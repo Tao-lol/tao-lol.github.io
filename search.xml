@@ -3,6 +3,87 @@
   
     
     <entry>
+      <title><![CDATA[行为型(Behavioral) 设计模式]]></title>
+      <url>/2019/09/05/BehavioralDesignPatterns/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>模板方法模式(Template Method) <a href="http://www.cnblogs.com/zhili/p/TemplateMethodPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/TemplateMethodPattern.html</a><br>命令模式(Command) <a href="http://www.cnblogs.com/zhili/p/CommandPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/CommandPattern.html</a><br>迭代器模式(Iterator) <a href="http://www.cnblogs.com/zhili/p/IteratorPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/IteratorPattern.html</a><br>观察者模式(Observer) <a href="http://www.cnblogs.com/zhili/p/ObserverPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/ObserverPattern.html</a><br>中介者模式(Mediator) <a href="http://www.cnblogs.com/zhili/p/MediatorPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/MediatorPattern.html</a><br>状态者模式(State) <a href="http://www.cnblogs.com/zhili/p/StatePattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/StatePattern.html</a><br>策略者模式(Strategy) <a href="http://www.cnblogs.com/zhili/p/StragetyPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/StragetyPattern.html</a><br>责任链模式(Chain of Responsibiliy) <a href="http://www.cnblogs.com/zhili/p/ChainOfResponsibity.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/ChainOfResponsibity.html</a><br>访问者模式(Visitor) <a href="http://www.cnblogs.com/zhili/p/VistorPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/VistorPattern.html</a><br>备忘录模式(Memento) <a href="http://www.cnblogs.com/zhili/p/MementoPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/MementoPattern.html</a><br>解释器模式(Interpreter)<br>空对象模式(Null Object)   </p>
+</blockquote>
+<a id="more"></a>
+
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> C# </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[结构型(Structural) 设计模式]]></title>
+      <url>/2019/09/05/StructuralDesignPatterns/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>适配器模式(Adapter) <a href="http://www.cnblogs.com/zhili/p/AdapterPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/AdapterPattern.html</a><br>桥接模式(Bridge) <a href="http://www.cnblogs.com/zhili/p/BridgePattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/BridgePattern.html</a><br>装饰者模式(Decorator) <a href="http://www.cnblogs.com/zhili/p/DecoratorPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/DecoratorPattern.html</a><br>组合模式(Composite) <a href="http://www.cnblogs.com/zhili/p/CompositePattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/CompositePattern.html</a><br>外观模式(Facade) <a href="http://www.cnblogs.com/zhili/p/FacadePattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/FacadePattern.html</a><br>亨元模式(Flyweight) <a href="http://www.cnblogs.com/zhili/p/FlyweightPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/FlyweightPattern.html</a><br>代理模式(Proxy) <a href="http://www.cnblogs.com/zhili/p/ProxyPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/ProxyPattern.html</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> C# </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[创建型(Creational) 设计模式]]></title>
+      <url>/2019/09/05/CreationalDesignPatterns/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>单例模式(Singleton) <a href="http://www.cnblogs.com/zhili/p/SingletonPatterm.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/SingletonPatterm.html</a><br>简单工厂模式(Factory) <a href="http://www.cnblogs.com/zhili/p/SimpleFactory.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/SimpleFactory.html</a><br>工厂方法模式(Factory Method) <a href="http://www.cnblogs.com/zhili/p/FactoryMethod.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/FactoryMethod.html</a><br>抽象工厂模式(Abstract Factory) <a href="http://www.cnblogs.com/zhili/p/AbstractFactory.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/AbstractFactory.html</a><br>建造者模式(Builder) <a href="http://www.cnblogs.com/zhili/p/BuilderPattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/BuilderPattern.html</a><br>原型模式(Prototype) <a href="http://www.cnblogs.com/zhili/p/PrototypePattern.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhili/p/PrototypePattern.html</a><br>对象池模式(Object Pool)   </p>
+</blockquote>
+<a id="more"></a>
+
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> C# </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[设计原则]]></title>
       <url>/2019/09/03/DesignPrinciples/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -99,7 +180,7 @@
 <li>工厂方法：创建单个对象，在Abstract Factory有使用到。  </li>
 <li>原型模式：通过拷贝原型来创建新的对象。  </li>
 </ul>
-<p>&emsp;&emsp;工厂方法，抽象工厂, 建造者都需要一个额外的工厂类来负责实例化“一个对象”，而Prototype则是通过原型（一个特殊的工厂类）来克隆“易变对象”。<br>&emsp;&emsp;下面详细介绍下它们。  </p>
+<p>&emsp;&emsp;工厂方法、抽象工厂、建造者都需要一个额外的工厂类来负责实例化“一个对象”，而Prototype则是通过原型（一个特殊的工厂类）来克隆“易变对象”。<br>&emsp;&emsp;下面详细介绍下它们。  </p>
 <h2 id="1-1-单例模式"><a href="#1-1-单例模式" class="headerlink" title="1.1  单例模式"></a>1.1  单例模式</h2><p>&emsp;&emsp;单例模式指的是确保某一个类只有一个实例，并提供一个全局访问点。解决的是实体对象个数的问题，而其他的建造者模式都是解决new所带来的耦合关系问题。其实现要点有：  </p>
 <ul>
 <li>类只有一个实例。问：如何保证呢？答：通过私有构造函数来保证类外部不能对类进行实例化  </li>
