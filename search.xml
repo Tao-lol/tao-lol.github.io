@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title><![CDATA[通俗易懂，什么是.NET?什么是.NET Framework？什么是.NET Core?]]></title>
+      <title><![CDATA[通俗易懂，什么是.NET? 什么是.NET Framework? 什么是.NET Core?]]></title>
       <url>/2019/11/28/WhatIsDotNet/</url>
       <content type="html"><![CDATA[<blockquote>
 <p><a href="https://www.cnblogs.com/1996V/p/9037603.html" target="_blank" rel="noopener">https://www.cnblogs.com/1996V/p/9037603.html</a></p>
@@ -11,7 +11,7 @@
 <p>&emsp;&emsp;什么是.NET？什么是.NET Framework?本文将从上往下，循序渐进的介绍一系列相关.NET的概念，先从类型系统开始讲起，我将通过跨语言操作这个例子来逐渐引入一系列.NET的相关概念，这主要包括：CLS、CTS(CLI)、FCL、Windows下CLR的相关核心组成、Windows下托管程序运行概念、什么是.NET Framework，.NET Core，.NET Standard及一些VS编译器相关杂项和相关阅读链接。完整的从上读到下则你可以理解个大概的.NET体系。</p>
 <a id="more"></a>
 
-<p>目录</p>
+<p><strong>目录</strong></p>
 <ul>
 <li><a href="https://tao-lol.top/2019/11/28/WhatIsDotNet/#NET和C-是什么关系">.NET和C#是什么关系</a></li>
 <li><a href="https://tao-lol.top/2019/11/28/WhatIsDotNet/#跨语言和跨平台是什么">跨语言和跨平台是什么</a></li>
@@ -360,7 +360,7 @@
             
             <tag> C# </tag>
             
-            <tag> .Net </tag>
+            <tag> dotNET </tag>
             
         </tags>
         
