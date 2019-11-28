@@ -384,6 +384,15 @@
 <figure class="image-box">
                 <img src="https://storebucket1-1258003678.cos.ap-guangzhou.myqcloud.com/NS20171101-20191101.jpg" alt="2017.11.01 - 2019.11.01" title class>
                 <p>2017.11.01 - 2019.11.01</p>
+            </figure>  
+
+<h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><figure class="image-box">
+                <img src="设计模式.png" alt="设计模式" title class>
+                <p>设计模式</p>
+            </figure>  
+<figure class="image-box">
+                <img src="CQRS架构.png" alt="CQRS架构" title class>
+                <p>CQRS架构</p>
             </figure>  ]]></content>
       
         <categories>
