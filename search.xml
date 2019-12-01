@@ -3,6 +3,44 @@
   
     
     <entry>
+      <title><![CDATA[编程小知识]]></title>
+      <url>/2019/12/01/ProgrammingTips/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+
+<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C"><a href="#C" class="headerlink" title="C"></a>C</h1><blockquote>
+<p>构建某个类型的某个实例时系统所执行的操作：</p>
+<ol>
+<li>把存放静态变量的空间清零。</li>
+<li>执行静态变量的初始化语句。</li>
+<li>执行基类的静态构造函数。</li>
+<li>执行（本类的）静态构造函数。</li>
+<li>把存放实例变量的空间清零。</li>
+<li>执行实例变量的初始化语句。</li>
+<li>适当地执行基类的实例构造函数。</li>
+<li>执行（本类的）实例构造函数。</li>
+</ol>
+<p>&emsp;&emsp;以后如果还要构造该类型的实例，那么会直接从第5步开始执行，因为类级别的初始化工作只执行一次就够了。<br>此外，可以通过链式调用构造函数的办法来优化第6、7两步，使得编译器在制作程序码时不再生成重复的指令。</p>
+</blockquote>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> C# </tag>
+            
+            <tag> dotNET </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[通俗易懂，什么是.NET? 什么是.NET Framework? 什么是.NET Core?]]></title>
       <url>/2019/11/28/WhatIsDotNet/</url>
       <content type="html"><![CDATA[<blockquote>
