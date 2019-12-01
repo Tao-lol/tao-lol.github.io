@@ -7,7 +7,7 @@
       <url>/2019/12/01/ProgrammingTips/</url>
       <content type="html"><![CDATA[<a id="more"></a>
 
-<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C"><a href="#C" class="headerlink" title="C"></a>C</h1><blockquote>
+<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C"><a href="#C" class="headerlink" title="C"></a>C</h1><blockquote>
 <p>构建某个类型的某个实例时系统所执行的操作：</p>
 <ol>
 <li>把存放静态变量的空间清零。</li>
@@ -20,6 +20,29 @@
 <li>执行（本类的）实例构造函数。</li>
 </ol>
 <p>&emsp;&emsp;以后如果还要构造该类型的实例，那么会直接从第5步开始执行，因为类级别的初始化工作只执行一次就够了。<br>此外，可以通过链式调用构造函数的办法来优化第6、7两步，使得编译器在制作程序码时不再生成重复的指令。</p>
+</blockquote>
+<blockquote>
+<p>在类的继承体系中，位于根部的那个基类应该做到以下几点：</p>
+<ul>
+<li>实现 IDisposable 接口，以便释放资源。</li>
+<li>如果本身含有非托管资源，那就添加 finalizer，以防客户端忘记调用 Dispose() 方法。若是没有非托管资源，则不用添加 finalizer。</li>
+<li>Dispose 方法与 finalizer（如果有的话）都把释放资源的工作委派给虚方法，使得子类能够重写该方法，以释放它们自己的资源。</li>
+</ul>
+<p>继承体系中的子类应该做到以下几点：</p>
+<ul>
+<li>如果子类中有自己的资源需要释放，那就重写由基类所定义的那个虚方法，若是没有，则不用重写该方法。</li>
+<li>如果子类自身的某个成员字段表示的是非托管资源，那么就实现 finalizer，若没有这样的字段，则不用实现 finalizer。</li>
+<li>记得调用基类的同名函数。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>实现 IDisposable.Dispose() 方法时，要注意以下四点：</p>
+<ol>
+<li>把非托管资源全都释放掉。</li>
+<li>把托管资源全都释放掉（这也包括不再订阅早前关注的那些事件）。</li>
+<li>设定相关的状态标志，用以表示该对象已经清理过了。如果对象已经清理过了之后还有人要访问其中的公有成员，那么你可以通过此标志得知这一状况，从而令这些操作抛出 ObjectDisposedException。</li>
+<li>阻止垃圾回收器重复清理该对象。这可以通过 GC.SuppressFinalize(this) 来完成。</li>
+</ol>
 </blockquote>
 ]]></content>
       
