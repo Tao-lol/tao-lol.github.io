@@ -241,6 +241,18 @@
 <li>阻止垃圾回收器重复清理该对象。这可以通过 GC.SuppressFinalize(this) 来完成。</li>
 </ol>
 </blockquote>
+<blockquote>
+<p>C# 提供了 4 种不同的函数，用来决定两个对象是否“相等”：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">ReferenceEquals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line">&gt; <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line">&gt; <span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> right</span>)</span>;</span><br><span class="line">&gt; <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="keyword">operator</span> ==(MyClass left, MyClass right);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>&emsp;&emsp;.NET 中的每个对象都有哈希码，其哈希码由 System.Object.GetHashCode() 决定。如果要重写该方法，那么必须遵守下面 3 条规则：</p>
+<ol>
+<li>如果（实例版本的 Equals() 方法认定的）两个对象相等，那么这两个对象的哈希码也必须相同，否则，容器无法通过正确的哈希码来寻找相应的元素。</li>
+<li>对于任何一个对象 A 来说，GetHashCode() 必须在实例层面上满足这样一种不变条件（或者说，在实例层面上具备这样一种固定的性质）————在 A 的生命期内，无论实例 A 在执行完 GetHashCode() 方法之后还执行过其他哪些方法，当它再度执行 GetHashCode() 时，必定返回与当初相同的值。这条性质用来确保容器总是能把 A 放在正确的桶中。</li>
+<li>对于常见的输入值来说，哈希函数应该把这些值均匀地映射到各个整数上，而不应该使自己所输出的哈希码仅仅集中在几个整数上。如果每一个整数都能有相似的概率来充当对象的哈希码，那么基于哈希的容器就能够较为高效地运作。简单来说，就是要保证自己所实现的 GetHashCode() 能够让元素均匀地保存在容器的每一个桶中。此外，每个桶的元素个数也不宜太多。</li>
+</ol>
+</blockquote>
 
         </div>
         
@@ -248,7 +260,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-01T09:29:32.061Z" itemprop="dateUpdated">2019-12-01 17:29:32</time>
+    最后更新时间：<time datetime="2019-12-02T10:16:48.183Z" itemprop="dateUpdated">2019-12-02 18:16:48</time>
 </span><br>
 
 
