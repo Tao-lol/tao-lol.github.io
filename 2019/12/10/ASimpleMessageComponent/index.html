@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>为 WPF, UWP 及 Xamarin 实现一个简单的消息组件 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="C#,dotNET">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>为 WPF, UWP 及 Xamarin 实现一个简单的消息组件</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">为 WPF, UWP 及 Xamarin 实现一个简单的消息组件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-10T06:38:08.000Z" itemprop="datePublished" class="page-time">
+  2019-12-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-ASimpleMessageComponent"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">为 WPF, UWP 及 Xamarin 实现一个简单的消息组件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-10 14:38:08" datetime="2019-12-10T06:38:08.000Z"  itemprop="datePublished">2019-12-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://mp.weixin.qq.com/s/PfFN_U0Yd6G3tZqpr1AwXg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PfFN_U0Yd6G3tZqpr1AwXg</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>本文目录：</p>
+<ol>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#介绍">介绍</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#Message-消息">Message - 消息</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#Subscription-订阅">Subscription - 订阅</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#MessengerHub-消息总线">MessageHub - 消息总线</a><ol>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#Subscribe-订阅">Subscribe - 订阅</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#Unsubscribe-取消订阅">Unsubscribe - 取消订阅</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#Publish-发布">Publish - 发布</a></li>
+</ol>
+</li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#用法">用法</a><ol>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#从NuGet安装">从 NuGet 安装</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#创建-Message-类">创建 Message 类</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#订阅">订阅</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#发布-Message">发布 Message</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#参数">参数</a></li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#取消订阅">取消订阅</a></li>
+</ol>
+</li>
+<li><a href="https://tao-lol.top/2019/12/10/ASimpleMessageComponent/#与-MvvmCross-Messenger-的差异">与 MvvmCross.Messenger 的差异</a></li>
+</ol>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;Sub-Pub 模式是一种常用的设计模式，用来在系统的不同组件中传递消息。发送消息的称为 Publisher，接收消息的称为 Subscriber。双方一般不需要知道对方的存在，由一个代理负责消息的传递。其结构如图所示：<br><a rel=为 WPF, UWP 及 Xamarin 实现一个简单的消息组件 href="640.webp" title=" " data-fancybox="images"><img src="640.webp" alt=" "></a><br>&emsp;&emsp;最初的需求是我需要开发一个实现 Socket 发送/接收的WPF应用程序。首先，我应用 MVVM 模式创建了一个基本的 WPF 应用程序。然后，我创建了另一个项目来完成所有与 Socket 通信有关的工作。接下来，我必须将 Socket 项目集成到 ViewModel 项目中，以操作 Socket 连接。<br>&emsp;&emsp;显然，我们可以为此使用 <code>Event</code>。例如，我们可以有一个名为 <code>SocketServer</code> 的类，该类具有一个事件来接收 Socket 数据包，然后在 <code>ViewModel</code> 层中对其进行订阅。但这意味着我们必须在 <code>ViewModel</code> 层中创建 <code>SocketServer</code> 类的实例，该类将 <code>ViewModel</code> 层与 Socket 项目耦合在一起。我希望创建一个中间件以解耦它们。 这样，发布者和订阅者就不需要知道对方的存在了。<br>&emsp;&emsp;MvvmCross 提供了一个名为 <strong>Messenger</strong> 的插件以在 ViewModel 之间进行通信。但它依赖于某些 MvvmCross 组件，这意味着如果我想在其他项目中使用此插件，则必须引用 MvvmCross。这对我当前的情况而言并不理想，因为实际上，Socket 项目没有必要引用 MvvmCross。因此，我做了一个专注于发布/订阅模式的项目，并删除了对 MvvmCross 的依赖。现在，可以在任何 WPF，UWP 和 Xamarin 项目中重复使用它。我已将其发布到 GitHub 上：<a href="https://github.com/yanxiaodi/CoreMessenger" target="_blank" rel="noopener">https://github.com/yanxiaodi/CoreMessenger</a> ，并发布了 NuGet 包：<a href="https://www.nuget.org/packages/FunCoding.CoreMessenger/" target="_blank" rel="noopener">https://www.nuget.org/packages/FunCoding.CoreMessenger/</a> 。本文仅介绍该组件的实现细节，后面会再写一篇文章介绍如何使用 Azure DevOps 实现 CI/CD。<br>&emsp;&emsp;下面让我们了解一下 Sub-Pub 模式的一种实现方式。  </p>
+<h1 id="Message-消息"><a href="#Message-消息" class="headerlink" title="Message - 消息"></a>Message - 消息</h1><p>&emsp;&emsp;Message 是在此系统中表示消息的抽象类：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Message</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">object</span> Sender &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Message</span>(<span class="params"><span class="keyword">object</span> sender</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Sender = sender ?? <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentNullException(<span class="keyword">nameof</span>(sender));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们需要从该抽象类派生不同消息的实例。它有一个名为 <code>sender</code> 的参数，因此订阅者可以获取发送者的实例。但这并不是强制性的。  </p>
+<h1 id="Subscription-订阅"><a href="#Subscription-订阅" class="headerlink" title="Subscription - 订阅"></a>Subscription - 订阅</h1><p>&emsp;&emsp;<code>BaseSubscription</code> 是订阅的基类。代码如下：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">BaseSubscription</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Guid Id &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> SubscriptionPriority Priority &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Tag &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Task&lt;<span class="keyword">bool</span>&gt; <span class="title">Invoke</span>(<span class="params"><span class="keyword">object</span> message</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">BaseSubscription</span>(<span class="params">SubscriptionPriority priority, <span class="keyword">string</span> tag</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Id = Guid.NewGuid();</span><br><span class="line">        Priority = priority;</span><br><span class="line">         Tag = tag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;它有一个 <code>Id</code> 属性和一个 <code>tag</code> 属性，因此您可以放置一些标签来区分或分组订阅实例。<code>Priority</code> 属性是一个枚举类型，用于指示订阅的优先级，因此将按预期顺序调用订阅。订阅有两种类型，一是强引用订阅 <code>StrongSubscription</code>：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class StrongSubscription&lt;TMessage&gt; : BaseSubscription where TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> Action&lt;TMessage&gt; _action;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StrongSubscription</span>(<span class="params">Action&lt;TMessage&gt; action,</span></span></span><br><span class="line"><span class="function"><span class="params">        SubscriptionPriority priority, <span class="keyword">string</span> tag</span>): <span class="title">base</span>(<span class="params">priority, tag</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _action = action;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">async</span> Task&lt;<span class="keyword">bool</span>&gt; <span class="title">Invoke</span>(<span class="params"><span class="keyword">object</span> message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> typedMessage = message <span class="keyword">as</span> TMessage;</span><br><span class="line">        <span class="keyword">if</span> (typedMessage == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">$"Unexpected message <span class="subst">&#123;message.ToString()&#125;</span>"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">await</span> Task.Run(() =&gt; _action?.Invoke(typedMessage));</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;它继承了 <code>BaseSubscription</code> 并覆盖了 <code>Invoke()</code> 方法。基本上，它具有一个名为 <code>_action</code> 的字段，该字段在创建实例时定义。当我们发布消息时，订阅将调用 <code>Invoke()</code> 方法来执行该 <code>_action</code> 。我们使用 <code>Task</code> 来包装动作，以便可以利用异步操作的优势。<br>&emsp;&emsp;这是名为 <code>WeakSubscription</code> 的另一种订阅：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class WeakSubscription&lt;TMessage&gt; : BaseSubscription where TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> WeakReference&lt;Action&lt;TMessage&gt;&gt; _weakReference;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeakSubscription</span>(<span class="params">Action&lt;TMessage&gt; action,</span></span></span><br><span class="line"><span class="function"><span class="params">        SubscriptionPriority priority, <span class="keyword">string</span> tag</span>) : <span class="title">base</span>(<span class="params">priority, tag</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _weakReference = <span class="keyword">new</span> WeakReference&lt;Action&lt;TMessage&gt;&gt;(action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">async</span> Task&lt;<span class="keyword">bool</span>&gt; <span class="title">Invoke</span>(<span class="params"><span class="keyword">object</span> message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> typedMessage = message <span class="keyword">as</span> TMessage;</span><br><span class="line">        <span class="keyword">if</span> (typedMessage == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">$"Unexpected message <span class="subst">&#123;message.ToString()&#125;</span>"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        Action&lt;TMessage&gt; action;</span><br><span class="line">        <span class="keyword">if</span> (!_weakReference.TryGetTarget(<span class="keyword">out</span> action))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">await</span> Task.Run(() =&gt; action?.Invoke(typedMessage));</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;它与强引用订阅的区别在于 action 存储在 <code>WeakReference</code> 字段中。您可以在这里了解更多信息： <a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.weakreference-1" target="_blank" rel="noopener">WeakReference 类</a>。它用于表示类型化的弱引用，该弱引用引用一个对象，同时仍允许该对象被垃圾回收回收。在使用它之前，我们需要使用 <code>TryGetTarget(T)</code> 方法检查目标是否已由 GC 收集。如果此方法返回 false，则表示该引用已被 GC 收集。<br>&emsp;&emsp;如果使用 <code>StrongSubscription</code>，Messenger 将保留对回调方法的强引用，并且 Garbage Collection 将不会破坏订阅。在这种情况下，您需要明确取消订阅，以避免内存泄漏。否则，可以使用 <code>WeakSubscription</code>，当对象超出范围时，会自动删除订阅。  </p>
+<h1 id="MessengerHub-消息总线"><a href="#MessengerHub-消息总线" class="headerlink" title="MessengerHub - 消息总线"></a>MessengerHub - 消息总线</h1><p>&emsp;&emsp;<code>MessengerHub</code> 是整个应用程序域中的一个单例实例。我们不需要使用依赖注入来创建实例，因为它的目的很明确，我们只有一个实例。这是实现单例模式的简单方法：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MessengerHub</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Lazy&lt;MessengerHub&gt; lazy = <span class="keyword">new</span> Lazy&lt;MessengerHub&gt;(() =&gt; <span class="keyword">new</span> MessengerHub());</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">MessengerHub</span>(<span class="params"></span>)</span> &#123; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> MessengerHub Instance</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> lazy.Value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.weakreference-1" target="_blank" rel="noopener">WeakReference 类</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.lazy-1" target="_blank" rel="noopener">Lazy&#60;T&#62; 类</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.collections.concurrent.concurrentdictionary-2" target="_blank" rel="noopener">ConcurrentDictionary&#60;TKey,TValue&#62; 类</a></p>
+</blockquote>
+<p>&emsp;&emsp;<code>MessengerHub</code> 在其内部维护一个 <code>ConcurrentDictionary</code> 来管理订阅的实例，如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> ConcurrentDictionary&lt;Type, ConcurrentDictionary&lt;Guid, BaseSubscription&gt;&gt; _subscriptions =</span><br><span class="line">            <span class="keyword">new</span> ConcurrentDictionary&lt;Type, ConcurrentDictionary&lt;Guid, BaseSubscription&gt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;该 <code>ConcurrentDictionary</code> 的 Key 是 <code>Message</code> 的类型，Value 是一个 <code>ConcurrentDictionary</code>，其中包含该特定 <code>Message</code> 的一组订阅。显然，一种类型可能具有多个订阅。  </p>
+<h2 id="Subscribe-订阅"><a href="#Subscribe-订阅" class="headerlink" title="Subscribe - 订阅"></a>Subscribe - 订阅</h2><p>&emsp;&emsp;<code>MessageHub</code> 公开了几种重要的方法来订阅/取消订阅/发布消息。<br>&emsp;&emsp;<code>Subscribe()</code> 方法如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> SubscriptionToken Subscribe&lt;TMessage&gt;(Action&lt;TMessage&gt; action,</span><br><span class="line">    ReferenceType referenceType = ReferenceType.Weak,</span><br><span class="line">    SubscriptionPriority priority = SubscriptionPriority.Normal, <span class="keyword">string</span> tag = <span class="literal">null</span>) <span class="keyword">where</span> TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (action == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentNullException(<span class="keyword">nameof</span>(action));</span><br><span class="line">    &#125;</span><br><span class="line">    BaseSubscription subscription = BuildSubscription(action, referenceType, priority, tag);</span><br><span class="line">    <span class="keyword">return</span> SubscribeInternal(action, subscription);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> SubscriptionToken SubscribeInternal&lt;TMessage&gt;(Action&lt;TMessage&gt; action, BaseSubscription subscription)</span><br><span class="line">    <span class="keyword">where</span> TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_subscriptions.TryGetValue(<span class="keyword">typeof</span>(TMessage), <span class="keyword">out</span> <span class="keyword">var</span> messageSubscriptions))</span><br><span class="line">    &#123;</span><br><span class="line">        messageSubscriptions = <span class="keyword">new</span> ConcurrentDictionary&lt;Guid, BaseSubscription&gt;();</span><br><span class="line">        _subscriptions[<span class="keyword">typeof</span>(TMessage)] = messageSubscriptions;</span><br><span class="line">    &#125;</span><br><span class="line">    messageSubscriptions[subscription.Id] = subscription;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SubscriptionToken(subscription.Id, <span class="keyword">async</span> () =&gt; <span class="keyword">await</span> UnsubscribeInternal&lt;TMessage&gt;(subscription.Id), action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当我们订阅消息时，会创建 <code>Subscription</code> 的实例并将其添加到字典中。根据您的选择，它可能是强引用或者弱引用。然后它将创建一个 <code>SubscriptionToken</code>，这是一个实现 <code>IDisposable</code> 接口来管理订阅的类：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">SubscriptionToken</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Guid Id &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> Action _disposeMe;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">object</span> _dependentObject;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubscriptionToken</span>(<span class="params">Guid id, Action disposeMe, <span class="keyword">object</span> dependentObject</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Id = id;</span><br><span class="line">        _disposeMe = disposeMe;</span><br><span class="line">        _dependentObject = dependentObject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Dispose(<span class="literal">true</span>);</span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"><span class="keyword">bool</span> isDisposing</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (isDisposing)</span><br><span class="line">        &#123;</span><br><span class="line">            _disposeMe();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当我们创建 <code>SubscriptionToken</code> 的实例时，实际上我们传递了一个方法来销毁自己-因此，当调用 <code>Dispose</code> 方法时，它将首先取消订阅。  </p>
+<h2 id="Unsubscribe-取消订阅"><a href="#Unsubscribe-取消订阅" class="headerlink" title="Unsubscribe - 取消订阅"></a>Unsubscribe - 取消订阅</h2><p>&emsp;&emsp;取消订阅消息的方法如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">async</span> Task Unsubscribe&lt;TMessage&gt;(SubscriptionToken subscriptionToken) <span class="keyword">where</span> TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> UnsubscribeInternal&lt;TMessage&gt;(subscriptionToken.Id);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">async</span> Task UnsubscribeInternal&lt;TMessage&gt;(Guid subscriptionId) <span class="keyword">where</span> TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (_subscriptions.TryGetValue(<span class="keyword">typeof</span>(TMessage), <span class="keyword">out</span> <span class="keyword">var</span> messageSubscriptions))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (messageSubscriptions.ContainsKey(subscriptionId))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> result = messageSubscriptions.TryRemove(subscriptionId, <span class="keyword">out</span> BaseSubscription <span class="keyword">value</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这段代码很容易理解。当我们取消订阅消息时，订阅将从字典中删除。  </p>
+<h2 id="Publish-发布"><a href="#Publish-发布" class="headerlink" title="Publish - 发布"></a>Publish - 发布</h2><p>&emsp;&emsp;我们已经订阅了消息，并创建了存储在字典中的订阅实例。现在可以发布消息了。发布消息的方法如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">async</span> Task Publish&lt;TMessage&gt;(TMessage message) <span class="keyword">where</span> TMessage : Message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (message == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentNullException(<span class="keyword">nameof</span>(message));</span><br><span class="line">    &#125;</span><br><span class="line">    List&lt;BaseSubscription&gt; toPublish = <span class="literal">null</span>;</span><br><span class="line">    Type messageType = message.GetType();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (_subscriptions.TryGetValue(messageType, <span class="keyword">out</span> <span class="keyword">var</span> messageSubscriptions))</span><br><span class="line">    &#123;</span><br><span class="line">        toPublish = messageSubscriptions.Values.OrderByDescending(x =&gt; x.Priority).ToList();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (toPublish == <span class="literal">null</span> || toPublish.Count == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;Guid&gt; deadSubscriptionIds = <span class="keyword">new</span> List&lt;Guid&gt;();</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> subscription <span class="keyword">in</span> toPublish)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Execute the action for this message.</span></span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">await</span> subscription.Invoke(message);</span><br><span class="line">        <span class="keyword">if</span> (!result)</span><br><span class="line">        &#123;</span><br><span class="line">            deadSubscriptionIds.Add(subscription.Id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (deadSubscriptionIds.Any())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">await</span> PurgeDeadSubscriptions(messageType, deadSubscriptionIds);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当我们发布一条消息时，<code>MessageHub</code> 将查询字典以检索该消息的订阅列表，然后循环执行操作。<br>&emsp;&emsp;需要注意的另一件事是，由于某些订阅可能是弱引用，因此需要检查执行结果。如果引用已经被 GC 收集，则执行结果会返回 false，这时候需要将该订阅从订阅列表中删除。  </p>
+<h1 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h1><h2 id="从NuGet安装"><a href="#从NuGet安装" class="headerlink" title="从NuGet安装"></a>从NuGet安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PM&gt; Install-Package FunCoding.CoreMessenger</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在整个应用程序域中，将 <code>MessengerHub.Instance</code> 用作单例模式。它提供了以下方法：  </p>
+<ul>
+<li><p>发布：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">async</span> Task Publish&lt;TMessage&gt;(TMessage message)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>订阅：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> SubscriptionToken Subscribe&lt;TMessage&gt;(Action&lt;TMessage&gt; action, ReferenceType referenceType = ReferenceType.Weak, SubscriptionPriority priority = SubscriptionPriority.Normal, <span class="keyword">string</span> tag = <span class="literal">null</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取消订阅：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">async</span> Task Unsubscribe&lt;TMessage&gt;(SubscriptionToken subscriptionToken)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="创建-Message-类"><a href="#创建-Message-类" class="headerlink" title="创建 Message 类"></a>创建 <code>Message</code> 类</h2><p>&emsp;&emsp;首先，定义一个从 <code>Message</code> 继承的类，如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestMessage</span> : <span class="title">Message</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> ExtraContent &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestMessage</span>(<span class="params"><span class="keyword">object</span> sender, <span class="keyword">string</span> content</span>) : <span class="title">base</span>(<span class="params">sender</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ExtraContent = content;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在组件A中创建 <code>Message</code> 的实例，如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> message = <span class="keyword">new</span> TestMessage(<span class="keyword">this</span>, <span class="string">"Test Content"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h2><p>&emsp;&emsp;定义一个 <code>SubscriptionToken</code> 实例来存储订阅。在组件 B 中订阅消息，如下所示：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HomeViewModel</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> SubscriptionToken _subscriptionTokenForTestMessage;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HomeViewModel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _subscriptionTokenForTestMessage =</span><br><span class="line">            MessengerHub.Instance.Subscribe&lt;TestMessage&gt;(OnTestMessageReceived,</span><br><span class="line">            ReferenceType.Weak, SubscriptionPriority.Normal);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnTestMessageReceived</span>(<span class="params">TestMessage message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> DEBUG</span></span><br><span class="line">        System.Diagnostics.Debug.WriteLine(<span class="string">$"Received messages of type <span class="subst">&#123;message.GetType().ToString()&#125;</span>. Content: <span class="subst">&#123;message.Content&#125;</span>"</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="发布-Message"><a href="#发布-Message" class="headerlink" title="发布 Message"></a>发布 <code>Message</code></h2><p>&emsp;&emsp;在组件 A 中发布消息：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">PublishMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">await</span> MessengerHub.Instance.Publish(<span class="keyword">new</span> TestMessage(<span class="keyword">this</span>, <span class="string">$"Hello World!"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;就是这么简单。  </p>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>&emsp;&emsp;<code>Subscribe</code> 方法的完整签名为：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> SubscriptionToken Subscribe&lt;TMessage&gt;(Action&lt;TMessage&gt; action,  ReferenceType referenceType = ReferenceType.Weak, SubscriptionPriority priority = SubscriptionPriority.Normal,  <span class="keyword">string</span> tag = <span class="literal">null</span>) <span class="keyword">where</span> TMessage : Message</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;您可以指定以下参数：</p>
+<ul>
+<li><code>ReferenceType</code>。默认值为 <code>ReferenceType.Weak</code>，因此您不必担心内存泄漏。一旦 <code>SubscriptionToken</code> 实例超出范围，GC 便可以自动收集它（但不确定何时）。如果需要保留强引用，请将参数指定为 <code>ReferenceType.Strong</code>，以使 GC 无法收集它。</li>
+<li><code>SubscriptionPriority</code>。默认值为 <code>SubscriptionPriority.Normal</code>。有时需要控制一个“消息”的订阅的执行顺序。在这种情况下，请为订阅指定不同的优先级以控制执行顺序。注意，该参数不适用于不同的 <code>Message</code>。</li>
+<li><code>Tag</code>。为订阅指定一个标签，是可选的。</li>
+</ul>
+<h2 id="取消订阅"><a href="#取消订阅" class="headerlink" title="取消订阅"></a>取消订阅</h2><p>&emsp;&emsp;您可以使用以下方法取消订阅：  </p>
+<ul>
+<li><p>使用 <code>Unsubscribe</code> 方法，如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> MessengerHub.Instance.Unsubscribe&lt;TestMessage&gt;(_subscriptionTokenForTestMessage);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>SubscriptionToken</code> 的 <code>Dispose</code> 方法：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_subscriptionTokenForTestMessage.Dispose();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>&emsp;&emsp;在许多情况下，您不会直接调用这些方法。如果使用强订阅类型，则可能会导致内存泄漏问题。因此，建议使用 <code>ReferenceType.Weak</code>。请注意，如果令牌未存储在上下文中，则 GC 可能会立即收集它。例如：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">MayNotEverReceiveAMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> token = MessengerHub.Instance.Subscribe&lt;TestMessage&gt;((message) =&gt; &#123;</span><br><span class="line">        <span class="comment">// Do something here</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// token goes out of scope now</span></span><br><span class="line">    <span class="comment">// - so will be garbage collected *at some point*</span></span><br><span class="line">    <span class="comment">// - so the action may never get called</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="与-MvvmCross-Messenger-的差异"><a href="#与-MvvmCross-Messenger-的差异" class="headerlink" title="与 MvvmCross.Messenger 的差异"></a>与 MvvmCross.Messenger 的差异</h1><p>&emsp;&emsp;如果您已经使用 <code>MvvmCross</code> 开发应用程序，并无需在 <code>ViewModel</code> 层之外传递消息，请直接使用 <code>MvvmCross.Messenger</code>。我仅实现了一些主要方法，没有提供 UI 线程调度的功能，并删除了对 MvvmCross 组件的依赖，因此只要您的项目目标 .NET Standard 2.0 以上，就可以在任何 WPF，UWP 和 Xamarin 项目中使用。另外，<code>Publish</code> 方法始终在后台运行，以避免阻塞 UI。但是您应该知道何时需要返回 UI 线程，尤其是当您需要与 UI 控件进行交互时。另一个区别是无需使用 DI 来创建 <code>MessageHub</code> 实例，该实例是所有应用程序域中的单例实例。如果解决方案包含需要相互通信的多个组件，则单例模式会比较简单，DI 将使其更加复杂。  </p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-10T09:33:01.421Z" itemprop="dateUpdated">2019-12-10 17:33:01</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/10/ASimpleMessageComponent/" target="_blank" rel="external">https://tao-lol.top/2019/12/10/ASimpleMessageComponent/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/10/ASimpleMessageComponent/&title=《为 WPF, UWP 及 Xamarin 实现一个简单的消息组件》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/10/ASimpleMessageComponent/&title=《为 WPF, UWP 及 Xamarin 实现一个简单的消息组件》 — Blog&source=
+https://mp.weixin.qq.com/s/PfFN_U0Yd6G3tZqpr1AwXg
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/10/DotNetObjectLifetime/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">谈谈 .net 对象生命周期</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Message-消息"><span class="post-toc-number">2.</span> <span class="post-toc-text">Message - 消息</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Subscription-订阅"><span class="post-toc-number">3.</span> <span class="post-toc-text">Subscription - 订阅</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#MessengerHub-消息总线"><span class="post-toc-number">4.</span> <span class="post-toc-text">MessengerHub - 消息总线</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Subscribe-订阅"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">Subscribe - 订阅</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Unsubscribe-取消订阅"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">Unsubscribe - 取消订阅</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Publish-发布"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">Publish - 发布</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用法"><span class="post-toc-number">5.</span> <span class="post-toc-text">用法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#从NuGet安装"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">从NuGet安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建-Message-类"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">创建 Message 类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#订阅"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">订阅</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#发布-Message"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">发布 Message</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参数"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">参数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#取消订阅"><span class="post-toc-number">5.6.</span> <span class="post-toc-text">取消订阅</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#与-MvvmCross-Messenger-的差异"><span class="post-toc-number">6.</span> <span class="post-toc-text">与 MvvmCross.Messenger 的差异</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/10/ASimpleMessageComponent/&title=《为 WPF, UWP 及 Xamarin 实现一个简单的消息组件》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/10/ASimpleMessageComponent/&title=《为 WPF, UWP 及 Xamarin 实现一个简单的消息组件》 — Blog&source=
+https://mp.weixin.qq.com/s/PfFN_U0Yd6G3tZqpr1AwXg
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aS46DMBAFwNz/0pltRhHkPZvMCLtYRREYF4uW+/N4xNfz5Tr6J7nz/f78ngsuDAyM2zKep9frPe06yVve1z//BIdUDAyMDRhH2zpfug2+R29sPx8GBgbGOeMc095/jsTAwMBoGTOvHINhYGBgtEnsVf/kCfBXcnEMDIwbMvKq+9///kp/AwMD41aMZ3m1xbJ2u8+hCwMDY23GWAtzrEkwFmTz1TAwMFZlJNtNGpDtSFkbcD+siYGBsQEjH9vKA+tMKa1to2JgYOzDmAmUSRhtW6RFWMfAwFiaMbNoMkKRHz3nE1oMDIy1GTOF/nZoY2b4DAMDY09GHkav6kIkGx1sDGBgYGzDSLbYluHyfwZTZQwMjG0YY+Nc7QDZWEvgwwERAwNjG8a122o/RNucKE64GBgYN2fUYw0T1a3kqTb4RtU7DAyMmzPygJsX/ZODY/vsh1QWAwNjG0Z+REsGJpKQ2o6XHa6AgYGxNCMv/efHxPlWKAYGBsY5o01Wry3AtSU5DAyMPRntmEUSTK8dBSumQjAwMBZitKljvokkic23WzyFgYGxEGOmATATlJP0NVn5V9UQAwNjUcbY8XGm0J+8eKzwh4GBsTYjCbJtMW6sITrV5sTAwNiAkR/X8sNcngCPHSIH+6IYGBibMcZS32Tr9XkWAwMDYyhNzQt2LRIDA2NPRtt6TA6IbVCeKt5hYGAszfivoDw/ZoGBgbEB4wf5yEa86dJ9hQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
