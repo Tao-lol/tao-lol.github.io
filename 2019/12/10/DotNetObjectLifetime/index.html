@@ -215,14 +215,14 @@
                 <p></p>
             </figure>
 
-<p>&emsp;&emsp;<strong>堆内存</strong>，从字面意思上理解就好像是仓库里面可以存一堆破烂，你若是需要存点什么东西就尽管往里面一扔，仓库里有的是空间。事实确实也是如此，<strong>堆内存中可以存放大规格的数据（比如对象资源）</strong>，这些数据是不适合存放在栈中的，因为栈空间的容量有限，这就是<strong>堆内存相对于栈内存的好处：容量大</strong>。但是它的缺点也是显而易见的，那就是<strong>存取堆内存的数据相较于存取栈内存是非常慢的</strong>，试想一下，让你在仓库里的一堆破烂里去找你想要的东西是什么感觉。<br>&emsp;&emsp;（栈内存比堆内存详细参考：<a href="https://blog.csdn.net/boyxiaolong/article/details/8543676）" target="_blank" rel="noopener">https://blog.csdn.net/boyxiaolong/article/details/8543676）</a></p>
+<p>&emsp;&emsp;<strong>堆内存</strong>，从字面意思上理解就好像是仓库里面可以存一堆破烂，你若是需要存点什么东西就尽管往里面一扔，仓库里有的是空间。事实确实也是如此，<strong>堆内存中可以存放大规格的数据（比如对象资源）</strong>，这些数据是不适合存放在栈中的，因为栈空间的容量有限，这就是<strong>堆内存相对于栈内存的好处：容量大</strong>。但是它的缺点也是显而易见的，那就是<strong>存取堆内存的数据相较于存取栈内存是非常慢的</strong>，试想一下，让你在仓库里的一堆破烂里去找你想要的东西是什么感觉。<br>&emsp;&emsp;（栈内存比堆内存详细参考：<a href="https://blog.csdn.net/boyxiaolong/article/details/8543676" target="_blank" rel="noopener">https://blog.csdn.net/boyxiaolong/article/details/8543676</a> ）</p>
 <figure class="image-box">
                 <a rel=谈谈 .NET 对象生命周期 href="1342524-20191129211711033-1091141984.png" title="" data-fancybox="images"><img src="1342524-20191129211711033-1091141984.png" alt title class></a>
                 <p></p>
             </figure>
 
 <p>&emsp;&emsp;从内存分配方式上看，堆内存不同于栈内存，函数栈是在每一个函数被执行的时候被自动分配并且函数执行完成后自动回收，而如果你想使用堆内存，就得自己动手丰衣足食。<br>&emsp;&emsp;所以你会看到 C 语言程序员会这样去使用堆内存：  </p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//在堆内存中申请一块字节数为int字节数的堆内存，并返回指向该内存区域的指针</span></span><br><span class="line">*p = <span class="number">10</span>; </span><br><span class="line"><span class="built_in">free</span>(p); <span class="comment">//释放堆内存资源</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//在堆内存中申请一块字节数为 int 字节数的堆内存，并返回指向该内存区域的指针</span></span><br><span class="line">*p = <span class="number">10</span>; </span><br><span class="line"><span class="built_in">free</span>(p); <span class="comment">//释放堆内存资源</span></span><br></pre></td></tr></table></figure>
 
 <p>&emsp;&emsp;你还会看见 C++ 程序员这样写：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Car* bmw = <span class="keyword">new</span> Car(); <span class="comment">//创建一个 Car 类对象，在堆内存中存放对象数据，并返回指向对象资源的指针</span></span><br><span class="line"><span class="keyword">delete</span> bmw; <span class="comment">//释放堆内存资源</span></span><br></pre></td></tr></table></figure>
@@ -250,13 +250,14 @@
             </figure>
 
 <p>&emsp;&emsp;看似问题好像都已水落石出，无非就是将堆内存资源回收交给了 CLR 去承担。难道你就不想知道的更多一点？比如接着而来的问题：<br>&emsp;&emsp;1、<strong>垃圾回收器如何判断一个对象什么时候不再需要？</strong><br>&emsp;&emsp;2、<strong>垃圾回收器又在什么时候会执行垃圾清理的操作？</strong><br>&emsp;&emsp;别急，带着问题慢慢往下看。</p>
-<h1 id="CIL的new指令-—-垃圾回收的触发者"><a href="#CIL的new指令-—-垃圾回收的触发者" class="headerlink" title="CIL的new指令 — 垃圾回收的触发者"></a>CIL的new指令 — 垃圾回收的触发者</h1><p>&emsp;&emsp;C# 中的<strong>new关键字最终会被编译器翻译成 CIL 的 newobj 指令</strong>，让我们仔细查看一下 CIL newobj 指令的作用。</p>
+<h1 id="CIL-的-new-指令-—-垃圾回收的触发者"><a href="#CIL-的-new-指令-—-垃圾回收的触发者" class="headerlink" title="CIL 的 new 指令 — 垃圾回收的触发者"></a>CIL 的 new 指令 — 垃圾回收的触发者</h1><p>&emsp;&emsp;C# 中的 <strong>new 关键字最终会被编译器翻译成 CIL 的 newobj 指令</strong>，让我们仔细查看一下 CIL newobj 指令的作用。</p>
 <figure class="image-box">
                 <a rel=谈谈 .NET 对象生命周期 href="1342524-20191130210833848-114463754.png" title="" data-fancybox="images"><img src="1342524-20191130210833848-114463754.png" alt title class></a>
                 <p></p>
             </figure>
 
-<p>&emsp;&emsp;首先，需要明白托管堆不仅仅是一个可由 CLR 访问的随机内存块。.NET 垃圾回收器是堆的“清洁工”，出于优化的目的它会压缩空闲的内存块（当需要时）。为了辅助压缩，托管堆会维护一个指针(通常被叫做下一个对象指针或者是新对象指针），这个指针用来标识下一个对象在堆中分配的地址。<br>&emsp;&emsp;此外，newobj 指令通知 CLR 来执行下列的核心任务：</p>
+<p>&emsp;&emsp;首先，需要明白托管堆不仅仅是一个可由 CLR 访问的随机内存块。.NET 垃圾回收器是堆的“清洁工”，出于优化的目的它会压缩空闲的内存块（当需要时）。为了辅助压缩，托管堆会维护一个指针(通常被叫做下一个对象指针或者是新对象指针），这个指针用来标识下一个对象在堆中分配的地址。  </p>
+<p>&emsp;&emsp;此外，newobj 指令通知 CLR 来执行下列的核心任务：</p>
 <ol>
 <li><strong>计算要分配的对象所需的全部内存（包括这个类型的数据成员和类型的基类所需的内存）。</strong></li>
 <li><strong>检查托管堆来确保有足够的空间来放置所申请的对象。如果有足够的空间，会调用这个类型的构造函数，构造函数会返回一个指向内存中这个新对象的引用，这个新对象的地址刚好就是下一个对象指针上一次所指向的位置。</strong></li>
@@ -270,7 +271,8 @@
 
 <p>&emsp;&emsp;在 C# 中分配对象是一个很频繁的操作，照这样下去托管堆上的空间迟早会被挥霍完，所以，重点来了，<strong>如果 CLR 发现托管堆没有足够空间分配请求的类型时，它会执行一次垃圾回收来释放内存。</strong><br>&emsp;&emsp;当执行垃圾回收时，垃圾收集器临时挂起当前进程中的所有的活动线程来保证在回收过程中应用程序不会访问到堆。（一个线程是一个正在执行的程序中的执行路径）。一旦垃圾回收完成，挂起的线程又可以继续执行了。还好，.NET 垃圾回收器是高度优化过的，所以用户很少能察觉到应用程序中的短暂中断。<br>&emsp;&emsp;通过对 CIL 的 new 指令作用的解读，我们知道了：<strong>如果托管堆没有足够的空间分配一个请求的对象，则会执行一次垃圾回收。</strong>  </p>
 <p>&emsp;&emsp;（讲到这里 C# 程序员停了下来，喝了口保温杯里的枸杞红枣大补茶🍵，清了清嗓子，继续开始解惑…）  </p>
-<h1 id="应用程序根的作用-—-区分不可到达的对象"><a href="#应用程序根的作用-—-区分不可到达的对象" class="headerlink" title="应用程序根的作用 — 区分不可到达的对象"></a>应用程序根的作用 — 区分不可到达的对象</h1><p>&emsp;&emsp;现在让我们来讨论一下垃圾回收器怎样确定什么时候“<strong>不再需要</strong>”一个对象。为了理解细节，你需要知道应用程序根的概念。<br>&emsp;&emsp;简单来说，一个根是一个引用，这个引用指向堆上面的一个对象的。严格来说，一个根可以有以下几种情况：</p>
+<h1 id="应用程序根的作用-—-区分不可到达的对象"><a href="#应用程序根的作用-—-区分不可到达的对象" class="headerlink" title="应用程序根的作用 — 区分不可到达的对象"></a>应用程序根的作用 — 区分不可到达的对象</h1><p>&emsp;&emsp;现在让我们来讨论一下垃圾回收器怎样确定什么时候“<strong>不再需要</strong>”一个对象。为了理解细节，你需要知道应用程序根的概念。  </p>
+<p>&emsp;&emsp;简单来说，一个根是一个引用，这个引用指向堆上面的一个对象的。严格来说，一个根可以有以下几种情况：</p>
 <ul>
 <li><strong>指向全局对象的引用（尽管 C# 不支持，但 CIL 代码允许分配全局对象）</strong></li>
 <li><strong>指向任何静态对象</strong></li>
@@ -293,7 +295,8 @@
 
 <p>&emsp;&emsp;到这里，通过对应用程序根的作用的理解，我们知道了如何知道一个对象是“不再需要”的。<strong>通俗点来说就是，这个对象在应用程序中已经无需被访问了，成为了一座“孤岛”，自然也就不再需要它了。</strong>  </p>
 <p>&emsp;&emsp;（为了让 C++ 程序员能更加理解 .NET 垃圾回收的奥妙，C# 程序员继续滔滔不绝…）  </p>
-<h1 id="理解对象的代-—-垃圾回收过程的优化"><a href="#理解对象的代-—-垃圾回收过程的优化" class="headerlink" title="理解对象的代 — 垃圾回收过程的优化"></a>理解对象的代 — 垃圾回收过程的优化</h1><p>&emsp;&emsp;在尝试找到不可达的对象时，CLR 并不是检查托管堆上的每个对象。很明显，这样做会消耗大量时间，尤其在大型（例如现实中）程序中。<br>&emsp;&emsp;为了帮助优化这个过程，堆上的每个对象被分配到一个特殊的”代”。代这个概念背后的想法很简单：<strong>对象在堆上存活的时间越长，接下来它继续存在的可能性也就越大，即较旧的对象生存期长，较新的对象生存期短。</strong>例如，实现 Main() 的对象一直在内存中，直到程序结束。相反，最近才被放到堆中的对象（例如在一个函数范围里分配的对象）很可能很快就不可达。<br>&emsp;&emsp;<strong>在堆上的每个对象属于以下的某一个代：</strong></p>
+<h1 id="理解对象的代-—-垃圾回收过程的优化"><a href="#理解对象的代-—-垃圾回收过程的优化" class="headerlink" title="理解对象的代 — 垃圾回收过程的优化"></a>理解对象的代 — 垃圾回收过程的优化</h1><p>&emsp;&emsp;在尝试找到不可达的对象时，CLR 并不是检查托管堆上的每个对象。很明显，这样做会消耗大量时间，尤其在大型（例如现实中）程序中。<br>&emsp;&emsp;为了帮助优化这个过程，堆上的每个对象被分配到一个特殊的”代”。代这个概念背后的想法很简单：<strong>对象在堆上存活的时间越长，接下来它继续存在的可能性也就越大，即较旧的对象生存期长，较新的对象生存期短。</strong>例如，实现 Main() 的对象一直在内存中，直到程序结束。相反，最近才被放到堆中的对象（例如在一个函数范围里分配的对象）很可能很快就不可达。  </p>
+<p>&emsp;&emsp;<strong>在堆上的每个对象属于以下的某一个代：</strong></p>
 <ul>
 <li><strong>Generation 0： 标识一个最近分配的还没有被标记为回收的对象</strong></li>
 <li><strong>Generation 1： 标识一个经历了一次垃圾回收而存活下来的对象（例如，他被标记为回收，但由于堆空间够用而没有被清除掉）</strong></li>
@@ -369,7 +372,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-10T13:07:04.633Z" itemprop="dateUpdated">2019-12-10 21:07:04</time>
+    最后更新时间：<time datetime="2019-12-10T13:19:40.848Z" itemprop="dateUpdated">2019-12-10 21:19:40</time>
 </span><br>
 
 
@@ -460,7 +463,7 @@ https://www.cnblogs.com/MaMaNongNong/p/11945161.html
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#不用程序员操心的堆-—-托管堆"><span class="post-toc-number">1.</span> <span class="post-toc-text">不用程序员操心的堆 — 托管堆</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CIL的new指令-—-垃圾回收的触发者"><span class="post-toc-number">2.</span> <span class="post-toc-text">CIL的new指令 — 垃圾回收的触发者</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#应用程序根的作用-—-区分不可到达的对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">应用程序根的作用 — 区分不可到达的对象</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#理解对象的代-—-垃圾回收过程的优化"><span class="post-toc-number">4.</span> <span class="post-toc-text">理解对象的代 — 垃圾回收过程的优化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#构建可终结对象-—-非托管资源处理第一式"><span class="post-toc-number">5.</span> <span class="post-toc-text">构建可终结对象 — 非托管资源处理第一式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#构建可处置对象-—-非托管资源处理第二式"><span class="post-toc-number">6.</span> <span class="post-toc-text">构建可处置对象 — 非托管资源处理第二式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#非托管资源最强模式-—-双剑合璧"><span class="post-toc-number">7.</span> <span class="post-toc-text">非托管资源最强模式 — 双剑合璧</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#不用程序员操心的堆-—-托管堆"><span class="post-toc-number">1.</span> <span class="post-toc-text">不用程序员操心的堆 — 托管堆</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CIL-的-new-指令-—-垃圾回收的触发者"><span class="post-toc-number">2.</span> <span class="post-toc-text">CIL 的 new 指令 — 垃圾回收的触发者</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#应用程序根的作用-—-区分不可到达的对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">应用程序根的作用 — 区分不可到达的对象</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#理解对象的代-—-垃圾回收过程的优化"><span class="post-toc-number">4.</span> <span class="post-toc-text">理解对象的代 — 垃圾回收过程的优化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#构建可终结对象-—-非托管资源处理第一式"><span class="post-toc-number">5.</span> <span class="post-toc-text">构建可终结对象 — 非托管资源处理第一式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#构建可处置对象-—-非托管资源处理第二式"><span class="post-toc-number">6.</span> <span class="post-toc-text">构建可处置对象 — 非托管资源处理第二式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#非托管资源最强模式-—-双剑合璧"><span class="post-toc-number">7.</span> <span class="post-toc-text">非托管资源最强模式 — 双剑合璧</span></a></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
