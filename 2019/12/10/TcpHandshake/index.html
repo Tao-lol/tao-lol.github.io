@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="Web">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-10T03:23:36.000Z" itemprop="datePublished" class="page-time">
+  2019-12-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-TcpHandshake"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-10 11:23:36" datetime="2019-12-10T03:23:36.000Z"  itemprop="datePublished">2019-12-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://mp.weixin.qq.com/s/OYNDJ9tzfZCIdPMyts2jtw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/OYNDJ9tzfZCIdPMyts2jtw</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="轻松了解-HTTP-协议"><a href="#轻松了解-HTTP-协议" class="headerlink" title="轻松了解 HTTP 协议"></a>轻松了解 HTTP 协议</h1><p>&emsp;&emsp;为什么要学习网络协议呢？为什么要学习计算机网络呢？显然这很重要，<strong>至少能够帮助你找到工作的原因之一</strong>，学习网络知识点太多太多，没有那么快就能记住。<br>&emsp;&emsp;理解的网络协议，应该从背景原理去着手。那么从现在开始请认真阅读了哦！适合人群，<strong>对计算机有相应的了解，入门软件技术的朋友</strong>。<br>&emsp;&emsp;从客户端发送请求，会是神马结果？<strong>正常情况的状态码为 2xx，错误的状态码为 4xx，或是 5xx 等情况。</strong><br>&emsp;&emsp;报错 404：<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="1.webp" title="报错404" data-fancybox="images"><img src="1.webp" alt="报错404"></a>  </p>
+<figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="2.webp" title="" data-fancybox="images"><img src="2.webp" alt title class></a>
+                <p></p>
+            </figure>  
+<p>&emsp;&emsp;了解 Web，了解网络基础，了解 HTTP 协议，如何使用 HTTP 协议访问 Web，我们在电脑中的浏览器 Web 页面是如何查询的，网页浏览器中的地址栏中输入 url 地址，就可以显示页面，这也是我们了解的常识。  </p>
+<h2 id="客户端、服务器"><a href="#客户端、服务器" class="headerlink" title="客户端、服务器"></a>客户端、服务器</h2><p>&emsp;&emsp;在浏览器中的地址栏内输入 URL，就可以看到 Web 页面，即是客户端在浏览器地址内输入 URL 之后，信息会被送到某处，然后从某处获得的回复，内容就会显示在 Web 页面上。<br>&emsp;&emsp;<strong>像这种通过发送请求获取服务器资源的 Web 浏览器等就叫做客户端</strong>。<br>&emsp;&emsp;我们所看到 Web 页面也不是凭空显示出来给我们看的，它是根据你在 Web 浏览器地址栏指定的 url 发送，Web浏览器从 Web 服务器获取文件资源等信息，然后在从服务器端返回在 Web 浏览器上显示出 Web 页面的。<br>&emsp;&emsp;抓住重点提炼：有两个主题，<strong>Web 浏览器作为客户端，一个为服务器，Web 浏览器通过指定的访问地址获取服务器上的资源，服务器使用 HTTP 协议的通信返回到 Web 浏览器。</strong><br>&emsp;&emsp;Web 是建立在 HTTP 协议上通信的，HTTP 为超文本传输协议作为规范（或是严谨说法，超文本转移协议），完成从客户端到服务器端等一系列工作流程，协议是指规则的约定。<br>&emsp;&emsp;抓住重点提炼：什么是客户端与服务端呢？简单来说，客户端就是个人使用的电脑，而服务器就是服务器，通过电脑访问服务器上的资源，用的就是 HTTP 网络协议。  </p>
+<h2 id="HTTP-协议"><a href="#HTTP-协议" class="headerlink" title="HTTP 协议"></a>HTTP 协议</h2><p>&emsp;&emsp;<strong>那么这里又问了什么是 HTTP 协议呢？</strong><br>&emsp;&emsp;HTTP 叫做超文本传输协议，它是 TCP/IP 协议的一个应用层协议，用于定义 Web 浏览器与 Web 服务器之间的交换数据的过程，客户端连上 web 服务器后，若想获得 web 服务器中的某个 web 资源，需要遵循一定的通讯格式，HTTP 协议用于定义客户端和 web 服务器端通讯的格式。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="3.webp" title=" " data-fancybox="images"><img src="3.webp" alt=" "></a><br>&emsp;&emsp;HTTP 的出现，在 1989 年，互联网是少数人的，为了致力于全世界的研究者们进行知识共享，诞生了 HTTP，有人提出了一种让远隔两地的研究者们共享知识的设想，借助多文档之间相互关联形成的超文本，连成可相互参阅的 WWW，万维网。<br>&emsp;&emsp;<strong>3项www构建技术分别是：</strong>  </p>
+<blockquote>
+<ul>
+<li>SGML：Standard Generalized Markup Language<br>标准通用标记语言  </li>
+<li>HTML：HyperText Markup Language<br>超文本标记语言  </li>
+<li>HTTP：HyperText Transfer Protocol<br>超文本传输协议  </li>
+<li>URL：Uniform Resource Locator<br>统一资源定位符  </li>
+</ul>
+</blockquote>
+<ol>
+<li><strong>把 SGML 作为页面的文本标记语言的 HTML</strong></li>
+<li><strong>作为文档传递协议的 HTTP</strong></li>
+<li><strong>指定文档所在地址的 URL</strong></li>
+</ol>
+<p>&emsp;&emsp;HTTP 是因特网的多媒体信使，每天有多少图片，页面，文件，电影，音频文件和其他资源都在因特网上面，HTTP 可以从遍布世界的 Web 服务器上将这些信息快速，可靠地移到人们的 Web 浏览器上。<br>&emsp;&emsp;Web 客户端和服务器，Web 内容存储在 Web 服务器上的，所使用的是 HTTP 协议，如果 HTTP 客户端发出请求，服务器会提供因特网中的数据，客户端向服务器发送 HTTP 请求，服务器会在 HTTP 响应中回送所请求的数据。<br>&emsp;&emsp;<strong>HTTP 客户端和 HTTP 服务器共同构成了万维网的基本组件。</strong><br>&emsp;&emsp;Web 服务器是 Web 资源的存储库，Web 资源是 Web 内容的源头，Web 资源可以包含任意内容，所有一切内容都是 Web 资源提供的。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="4.webp" title=" " data-fancybox="images"><img src="4.webp" alt=" "></a>  </p>
+<h2 id="URI-和-URL"><a href="#URI-和-URL" class="headerlink" title="URI 和 URL"></a>URI 和 URL</h2><p>&emsp;&emsp;每个 Web 服务器资源都是有一个名字的，因为这样客户端就可以选取它要的资源了，<strong>URI，服务器资源名，为统一资源标识符</strong>，URI 是名字一样，像因特网上的邮政地址，是世界范围内唯一的标识并定位信息资源。<strong>URI 分两种形式，为 URL 和 URN。</strong><br>&emsp;&emsp;<strong>URL 为统一资源定位符</strong>，是资源标识符最常见的形式，描述了一台特定服务器上某资源的特定位置，URN 为统一资源名，为大范围使用，它是作为特定内容的唯一名称使用的，与资源所在地无关。  </p>
+<h2 id="TCP-IP"><a href="#TCP-IP" class="headerlink" title="TCP/IP"></a>TCP/IP</h2><p>&emsp;&emsp;计算机与网络设备要相互通信，双方就必须基于相同的方法，不同的硬件、操作系统之间的通信，所有的这一切都需要一种规则。而我们就把这种规则称为<strong>协议(protocol)</strong>。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="5.webp" title=" " data-fancybox="images"><img src="5.webp" alt=" "></a><br>&emsp;&emsp;TCP/IP 是互联网相关各类协议族的总称。TCP/IP 是指 TCP 和 IP 这两种协议。TCP/IP 是在 IP 协议的通信过程中，使用到的协议族的统称。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="6.webp" title=" " data-fancybox="images"><img src="6.webp" alt=" "></a>  </p>
+<h1 id="TCP-IP-的分层管理"><a href="#TCP-IP-的分层管理" class="headerlink" title="TCP/IP 的分层管理"></a>TCP/IP 的分层管理</h1><p>&emsp;&emsp;TCP/IP 协议族按层次分别为 <strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>，<strong>物理层</strong>。<strong>可以按照不同的模型分 4 层或者是 7 层。</strong>  </p>
+<p>&emsp;&emsp;将 TCP/IP 分为 5 层，越靠下越接近硬件。  </p>
+<ul>
+<li><strong>应用层</strong>，应用程序收到传输层的数据后，接下来就是要进行解读，解读必须要先规定好格式，而应用层就是规定应用程序的数据格式，主要协议有 HTTP 等。</li>
+<li><strong>传输层</strong>，该层为两台主机上的应用程序提供端到端的通信，传输层有两个传输协议为 TCP（传输控制协议）和 UDP（用户数据报协议），TCP 是一个可靠的面向连接的协议，UDP 是不可靠或者说无连接的协议。</li>
+<li><strong>网络层</strong>，决定如何将数据从发送方到接收方，是建立主机到主机的通信。</li>
+<li><strong>数据链路层</strong>，控制网络层与物理层之间的通信，主要功能是保证物理线路上进行可靠的数据传递。</li>
+<li><strong>物理层</strong>，该层负责物理传输，与链路有关，也与传输的介质有关。</li>
+</ul>
+<figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="7.webp" title="" data-fancybox="images"><img src="7.webp" alt title class></a>
+                <p></p>
+            </figure>  
+<p>&emsp;&emsp;TCP/IP 协议分层之后，如果后期要对哪些地方进行设计修改，无需全部替换，只需要对变化的层进行替换即可。  </p>
+<p>&emsp;&emsp;我们按照 4 层来说明，TCP/IP 协议族按层次分别分为以下：<strong>应用层</strong>，<strong>传输层</strong>，<strong>网络层</strong>，<strong>数据链路层</strong>。  </p>
+<ul>
+<li><strong>应用层</strong>，应用层决定了向用户提供应用服务时通信的活动，如 FTP，文件传输协议和 DNS 服务，HTTP 协议处于应用层。</li>
+<li><strong>传输层</strong>，传输层对上层应用层，提供处于网络连接中的两台计算机之间的数据传输，有 TCP 传输控制协议和 UDP 用户数据报协议。</li>
+<li><strong>网络层</strong>，用来处理在网络上流动的数据包，规定哪条传输路线将数据包传送到对方计算机。</li>
+<li><strong>链路层</strong>，用来处理连接网络的硬件部分，包含操作系统，硬件的设备驱动，NIC 等。</li>
+</ul>
+<p>&emsp;&emsp;以上内容过于概念，了解加理解：<br>&emsp;&emsp;那他们之间又是怎么通信的呢？<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="8.webp" title=" " data-fancybox="images"><img src="8.webp" alt=" "></a>  </p>
+<figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="9.webp" title="" data-fancybox="images"><img src="9.webp" alt title class></a>
+                <p></p>
+            </figure>  
+<p>&emsp;&emsp;利用 TCP/IP 协议族进行网络通信时，会通过分层顺序与对方进行通信，<strong>发送端会从应用层往下走</strong>，即应用层（HTTP 客户端），传输层（TCP），网络层（IP），链路层（网络），而<strong>接收端则是从链路层往上走的</strong>。<br>&emsp;&emsp;发送端在层与层之间进行传输的时候，<strong>每经过一层必须被打上该层所属的首部信息</strong>，反之，接收端在接收数据时，每经过一层，就会把对应的首部去掉，这种把信息包装起来的做法叫做“封装”。<br>&emsp;&emsp;由图看文字内容，这个相信大家一定看懂的了。  </p>
+<p>&emsp;&emsp;传输层，TCP/UDP，传输控制协议和用户数据报协议，重点再说一次，<strong>TCP 是一种可靠的面向连接的协议</strong>，而 <strong>UDP 不是可靠的，或说是无连接的协议</strong>。<br>&emsp;&emsp;它们 TCP、UDP 都是传输层的协议，两个的区别是：<br>&emsp;&emsp;TCP 的可靠性是强的，它是可靠的，连接性，是面向连接的，报文，是面向字节流的，效率是，传输效率低，双工性，全双工，流量控制是滑动窗口，拥塞控制是慢开始，拥塞避免，快重传，快恢复的，传输速度是慢的，<strong>应用场景是对效率要求低，对准确性要求高或者要求有连接的场景</strong>。<br>&emsp;&emsp;UDP 的不是可靠的，无连接的，面向报文的，传输效率高的，一对一，一对多，多对一，多对多，流量控制，无，拥塞控制，无，但是传输速度是快的，<strong>应用场景是对效率要求高，对准确性要求低的</strong>。  </p>
+<h2 id="TCP-IP-分层的好处"><a href="#TCP-IP-分层的好处" class="headerlink" title="TCP/IP 分层的好处"></a>TCP/IP 分层的好处</h2><p>&emsp;&emsp;如果互联网只有一个协议通信，某个地方需要修改，那么就必须要整个全部换掉，但是分层之后，只是需要把变动的层替换就行了。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="10.webp" title=" " data-fancybox="images"><img src="10.webp" alt=" "></a>  </p>
+<h1 id="TCP-的三次握手与四次挥手"><a href="#TCP-的三次握手与四次挥手" class="headerlink" title="TCP 的三次握手与四次挥手"></a>TCP 的三次握手与四次挥手</h1><p>&emsp;&emsp;请看图，记住有三个箭头，四个对话框，就可以记住口诀：<br>&emsp;&emsp;三次握手与四次挥手：<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="11.webp" title=" " data-fancybox="images"><img src="11.webp" alt=" "></a>  </p>
+<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p>&emsp;&emsp;三次握手示意图：<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="12.webp" title="三次握手示意图" data-fancybox="images"><img src="12.webp" alt="三次握手示意图"></a><br>&emsp;&emsp;<strong>三次握手过程：</strong>  </p>
+<ol>
+<li>第一次握手是在建立连接，客户端发送连接请求报文段，<strong>把标有 SYN 的数据包发给服务器端即为接收端</strong>。</li>
+<li>第二次握手是服务器端即接收端收到客户端的SYN的报文段，<strong>同时发送标有 SYN/ACK 的数据包</strong>。</li>
+<li>第三次握手是客户端收到服务器端的 SYN/ACK 的数据包后，<strong>向服务器端发送标有 ACK 的数据包</strong>。</li>
+</ol>
+<p>&emsp;&emsp;上面的解释看图片一起理解会更好懂得，之间的传输数据。  </p>
+<p>&emsp;&emsp;TCP 的三次握手，那么你了解什么是 TCP 了吗？我相信有的人还记得，但是总会有人又忘记了，了解 TCP 头部报文，还有为什么是 TCP 的三次握手，而不是其他次数呢？在 TCP 三次握手过程中，有什么区别或者是说变化。<br>&emsp;&emsp;TCP，请记住中文名，传输控制协议，是一种面向连接的，可靠的，基于字节流的传输层通信协议，TCP 的头部报文，你了解吗？不了解即可百度。  </p>
+<h3 id="TCP-IP-TCP-的报文头"><a href="#TCP-IP-TCP-的报文头" class="headerlink" title="[TCP/IP] TCP 的报文头"></a>[TCP/IP] TCP 的报文头</h3><p>&emsp;&emsp;报文(message)是网络中交换与传输的数据单元，即站点一次性要发送的数据块。报文包含了将要发送的完整的数据信息，其长短很不一致，长度不限且可变。<br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="13.webp" title=" " data-fancybox="images"><img src="13.webp" alt=" "></a><br>&emsp;&emsp;让我们看看百度上面对“报文”的解释：  </p>
+<blockquote>
+<p><strong>报文的理解及作用</strong><br>&emsp;&emsp;报文就是在各个系统之间进行请求和响应时用来交换信息的，还需要遵守规定好的格式。<br>&emsp;&emsp;另外，应用报文多是多个系统之间需要通信的时候，比如银行的 ESB 系统到网关系统再到银联系统。在这中间报文就承担了装载数据，运输数据的功能，可能在这三个系统中报文的格式互不相同，但是承载的数据都是一样的。</p>
+</blockquote>
+<p>&emsp;&emsp;<strong>TCP 头部报文：</strong><br><a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="14.webp" title="TCP 头部报文" data-fancybox="images"><img src="14.webp" alt="TCP 头部报文"></a><br>&emsp;&emsp;<strong>source port</strong>，源端口号，指向本地端口<br>&emsp;&emsp;<strong>destination port</strong>，目的端口号，指向远程端口<br>&emsp;&emsp;源端口号即是发送端的，接收端是目的端口号，源端口号从发送端依据某种规定发送到接收端的目的端口号，不同的应用程序都有者不同的端口，因为发送端会发送很多源端口号，对应接收端很多对应规则的目的端口号。  </p>
+<p>&emsp;&emsp;Sequence Number，序列号<br>&emsp;&emsp;用于 TCP 通信过程中，分段序列进行字节流的传输，接收端会根据这个编号进行再排序确认。如排队每个人拿对应的号入口检查，进入后不会乱的就坐一样。  </p>
+<p>&emsp;&emsp;TCP有6种状态表示：</p>
+<ul>
+<li>SYN (建立联机) </li>
+<li>ACK (确认) </li>
+<li>PSH (传送) </li>
+<li>FIN (结束) </li>
+<li>RST (重置) </li>
+<li>URG (紧急)</li>
+</ul>
+<h3 id="分析-TCP-为啥三次握手"><a href="#分析-TCP-为啥三次握手" class="headerlink" title="分析 TCP 为啥三次握手"></a>分析 TCP 为啥三次握手</h3><p>&emsp;&emsp;首先客户端，服务端，TCP 三次握手：<br>&emsp;&emsp;握手过程中使用了 TCP 的标志，<strong>SYN 和 ACK</strong>。  </p>
+<ol>
+<li>初始化状态<br>客户端处于 close 关闭状态，服务器处于 Listen 监听状态。  </li>
+<li>第一次握手<br>客户端发送<strong>请求报文将 SYN=1 同步序列号和初始化 seq=x 发送给服务端</strong>，服务端从初始化状态，创建连接，等待客户端，确认接收后的状态为 SYN_Receive。这个时候<strong>客户端处于等待状态为 SYN_Send</strong>。  </li>
+<li>第二次握手<br>服务器接<strong>收到报文后（SYN=1，seq=x）</strong>收到请求后请求报文变为<strong>同步序列号 SYN=1，初始化序列号 seq=y，确认号 ACK=1，ack=x+1，服务器为 SYN_Receive 状态</strong>，发送端的状态为：SYN_Send。  </li>
+<li>第三次握手<br>客户端收到服务端的数据包（收到响应后），然后发送同步序列号 ack=y+1 和数据包的序列号 seq=x+1 和 ACK=1 确认包作为应答<strong>（第三次握手：ACK=1, seq=x+1, ack=y+1）</strong>，客户端和服务端变化为 established 状态。  </li>
+</ol>
+<p>&emsp;&emsp;发送三封信息给女朋友，这三次握手主要是为了验证我这边和女朋友那边的发送/收信能力是没有问题的，证明连接是通的，可以正式发送信息。  </p>
+<ol>
+<li>第一次握手，我发送信息，女朋友收到了，此时女朋友就知道，我发送信息的能力和她自己的收信能力是没问题的。  </li>
+<li>第二次握手，女朋友发送信息，我收到了，此时我明白，<strong>我的发送信息和接收信息是没有问题的</strong>，还是要进行第三次握手的，如果没有我的回音，女朋友还不知道自己的发送信息功能是否没有问题的。  </li>
+<li>第三次握手，我发送信息，女朋友收到了，此时女朋友也确认了，我们两者之间的发送和收信都是没有问题的。  </li>
+</ol>
+<h3 id="负责域名解析的-DNS-服务"><a href="#负责域名解析的-DNS-服务" class="headerlink" title="负责域名解析的 DNS 服务"></a>负责域名解析的 DNS 服务</h3><figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="15.webp" title="" data-fancybox="images"><img src="15.webp" alt title class></a>
+                <p></p>
+            </figure>  
+<p>&emsp;&emsp;DNS 服务和HTTP协议一样位于应用层。提供域名到 IP 地址之间的解析服务。DNS 协议提供通过域名查找 IP 地址，或逆向从 IP 地址反查域名的服务。<br>&emsp;&emsp;<strong>各种协议与 HTTP 协议的关系</strong></p>
+<figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="16.webp" title="各种协议与HTTP协议的关系" data-fancybox="images"><img src="16.webp" alt="各种协议与HTTP协议的关系" title class></a>
+                <p>各种协议与HTTP协议的关系</p>
+            </figure>  
+<p>&emsp;&emsp;当客户端和服务端通过三次握手建立了 TCP 连接以后，当数据传送完毕，断开连接就需要进行 TCP 的四次挥手。  </p>
+<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><p>&emsp;&emsp;四次挥手如下所示：</p>
+<figure class="image-box">
+                <a rel=TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？ href="17.wbp" title="四次挥手示意图" data-fancybox="images"><img src="17.wbp" alt="四次挥手示意图" title class></a>
+                <p>四次挥手示意图</p>
+            </figure>  
+<ul>
+<li>第一次挥手<br>客户端设置 seq 和 ACK ,向服务器发送一个 FIN=1 报文段。此时，<strong>（第一次挥手，FIN=1，seq=u）客户端进入 FIN_WAIT 状态</strong>，表示客户端没有数据要发送给服务端了。</li>
+<li>第二次挥手<br>服务端收到了客户端发送的 FIN 报文段，向客户端回了一个 ACK 报文段。</li>
+<li>第三次挥手<br>服务端向客户端发送 FIN 报文段，请求关闭连接，同时服务端进入 LAST_ACK 状态。</li>
+<li>第四次挥手<br>客户端收到服务端发送的 FIN 报文段后，向服务端发送 ACK 报文段,然后客户端进入 TIME_WAIT 状态。服务端收到客户端的 ACK 报文段以后，就关闭连接。此时，客户端等待 2MSL（指一个片段在网络中最大的存活时间）后依然没有收到回复，则说明服务端已经正常关闭，这样客户端就可以关闭连接了。</li>
+</ul>
+<blockquote>
+<p><strong>统一资源标识符</strong><br>&emsp;&emsp;URI 是 Uniform Resource Identifier 的缩写，规定统一的格式可方便处理多种不同类型的资源，而不用根据上下文 环境来识别资源指定的访问方式。<br>&emsp;&emsp;URL（Uniform Resource Locator，统一资源定位符），URL 正是使用 Web 浏览器等 访问 Web 页面时需要输入的网页地址。  </p>
+</blockquote>
+<p>参考资料：《图解HTTP》</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-10T06:06:32.164Z" itemprop="dateUpdated">2019-12-10 14:06:32</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/10/TcpHandshake/" target="_blank" rel="external">https://tao-lol.top/2019/12/10/TcpHandshake/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/10/TcpHandshake/&title=《TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/10/TcpHandshake/&title=《TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？》 — Blog&source=
+https://mp.weixin.qq.com/s/OYNDJ9tzfZCIdPMyts2jtw
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/09/FoundationsOfRestfulArchitecture/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">RESTful 架构基础</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#轻松了解-HTTP-协议"><span class="post-toc-number">1.</span> <span class="post-toc-text">轻松了解 HTTP 协议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#客户端、服务器"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">客户端、服务器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTP-协议"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">HTTP 协议</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#URI-和-URL"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">URI 和 URL</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP-IP"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">TCP/IP</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP-IP-的分层管理"><span class="post-toc-number">2.</span> <span class="post-toc-text">TCP/IP 的分层管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP-IP-分层的好处"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">TCP/IP 分层的好处</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TCP-的三次握手与四次挥手"><span class="post-toc-number">3.</span> <span class="post-toc-text">TCP 的三次握手与四次挥手</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三次握手"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">三次握手</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TCP-IP-TCP-的报文头"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">[TCP/IP] TCP 的报文头</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分析-TCP-为啥三次握手"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">分析 TCP 为啥三次握手</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#负责域名解析的-DNS-服务"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">负责域名解析的 DNS 服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四次挥手"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">四次挥手</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/10/TcpHandshake/&title=《TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/10/TcpHandshake/&title=《TCP 的 “三次握手” 和“四次挥手”，到底是什么鬼？》 — Blog&source=
+https://mp.weixin.qq.com/s/OYNDJ9tzfZCIdPMyts2jtw
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3aOW7EMBAF0bn/peXEgRNqqn9LBtgsRcZACx8DurfPB1/X4iL3//1l9bbVUw9fMmTI2JZx3V5kWf2N4OAlVYYMGQcwVh/m91Sf4ttHvitDhgwZ96++D+l4QNnZPhkyZMggBysPKLMwUYYMGTKqr+bHbpasvpiLy5AhY0MGL5b9/9+v9DdkyJCxFeMqXryIxn/prOf3PTJkyBjN4Adcdczi4VIa2DIZMmTMZmS33iex/dGKKkyGDBknMKplMh728fZnNSRFXQ4ZMmRszuBpZ5a+8jCuddTKkCFjNCNrYWZHZ5bKkq/IkCHjBAYpipGHebmfl9taAxYyZMgYwagutzoK1n8PChxlyJAxmpE1BrLSf/U45muQIUPGCYwsoiSpaXX8K2tUyJAhYzYjG9LKFtfJsL+sQYYMGaMZ1VCPl8yqdbCsnBf2N2TIkLEtg88w8HENngBngakMGTJOYLwX9oXjEXgly/6GDBkyxjHIeVwtivFW5f23eNgqQ4aMExjZ0ck7ouT9JD0Oa4cyZMgYx6h+LDte+6EkysVlyJAxmvHGgEUhBeWVQh6lypAhY1vGVbz6hbms2fllE2XIkDGakR12VV4nNZUhQ4aMLNXkqWyneVl9SoYMGScwnko4Cbia+qL/FTJkyJBRHIko1/zA/V+2VYYMGTL466JFZIkuamHKkCFjECMbLe0EiLz/iI5vGTJkjGY8m5rykYtsIzrjGjJkyNiQ8QNGcCy6xUs60wAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
