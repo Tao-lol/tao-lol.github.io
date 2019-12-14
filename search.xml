@@ -3,6 +3,256 @@
   
     
     <entry>
+      <title><![CDATA[使用 .NET Core 创建 Windows 服务]]></title>
+      <url>/2019/12/14/CreatingWindowsServicesInDotNetCore/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>原文：</p>
+<ul>
+<li>Part 1 - The “Microsoft” Way: <a href="https://dotnetcoretutorials.com/2019/09/19/creating-windows-services-in-net-core-part-1-the-microsoft-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/09/19/creating-windows-services-in-net-core-part-1-the-microsoft-way/</a>  </li>
+<li>Part 2 - The “Topshelf” Way: <a href="https://dotnetcoretutorials.com/2019/09/27/creating-windows-services-in-net-core-part-2-the-topshelf-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/09/27/creating-windows-services-in-net-core-part-2-the-topshelf-way/</a>  </li>
+<li>Part 3 – The “.NET Core Worker” Way: <a href="https://dotnetcoretutorials.com/2019/12/07/creating-windows-services-in-net-core-part-3-the-net-core-worker-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/12/07/creating-windows-services-in-net-core-part-3-the-net-core-worker-way/</a></li>
+</ul>
+<p>作者：Dotnet Core Tutorials<br>译者：Lamond Lu  </p>
+<p>译文：</p>
+<ul>
+<li>Part 1 - 使用官方推荐方式: <a href="https://www.cnblogs.com/lwqlun/p/11621186.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/11621186.html</a>  </li>
+<li>Part 2 - 使用 Topshelf 方式: <a href="https://www.cnblogs.com/lwqlun/p/11625789.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/11625789.html</a>  </li>
+<li>Part 3 - 使用 .NET Core 工作器方式: <a href="https://www.cnblogs.com/lwqlun/p/12038062.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/12038062.html</a>  </li>
+</ul>
+</blockquote>
+<a id="more"></a>
+
+<figure class="image-box">
+                <img src="65831-20191005211343706-2050001309.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="使用官方推荐方式"><a href="#使用官方推荐方式" class="headerlink" title="使用官方推荐方式"></a>使用官方推荐方式</h1><p>&emsp;&emsp;创建 Windows 服务来运行批处理任务或者运行后台任务，是一种非常常见的模式，但是由于云服务（Amazon Lambda, Azure WebJobs 以及 Azure Functions）的激增，你可能不会经常使用 Windows 服务了。个人而言，我非常喜欢使用 Azure WebJobs，因为我可以直接编写一个控制台程序，而不需要考虑如何云中运行它，一个批处理文件可以将其装换成一个自动化任务，并且可以保证 7 * 24 小时的运行。<br>&emsp;&emsp;但是也许你还没有使用云服务，或者你有一堆要作为 Windows 服务运行的旧版应用程序需要转换为 .NET Core，但是不能完全将他们转换为 “ 无服务器 ”（serverless）应用。 那么这边文章就是适合你的。<br>&emsp;&emsp;在许多方面，.NET Core 中的 Windows 服务和 .NET Framework 中的 Windows 服务完全相同。但是，在编写服务的时候，你可能会遇到一些小问题。此外，本文中，我们仅介绍 “ Microsoft ” 方式的 Windows 服务创建，在后续，我会继续介绍如何使用第三方库 TopShelf 来简化这个过程。  </p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>&emsp;&emsp;由于 Visual Studio 没有提供创建 Windows 服务的模板，所以我们需要通过创建控制台程序的方式来创建一个 Windows 服务。<br>创建完成之后，我们需要安装一个 Nuget 程序包，这个程序包会将一些 Windows 特定的 API 添加到 .NET Core 中，这些 API 实际上已经在完整框架中提供了，但是其中许多是 Windows 特有的，例如 Windows 服务。因此, 它们并没有包含在 .NET Core 的基础库中，但是可以通过将 Nuget 程序包的方式引入到 .NET Core 中。<br>&emsp;&emsp;下面我们就可以在 Package Manager Console 中输入以下命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Windows.Compatibility</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>&emsp;&emsp;以上引入的 Nuget 程序包中，最让我们感兴趣的是 <code>ServiceBase</code> 类。这是一个用于编写 Windows 服务的基类，它提供了一系列的事件钩子，包含服务启动、结束、暂停等。<br>&emsp;&emsp;下面呢，我们将在代码中创建一个类，这个类负责将一些简单的日志输出到一个临时文件中。我们将使用这个例子来了解其中的原理。我们的代码如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">LoggingService</span> : <span class="title">ServiceBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> _logFileLocation = <span class="string">@"C:\temp\servicelog.txt"</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Log</span>(<span class="params"><span class="keyword">string</span> logMessage</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Directory.CreateDirectory(Path.GetDirectoryName(_logFileLocation));</span><br><span class="line">        File.AppendAllText(_logFileLocation, DateTime.UtcNow.ToString() + <span class="string">" : "</span> + logMessage + Environment.NewLine);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnStart</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Log(<span class="string">"Starting"</span>);</span><br><span class="line">        <span class="keyword">base</span>.OnStart(args);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnStop</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Log(<span class="string">"Stopping"</span>);</span><br><span class="line">        <span class="keyword">base</span>.OnStop();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPause</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Log(<span class="string">"Pausing"</span>);</span><br><span class="line">        <span class="keyword">base</span>.OnPause();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;所以这里你会注意到，我们的类是继承了 <code>ServiceBase</code> 类，并且我们重写了几个事件方法，输出了一些日志。在服务启动时，会触发 <code>OnStart</code> 事件，在服务终止的时候，会触发 <code>OnStop</code> 事件。这里我们不应该将过于繁重的任务放置在 <code>OnStart</code> 事件中来处理。<br>&emsp;&emsp;如果我们想从 <code>Main</code> 方式中启动这个服务，代码非常的简单。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ServiceBase.Run(<span class="keyword">new</span> LoggingService());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;以上就是全部代码。  </p>
+<h2 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h2><p>&emsp;&emsp;在发布服务的时候，我们不可能仅依靠 Visual Studio 来构建我们所需要的服务，我们还需要专门针对 Windows 运行时进行构建。为此，我们需要在项目根目录的命令提示符下运行以下命令。注意，这里我们传入了一个 <code>-r</code> 标记来告诉它要构建那个平台。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish -r win-x64 -c Release</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;命令运行完毕之后，我们可以检查以下 <code>/bin/release/netcoreappX.X/publish</code> 目录，我们可以找到所有的发布代码，但是最重要的是，这里我们可以得到一个可执行的 exe 文件。如果我们不指定运行时，我们只会获得一个 .NET Core 的 dll 程序集，使用这个程序集，我们是没有办法创建 Windows 服务的。<br>&emsp;&emsp;现在我们可以将这个发布目录移动带其他的任何地方，但是现在我们就暂时使用当前的发布目录。<br>&emsp;&emsp;下一步，我们需要使用管理员角色打开一个命令提示符，然后输入一下命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create TestService BinPath=C:\full\path\to\publish\dir\WindowsServiceExample.exe</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<code>SC</code> 命令是一个标准的 Windows 命令（与 .NET Core 无关），它可以用来安装 Windows 服务。这里我们将我们的测试服务命名为 <code>TestService</code>，更重要的是，我们通过 <code>BinPath</code> 参数指定了可执行 exe 文件。<br>&emsp;&emsp;运行之后，我们应该会得到以下结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[SC] CreateService SUCCESS</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后我们要做的就是启动服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc start TestService</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们可以查看一下我们的日志文件，查看服务的运行情况。<br>&emsp;&emsp;如果想要停止并删除服务，我们可以使用一下命令。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sc stop TestService</span><br><span class="line">sc delete TestService</span><br></pre></td></tr></table></figure>
+
+<h2 id="服务调试"><a href="#服务调试" class="headerlink" title="服务调试"></a>服务调试</h2><p>&emsp;&emsp;在这里，我真的认为，使用 “ Microsoft “ 的方式注定会失败。因为调试服务实在是太繁琐了。<br>&emsp;&emsp;首先，我们将 <code>ServiceBase</code> 中重写的方法设置为受保护，这意味着我们无法在类之外访问它们，这使得调试它们变得更加困难。这里我发现最好的方法是为每个事件提供一个 public 方法, 并在受保护方法中调用这些 public 方法来完成功能，这虽然有点混乱，</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnStartPublic</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Log(<span class="string">"Starting"</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnStart</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    OnStartPublic(args);</span><br><span class="line">    <span class="keyword">base</span>.OnStart(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;但是至少我们可以做如下了事情了。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> loggingService = <span class="keyword">new</span> LoggingService();</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">true</span>)   <span class="comment">//Some check to see if we are in debug mode (Either #IF Debug etc or an app setting)</span></span><br><span class="line">    &#123;</span><br><span class="line">        loggingService.OnStartPublic(<span class="keyword">new</span> <span class="keyword">string</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//Just spin wait here. </span></span><br><span class="line">            Thread.Sleep(<span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Call stop here etc. </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        ServiceBase.Run(<span class="keyword">new</span> LoggingService());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;你的另一个选择是，在调试模式下进行项目发布，安装服务，然后附加调试器。实际上，这是 Microsoft 建议你使用的方式，但是我认为这简直一团糟。  </p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>&emsp;&emsp;实际上，我们可以在这里做一些其他非常有用的事情， 比如我们可以通过创建一个 install.bat 批处理文件来为我们运行 SC Create 命令。但我认为，上面我们看到的调试问题，已经让我不再想使用这种方式了。幸运的是，有一个名为 <code>Topshelf</code> 的库可以帮助我们减轻很多麻烦，在本系列的下一部分中，我们将研究如何它。  </p>
+<h1 id="使用-Topshelf-方式"><a href="#使用-Topshelf-方式" class="headerlink" title="使用 Topshelf 方式"></a>使用 Topshelf 方式</h1><p>&emsp;&emsp;在前一篇文章中，我给大家介绍了，如何基于微软推荐方式使用 .NET Core 创建 Windows 服务。我们发现使用这种方式，我们很容易就可以搭建和运行一个 Windows 服务，但是问题是使用这种方式，代码调试将非常困难。<br>&emsp;&emsp;那么现在就是 <code>Topshelf</code> 出场的时候了。<code>Topshelf</code> 是一个 .NET Standard 库，它消除了在 .NET Framework 和 .NET Core 中创建 Windows 服务的那些麻烦。  </p>
+<h2 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h2><p>&emsp;&emsp;与微软推荐方式类似，这里 Visual Studio 并没有提供一个基于 <code>Topshelf</code> 创建 Windows 服务的模板，所以我们依然需要通过创建普通控制台程序的方式，来创建一个 Windows 服务。<br>&emsp;&emsp;然后，我们需要通过 Package Manager Console，运行以下命令，安装 <code>Topshelf</code> 类库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Topshelf</span><br></pre></td></tr></table></figure>
+
+<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><p>&emsp;&emsp;下面我们就来使用 <code>Topshelf</code> 重构之前的服务代码。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoggingService</span> : <span class="title">ServiceControl</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> _logFileLocation = <span class="string">@"C:\temp\servicelog.txt"</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Log</span>(<span class="params"><span class="keyword">string</span> logMessage</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Directory.CreateDirectory(Path.GetDirectoryName(_logFileLocation));</span><br><span class="line">        File.AppendAllText(_logFileLocation, </span><br><span class="line">            DateTime.UtcNow.ToString() + <span class="string">" : "</span> + logMessage + Environment.NewLine);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">Start</span>(<span class="params">HostControl hostControl</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Log(<span class="string">"Starting"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">Stop</span>(<span class="params">HostControl hostControl</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Log(<span class="string">"Stopping"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;代码看起来是不是很简单？<br>&emsp;&emsp;这里我们的服务类继承了 <code>ServiceControl</code> 类（实际上并不需要，但是这可以为我们的工作打下良好的基础）。我们必须实现服务开始和服务结束两个方法，并且像以前一样记录日志。<br>&emsp;&emsp;在 <code>Program.cs</code> 文件的 <code>Main</code> 方法中，我们要写的代码也非常的简单。我们可以直接使用 <code>HostFactory.Run</code> 方法来启动服务。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HostFactory.Run(x =&gt; x.Service&lt;LoggingService&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这看起来真是太简单了。但这并不是 <code>HostFactory</code> 类的唯一功能。这里我们还可以设置</p>
+<ul>
+<li>服务的名称</li>
+<li>服务是否自动启动</li>
+<li>服务崩溃之后的重启时间</li>
+</ul>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    HostFactory.Run(x =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            x.Service&lt;LoggingService&gt;();</span><br><span class="line">            x.EnableServiceRecovery(r =&gt; r.RestartService(TimeSpan.FromSeconds(<span class="number">10</span>)));</span><br><span class="line">            x.SetServiceName(<span class="string">"TestService"</span>);</span><br><span class="line">            x.StartAutomatically();</span><br><span class="line">         &#125;</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里其实能说的东西很多，但是我建议你还是自己去看看 <code>Topshelf</code> 的文档，学习一下其他的配置选项。基本上你能使用 Windows 命令行完成的所有操作，都可以使用代码来设置：<a href="https://topshelf.readthedocs.io/en/latest/configuration/config_api.html" target="_blank" rel="noopener">https://topshelf.readthedocs.io/en/latest/configuration/config_api.html</a>  </p>
+<h2 id="部署服务"><a href="#部署服务" class="headerlink" title="部署服务"></a>部署服务</h2><p>&emsp;&emsp;和之前一样，我们需要针对不同的 Windows 环境发布我们的服务。在 Windows 命令提示符下，我们可以在项目目录中执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish -r win-x64 -c Release</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们就可以查看一下 <code>bin\Release\netcoreappX.X\win-x64\publish</code> 目录，我们会发现一个编译好的 exe，下面我们就会使用这个文件来安装服务。<br>&emsp;&emsp;在上一篇文章中，我们是使用 <code>SC</code> 命令来安装 Windows 服务的。使用 <code>Topshelf</code> 我们就不需要这么做了，<code>Topshelf</code> 提供了自己的命令行参数来安装服务。基本上使用代码能完成的配置，都可以使用命令行来完成。<br>&emsp;&emsp;你可以查看相关的文档：<a href="http://docs.topshelf-project.com/en/latest/overview/commandline.html" target="_blank" rel="noopener">http://docs.topshelf-project.com/en/latest/overview/commandline.html</a> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WindowsServiceExample.exe install</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里 <code>WindowsServiceExample.exe</code> 是我发布之后的 exe 文件。运行以上命令之后，服务应该就正常安装了！这里有一个小问题，我经常发现，即使配置了服务自动启动，但是服务安装之后，并不会触发启动操作。所有在服务安装之后，我们还需要通过以下命令来启动服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WindowsServiceExample.exe start</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>&emsp;&emsp;在生产环境部署的时候，我的经验是在安装服务之后，等待 10 秒钟，再启动服务。</p>
+</blockquote>
+<h2 id="调试服务"><a href="#调试服务" class="headerlink" title="调试服务"></a>调试服务</h2><p>&emsp;&emsp;当我们是使用微软推荐方式的时候，我们会遇到了调试困难的问题。大多数情况下，无论是否在服务内部运行，我们都不得不使用命令行标志、<code>#IF DEBUG</code> 指令或者配置值来实现调试。然后使用 Hack 的方式在控制台程序中模拟服务。<br>&emsp;&emsp;因此，这就是为什么我们要使用 <code>Topshelf</code>。<br>&emsp;&emsp;如果我们的服务代码已经在 Visual Studio 中打开了，我们就可以直接启动调试。<code>Topshelf</code> 会模拟在控制台中启动服务。我们应该能在控制台中看到以下的消息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The TestService service is now running, press Control+C to exit.</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这确实符合了我们的需求。它启动了我们的服务，并像真正的 Windows 服务一样在后台运行。我们可以像往常一样设置断点，基本上它遵循的流程和正常安装的服务一样。<br>&emsp;&emsp;我们可以通过 ctrl+c，来关闭我们的应用，但是在运行服务执行 Stop 方法之前，它是不能被关闭的，这使我们可以调试服务的关闭流程。与调试指令和配置标志相比，这要容易的多。<br>&emsp;&emsp;这里需要注意一个问题。如果你收到的以下内容的消息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The TestService service is running and must be stopped before running via the console</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这意味着你尝试调试的服务实际上已经作为 Windows 服务被安装在系统中了，你需要停止（不需要卸载）这个正在运行的服务，才可以正常调试。</p>
+<h2 id="后续-1"><a href="#后续-1" class="headerlink" title="后续"></a>后续</h2><p>&emsp;&emsp;在上一篇中，有读者指出 .NET Core 中实际上已经提供了一种完全不同的方式运行 Windows 服务。它的实质是利用了 ASP.NET Core 中引入的 “ 托管服务 ” 模型，并允许它们作为 Windows 服务来运行，这真的是非常的棒。</p>
+<h1 id="使用-NET-Core-工作器方式"><a href="#使用-NET-Core-工作器方式" class="headerlink" title="使用 .NET Core 工作器方式"></a>使用 .NET Core 工作器方式</h1><h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><p>&emsp;&emsp;这里首先你要确保你已经安装了 .NET Core 3.0 或以上版本。在我编写这篇文章的时候，.NET Core 3.1 刚刚发布，Visual Studio 应该会提示你升级到最新版本。但是如果你想要在 .NET Core 2.x 项目中使用这个方式，应该是行不通的。<br>&emsp;&emsp;如果你喜欢使用命令行创建项目，你就需要使用工作器（worker）类型创建项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new worker</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;如果你是一个和我一样喜欢使用 Visual Studio 的开发人员，那么你可以在 Visual Studio 中使用项目模板完成相同的功能。</p>
+<figure class="image-box">
+                <img src="65831-20191214083435124-1006535101.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;这样做将创建出一个包含两个文件的项目。其中 <code>Program.cs</code> 文件是应用的启动 “ 引导程序 ” 。另外一个文件是 <code>worker.cs</code> 文件，在这个文件中，你可以编写你的服务逻辑。<br>&emsp;&emsp;这看起来应该是相当的容易，但是为这个程序添加额外的并行后台服务，你还需要添加一个类，并让它继承 <code>BackgroundService</code> 类：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyNewBackgroundWorker</span> : <span class="title">BackgroundService</span></span><br><span class="line">&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> Task <span class="title">ExecuteAsync</span>(<span class="params">CancellationToken stoppingToken</span>)    </span></span><br><span class="line"><span class="function"></span>    &#123;        </span><br><span class="line">        <span class="comment">//Do something.     </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在 <code>Program.cs</code> 中，我们要做的只是把当前的 Worker 注册到服务集合（Service Collection）中即可。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">    services.AddHostedService&lt;MyNewBackgroundWorker&gt;();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;实际上作为 “ 后台服务 ” 任务的运行程序，<code>AddHostedService</code> 方法已经在框架中存在了很长时间了。在之前我们已经完成的一篇关于<a href="https://dotnetcoretutorials.com/2019/01/13/hosted-services-in-asp-net-core/" target="_blank" rel="noopener"> ASP.NET Core 托管服务</a>的文章， 但是在当时场景中，我们托管是是整个应用，而非一个在你应用程序幕后运行的东西。  </p>
+<h2 id="运行-调试我们的应用"><a href="#运行-调试我们的应用" class="headerlink" title="运行 / 调试我们的应用"></a>运行 / 调试我们的应用</h2><p>&emsp;&emsp;在默认的工作器（worker）模板中，已经包含了一个后台服务，这个服务可以将当前时间输出到控制台窗口。下面让我们点击 F5 来运行程序，看看我们能得到什么。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">info: CoreWorkerService.Worker[0]      </span><br><span class="line">      Worker running at: 12/07/2019 08:20:30 +13:00</span><br><span class="line">info: Microsoft.Hosting.Lifetime[0]      </span><br><span class="line">      Application started. Press Ctrl+C to shut down.</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在我们启动程序之后，程序立刻就运行了！我们可以保持控制台的打开状态来调试应用，或者直接关闭窗口退出。相较于使用 “ Microsoft “ 方式来调试一个 Windows 服务，这简直就是天堂。<br>&emsp;&emsp;这里我们需要注意的另外一件事情是编写控制台程序的平台。在最后，我们不仅在控制台窗口输出了时间，还通过依赖注入创建了一个托管 worker。我们也可以使用依赖注入容器来注入仓储，配置环境变量，获取配置等。<br>&emsp;&emsp;但这里我们还没有做的事情是，将这个应用转换为 Windows 服务。  </p>
+<h2 id="将我们的应用转换成-Windows-服务"><a href="#将我们的应用转换成-Windows-服务" class="headerlink" title="将我们的应用转换成 Windows 服务"></a>将我们的应用转换成 Windows 服务</h2><p>&emsp;&emsp;为了将应用转换成 Windows 服务，我们需要使用如下命令引入一个包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Extensions.Hosting.WindowsServices</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;下一步，我们需要修改 <code>Program.cs</code> 文件，添加 <code>UseWindowsService()</code> 方法的调用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span> =&gt; </span><br><span class="line">    Host.CreateDefaultBuilder(args)    </span><br><span class="line">        .ConfigureServices((hostContext, services) =&gt;    </span><br><span class="line">        &#123;        </span><br><span class="line">            services.AddHostedService&lt;Worker&gt;();   </span><br><span class="line">         &#125;)</span><br><span class="line">         .UseWindowsService();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;以上就是所有需要变更的代码。<br>&emsp;&emsp;运行我们的程序，你会发现和之前的效果完全样。但是这里最大的区别是，我们可以将当前应用以 Windows 服务的形式安装了。<br>&emsp;&emsp;为了实现这一目的，我们需要发布当前项目。在当前项目目录中，我们可以运行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish -r win-x64 -c Release</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后我们就可以借助标准的 Windows 服务安装器来安装当前服务了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create TestService BinPath=C:\full\path\to\publish\dir\WindowsServiceExample.exe</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当前，你也可以使用 Windows 服务安装器的其他命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc start TestServicesc stop TestServicesc delete TestService</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;最后检查一下我们的服务面板。</p>
+<figure class="image-box">
+                <img src="65831-20191214083446395-754761263.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;服务已经正常工作了。</p>
+<h2 id="在-Linux-中运行服务"><a href="#在-Linux-中运行服务" class="headerlink" title="在 Linux 中运行服务"></a>在 Linux 中运行服务</h2><p>&emsp;&emsp;老实说，我没有太多的Linux经验，但是终归是需要了解一下…<br>&emsp;&emsp;在 Linux 系统中, 如果你希望我们编写的 “ Windows ” 服务在 Linux 系统中作为服务运行，你需要做以下 2 步：</p>
+<ul>
+<li>使用 <code>Microsoft.Extensions.Hosting.Systemd</code> 替换之前的 <code>Microsoft.Extensions.Hosting.WindowsServices</code>。</li>
+<li>使用 <code>UseSystemd()</code> 替换 <code>UseWindowsService()</code>。</li>
+</ul>
+<h1 id="Microsoft-vs-Topshelf-vs-NET-Core-Workers"><a href="#Microsoft-vs-Topshelf-vs-NET-Core-Workers" class="headerlink" title="Microsoft vs Topshelf vs .NET Core Workers"></a>Microsoft vs Topshelf vs .NET Core Workers</h1><p>&emsp;&emsp;到现在为止，我们已经介绍了借助 3 种不同的方式来创建 Windows 服务。<br>&emsp;&emsp;你可能会问 “ 好吧，那我到底应该选择哪一种 ？”<br>&emsp;&emsp;这里呢，我们可以首先把 “ Microsoft “ 这种老派学院式的方式抛弃。以为它的调试实在是太麻烦了，而且没有什么实际的用处。<br>&emsp;&emsp;然后剩下的就是 <code>Topshelf</code> 和 .NET Core 工作器两种方式了。在我看来，.NET Core 工作器，已经很好的融入 .NET Core 生态系统，如果你正在开发 ASP.NET Core 应用，那么使用 .NET Core 工作器就很有意义。最重要的是，当你创建一个后台服务的时候，你可以让它在一个 ASP.NET Core 网站中的任意位置运行，这非常的方便。但是缺点是安装。你必须使用 <code>SC</code> 命令来安装服务。这一部分 <code>Topshelf</code> 可能更胜一筹。<br>&emsp;&emsp;<code>Topshelf</code> 总体上将非常的友好，并且具有最好的安装方式，但是使用额外的库，也增加了学习的成本。<br>&emsp;&emsp;所以 <code>Topshelf</code> 和 .NET Core 工作器，大家可以自行选择，都是不错的方案。  </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> dotNET </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[I/O 中断原理]]></title>
+      <url>/2019/12/14/IOInterruptionPrinciple/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.cnblogs.com/Jack-Blog/p/12038716.html" target="_blank" rel="noopener">https://www.cnblogs.com/Jack-Blog/p/12038716.html</a></p>
+</blockquote>
+<p>&emsp;&emsp;本篇文章会对中断操作的原理进行说明。  </p>
+<a id="more"></a>
+
+<h1 id="什么是中断"><a href="#什么是中断" class="headerlink" title="什么是中断"></a>什么是中断</h1><p>&emsp;&emsp;中断指当出现需要时，CPU 暂时停止当前程序的执行转而执行处理新情况的程序和执行过程。即在程序运行过程中，系统出现了一个必须由 CPU 立即处理的情况，此时，CPU 暂时中止程序的执行转而处理这个新的情况的过程就叫做中断。<br>&emsp;&emsp;我们知道 CPU 是按指令顺序进行执行的，操作系统每过大约 15ms 会发生一次线程调度（Windows 下），根据线程优先级先调度优先级高的线程。但是实际情况并没有那么简单，若我们接收到一个网络请求，如果要等当前线程执行完或 15ms 线程调度之后才去处理网络请求，网卡缓冲区很有可能会被占满，此时就发生了丢包。  </p>
+<h1 id="中断类型"><a href="#中断类型" class="headerlink" title="中断类型"></a>中断类型</h1><p>&emsp;&emsp;中断分为硬件中断和软件中断。</p>
+<h2 id="硬件中断"><a href="#硬件中断" class="headerlink" title="硬件中断"></a>硬件中断</h2><p>&emsp;&emsp;硬件中断即为硬件发出的中断信号，如 I/O 中断和硬件失效中断。</p>
+<ul>
+<li>I/O 中断：由 I/O 控制器产生，用于发送信号通知操作完成等信号。</li>
+<li>硬件失效中断：如掉电或存储器奇偶错之类的故障。</li>
+</ul>
+<h2 id="软件中断"><a href="#软件中断" class="headerlink" title="软件中断"></a>软件中断</h2><p>&emsp;&emsp;软件中断即为非硬件发出的中断信号，如程序中断和时钟中断。</p>
+<ul>
+<li>程序中断：一些指令产生的异常（如算数移除、除数为 0 等）。</li>
+<li>时钟中断：由处理器内部的计时器产生，允许操作系统以一定规程执行函数。<blockquote>
+<p>&emsp;&emsp;我们提到了操作系统每过大约 15ms 会进行一次线程调度，就是利用时钟中断来实现的。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="I-O中断流程"><a href="#I-O中断流程" class="headerlink" title="I/O中断流程"></a>I/O中断流程</h1><p>&emsp;&emsp;本篇文章还是主要解释前几篇文章提到的 I/O 中断进行解释说明，因此仅以 I/O 中断举例，但是中断的原理和流程都是相似的。<br>&emsp;&emsp;I/O 中断通过中断处理器执行中断操作。当外部设备的 I/O 模块准备好时，它会发送给 CPU 一个中断信号，CPU 则会 “ 立即 ” 做出响应，暂停当前程序的处理去服务该 I/O 设备的程序。</p>
+<blockquote>
+<p>&emsp;&emsp;也可能不是立即，比如同时存在多个中断，则根据实际的中断算法决定，是按中断先后顺序执行中断操作，还是按中断优先级执行。<br>&emsp;&emsp;I/O 中断时硬件中断，需要硬件支持来接收中断信号。</p>
+</blockquote>
+<h2 id="无中断"><a href="#无中断" class="headerlink" title="无中断"></a>无中断</h2><p>&emsp;&emsp;为了更好的说明中断带来的性能提升，我们先描述一下没有中断时程序如何处理 I/O 操作。</p>
+<figure class="image-box">
+                <img src="580757-20191214121306882-165841570.png" alt title class>
+                <p></p>
+            </figure>
+
+<ul>
+<li><p>当我们程序需要从硬盘读取一个文件时，会先检查内核缓存中是否有数据，若没有数据，则执行实际 I/O 操作。在 I/O 操作执行时，我们的用户线程将阻塞等待数据从硬盘写到内存中。对于用户来说线程是被阻塞的。</p>
+</li>
+<li><p>在实际的 I/O 操作过程中，若没有中断操作，CPU 会不断轮询检查 I/O 操作是否完成，若 I/O 操作没有完成则继续调度其他线程，过一会儿再来检查。若操作完成，CPU 将线程加入到线程就绪队列中并恢复线程上下文信息。</p>
+</li>
+<li><p>线程处于就绪队列，可以被操作系统调度从而继续执行读操作，此时会将数据从操作系统内核缓存读取到用户缓存中。</p>
+<h2 id="有中断"><a href="#有中断" class="headerlink" title="有中断"></a>有中断</h2><figure class="image-box">
+                <img src="580757-20191214121702241-973799984.png" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>当我们程序需要从硬盘读取一个文件时，会先检查内核缓存中是否有数据，若没有数据，则执行实际 I/O 操作。在 I/O 操作执行时，我们的用户线程将阻塞等待数据从硬盘写到内存中。对于用户来说线程是被阻塞的。</p>
+</li>
+<li><p>在实际的 I/O 操作过程中，CPU 向 I/O 模块（DMA 控制器）发送读指令，然后就去调度其他线程。</p>
+</li>
+<li><p>当 I/O 模块（DMA 控制器）I/O 执行完成后，会产生中断信号在通知 CPU，CPU 将线程加入到线程就绪队列中并恢复线程上下文信息。</p>
+</li>
+<li><p>线程处于就绪队列，可以被操作系统调度从而继续执行读操作，此时会将数据从操作系统内核缓存读取到用户缓存中。</p>
+</li>
+</ul>
+<p>&emsp;&emsp;由此可知，有中断还是没有中断对于用户来说线程都是阻塞的，对于操作系统内核来说通过中断方式主动通知 CPU 的方式减少了线程轮询判断，提高了线程执行效率。<br>&emsp;&emsp;当然，为了进一步提高线程利用率，此时我们可以通过异步操作 API 执行 I/O 操作。<br>&emsp;&emsp;比如 .Net Framework 4.5 的 <code>async</code> 和 <code>await</code> 关键字，当调用异步操作后，API 内部保存了相关状态机信息（回调信息），线程继续执行其他操作，当操作系统内核读取数据完成时，线程调用回调方法恢复到 <code>await</code> 的后续操作。整个过程中线程不会因为阻塞带来导致性能损失。</p>
+<h1 id="中断处理"><a href="#中断处理" class="headerlink" title="中断处理"></a>中断处理</h1><p>&emsp;&emsp;当 I/O 设备完成一次 I/O 操作时，发生以下事件：</p>
+<ol>
+<li>开始 I/O 操作前，处理器将当前处理的相关信息如指令地址、必要的状态信息等保存到栈中，使得中断后可以恢复执行。</li>
+<li>I/O 操作完成后，设备给处理器发送一个中断信号。</li>
+<li>处理器响应中断信号。</li>
+<li>处理器对中断信号进行判断，若存在未响应的中断，则给产生中断信号的设备发送确认信号，确认信号使得设备取消它的中断信号。</li>
+<li>处理器将控制前转移给中断程序中，中断程序从栈中获取之前保存的信息，使得能继续执行 I/O 完成时的后续操作。</li>
+<li>处理器将中断程序入口地址载入到程序计数器中，使得处理器能继续执行下一个指令周期。</li>
+</ol>
+<h1 id="相关文献"><a href="#相关文献" class="headerlink" title="相关文献"></a>相关文献</h1><ol>
+<li>《操作系统 - 精髓与设计原理》</li>
+<li><a href="https://blog.csdn.net/flydream0/article/details/8589667" target="_blank" rel="noopener">时钟中断是 rt-thread 的线程调度器的驱动力</a></li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 计算机原理 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[用故事说透 HTTPS]]></title>
       <url>/2019/12/12/KnowHttpsThroughStory/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -257,7 +507,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -442,7 +692,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -992,7 +1242,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -1356,7 +1606,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -1660,7 +1910,7 @@
             
             <tag> 程序设计 </tag>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
         </tags>
         
@@ -1687,7 +1937,7 @@
             
             <tag> 程序设计 </tag>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
         </tags>
         
@@ -1714,7 +1964,7 @@
             
             <tag> 程序设计 </tag>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
         </tags>
         
@@ -1964,7 +2214,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
         </tags>
         
@@ -1996,7 +2246,7 @@
         
         <tags>
             
-            <tag> C# </tag>
+            <tag> CSharp </tag>
             
         </tags>
         
