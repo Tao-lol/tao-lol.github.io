@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>I/O 中断原理 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="计算机原理">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>I/O 中断原理</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">I/O 中断原理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-14T12:50:15.000Z" itemprop="datePublished" class="page-time">
+  2019-12-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-IOInterruptionPrinciple"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">I/O 中断原理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-14 20:50:15" datetime="2019-12-14T12:50:15.000Z"  itemprop="datePublished">2019-12-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/Jack-Blog/p/12038716.html" target="_blank" rel="noopener">https://www.cnblogs.com/Jack-Blog/p/12038716.html</a></p>
+</blockquote>
+<p>&emsp;&emsp;本篇文章会对中断操作的原理进行说明。  </p>
+<a id="more"></a>
+
+<h1 id="什么是中断"><a href="#什么是中断" class="headerlink" title="什么是中断"></a>什么是中断</h1><p>&emsp;&emsp;中断指当出现需要时，CPU 暂时停止当前程序的执行转而执行处理新情况的程序和执行过程。即在程序运行过程中，系统出现了一个必须由 CPU 立即处理的情况，此时，CPU 暂时中止程序的执行转而处理这个新的情况的过程就叫做中断。<br>&emsp;&emsp;我们知道 CPU 是按指令顺序进行执行的，操作系统每过大约 15ms 会发生一次线程调度（Windows 下），根据线程优先级先调度优先级高的线程。但是实际情况并没有那么简单，若我们接收到一个网络请求，如果要等当前线程执行完或 15ms 线程调度之后才去处理网络请求，网卡缓冲区很有可能会被占满，此时就发生了丢包。  </p>
+<h1 id="中断类型"><a href="#中断类型" class="headerlink" title="中断类型"></a>中断类型</h1><p>&emsp;&emsp;中断分为硬件中断和软件中断。</p>
+<h2 id="硬件中断"><a href="#硬件中断" class="headerlink" title="硬件中断"></a>硬件中断</h2><p>&emsp;&emsp;硬件中断即为硬件发出的中断信号，如 I/O 中断和硬件失效中断。</p>
+<ul>
+<li>I/O 中断：由 I/O 控制器产生，用于发送信号通知操作完成等信号。</li>
+<li>硬件失效中断：如掉电或存储器奇偶错之类的故障。</li>
+</ul>
+<h2 id="软件中断"><a href="#软件中断" class="headerlink" title="软件中断"></a>软件中断</h2><p>&emsp;&emsp;软件中断即为非硬件发出的中断信号，如程序中断和时钟中断。</p>
+<ul>
+<li>程序中断：一些指令产生的异常（如算数移除、除数为 0 等）。</li>
+<li>时钟中断：由处理器内部的计时器产生，允许操作系统以一定规程执行函数。<blockquote>
+<p>&emsp;&emsp;我们提到了操作系统每过大约 15ms 会进行一次线程调度，就是利用时钟中断来实现的。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="I-O中断流程"><a href="#I-O中断流程" class="headerlink" title="I/O中断流程"></a>I/O中断流程</h1><p>&emsp;&emsp;本篇文章还是主要解释前几篇文章提到的 I/O 中断进行解释说明，因此仅以 I/O 中断举例，但是中断的原理和流程都是相似的。<br>&emsp;&emsp;I/O 中断通过中断处理器执行中断操作。当外部设备的 I/O 模块准备好时，它会发送给 CPU 一个中断信号，CPU 则会 “ 立即 ” 做出响应，暂停当前程序的处理去服务该 I/O 设备的程序。</p>
+<blockquote>
+<p>&emsp;&emsp;也可能不是立即，比如同时存在多个中断，则根据实际的中断算法决定，是按中断先后顺序执行中断操作，还是按中断优先级执行。<br>&emsp;&emsp;I/O 中断时硬件中断，需要硬件支持来接收中断信号。</p>
+</blockquote>
+<h2 id="无中断"><a href="#无中断" class="headerlink" title="无中断"></a>无中断</h2><p>&emsp;&emsp;为了更好的说明中断带来的性能提升，我们先描述一下没有中断时程序如何处理 I/O 操作。</p>
+<figure class="image-box">
+                <a rel=I/O 中断原理 href="580757-20191214121306882-165841570.png" title="" data-fancybox="images"><img src="580757-20191214121306882-165841570.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<ul>
+<li><p>当我们程序需要从硬盘读取一个文件时，会先检查内核缓存中是否有数据，若没有数据，则执行实际 I/O 操作。在 I/O 操作执行时，我们的用户线程将阻塞等待数据从硬盘写到内存中。对于用户来说线程是被阻塞的。</p>
+</li>
+<li><p>在实际的 I/O 操作过程中，若没有中断操作，CPU 会不断轮询检查 I/O 操作是否完成，若 I/O 操作没有完成则继续调度其他线程，过一会儿再来检查。若操作完成，CPU 将线程加入到线程就绪队列中并恢复线程上下文信息。</p>
+</li>
+<li><p>线程处于就绪队列，可以被操作系统调度从而继续执行读操作，此时会将数据从操作系统内核缓存读取到用户缓存中。</p>
+<h2 id="有中断"><a href="#有中断" class="headerlink" title="有中断"></a>有中断</h2><figure class="image-box">
+                <a rel=I/O 中断原理 href="580757-20191214121702241-973799984.png" title="" data-fancybox="images"><img src="580757-20191214121702241-973799984.png" alt title class></a>
+                <p></p>
+            </figure>
+</li>
+<li><p>当我们程序需要从硬盘读取一个文件时，会先检查内核缓存中是否有数据，若没有数据，则执行实际 I/O 操作。在 I/O 操作执行时，我们的用户线程将阻塞等待数据从硬盘写到内存中。对于用户来说线程是被阻塞的。</p>
+</li>
+<li><p>在实际的 I/O 操作过程中，CPU 向 I/O 模块（DMA 控制器）发送读指令，然后就去调度其他线程。</p>
+</li>
+<li><p>当 I/O 模块（DMA 控制器）I/O 执行完成后，会产生中断信号在通知 CPU，CPU 将线程加入到线程就绪队列中并恢复线程上下文信息。</p>
+</li>
+<li><p>线程处于就绪队列，可以被操作系统调度从而继续执行读操作，此时会将数据从操作系统内核缓存读取到用户缓存中。</p>
+</li>
+</ul>
+<p>&emsp;&emsp;由此可知，有中断还是没有中断对于用户来说线程都是阻塞的，对于操作系统内核来说通过中断方式主动通知 CPU 的方式减少了线程轮询判断，提高了线程执行效率。<br>&emsp;&emsp;当然，为了进一步提高线程利用率，此时我们可以通过异步操作 API 执行 I/O 操作。<br>&emsp;&emsp;比如 .Net Framework 4.5 的 <code>async</code> 和 <code>await</code> 关键字，当调用异步操作后，API 内部保存了相关状态机信息（回调信息），线程继续执行其他操作，当操作系统内核读取数据完成时，线程调用回调方法恢复到 <code>await</code> 的后续操作。整个过程中线程不会因为阻塞带来导致性能损失。</p>
+<h1 id="中断处理"><a href="#中断处理" class="headerlink" title="中断处理"></a>中断处理</h1><p>&emsp;&emsp;当 I/O 设备完成一次 I/O 操作时，发生以下事件：</p>
+<ol>
+<li>开始 I/O 操作前，处理器将当前处理的相关信息如指令地址、必要的状态信息等保存到栈中，使得中断后可以恢复执行。</li>
+<li>I/O 操作完成后，设备给处理器发送一个中断信号。</li>
+<li>处理器响应中断信号。</li>
+<li>处理器对中断信号进行判断，若存在未响应的中断，则给产生中断信号的设备发送确认信号，确认信号使得设备取消它的中断信号。</li>
+<li>处理器将控制前转移给中断程序中，中断程序从栈中获取之前保存的信息，使得能继续执行 I/O 完成时的后续操作。</li>
+<li>处理器将中断程序入口地址载入到程序计数器中，使得处理器能继续执行下一个指令周期。</li>
+</ol>
+<h1 id="相关文献"><a href="#相关文献" class="headerlink" title="相关文献"></a>相关文献</h1><ol>
+<li>《操作系统 - 精髓与设计原理》</li>
+<li><a href="https://blog.csdn.net/flydream0/article/details/8589667" target="_blank" rel="noopener">时钟中断是 rt-thread 的线程调度器的驱动力</a></li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-14T13:59:51.399Z" itemprop="dateUpdated">2019-12-14 21:59:51</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/14/IOInterruptionPrinciple/" target="_blank" rel="external">https://tao-lol.top/2019/12/14/IOInterruptionPrinciple/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/计算机原理/">计算机原理</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/14/IOInterruptionPrinciple/&title=《I/O 中断原理》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/14/IOInterruptionPrinciple/&title=《I/O 中断原理》 — Blog&source=
+https://www.cnblogs.com/Jack-Blog/p/12038716.html
+
+&emsp;&emsp;本篇文章会对中断操作的原理..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/14/CreatingWindowsServicesInDotNetCore/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用 .NET Core 创建 Windows 服务</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/12/KnowHttpsThroughStory/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">用故事说透 HTTPS</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#什么是中断"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是中断</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#中断类型"><span class="post-toc-number">2.</span> <span class="post-toc-text">中断类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#硬件中断"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">硬件中断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#软件中断"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">软件中断</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#I-O中断流程"><span class="post-toc-number">3.</span> <span class="post-toc-text">I/O中断流程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#无中断"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">无中断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#有中断"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">有中断</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#中断处理"><span class="post-toc-number">4.</span> <span class="post-toc-text">中断处理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#相关文献"><span class="post-toc-number">5.</span> <span class="post-toc-text">相关文献</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/14/IOInterruptionPrinciple/&title=《I/O 中断原理》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/14/IOInterruptionPrinciple/&title=《I/O 中断原理》 — Blog&source=
+https://www.cnblogs.com/Jack-Blog/p/12038716.html
+
+&emsp;&emsp;本篇文章会对中断操作的原理..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNklEQVR42u3aQW7DMAwFUd//0i7QVYHA9nxSLWpqtAqQxOHTQiFFHgde5/f6+fpqfX6GPOHqW4uXDBkyXsvgYdVeX23HfSQ8NhkyZOzDqB2yaw/o1nbIkCFDxsdneKp3/5n0d2XIkCGDBHoPuwo03RQZMmTIqBWxQUkJStPaxdyCWlyGDBkvZNQaA3/z+tf7GzJkyPj3jDNcnZ9PnxNEJUOGjNEMUlKmZWqnHE2HNh7qWhkyZIxjtB6xdHSDbOvlgStDhoxxDHKw8kD73+Up5pH+P8iQIWMQo3/1n176p6EH5asMGTI2YKxK/oKjE0QSH7gyZMgYwagNaXWuyXiZiq7qZMiQsQEjvfTvH8ckoSQbJEOGjH0Y6aDDqnmtNBl9aAzIkCFjNKPTGOBBdwY4HmKQIUPGxgx+6c8PYp4sBsWtDBkyRjP42+RdXo7WWgtxr0OGDBlDGbUhrVooPHHk5a4MGTLmMdKyk49QdIbD4tENGTJkjGakCVx6MVcDp5siQ4aM2Qx+7cXL1/Qw5W2AYlYrQ4aMEYy0aKylemnyFxzxMmTIGM1I08F0wIJUmkGZev8tGTJkDGWc4epcvfGg04EMGTJkzGakV2N9fFqykt+VIUPGDozakFbtoj9tGARPkCFDxgYMfsjWmgr99ZCeypAhQ0ZjqKs2WsGbDTJkyJARPAi3HknrlGzBggNXhgwZr2KQIjYNhZNI6ftQ3MqQIWM0o3+XRQ5EnvaRVHJBf0OGDBnvYHwBe07RPwcxrFwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
