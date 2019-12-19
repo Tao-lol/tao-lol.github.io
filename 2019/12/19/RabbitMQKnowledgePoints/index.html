@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>RabbitMQ 知识点 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="RabbitMQ">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>RabbitMQ 知识点</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">RabbitMQ 知识点</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-19T06:02:39.000Z" itemprop="datePublished" class="page-time">
+  2019-12-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-RabbitMQKnowledgePoints"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">RabbitMQ 知识点</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-19 14:02:39" datetime="2019-12-19T06:02:39.000Z"  itemprop="datePublished">2019-12-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;目前，主流的消息中间件主要有：ActiveMQ、Kafka、RabbitMQ、RocketMQ 等等……而我们今天的主角是：RabbitMQ。RabbitMQ 是开源基于 erlang 语言开发，具有高可用高并发的优点，适合集群消息代理和队列服务器，它是基于 AMQP 协议来实现的。AMQP 的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。RabbitMQ 支持多种语言，有消息确认机制和持久化机制，保证数据不丢失的前提做到可靠性、可用性。</p>
+<h1 id="消息与消息队列"><a href="#消息与消息队列" class="headerlink" title="消息与消息队列"></a>消息与消息队列</h1><p>&emsp;&emsp;消息（Message）是指应用于应用之间传送的数据，消息的类型包括文本字符串、JSON、XML、内嵌对象等等…<br>&emsp;&emsp;所谓 <strong>消息中间件 / 消息队列</strong>（Message Queue Middleware，简称 MQ）是利用高效可靠的消息传递机制进行数据交流，同时可以基于数据通信来进行分布式系统的继承。消息中间件一般有两种传递模式：<strong>点对点（Point-to-Point）模式</strong>和<strong>发布/订阅（Pub/Sub）模式</strong>。点对点模式是基于队列的，消息生产者发送消息到队列，消息消费者从队列中接收消息，队列的存在使得消息的异步传输成为了可能。发布订阅模式定义了如何向一个内容节点发布和订阅内容，这个内容节点叫 topic，这种模式可以满足消费者发布一个消息，多个消费者同时消费同一信息的需求。</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="1.webp" title="性能对比" data-fancybox="images"><img src="1.webp" alt="性能对比" title class></a>
+                <p>性能对比</p>
+            </figure>
+
+<h2 id="什么是-AMQP-协议？"><a href="#什么是-AMQP-协议？" class="headerlink" title="什么是 AMQP 协议？"></a>什么是 AMQP 协议？</h2><p>&emsp;&emsp;AMQP 的全称：Advanced Message Queuing Protocol（高级消息队列协议），它是消息队列的一个规范，其中定义了很多核心的概念，AMQP 与 JMS（Java Message Service）Java 平台的专业技术规范类似，同样提供了很多面向中间件的 API，用于两个应用程序之间，或者分布式系统之间的发送消息，进行异步通信。</p>
+<h2 id="AMQP-的协议模型"><a href="#AMQP-的协议模型" class="headerlink" title="AMQP 的协议模型"></a>AMQP 的协议模型</h2><p>&emsp;&emsp;<strong>解释</strong>：Producer（生产者）将信息投递到 Server 端的 RabbitMQ 的 Exchange 中（过程：message -&gt; server -&gt; virtual host -&gt; RabbitMQ -&gt; Exchange），Consumer（消费者）只需要订阅消息队列 Message Queue，每当有消息投递到队列 queue 中时，都会通知消费者进行消费。</p>
+<ul>
+<li>生产者只需要将消息投递到 Exchange 交换机中，不需要关注消息被投递到哪个队列。</li>
+<li>消费者只需要监听队列来消费消息，不需要关注消息来自于哪个 Exchange。</li>
+<li>Exchange 和 Message Queue 存在着绑定的关系，一个 Exchage 可以绑定多个消息队列。</li>
+</ul>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="2.webp" title="" data-fancybox="images"><img src="2.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="AMQP-核心概念"><a href="#AMQP-核心概念" class="headerlink" title="AMQP 核心概念"></a>AMQP 核心概念</h2><ul>
+<li><strong>Server</strong>：又称 Broker，接受客户端的连接，实现 AMQP 实体服务；</li>
+<li><strong>Connection</strong>：连接，应用于程序与 Broker 的网络连接；</li>
+<li><strong>Channel</strong>：网络通道，几乎所有的操作都是在 channel 中进行的，channel 是进行消息读写的通道，客户可以建立多个 channel，每个 channel 代表一个会话任务；</li>
+<li><strong>Message</strong>：消息，服务器与应用程序之间传送的数据，由 Properties 和 Body 组成，Properties 可以对消息进行修饰，比如消息的优先级，延迟等高级特性，Body 是消息体内容；</li>
+<li><strong>Virtual host</strong>：虚拟地址，用于进行逻辑隔离，最上层的消息路由，一个 Virtrual host 里面可以有若干个 Exchange 和 Queue，同一个 Virtrual host 里面不能有相同名字的 Exchange 或 Queue；</li>
+<li><strong>Exchange</strong>：交换机，接收消息，根据路由键转发消息到绑定的队列；</li>
+<li><strong>Routingkey</strong>：生产者架构消息发给交换器的时候，会指定一个 RoutingKey，用来置顶这个消息的路由规则，通过 RoutingKey 来决定消息流向哪里；</li>
+<li><strong>Binding</strong>：绑定，RabbitMQ 中通过绑定将交换器跟队列关联起来，在绑定的时候会指定一个绑定键（BindingKey），这样 RabbitMQ 就知道如何正确地将消息路由到对应的队列中去了，也就是生产者将信息发送给交换器时，需要一个 RoutingKey，当 RoutingKey 与 BindingKey 完全匹配时，消息会被路由到对应的队列中去；</li>
+<li><strong>Queue</strong>：也叫 Message Queue，消息队列，保存消息并将他们转发给消费者；</li>
+</ul>
+<p>&emsp;&emsp;注意：对于初学者，交换器、路由键、绑定这几个概念理解起来比较晦涩，这里做个比喻：交换器相当于投递包裹的邮箱，RoutingKey 相当于填写在包裹上的地址，BindingKey 相当于包裹的目的地，当填写在包裹上的地址和实际想要投递的地址相匹配，那么这个包裹就会被投递到目的地，最后这个目的地的主人 “队列” 就可以保留这个包裹，如果对应的地址不匹配，也就是 RoutingKey 和 BindingKey 不匹配，邮递员就不能正确地投递到目的地，包裹可能会回退给寄件人，也可能被丢弃。  </p>
+<h2 id="AMQP-消息路由"><a href="#AMQP-消息路由" class="headerlink" title="AMQP 消息路由"></a>AMQP 消息路由</h2><p>&emsp;&emsp;AMQP 中消息的路由过程和 JMS 存在一些差别。<strong>AMQP</strong> 中增加了 Exchange 和 Binding 的角色。生产者把消息发布到 Exchange 上，消息最终到达队列并被消费者接收，而 Binding 决定交换器的消息应该发送到哪个队列。</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="3.webp" title="" data-fancybox="images"><img src="3.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="Exchange-类型"><a href="#Exchange-类型" class="headerlink" title="Exchange 类型"></a>Exchange 类型</h3><p>&emsp;&emsp;RabbitMQ 常用的交换器类型主要有四种：direct、fanout、topic、headers ，Exchange 分发消息时根据类型的不同分发策略有区别，headers 匹配 AMQP 消息的 header 而不是路由键，此外 headers 交换器和 direct 交换器完全一致，但性能差很多，目前几乎用不到了，这里仅仅对其他三种进行展开说明：  </p>
+<h4 id="1-direct"><a href="#1-direct" class="headerlink" title="1. direct"></a>1. direct</h4><figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="4.webp" title="" data-fancybox="images"><img src="4.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;direct 类型的交换器理由规则需要遵循严格的完全匹配规则，他会把消息路由到那些 BindingKey 和 RoutingKey 完全匹配的队里中，如果消息中的路由键（RoutingKey）和 Binding 中的 BindingKey 一致， 交换器就将消息发到对应的队列中。比如：</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="5.webp" title="" data-fancybox="images"><img src="5.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<ul>
+<li>在发送消息的时候设置路由键为 “info” 或者 “debug”，消息只会路由到 Queue2，如果以其他路由键发送消息，则消息不会路由到这两个队里中，这就是路由键和 Binding key 的完全匹配。</li>
+</ul>
+<p>&emsp;&emsp;direct 类型模式的特点：</p>
+<ol>
+<li>不需要将 Exchange 进行任何绑定（binding）操作</li>
+<li>消息传递时需要一个 “RoutingKey”，可以简单的理解为要发送到的队列名字。</li>
+<li>如果 vhost 中不存在 RoutingKey 中指定的队列名，则该消息会被抛弃。</li>
+</ol>
+<h4 id="2-fanout"><a href="#2-fanout" class="headerlink" title="2. fanout"></a>2. fanout</h4><figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="6.webp" title="" data-fancybox="images"><img src="6.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;<strong>它会将所有发送到该交换器的消息路由到所有与该交换器绑定的队列中。</strong>fanout 交换器不处理路由键，只是简单的将队列绑定到交换器上，每个发送到交换器的消息都会被转发到与该交换器绑定的所有队列上。就像子网广播，每台子网内的主机都获得了一份复制的消息。fanout 类型转发消息是最快的。<br>&emsp;&emsp;这种模式的特点：</p>
+<ol>
+<li>不需要 RoutingKey，我们将路由键设置为空即可。</li>
+<li>需要提前将 Exchange 和 Queue 进行绑定，一个 Exchange 可以绑定多个 Queue，一个 Queue 可以同时与多个 Exchange 进行绑定（”多对多关系”）。</li>
+<li>如果接受到消息的 Exchange 没有与任何 Queue 绑定，则消息会被抛弃。</li>
+</ol>
+<h4 id="3-topic"><a href="#3-topic" class="headerlink" title="3. topic"></a>3. topic</h4><figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="7.webp" title="" data-fancybox="images"><img src="7.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;direct 类型的交换器理由规则需要遵循严格的完全匹配规则，这种严格的匹配方式有时候不能满足实际的业务需求，topic 就是在这种规则上进行了扩展，topic 交换器通过模式匹配分配消息的路由键属性，将路由键和某个模式进行匹配，但是这里的匹配规则有所不同，它的约定如下：</p>
+<ul>
+<li>RoutingKey 为一个点号 “.” 分隔的字符串（被点号 “.” 号分隔开的一段独立的字符串称为单词），比如：”com.rabbit.client”、”java.util.Map”;</li>
+<li>BindingKey 和 RoutingKey 为一个点号 “.” 分隔的字符串；</li>
+<li>BindingKey 中可以存在两种特殊的字符串 “*“ 和 “#“，用于做模糊匹配，其中 “*“ 用于匹配一个单词， “#“ 用于匹配多规则单词；<ul>
+<li>“com.#” 可以匹配到 com.rabbitmq.aaa</li>
+<li>“com.*” 可以匹配到 com.rabbitmq</li>
+</ul>
+</li>
+</ul>
+<p>&emsp;&emsp;<strong>举个实例</strong>：</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="8.webp" title="" data-fancybox="images"><img src="8.webp" alt title class></a>
+                <p></p>
+            </figure>
+<ul>
+<li>路由键为 “com.rabbitmq.client” 的消息会同时路由到 Queue1 和 Queue2</li>
+<li>路由键为 “com.hidden.client” 的消息只会路由到 Queue2</li>
+<li>路由键为 “com.hidden.data” 的消息只会路由到 Queue2</li>
+<li>路由键为 “java.rabbitmq.data” 的消息只会路由到 Queue1</li>
+<li>路由键为 “java.util.map” 的消息将会被丢弃或者返回给生产者，因为它没有匹配任何的路由键。</li>
+</ul>
+<h2 id="RabbitMQ-特点"><a href="#RabbitMQ-特点" class="headerlink" title="RabbitMQ 特点"></a>RabbitMQ 特点</h2><p>&emsp;&emsp;RabbitMQ 最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。具体特点包括：</p>
+<ol>
+<li>可靠性<br>RabbitMQ 使用一些机制来保证可靠性，如持久化、传输确认、发布确认。</li>
+<li>灵活的路由（Flexible Routing）<br>在消息进入队列之前，通过 Exchange 来路由消息。对于典型的路由功能，RabbitMQ 已经提供了一些内置的 Exchange 来实现。针对更复杂的路由功能，可以将多个 Exchange 绑定在一起，也可以通过插件机制实现自己的 Exchange。</li>
+<li>消息集群（Clustering）<br>多个 RabbitMQ 服务器可以组成一个集群，形成一个逻辑 Broker 。</li>
+<li>高可用<br>队列可以在集群中的机器上进行镜像，使得在部分节点出问题的情况下队列仍然可用。</li>
+<li>多种协议（Multi-protocol）<br>RabbitMQ 支持多种消息队列协议，比如 STOMP、MQTT 等等。</li>
+<li>多语言客户端<br>RabbitMQ 几乎支持所有常用语言，比如 Java、.NET、Ruby 等等。</li>
+<li>管理界面<br>RabbitMQ 提供了一个易用的用户界面，使得用户可以监控和管理消息 Broker 的许多方面。</li>
+<li>跟踪机制<br>如果消息异常，RabbitMQ 提供了消息跟踪机制，使用者可以找出发生了什么。</li>
+<li>插件机制<br>RabbitMQ 提供了许多插件，来从多方面进行扩展，也可以编写自己的插件。</li>
+</ol>
+<h1 id="RabbitMQ-中的概念模型"><a href="#RabbitMQ-中的概念模型" class="headerlink" title="RabbitMQ 中的概念模型"></a>RabbitMQ 中的概念模型</h1><h2 id="消息模型"><a href="#消息模型" class="headerlink" title="消息模型"></a>消息模型</h2><p>&emsp;&emsp;所有 MQ 产品从模型抽象上来说都是一样的过程：<br>&emsp;&emsp;消费者（consumer）订阅某个队列。生产者（producer）创建消息，然后发布到队列（queue）中，最后将消息发送到监听的消费者。</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="9.webp" title="消息流" data-fancybox="images"><img src="9.webp" alt="消息流" title class></a>
+                <p>消息流</p>
+            </figure>
+
+<h2 id="RabbitMQ-基本概念"><a href="#RabbitMQ-基本概念" class="headerlink" title="RabbitMQ 基本概念"></a>RabbitMQ 基本概念</h2><p>&emsp;&emsp;上面只是最简单抽象的描述，具体到 RabbitMQ 则有更详细的概念需要解释。上面介绍过 RabbitMQ 是 AMQP 协议的一个开源实现，所以其内部实际上也是 AMQP 中的基本概念：</p>
+<figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="10.webp" title="RabbitMQ 内部结构" data-fancybox="images"><img src="10.webp" alt="RabbitMQ 内部结构" title class></a>
+                <p>RabbitMQ 内部结构</p>
+            </figure>
+
+<h2 id="RabbitMQ-的作用和使用场景"><a href="#RabbitMQ-的作用和使用场景" class="headerlink" title="RabbitMQ 的作用和使用场景"></a>RabbitMQ 的作用和使用场景</h2><figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="11.webp" title="" data-fancybox="images"><img src="11.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="RabbitMQ-的核心组件"><a href="#RabbitMQ-的核心组件" class="headerlink" title="RabbitMQ 的核心组件"></a>RabbitMQ 的核心组件</h2><figure class="image-box">
+                <a rel=RabbitMQ 知识点 href="12.webp" title="" data-fancybox="images"><img src="12.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-19T06:50:28.567Z" itemprop="dateUpdated">2019-12-19 14:50:28</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/19/RabbitMQKnowledgePoints/" target="_blank" rel="external">https://tao-lol.top/2019/12/19/RabbitMQKnowledgePoints/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/">RabbitMQ</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/19/RabbitMQKnowledgePoints/&title=《RabbitMQ 知识点》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/19/RabbitMQKnowledgePoints/&title=《RabbitMQ 知识点》 — Blog&source=
+https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/19/DockerSummary/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Docker 实战总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/19/RedisKnowledgePoints/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Redis 知识点</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#消息与消息队列"><span class="post-toc-number">1.</span> <span class="post-toc-text">消息与消息队列</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是-AMQP-协议？"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">什么是 AMQP 协议？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AMQP-的协议模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">AMQP 的协议模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AMQP-核心概念"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">AMQP 核心概念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AMQP-消息路由"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">AMQP 消息路由</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Exchange-类型"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">Exchange 类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-direct"><span class="post-toc-number">1.4.1.1.</span> <span class="post-toc-text">1. direct</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-fanout"><span class="post-toc-number">1.4.1.2.</span> <span class="post-toc-text">2. fanout</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-topic"><span class="post-toc-number">1.4.1.3.</span> <span class="post-toc-text">3. topic</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RabbitMQ-特点"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">RabbitMQ 特点</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#RabbitMQ-中的概念模型"><span class="post-toc-number">2.</span> <span class="post-toc-text">RabbitMQ 中的概念模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息模型"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">消息模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RabbitMQ-基本概念"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">RabbitMQ 基本概念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RabbitMQ-的作用和使用场景"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">RabbitMQ 的作用和使用场景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RabbitMQ-的核心组件"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">RabbitMQ 的核心组件</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/19/RabbitMQKnowledgePoints/&title=《RabbitMQ 知识点》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/19/RabbitMQKnowledgePoints/&title=《RabbitMQ 知识点》 — Blog&source=
+https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNElEQVR42u3aS3KDQAxFUfa/aVzlKWDfJ+FUUN8euRxCcxjI+vS24bW/1/Gb4+J/vfp83Ou2JUOGjMcy9o+Lb3Z1Pb+Gv46T+8uQIWMBBtmSBM3P/1t7ZeQHQIYMGTLSB01fRCdwy5AhQwZ50LQQ7YRyGTJkrMxI22e1xhxPHH9Yi8uQIeOBjHQw8JeffzjfkCFDxkMYe7jSJK9zZfBUMmTIGM0grbTaBp3BZ61JJ0OGjKkMfvSBl7WdISWhnnwjQ4aMxRidh77haBcoYlHAlSFDxlAGSQR5spiOJ9P/OqnFZciQMZTBH4iMJHlzn49C42GqDBkyxjHI9ryhnx6w4K/gy31kyJCxJIMngunwgIfUYAgqQ4aMZRi1RLDfaOOh9vKpZMiQsQCjVl7WjmLwo7EyZMiQcWQQUrGTh5PLtKCNz4zIkCFjBCMNi2na13kRlyQZMmQsxkjD4s0t/jDcy5AhYx1GpzVPCt1aiy0op2XIkDGakQ4UeUG7gVUbLXzZRYYMGeMYvO1FClEedjvU4CIZMmQMYtSa/rxk5UlhPLyUIUPGAgyezHFMes8NL5QgypAhYxxjD1dt2Fm7Q/CCZMiQMZqRBrs07eNHxPoHO2TIkDGbwYNsfzyZpoDBHWTIkLEAIz0wwQPxvUXs5TcyZMiQEQbZ9EBqfwghQ4YMGTzU1hK+2l6tgCtDhowHMvgwoHbMIm3JkUNpxVpchgwZD2R0ellp2sc/kx+DG+YbMmTI+O+MF6IgN/WmJVG0AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>

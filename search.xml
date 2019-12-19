@@ -3,9 +3,977 @@
   
     
     <entry>
+      <title><![CDATA[ASP.NET Core Web API 最佳实践指南]]></title>
+      <url>/2019/12/19/AspNetCoreWebApiBestPracticesGuide/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>译文：<a href="https://www.cnblogs.com/hippieZhou/p/11966373.html" target="_blank" rel="noopener">https://www.cnblogs.com/hippieZhou/p/11966373.html</a><br>原文：<a href="https://code-maze.us12.list-manage.com/track/click?u=9bb15645129501e5249a9a8e1&id=986d07e1f0&e=1184a539da" target="_blank" rel="noopener">ASP.NET-Core-Web-API-Best-Practices-Guide</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+<p><strong>目录</strong></p>
+<ul>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#介绍">介绍</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#Startup-类-和-服务配置">Startup 类 和 服务配置</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#项目组织">项目组织</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#基于环境的设置">基于环境的设置</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#数据访问层">数据访问层</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#控制器">控制器</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#处理全局异常">处理全局异常</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#使用过滤器移除重复代码">使用过滤器移除重复代码</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#Microsoft-AspNetCore-All-元包">Microsoft.AspNetCore.All 元包</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#路由（ROUTING）">路由</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#日志（LOGGING）">日志</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#加密">加密</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#内容协商">内容协商</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#使用-JWT">使用 JWT</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#总结">总结</a></li>
+</ul>
+<figure class="image-box">
+                <img src="749711-20191202210059663-465533847.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;当我们编写一个项目的时候，我们的主要目标是使它能如期运行，并尽可能地满足所有用户需求。<br>&emsp;&emsp;但是，你难道不认为创建一个能正常工作的项目还不够吗？同时这个项目不应该也是可维护和可读的吗？<br>&emsp;&emsp;事实证明，我们需要把更多的关注点放到我们项目的可读性和可维护性上。这背后的主要原因是我们或许不是这个项目的唯一编写者。一旦我们完成后，其他人也极有可能会加入到这里面来。<br>&emsp;&emsp;因此，我们应该把关注点放到哪里呢？<br>&emsp;&emsp;在这一份指南中，关于开发 .NET Core Web API 项目，我们将叙述一些我们认为会是最佳实践的方式。进而让我们的项目变得更好和更加具有可维护性。<br>&emsp;&emsp;现在，让我们开始想一些可以应用到 ASP.NET Web API 项目中的一些最佳实践。  </p>
+<h1 id="Startup-类-和-服务配置"><a href="#Startup-类-和-服务配置" class="headerlink" title="Startup 类 和 服务配置"></a>Startup 类 和 服务配置</h1><blockquote>
+<p>STARTUP CLASS AND THE SERVICE CONFIGURATION</p>
+</blockquote>
+<p>&emsp;&emsp;在 <code>Startup</code> 类中，有两个方法：<code>ConfigureServices</code> 是用于服务注册，<code>Configure</code> 方法是向应用程序的请求管道中添加中间件。<br>&emsp;&emsp;因此，最好的方式是保持 <code>ConfigureServices</code> 方法简洁，并且尽可能地具有可读性。当然，我们需要在该方法内部编写代码来注册服务，但是我们可以通过使用 <code>扩展方法</code> 来让我们的代码更加地可读和可维护。<br>&emsp;&emsp;例如，让我们看一个注册 CORS 服务的不好方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddCors(options =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">        options.AddPolicy(<span class="string">"CorsPolicy"</span>, builder =&gt; builder.AllowAnyOrigin()</span><br><span class="line">            .AllowAnyMethod()</span><br><span class="line">            .AllowAnyHeader()</span><br><span class="line">            .AllowCredentials());</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;尽管这种方式看起来挺好，也能正常地将 CORS 服务注册成功。但是想象一下，在注册了十几个服务之后这个方法体的长度。<br>&emsp;&emsp;这样一点也不具有可读性。<br>&emsp;&emsp;一种好的方式是通过在扩展类中创建静态方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ServiceExtensions</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ConfigureCors</span>(<span class="params"><span class="keyword">this</span> IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        services.AddCors(options =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            options.AddPolicy(<span class="string">"CorsPolicy"</span>, builder =&gt; builder.AllowAnyOrigin()</span><br><span class="line">                .AllowAnyMethod()</span><br><span class="line">                .AllowAnyHeader()</span><br><span class="line">                .AllowCredentials());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，只需要调用这个扩展方法即可：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.ConfigureCors();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;了解更多关于 .NET Core 的项目配置，请查看：<a href="https://code-maze.com/net-core-web-development-part2/" target="_blank" rel="noopener">.NET Core Project Configuration</a>  </p>
+<h1 id="项目组织"><a href="#项目组织" class="headerlink" title="项目组织"></a>项目组织</h1><blockquote>
+<p>PROJECT ORGANIZATION</p>
+</blockquote>
+<p>&emsp;&emsp;我们应该尝试将我们的应用程序拆分为多个小项目。通过这种方式，我们可以获得最佳的项目组织方式，并能将关注点分离（SoC）。我们的实体、契约、访问数据库操作、记录信息或者发送邮件的业务逻辑应该始终放在单独的 .NET Core 类库项目中。<br>&emsp;&emsp;应用程序中的每个小项目都应该包含多个文件夹用来组织业务逻辑。<br>&emsp;&emsp;这里有个简单的示例用来展示一个复杂的项目应该如何组织：</p>
+<figure class="image-box">
+                <img src="749711-20191202210211630-1582297257.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="基于环境的设置"><a href="#基于环境的设置" class="headerlink" title="基于环境的设置"></a>基于环境的设置</h1><blockquote>
+<p>ENVIRONMENT BASED SETTINGS</p>
+</blockquote>
+<p>&emsp;&emsp;当我们开发应用程序时，它处于开发环境。但是一旦我们发布之后，它将处于生产环境。因此，将每个环境进行隔离配置往往是一种好的实践方式。<br>&emsp;&emsp;在 .NET Core 中，这一点很容易实现。<br>&emsp;&emsp;一旦我们创建好了项目，就已经有一个 <code>appsettings.json</code> 文件，当我们展开它时会看到 <code>appsettings.Development.json</code> 文件：</p>
+<figure class="image-box">
+                <img src="749711-20191202210228362-471063224.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;此文件中的所有设置将用于开发环境。<br>&emsp;&emsp;我们应该添加另一个文件 <code>appsettings.Production.json</code>，将其用于生产环境：</p>
+<figure class="image-box">
+                <img src="749711-20191202210241965-1672669642.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;生产文件将位于开发文件下面。<br>&emsp;&emsp;设置修改后，我们就可以通过不同的 appsettings 文件来加载不同的配置，取决于我们应用程序当前所处环境，.NET Core 将会给我们提供正确的设置。更多关于这一主题，请查阅：<a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.0" target="_blank" rel="noopener">Use Multiple Environments in ASP.NET Core</a>  </p>
+<h1 id="数据访问层"><a href="#数据访问层" class="headerlink" title="数据访问层"></a>数据访问层</h1><blockquote>
+<p>DATA ACCESS LAYER</p>
+</blockquote>
+<p>&emsp;&emsp;在一些不同的示例教程中，我们可能看到 DAL 的实现在主项目中，并且每个控制器中都有实例。我们不建议这么做。<br>&emsp;&emsp;当我们编写 DAL 时，我们应该将其作为一个独立的服务来创建。在 .NET Core 项目中，这一点很重要，因为当我们将 DAL 作为一个独立的服务时，我们就可以将其直接注入到 IOC（控制反转）容器中。IOC 是 .NET Core 内置功能。通过这种方式，我们可以在任何控制器中通过构造函数注入的方式来使用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span>: <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IRepository _repository;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OwnerController</span>(<span class="params">IRepository repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h1><blockquote>
+<p>CONTROLLERS</p>
+</blockquote>
+<p>&emsp;&emsp;控制器应该始终尽量保持整洁。我们不应该将任何业务逻辑放置于内。<br>&emsp;&emsp;因此，我们的控制器应该通过构造函数注入的方式接收服务实例，并组织 HTTP 的操作方法（GET，POST，PUT，DELETE，PATCH…）：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILoggerManager _logger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IRepository _repository;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OwnerController</span>(<span class="params">ILoggerManager logger, IRepository repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">        _repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;"</span>, Name = <span class="meta-string">"OwnerById"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;/account"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerWithDetails</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpPost</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">CreateOwner</span>(<span class="params">[FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpPut(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">UpdateOwner</span>(<span class="params">Guid id, [FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpDelete(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">DeleteOwner</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们的 Action 应该尽量保持简洁，它们的职责应该包括处理 HTTP 请求，验证模型，捕捉异常和返回响应。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">HttpPost</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">CreateOwner</span>(<span class="params">[FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (owner.IsObjectNull())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Owner object is null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid model object"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        _repository.Owner.CreateOwner(owner);</span><br><span class="line">        <span class="keyword">return</span> CreatedAtRoute(<span class="string">"OwnerById"</span>, <span class="keyword">new</span> &#123; id = owner.Id &#125;, owner);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        _logger.LogError(<span class="string">$"Something went wrong inside the CreateOwner action: <span class="subst">&#123; ex&#125;</span> "</span>);</span><br><span class="line">        <span class="keyword">return</span> StatusCode(<span class="number">500</span>, <span class="string">"Internal server error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在大多数情况下，我们的 action 应该将 <code>IActonResult</code> 作为返回类型（有时我们希望返回一个特定类型或者是 <code>JsonResult</code> …）。通过使用这种方式，我们可以很好地使用 .NET Core 中内置方法的返回值和状态码。  </p>
+<p>&emsp;&emsp;使用最多的方法是：</p>
+<ul>
+<li>OK =&gt; returns the 200 status code</li>
+<li>NotFound =&gt; returns the 404 status code</li>
+<li>BadRequest =&gt; returns the 400 status code</li>
+<li>NoContent =&gt; returns the 204 status code</li>
+<li>Created, CreatedAtRoute, CreatedAtAction =&gt; returns the 201 status code</li>
+<li>Unauthorized =&gt; returns the 401 status code</li>
+<li>Forbid =&gt; returns the 403 status code</li>
+<li>StatusCode =&gt; returns the status code we provide as input</li>
+</ul>
+<h1 id="处理全局异常"><a href="#处理全局异常" class="headerlink" title="处理全局异常"></a>处理全局异常</h1><blockquote>
+<p>HANDLING ERRORS GLOBALLY</p>
+</blockquote>
+<p>&emsp;&emsp;在上面的示例中，我们的 action 内部有一个 <code>try-catch</code> 代码块。这一点很重要，我们需要在我们的 action 方法体中处理所有的异常（包括未处理的）。一些开发者在 action 中使用 <code>try-catch</code> 代码块，这种方式明显没有任何问题。但我们希望 action 尽量保持简洁。因此，从我们的 action 中删除 <code>try-catch</code>，并将其放在一个集中的地方会是一种更好的方式。.NET Core 给我们提供了一种处理全局异常的方式，只需要稍加修改，就可以使用内置且完善的的中间件。我们需要做的修改就是在 <code>Startup</code> 类中修改 <code>Configure</code> 方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseExceptionHandler(config =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">        config.Run(<span class="keyword">async</span> context =&gt; </span><br><span class="line">        &#123;</span><br><span class="line">            context.Response.StatusCode = <span class="number">500</span>;</span><br><span class="line">            context.Response.ContentType = <span class="string">"application/json"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> error = context.Features.Get&lt;IExceptionHandlerFeature&gt;();</span><br><span class="line">            <span class="keyword">if</span> (error != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> ex = error.Error;</span><br><span class="line">                <span class="keyword">await</span> context.Response.WriteAsync(<span class="keyword">new</span> ErrorModel</span><br><span class="line">                &#123;</span><br><span class="line">                    StatusCode = <span class="number">500</span>,</span><br><span class="line">                    ErrorMessage = ex.Message</span><br><span class="line">                &#125;.ToString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapControllers();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以通过创建自定义的中间件来实现我们的自定义异常处理：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomExceptionMiddleware</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger&lt;CustomExceptionMiddleware&gt; _logger;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomExceptionMiddleware</span>(<span class="params">RequestDelegate next, ILogger&lt;CustomExceptionMiddleware&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext httpContext</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> _next(httpContext);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            _logger.LogError(<span class="string">"Unhandled exception...."</span>, ex);</span><br><span class="line">            <span class="keyword">await</span> HandleExceptionAsync(httpContext, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Task <span class="title">HandleExceptionAsync</span>(<span class="params">HttpContext httpContext, Exception ex</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//todo</span></span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Extension method used to add the middleware to the HTTP request pipeline.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">CustomExceptionMiddlewareExtensions</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IApplicationBuilder <span class="title">UseCustomExceptionMiddleware</span>(<span class="params"><span class="keyword">this</span> IApplicationBuilder builder</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> builder.UseMiddleware&lt;CustomExceptionMiddleware&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;之后，我们只需要将其注入到应用程序的请求管道中即可：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseCustomExceptionMiddleware();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用过滤器移除重复代码"><a href="#使用过滤器移除重复代码" class="headerlink" title="使用过滤器移除重复代码"></a>使用过滤器移除重复代码</h1><blockquote>
+<p>USING ACTIONFILTERS TO REMOVE DUPLICATED CODE</p>
+</blockquote>
+<p>&emsp;&emsp;ASP.NET Core 的过滤器可以让我们在请求管道的特定状态之前或之后运行一些代码。因此如果我们的 action 中有重复验证的话，可以使用它来简化验证操作。<br>&emsp;&emsp;当我们在 action 方法中处理 PUT 或者 POST 请求时，我们需要验证我们的模型对象是否符合我们的预期。作为结果，这将导致我们的验证代码重复，我们希望避免出现这种情况，（基本上，我们应该尽我们所能避免出现任何代码重复。）我们可以在代码中通过使用 ActionFilter 来代替我们的验证代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//bad request and logging logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们可以创建一个过滤器：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ModelValidationAttribute</span> : <span class="title">ActionFilterAttribute</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnActionExecuting</span>(<span class="params">ActionExecutingContext context</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!context.ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            context.Result = <span class="keyword">new</span> BadRequestObjectResult(context.ModelState);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在 <code>Startup</code> 类的 <code>ConfigureServices</code> 函数中将其注入：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;ModelValidationAttribute&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在，我们可以将上述注入的过滤器应用到我们的 action 中。  </p>
+<h1 id="Microsoft-AspNetCore-All-元包"><a href="#Microsoft-AspNetCore-All-元包" class="headerlink" title="Microsoft.AspNetCore.All 元包"></a>Microsoft.AspNetCore.All 元包</h1><blockquote>
+<p>MICROSOFT.ASPNETCORE.ALL META-PACKAGE</p>
+</blockquote>
+<p>&emsp;&emsp;注：如果你使用的是 2.1 和更高版本的 ASP.NET Core。建议使用 Microsoft.AspNetCore.App 包，而不是 Microsoft.AspNetCore.All。这一切都是出于安全原因。此外，如果使用 2.1 版本创建新的 WebAPI 项目，我们将自动获取 AspNetCore.App 包，而不是 AspNetCore.All。<br>&emsp;&emsp;这个元包包含了所有 AspNetCore 的相关包，EntityFrameworkCore 包，SignalR 包（version 2.1） 和依赖框架运行的支持包。采用这种方式创建一个新项目很方便，因为我们不需要手动安装一些我们可能使用到的包。<br>&emsp;&emsp;当然，为了能使用 Microsoft.AspNetCore.all 元包，需要确保你的机器安装了 .NET Core Runtime。  </p>
+<h1 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h1><blockquote>
+<p>ROUTING</p>
+</blockquote>
+<p>&emsp;&emsp;在 .NET Core Web API 项目中，我们应该使用属性路由代替传统路由，这是因为属性路由可以帮助我们匹配路由参数名称与 Action 内的实际参数方法。另一个原因是路由参数的描述，对我们而言，一个名为 “ownerId” 的参数要比 “id” 更加具有可读性。<br>&emsp;&emsp;我们可以使用 <code>[Route]</code> 属性来在控制器的顶部进行标注：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/[controller]"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Route(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;还有另一种方式为控制器和操作创建路由规则：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Route(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;对于这两种方式哪种会好一些存在分歧，但是我们经常建议采用第二种方式。这是我们一直在项目中采用的方式。<br>&emsp;&emsp;当我们谈论路由时，我们需要提到路由的命名规则。我们可以为我们的操作使用描述性名称，但对于 路由/节点，我们应该使用 NOUNS 而不是 VERBS。<br>&emsp;&emsp;一个较差的示例：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"getAllOwners"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"getOwnerById/&#123;id&#125;"</span></span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;一个较好的示例：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;"</span></span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;更多关于 Restful 实践的细节解释，请查阅：<a href="https://code-maze.com/top-rest-api-best-practices/" target="_blank" rel="noopener">Top REST API Best Practices</a>  </p>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><blockquote>
+<p>LOGGING</p>
+</blockquote>
+<p>&emsp;&emsp;如果我们打算将我们的应用程序发布到生产环境，我们应该在合适的位置添加一个日志记录机制。在生产环境中记录日志对于我们梳理应用程序的运行很有帮助。<br>&emsp;&emsp;.NET Core 通过继承 <code>ILogger</code> 接口实现了它自己的日志记录。通过借助依赖注入机制，它可以很容易地使用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestController</span>: <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger _logger;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestController</span>(<span class="params">ILogger&lt;TestController&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，在我们的 action 中，我们可以通过使用 _logger 对象借助不同的日志级别来记录日志。<br>&emsp;&emsp;.NET Core 支持使用于各种日志记录的 Provider。因此，我们可能会在项目中使用不同的 Provider 来实现我们的日志逻辑。<br>&emsp;&emsp;NLog 是一个很不错的可以用于我们自定义的日志逻辑类库，它极具扩展性。支持结构化日志，且易于配置。我们可以将信息记录到控制台，文件甚至是数据库中。<br>&emsp;&emsp;想了解更多关于该类库在 .NET Core 中的应用，请查阅：<a href="https://code-maze.com/net-core-web-development-part3/" target="_blank" rel="noopener">.NET Core series – Logging With NLog</a><br>&emsp;&emsp;Serilog 也是一个很不错的类库，它适用于 .NET Core 内置的日志系统。  </p>
+<h1 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h1><blockquote>
+<p>CRYPTOHELPER</p>
+</blockquote>
+<p>&emsp;&emsp;我们不会建议将密码以明文形式存储到数据库中。处于安全原因，我们需要对其进行哈希处理。这超出了本指南的内容范围。互联网上有大量哈希算法，其中不乏一些不错的方法来将密码进行哈希处理。<br>&emsp;&emsp;但是如果需要为 .NET Core 的应用程序提供易于使用的加密类库，CryptoHelper 是一个不错的选择。<br>&emsp;&emsp;CryptoHelper 是适用于 .NET Core 的独立密码哈希库，它是基于 PBKDF2 来实现的。通过创建 Data Protection 栈来将密码进行哈希化。这个类库在 NuGet 上是可用的，并且使用也很简单：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> CryptoHelper;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hash a password</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">HashPassword</span>(<span class="params"><span class="keyword">string</span> password</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Crypto.HashPassword(password);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Verify the password hash against the given password</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">VerifyPassword</span>(<span class="params"><span class="keyword">string</span> hash, <span class="keyword">string</span> password</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Crypto.VerifyHashedPassword(hash, password);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="内容协商"><a href="#内容协商" class="headerlink" title="内容协商"></a>内容协商</h1><blockquote>
+<p>CONTENT NEGOTIATION</p>
+</blockquote>
+<p>&emsp;&emsp;默认情况下，.NET Core Web API 会返回 JSON 格式的结果。大多数情况下，这是我们所希望的。<br>&emsp;&emsp;但是如果客户希望我们的 Web API 返回其它的响应格式，例如 XML 格式呢？<br>&emsp;&emsp;为了解决这个问题，我们需要进行服务端配置，用于按需格式化我们的响应结果：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers().AddXmlSerializerFormatters();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;但有时客户端会请求一个我们 Web API 不支持的格式，因此最好的实践方式是对于未经处理的请求格式统一返回 <strong>406</strong> 状态码。这种方式也同样能在 <code>ConfigureServices</code> 方法中进行简单配置：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers(options =&gt; options.ReturnHttpNotAcceptable = <span class="literal">true</span>).AddXmlSerializerFormatters();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以创建我们自己的格式化规则。<br>&emsp;&emsp;这一部分内容是一个很大的主题，如果你希望了解更多，请查阅：<a href="https://code-maze.com/content-negotiation-dotnet-core/" target="_blank" rel="noopener">Content Negotiation in .NET Core</a>  </p>
+<h1 id="使用-JWT"><a href="#使用-JWT" class="headerlink" title="使用 JWT"></a>使用 JWT</h1><blockquote>
+<p>USING JWT</p>
+</blockquote>
+<p>&emsp;&emsp;现如今的 Web 开发中，JSON Web Tokens (JWT) 变得越来越流行。得益于 .NET Core 内置了对 JWT 的支持，因此实现起来非常容易。JWT 是一个开发标准，它允许我们以 JSON 格式在服务端和客户端进行安全的数据传输。<br>&emsp;&emsp;我们可以在 <code>ConfigureServices</code> 中配置 JWT 认证：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)</span><br><span class="line">        .AddJwtBearer(options =&gt; </span><br><span class="line">        &#123;</span><br><span class="line">            options.TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters</span><br><span class="line">            &#123;</span><br><span class="line">                ValidateIssuer = <span class="literal">true</span>,</span><br><span class="line">                ValidIssuer = _authToken.Issuer,</span><br><span class="line"></span><br><span class="line">                ValidateAudience = <span class="literal">true</span>,</span><br><span class="line">                ValidAudience = _authToken.Audience,</span><br><span class="line"></span><br><span class="line">                ValidateIssuerSigningKey = <span class="literal">true</span>,</span><br><span class="line">                IssuerSigningKey = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authToken.Key)),</span><br><span class="line"></span><br><span class="line">                RequireExpirationTime = <span class="literal">true</span>,</span><br><span class="line">                ValidateLifetime = <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">                <span class="comment">//others</span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;为了能在应用程序中使用它，我们还需要在 <code>Configure</code> 中调用下面一段代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseAuthentication();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此外，创建 Token 可以使用如下方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> securityToken = <span class="keyword">new</span> JwtSecurityToken(</span><br><span class="line">                claims: <span class="keyword">new</span> Claim[]</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">new</span> Claim(ClaimTypes.NameIdentifier,user.Id),</span><br><span class="line">                    <span class="keyword">new</span> Claim(ClaimTypes.Email,user.Email)</span><br><span class="line">                &#125;,</span><br><span class="line">                issuer: _authToken.Issuer,</span><br><span class="line">                audience: _authToken.Audience,</span><br><span class="line">                notBefore: DateTime.Now,</span><br><span class="line">                expires: DateTime.Now.AddDays(_authToken.Expires),</span><br><span class="line">                signingCredentials: <span class="keyword">new</span> SigningCredentials(</span><br><span class="line">                    <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authToken.Key)),</span><br><span class="line">                    SecurityAlgorithms.HmacSha256Signature));</span><br><span class="line"></span><br><span class="line">Token = <span class="keyword">new</span> JwtSecurityTokenHandler().WriteToken(securityToken)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;基于 Token 的用户验证可以在控制器中使用如下方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> auth = <span class="keyword">await</span> HttpContext.AuthenticateAsync();</span><br><span class="line"><span class="keyword">var</span> id = auth.Principal.Claims.FirstOrDefault(x =&gt; x.Type.Equals(ClaimTypes.NameIdentifier))?.Value;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以将 JWT 用于授权部分，只需添加角色声明到 JWT 配置中即可。<br>&emsp;&emsp;更多关于 .NET Core 中 JWT 认证和授权部分，请查阅：<a href="https://code-maze.com/authentication-aspnetcore-jwt-1/" target="_blank" rel="noopener">authentication-aspnetcore-jwt-1</a> 和 <a href="https://code-maze.com/authentication-aspnetcore-jwt-2/" target="_blank" rel="noopener">authentication-aspnetcore-jwt-2</a>  </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
+<p>&emsp;&emsp;读到这里，可能会有朋友对上述一些最佳实践不是很认同，因为全篇都没有谈及更切合项目的实践指南，比如 TDD 、DDD 等。但我个人认为上述所有的最佳实践是基础，只有把这些基础掌握了，才能更好地理解一些更高层次的实践指南。万丈高楼平地起，所以你可以把这看作是一篇面向新手的最佳实践指南。</p>
+</blockquote>
+<p>&emsp;&emsp;在这份指南中，我们的主要目的是让你熟悉关于使用 .NET Core 开发 Web API 项目时的一些最佳实践。这里面的部分内容在其它框架中也同样适用。因此，熟练掌握它们很有用。<br>&emsp;&emsp;非常感谢你能阅读这份指南，希望它能对你有所帮助。  </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> Web </tag>
+            
+            <tag> dotNET </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[如何运用领域驱动设计]]></title>
+      <url>/2019/12/19/HowToUseDDD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>值对象：<a href="https://www.cnblogs.com/uoyo/p/11951840.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11951840.html</a><br>实体：<a href="https://www.cnblogs.com/uoyo/p/11984311.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11984311.html</a><br>领域服务：<a href="https://www.cnblogs.com/uoyo/p/12023896.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12023896.html</a><br>聚合：<a href="https://www.cnblogs.com/uoyo/p/12061334.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12061334.html</a>  </p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> 领域驱动设计 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Docker 实战总结]]></title>
+      <url>/2019/12/19/DockerSummary/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.cnblogs.com/leozhanggg/p/12039953.html" target="_blank" rel="noopener">https://www.cnblogs.com/leozhanggg/p/12039953.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p><strong>目录</strong></p>
+<ol>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-简介">Docker 简介</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-优势">Docker 优势</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-基本概念">Docker 基本概念</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-安装使用">Docker 安装使用</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-常用命令">Docker 常用命令</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-镜像构建">Docker 镜像构建</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-本地仓库">Docker 本地仓库</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-与图形管理工具-Portainer">Docker 图形管理工具 Portainer</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-与集群管理工具-Swarm">Docker 集群管理工具 Swarm</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-运维流程图">Docker 运维流程图</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-配置管理">Docker 配置管理</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-后续问题">Docker 后续问题</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/DockerSummary/#Docker-报错解决">Docker 报错解决</a></li>
+</ol>
+<h1 id="Docker-简介"><a href="#Docker-简介" class="headerlink" title="Docker 简介"></a>Docker 简介</h1><p>&emsp;&emsp;<strong>Docker 是一个开源的应用容器引擎，开发者可以打包自己的应用到容器里面，然后迁移到其他机器的 docker 应用中，可以实现快速部署。</strong><br>&emsp;&emsp;简单的理解，docker 就是一个软件集装箱化平台，就像船只、火车、卡车运输集装箱而不论其内部的货物一样，软件容器充当软件部署的标准单元，其中可以包含不同的代码和依赖项。<br>&emsp;&emsp;按照这种方式容器化软件，开发人员和 IT 专业人员只需进行极少修改或不修改，即可将其部署到不同的环境，如果出现的故障，也可以通过镜像，快速恢复服务。</p>
+<figure class="image-box">
+                <img src="1059616-20191109172555889-1603196756.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="Docker-优势"><a href="#Docker-优势" class="headerlink" title="Docker 优势"></a>Docker 优势</h1><h2 id="特性优势"><a href="#特性优势" class="headerlink" title="特性优势"></a>特性优势</h2><figure class="image-box">
+                <img src="1059616-20191109172604637-1990244867.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="资源优势"><a href="#资源优势" class="headerlink" title="资源优势"></a>资源优势</h2><figure class="image-box">
+                <img src="1059616-20191112151326588-965047543.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="Docker-基本概念"><a href="#Docker-基本概念" class="headerlink" title="Docker 基本概念"></a>Docker 基本概念</h1><p>&emsp;&emsp;<strong>Client（客户端）</strong>：是 Docker 的用户端，可以接受用户命令和配置标识，并与 Docker daemon 通信。<br>&emsp;&emsp;<strong>Images（镜像）</strong>：是一个只读模板，含创建 Docker 容器的说明，它与操作系统的安装光盘有点像。<br>&emsp;&emsp;<strong>Containers（容器）</strong>：镜像的运行实例，镜像与容器的关系类比面向对象中的类和对象。<br>&emsp;&emsp;<strong>Registry（仓库）</strong>：是一个集中存储与分发镜像的服务。最常用的 Registry 是官方的 Docker Hub。</p>
+<figure class="image-box">
+                <img src="1059616-20191109172624159-620464653.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="Docker-安装使用"><a href="#Docker-安装使用" class="headerlink" title="Docker 安装使用"></a>Docker 安装使用</h1><h2 id="操作系统：CentOS-7"><a href="#操作系统：CentOS-7" class="headerlink" title="操作系统：CentOS 7"></a>操作系统：CentOS 7</h2><ol>
+<li><p>安装依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加软件源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo　　# 指定阿里云镜像源</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 docker-ce（对系统内核有一定要求，centos6 不支持）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all  yum makecache fast        # 重新生成缓存</span><br><span class="line">yum -y install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置自启并启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable docker</span><br><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112154320701-108250532.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="运行示例：Nginx"><a href="#运行示例：Nginx" class="headerlink" title="运行示例：Nginx"></a>运行示例：Nginx</h2><ol>
+<li>搜索并下载镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112154517806-1605394976.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="2">
+<li>启动一个容器并映射端口到本地<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 8080:80 --name Nginx nginx　　　　# 参数详解见下文</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112154526743-736147967.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="3">
+<li>访问本地映射端口<figure class="image-box">
+                <img src="1059616-20191112154531659-814379855.png" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ol>
+<h1 id="Docker-常用命令"><a href="#Docker-常用命令" class="headerlink" title="Docker 常用命令"></a>Docker 常用命令</h1><h2 id="镜像控制"><a href="#镜像控制" class="headerlink" title="镜像控制"></a>镜像控制</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">搜索镜像：docker  search  [OPTIONS]  TERM</span><br><span class="line">上传镜像：docker  push  [OPTIONS]  NAME[:TAG]</span><br><span class="line">下载镜像：docker  pull  [OPTIONS]  NAME[:TAG]</span><br><span class="line">提交镜像：docker  commit [OPTIONS]  CONTAINER  NAME[:TAG]</span><br><span class="line">构建镜像：docker  build  [OPTIONS]  PATH</span><br><span class="line">删除镜像：docker  rmi [OPTIONS]  IMAGE  [IMAGE...]</span><br><span class="line">增加镜像标签：docker  tag  SOURCE_IMAGE[:TAG]  TARGET_IMAGE[:TAG]</span><br><span class="line">查看所有镜像：docker  images  [OPTIONS]  [REPOSITORY[:TAG]]</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1059616-20191112155412834-338762946.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="容器控制"><a href="#容器控制" class="headerlink" title="容器控制"></a>容器控制</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">启动/重启容器：docker start/restart CONTAINER</span><br><span class="line">停止/强停容器：docker stop/ kill CONTAINER</span><br><span class="line">删除容器：docker rm [OPTIONS] CONTAINER [CONTAINER...]</span><br><span class="line">重命名容器：docker rename CONTAINER CONTAINER_NEW</span><br><span class="line">进入容器：docker attach CONTAINER</span><br><span class="line">执行容器命令：docker exec CONTAINER COMMAND</span><br><span class="line">查看容器日志：docker logs [OPTIONS] CONTAINER</span><br><span class="line">查看容器列表：docker ps [OPTIONS]</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1059616-20191112155423874-350386050.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="容器启动"><a href="#容器启动" class="headerlink" title="容器启动"></a>容器启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker  run  [OPTIONS]  IMAGE  [COMMAND]  [ARG...]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-d</code>：后台运行容器，并返回容器 ID</li>
+<li><code>-i</code>：以交互模式运行容器，通常与 <code>-t</code> 同时使用</li>
+<li><code>-t</code>：为容器重新分配一个伪输入终端，通常与 <code>-i</code> 同时使用</li>
+<li><code>-v</code>：绑定挂载目录</li>
+<li><code>--name=&quot;mycontainer&quot;</code>：为容器指定一个名称</li>
+<li><code>--net=&quot;bridge&quot;</code>：指定容器的网络连接类型，支持如下：<br><code>bridge</code> / <code>host</code> / <code>none</code> / <code>container:&lt;name|id&gt;</code></li>
+<li><code>-p</code>/<code>-P</code>：端口映射，格式如图：<figure class="image-box">
+                <img src="1059616-20191112155237442-1935865842.png" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ul>
+<h2 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查看 docker 信息：docker info</span><br><span class="line">docker 命令帮助：docker run --help</span><br><span class="line">复制文件到容器：docker cp custom.conf Nginx:/etc/nginx/conf.d/</span><br><span class="line">更新容器启动项：docker container update --restart=always nginx</span><br><span class="line">查看 docker 日志：tail -f /var/log/messages</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1059616-20191112161415759-1267729284.png" alt title class>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>更多可以参考官网：<a href="https://docs.docker.com/engine/reference/commandline/cli/" target="_blank" rel="noopener">https://docs.docker.com/engine/reference/commandline/cli/</a> </p>
+<figure class="image-box">
+                <img src="1059616-20191214150000098-1909876776.png" alt title class>
+                <p></p>
+            </figure>
+</blockquote>
+<h1 id="Docker-镜像构建"><a href="#Docker-镜像构建" class="headerlink" title="Docker 镜像构建"></a>Docker 镜像构建</h1><h2 id="Docker-commit（1-运行-2-修改-3-保存）"><a href="#Docker-commit（1-运行-2-修改-3-保存）" class="headerlink" title="Docker commit（1 运行 2 修改 3 保存）"></a>Docker commit（1 运行 2 修改 3 保存）</h2><ol>
+<li><p>运行容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -dit -p 8080:80 --name Nginx nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改容器（这里我只是做个演示，所以就复制一下文件，具体修改需要根据你实际情况）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp custom.conf Nginx:/etc/nginx/conf.d/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将容器保存为新的镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit Nginx zwx/nginx</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112155640841-516876073.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="Dockerfile（1-编写-2-构建）"><a href="#Dockerfile（1-编写-2-构建）" class="headerlink" title="Dockerfile（1 编写 2 构建）"></a>Dockerfile（1 编写 2 构建）</h2><ol>
+<li>编写 Dockerfile 文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112155736158-842820092.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="2">
+<li>执行 Dockerfile 文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t zwx/nginx .　　　　# 后面有个点，代表当前目录下 dockerfile 文件</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112155724434-463914884.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="3">
+<li>Dockerfile 常用指令<figure class="image-box">
+                <img src="1059616-20191112155749441-1705248710.png" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ol>
+<blockquote>
+<p>更多可以参考：<a href="https://www.cnblogs.com/leozhanggg/p/11820214.html" target="_blank" rel="noopener">【转载】Dockerfile 文件详解</a></p>
+</blockquote>
+<h1 id="Docker-本地仓库"><a href="#Docker-本地仓库" class="headerlink" title="Docker 本地仓库"></a>Docker 本地仓库</h1><ol>
+<li><p>拉取镜像仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker search registry</span><br><span class="line">docker pull registry</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动镜像服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -dit \</span><br><span class="line">--name=Registry \　　　　# 指定容器名称</span><br><span class="line">-p 5000:5000 \　　　　　　# 仓库默认端口是 5000，映射到宿主机，这样可以使用宿主机地址访问</span><br><span class="line">--restart=always \                # 自动重启，这样每次 docker 重启后仓库容器也会自动启动</span><br><span class="line">--privileged=true \              # 增加安全权限，一般可不加</span><br><span class="line">-v /usr/local/my_registry:/var/lib/registry  \　　　　# 把仓库镜像数据保存到宿主机</span><br><span class="line">registry</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注册 https 协议（需要通过本地仓库下载镜像，均需要配置）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json　　　　　　　　# 默认无此文件，需自行添加，有则追加一下内容。</span><br><span class="line">   &#123; &quot;insecure-registries&quot;:[&quot; xx.xx.xx.xx:5000&quot;] &#125;　　# 指定 ip 地址或域名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新增 tag 指明仓库地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag zwx/nginx x.xx.xx.xx:5000/zwx/nginx　　# 如果构建时已经指定仓库地址，则可以省略</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上传镜像到本地仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push x.xx.xx.xx:5000/zwx/nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看本地仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET http://x.xx.xx.xx:5000/v2/_catalog</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191112160214624-1466104232.png" alt title class>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>更多可以参考：<a href="https://www.jianshu.com/p/8f38f198724e" target="_blank" rel="noopener">docker 搭建本地私有仓库</a></p>
+</blockquote>
+<h1 id="Docker-与图形管理工具-Portainer"><a href="#Docker-与图形管理工具-Portainer" class="headerlink" title="Docker 与图形管理工具 Portainer"></a>Docker 与图形管理工具 Portainer</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>&emsp;&emsp;Portainer 是 Docker 的图形化管理工具，提供状态显示面板、应用模板快速部署、容器镜像网络数据卷的基本操作（包括上传下载镜像，创建容器等操作）、事件日志显示、容器控制台操作、Swarm 集群和服务等集中管理和操作、登录用户管理和控制等功能。功能十分全面，基本能满足中小型单位对容器管理的全部需求。</p>
+<figure class="image-box">
+                <img src="1059616-20191112153539731-1511928488.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h2><ol>
+<li><p>搜索并下载镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker search portainer</span><br><span class="line">docker pull portainer/portainer</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>单机方式运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">-p 9000:9000 \　　　# portainer 默认端口是 9000，映射到本地 9000 端口，通过本地地址访问</span><br><span class="line">--restart=always \　　# 设置自动重启</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \　　# 单机必须指定docker.sock</span><br><span class="line">--name Prtainer portainer/portainer</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问<a href="http://localhost:9000" target="_blank" rel="noopener">http://localhost:9000</a><br>&emsp;&emsp;<strong>首次登陆需要注册用户，给 admin 用户设置密码，然后单机版选择 local 连接即可。</strong></p>
+<figure class="image-box">
+                <img src="1059616-20191112153230740-1138499583.png" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>控制管理</p>
+<figure class="image-box">
+                <img src="1059616-20191112153611631-1158270908.png" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ol>
+<blockquote>
+<p>更多可以参考：<a href="https://www.cnblogs.com/river2005/p/8283700.html" target="_blank" rel="noopener">Portainer 介绍</a></p>
+</blockquote>
+<h1 id="Docker-与集群管理工具-Swarm"><a href="#Docker-与集群管理工具-Swarm" class="headerlink" title="Docker 与集群管理工具 Swarm"></a>Docker 与集群管理工具 Swarm</h1><h2 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h2><p>&emsp;&emsp;Swarm 是 Docker 官方提供的一款集群管理工具，其主要作用是把若干台 Docker 主机抽象为一个整体，并且通过一个入口统一管理这些 Docker 主机上的各种 Docker 资源。</p>
+<figure class="image-box">
+                <img src="1059616-20191112152657240-1084437635.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="安装使用-1"><a href="#安装使用-1" class="headerlink" title="安装使用"></a>安装使用</h2><p>&emsp;&emsp;Swarm 在 Docker 1.12 版本之前属于一个独立的项目，在 Docker 1.12 版本发布之后，该项目合并到了 Docker 中，成为 Docker 的一个子命令。</p>
+<ol>
+<li>启动 swarm 集群只需要执行初始化命令即可：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker swarm init \　　　　　　　# 默认初始化节点为管理节点</span><br><span class="line">--advertise-addr xx.xx.xx.xx \　　　#指定使用的 ip</span><br><span class="line">--listen-addr xx.xx.xx.xx:2377　　　#指定监听 ip 和 port，默认为 2377</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191128171456606-615353300.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="2">
+<li><p>设置 manager 节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker swarm join-token manager　　　　#获取管理节点 token，放入下面命令</span><br><span class="line">docker swarm join \</span><br><span class="line">--advertise-addr xx.xx.xx.xx \</span><br><span class="line">--listen-addr xx.xx.xx.xx:2377 \</span><br><span class="line">--token SWMTKN-1-29ynh5uyfiiospy4fsm4pd4xucyji2rn0oj4b4ak4s7a37syf9-ajkrv2ctjr5cmxzuij75tbrmz \</span><br><span class="line">xx.xx.xx.xx:2377</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置 worker 节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker swarm join-token worker　　　　#获取工作节点 token，放入下面命令</span><br><span class="line">docker swarm join \</span><br><span class="line">--advertise-addr xx.xx.xx.xx \</span><br><span class="line">--listen-addr xx.xx.xx.xx:2377 \</span><br><span class="line">--token SWMTKN-1-29ynh5uyfiiospy4fsm4pd4xucyji2rn0oj4b4ak4s7a37syf9-ajkrv2ctjr5cmxzuij75tbrmz \</span><br><span class="line">xx.xx.xx.xx:2377</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker node ls</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1059616-20191128172311278-1473171098.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol start="5">
+<li>创建服务<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]</span><br><span class="line">          --detach , -d:  指定容器运行于前台还是后台，默认为 false</span><br><span class="line">          --name:  服务名称</span><br><span class="line">          --network:  网络连接</span><br><span class="line">          --publish , -p:  端口映射</span><br><span class="line">          --env , -e:  设置环境变量</span><br><span class="line">          --tty , -t:  分配 tty 设备，该可以支持终端登录</span><br><span class="line">          --mount:  文件挂载</span><br><span class="line">          --replicas:  指定任务数量</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<blockquote>
+<p>更多参考：<a href="https://www.jianshu.com/p/028b40ca4f2a" target="_blank" rel="noopener">Docker Swarm 集群部署实践</a>&emsp;&emsp;<a href="https://www.cnblogs.com/xiangsikai/p/9935814.html" target="_blank" rel="noopener">Docker Swarm 常用命令</a></p>
+</blockquote>
+<h2 id="对比K8s究竟有何异同？"><a href="#对比K8s究竟有何异同？" class="headerlink" title="对比K8s究竟有何异同？"></a>对比K8s究竟有何异同？</h2><ol>
+<li><strong>出生不同</strong><br>&emsp;&emsp;Google 根据其在 Linux 上容器管理经验，改造到 docker 管理上，就是 kubernetes。他的在许多方面表现良好,最重要的是构造于 Google 多年的宝贵经验之上。<br>&emsp;&emsp;kubernetes 并不是为了 docker 写的，kubernetes 把集群带到了一个全新的高度，代价是学习曲线比较陡。docker-swarm 使用了一个不同的方式,它是 docker 原生的集群工具。<br>&emsp;&emsp;最方便的部分是它暴露了 docker 标准的编程接口，意味着你之前一直在使用的任何与 docker 沟通的工具（docker CLI,  docker compose 等），都可以无缝的在 docker swarm 上使用。</li>
+<li><strong>安装配置不同</strong><br>&emsp;&emsp;安装设置 swarm 非常简单，简单明了并且很灵活。我们需要做的就是安装一个服务发现工具，然后在所有的节点上安装 swarm 容器。<br>&emsp;&emsp;相比较而言，kubernetes 的安装就有点复杂晦涩了。不同的操作系统上安装都不同。每个操作系统都有自己的独立安装指令。</li>
+<li><strong>运行方式不同</strong><br>&emsp;&emsp;使用 Swarm 和使用容器没有什么不同。比如，你习惯于使用 Docker CLI（命令行接口），你可以继续使用几乎相同的命令。<br>&emsp;&emsp;如果你习惯于使用 Docker Componse 来运行容器，你可以继续在 Swarm 集群中使用。不管你之前习惯于怎么使用容器，你仍旧可以使用，只是在更大级别的集群中使用。<br>&emsp;&emsp;Kubernetes 要求你去学习它自己的 CLI（命令行接口）和配置。你不能使用你之前创建的 docker-compose.yml 配置，你必须要去新建与 Kubernetes 对应的配置。<br>&emsp;&emsp;你也不能使用之前学习的 Docker CLI（命令行接口）。你必须要去学习 Kubernetes CLI（命令行接口）</li>
+</ol>
+<p>&emsp;&emsp;<strong>最后，当需要在 Docker Swarm 和 Kubernetes 做出选择时，可以考虑如下几点：</strong><br>&emsp;&emsp;你是否想依赖于 Docker 自己来解决集群的问题。如果是，选择 Swarm。如果某些功能在 Docker 中不支持，那它也非常可能在 Swarm 中找不到，因为 Swarm 是依赖于 Docker API 的。<br>&emsp;&emsp;另外一方面，如果你想要一个工具可以解决 Docker 的限制，Kubernetes 将是不错的选择。Kubernetes 不是基于 Docker，而是基于 Google 多年对于管理容器的经验。它是按照自己的方式来行事。  </p>
+<h1 id="Docker-运维流程图"><a href="#Docker-运维流程图" class="headerlink" title="Docker 运维流程图"></a>Docker 运维流程图</h1><figure class="image-box">
+                <img src="1059616-20191112152457727-1393157662.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="Docker-配置管理"><a href="#Docker-配置管理" class="headerlink" title="Docker 配置管理"></a>Docker 配置管理</h1><h2 id="用了容器以后，还需要配置管理吗？"><a href="#用了容器以后，还需要配置管理吗？" class="headerlink" title="用了容器以后，还需要配置管理吗？"></a>用了容器以后，还需要配置管理吗？</h2><p>&emsp;&emsp;起初我们跟 Docker 官方一样，属于理想主义派。天真的认为容器就应该是 inmutable 的，当需要配置变更的时候，重新构建镜像重新部署。<br>&emsp;&emsp;基于这一思路，我们在 cSphere 中添加了个镜像自动构建模块，用户可以配置代码仓库的地址。<br>&emsp;&emsp;服务的配置文件保存于 Git 或者 SVN 库中，需要配置变更时，向版本库中 Push 一下，自动通过 hook 触发镜像构建，并自动完成线上容器的重建。<br>&emsp;&emsp;通过这套系统，用户可以非常方便的批量更新线上的服务，并不局限于配置文件的变更，代码的变更也天生支持。<br>&emsp;&emsp;经过实际使用，这套系统能够很好的满足开发和测试环境的需求，提升工作效率。<br>&emsp;&emsp;<strong>但是，在生产环境中使用的时候，我们发现这种流程其实并不那么完美，主要表现在：</strong><br>&emsp;&emsp;镜像构建和部署虽然自动化了，但构建是针对 VCS 中的某个仓库的，改一行配置就得整体重新构建一下，在更新容器时还需要把镜像重新分发到所有机器上，配置变更速度太慢。<br>&emsp;&emsp;这种方式的配置变更会涉及到服务的重启，这在生产环境某些场景下是不可接受的 ，有可能引起短暂的服务中断。  </p>
+<h2 id="应用配置文件应该需要做到什么？"><a href="#应用配置文件应该需要做到什么？" class="headerlink" title="应用配置文件应该需要做到什么？"></a>应用配置文件应该需要做到什么？</h2><p>&emsp;&emsp;Docker 应用配置文件能够保持能够支持针对不同环境作出更改。另外配置文件支持在线更改，重启就生效。一般分为以下两种方式。</p>
+<ol>
+<li><strong>Docker 环境变量</strong><br>&emsp;&emsp;需要在制作镜像的时候就需要提前想好，有哪些参数是部署容器的时候会经常更改，<br>&emsp;&emsp;然后把这些参数抽出来做成容器的环境变量，然后在部署的容器的时候填入不同的参数即可。<br>&emsp;&emsp;但是如果后续发现有一些参数不同场景下部署的时候也会修改，那就需要再重新制作镜像了。</li>
+<li><strong>应用配置文件</strong><br>&emsp;&emsp;上述的管理方式不太灵活，灵活的管理方式是将配置文件和镜像剥离开，这样就不会被镜像给绑定了。<br>&emsp;&emsp;<strong>注：最新版本可以参考 docker config 命令管理</strong></li>
+</ol>
+<h1 id="Docker-后续问题"><a href="#Docker-后续问题" class="headerlink" title="Docker 后续问题"></a>Docker 后续问题</h1><ul>
+<li>集群环境</li>
+<li>网络安全</li>
+<li>存储管理</li>
+<li>日志收集</li>
+<li>实时监控</li>
+<li>性能调优</li>
+<li>……</li>
+</ul>
+<h1 id="Docker-报错解决"><a href="#Docker-报错解决" class="headerlink" title="Docker 报错解决"></a>Docker 报错解决</h1><p><a href="https://www.cnblogs.com/leozhanggg/p/11730189.html" target="_blank" rel="noopener">【解决】Got permission denied while trying to connect to the Docker daemon socket at……dial unix /var/run/docker.sock: permission denied</a><br><a href="https://www.cnblogs.com/leozhanggg/p/12031433.html" target="_blank" rel="noopener">【解决】error pulling image configuration: Get https:// …… x509: certificate has expired or is not yet valid</a><br><a href="https://www.cnblogs.com/leozhanggg/p/12023531.html" target="_blank" rel="noopener">【解决】image … could not be accessed on a registry to record its digest.</a><br><a href="https://www.cnblogs.com/leozhanggg/p/12023456.html" target="_blank" rel="noopener">【解决】http: server gave HTTP response to HTTPS client</a><br><a href="https://www.cnblogs.com/leozhanggg/p/12023429.html" target="_blank" rel="noopener">【解决】OCI runtime exec failed……executable file not found in $PATH”: unknown</a><br>更多报错解决方案持续更新中：<a href="https://www.cnblogs.com/leozhanggg/p/11796810.html" target="_blank" rel="noopener">【解决】Docker Errors</a>  </p>
+<hr>
+<blockquote>
+<p>如果想更详细，更深入了解 Docker，推荐 &gt;&gt;&gt; <a href="https://www.cnblogs.com/codelove/p/10030439.html" target="_blank" rel="noopener">Docker 最全教程——从理论到实战（一）</a></p>
+</blockquote>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[RabbitMQ 知识点]]></title>
+      <url>/2019/12/19/RabbitMQKnowledgePoints/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/r8k1TN46Pk61qTjZ8ljsEQ</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;目前，主流的消息中间件主要有：ActiveMQ、Kafka、RabbitMQ、RocketMQ 等等……而我们今天的主角是：RabbitMQ。RabbitMQ 是开源基于 erlang 语言开发，具有高可用高并发的优点，适合集群消息代理和队列服务器，它是基于 AMQP 协议来实现的。AMQP 的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。RabbitMQ 支持多种语言，有消息确认机制和持久化机制，保证数据不丢失的前提做到可靠性、可用性。</p>
+<h1 id="消息与消息队列"><a href="#消息与消息队列" class="headerlink" title="消息与消息队列"></a>消息与消息队列</h1><p>&emsp;&emsp;消息（Message）是指应用于应用之间传送的数据，消息的类型包括文本字符串、JSON、XML、内嵌对象等等…<br>&emsp;&emsp;所谓 <strong>消息中间件 / 消息队列</strong>（Message Queue Middleware，简称 MQ）是利用高效可靠的消息传递机制进行数据交流，同时可以基于数据通信来进行分布式系统的继承。消息中间件一般有两种传递模式：<strong>点对点（Point-to-Point）模式</strong>和<strong>发布/订阅（Pub/Sub）模式</strong>。点对点模式是基于队列的，消息生产者发送消息到队列，消息消费者从队列中接收消息，队列的存在使得消息的异步传输成为了可能。发布订阅模式定义了如何向一个内容节点发布和订阅内容，这个内容节点叫 topic，这种模式可以满足消费者发布一个消息，多个消费者同时消费同一信息的需求。</p>
+<figure class="image-box">
+                <img src="1.webp" alt="性能对比" title class>
+                <p>性能对比</p>
+            </figure>
+
+<h2 id="什么是-AMQP-协议？"><a href="#什么是-AMQP-协议？" class="headerlink" title="什么是 AMQP 协议？"></a>什么是 AMQP 协议？</h2><p>&emsp;&emsp;AMQP 的全称：Advanced Message Queuing Protocol（高级消息队列协议），它是消息队列的一个规范，其中定义了很多核心的概念，AMQP 与 JMS（Java Message Service）Java 平台的专业技术规范类似，同样提供了很多面向中间件的 API，用于两个应用程序之间，或者分布式系统之间的发送消息，进行异步通信。</p>
+<h2 id="AMQP-的协议模型"><a href="#AMQP-的协议模型" class="headerlink" title="AMQP 的协议模型"></a>AMQP 的协议模型</h2><p>&emsp;&emsp;<strong>解释</strong>：Producer（生产者）将信息投递到 Server 端的 RabbitMQ 的 Exchange 中（过程：message -&gt; server -&gt; virtual host -&gt; RabbitMQ -&gt; Exchange），Consumer（消费者）只需要订阅消息队列 Message Queue，每当有消息投递到队列 queue 中时，都会通知消费者进行消费。</p>
+<ul>
+<li>生产者只需要将消息投递到 Exchange 交换机中，不需要关注消息被投递到哪个队列。</li>
+<li>消费者只需要监听队列来消费消息，不需要关注消息来自于哪个 Exchange。</li>
+<li>Exchange 和 Message Queue 存在着绑定的关系，一个 Exchage 可以绑定多个消息队列。</li>
+</ul>
+<figure class="image-box">
+                <img src="2.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="AMQP-核心概念"><a href="#AMQP-核心概念" class="headerlink" title="AMQP 核心概念"></a>AMQP 核心概念</h2><ul>
+<li><strong>Server</strong>：又称 Broker，接受客户端的连接，实现 AMQP 实体服务；</li>
+<li><strong>Connection</strong>：连接，应用于程序与 Broker 的网络连接；</li>
+<li><strong>Channel</strong>：网络通道，几乎所有的操作都是在 channel 中进行的，channel 是进行消息读写的通道，客户可以建立多个 channel，每个 channel 代表一个会话任务；</li>
+<li><strong>Message</strong>：消息，服务器与应用程序之间传送的数据，由 Properties 和 Body 组成，Properties 可以对消息进行修饰，比如消息的优先级，延迟等高级特性，Body 是消息体内容；</li>
+<li><strong>Virtual host</strong>：虚拟地址，用于进行逻辑隔离，最上层的消息路由，一个 Virtrual host 里面可以有若干个 Exchange 和 Queue，同一个 Virtrual host 里面不能有相同名字的 Exchange 或 Queue；</li>
+<li><strong>Exchange</strong>：交换机，接收消息，根据路由键转发消息到绑定的队列；</li>
+<li><strong>Routingkey</strong>：生产者架构消息发给交换器的时候，会指定一个 RoutingKey，用来置顶这个消息的路由规则，通过 RoutingKey 来决定消息流向哪里；</li>
+<li><strong>Binding</strong>：绑定，RabbitMQ 中通过绑定将交换器跟队列关联起来，在绑定的时候会指定一个绑定键（BindingKey），这样 RabbitMQ 就知道如何正确地将消息路由到对应的队列中去了，也就是生产者将信息发送给交换器时，需要一个 RoutingKey，当 RoutingKey 与 BindingKey 完全匹配时，消息会被路由到对应的队列中去；</li>
+<li><strong>Queue</strong>：也叫 Message Queue，消息队列，保存消息并将他们转发给消费者；</li>
+</ul>
+<p>&emsp;&emsp;注意：对于初学者，交换器、路由键、绑定这几个概念理解起来比较晦涩，这里做个比喻：交换器相当于投递包裹的邮箱，RoutingKey 相当于填写在包裹上的地址，BindingKey 相当于包裹的目的地，当填写在包裹上的地址和实际想要投递的地址相匹配，那么这个包裹就会被投递到目的地，最后这个目的地的主人 “队列” 就可以保留这个包裹，如果对应的地址不匹配，也就是 RoutingKey 和 BindingKey 不匹配，邮递员就不能正确地投递到目的地，包裹可能会回退给寄件人，也可能被丢弃。  </p>
+<h2 id="AMQP-消息路由"><a href="#AMQP-消息路由" class="headerlink" title="AMQP 消息路由"></a>AMQP 消息路由</h2><p>&emsp;&emsp;AMQP 中消息的路由过程和 JMS 存在一些差别。<strong>AMQP</strong> 中增加了 Exchange 和 Binding 的角色。生产者把消息发布到 Exchange 上，消息最终到达队列并被消费者接收，而 Binding 决定交换器的消息应该发送到哪个队列。</p>
+<figure class="image-box">
+                <img src="3.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h3 id="Exchange-类型"><a href="#Exchange-类型" class="headerlink" title="Exchange 类型"></a>Exchange 类型</h3><p>&emsp;&emsp;RabbitMQ 常用的交换器类型主要有四种：direct、fanout、topic、headers ，Exchange 分发消息时根据类型的不同分发策略有区别，headers 匹配 AMQP 消息的 header 而不是路由键，此外 headers 交换器和 direct 交换器完全一致，但性能差很多，目前几乎用不到了，这里仅仅对其他三种进行展开说明：  </p>
+<h4 id="1-direct"><a href="#1-direct" class="headerlink" title="1. direct"></a>1. direct</h4><figure class="image-box">
+                <img src="4.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;direct 类型的交换器理由规则需要遵循严格的完全匹配规则，他会把消息路由到那些 BindingKey 和 RoutingKey 完全匹配的队里中，如果消息中的路由键（RoutingKey）和 Binding 中的 BindingKey 一致， 交换器就将消息发到对应的队列中。比如：</p>
+<figure class="image-box">
+                <img src="5.webp" alt title class>
+                <p></p>
+            </figure>
+
+<ul>
+<li>在发送消息的时候设置路由键为 “info” 或者 “debug”，消息只会路由到 Queue2，如果以其他路由键发送消息，则消息不会路由到这两个队里中，这就是路由键和 Binding key 的完全匹配。</li>
+</ul>
+<p>&emsp;&emsp;direct 类型模式的特点：</p>
+<ol>
+<li>不需要将 Exchange 进行任何绑定（binding）操作</li>
+<li>消息传递时需要一个 “RoutingKey”，可以简单的理解为要发送到的队列名字。</li>
+<li>如果 vhost 中不存在 RoutingKey 中指定的队列名，则该消息会被抛弃。</li>
+</ol>
+<h4 id="2-fanout"><a href="#2-fanout" class="headerlink" title="2. fanout"></a>2. fanout</h4><figure class="image-box">
+                <img src="6.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;<strong>它会将所有发送到该交换器的消息路由到所有与该交换器绑定的队列中。</strong>fanout 交换器不处理路由键，只是简单的将队列绑定到交换器上，每个发送到交换器的消息都会被转发到与该交换器绑定的所有队列上。就像子网广播，每台子网内的主机都获得了一份复制的消息。fanout 类型转发消息是最快的。<br>&emsp;&emsp;这种模式的特点：</p>
+<ol>
+<li>不需要 RoutingKey，我们将路由键设置为空即可。</li>
+<li>需要提前将 Exchange 和 Queue 进行绑定，一个 Exchange 可以绑定多个 Queue，一个 Queue 可以同时与多个 Exchange 进行绑定（”多对多关系”）。</li>
+<li>如果接受到消息的 Exchange 没有与任何 Queue 绑定，则消息会被抛弃。</li>
+</ol>
+<h4 id="3-topic"><a href="#3-topic" class="headerlink" title="3. topic"></a>3. topic</h4><figure class="image-box">
+                <img src="7.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;direct 类型的交换器理由规则需要遵循严格的完全匹配规则，这种严格的匹配方式有时候不能满足实际的业务需求，topic 就是在这种规则上进行了扩展，topic 交换器通过模式匹配分配消息的路由键属性，将路由键和某个模式进行匹配，但是这里的匹配规则有所不同，它的约定如下：</p>
+<ul>
+<li>RoutingKey 为一个点号 “.” 分隔的字符串（被点号 “.” 号分隔开的一段独立的字符串称为单词），比如：”com.rabbit.client”、”java.util.Map”;</li>
+<li>BindingKey 和 RoutingKey 为一个点号 “.” 分隔的字符串；</li>
+<li>BindingKey 中可以存在两种特殊的字符串 “*“ 和 “#“，用于做模糊匹配，其中 “*“ 用于匹配一个单词， “#“ 用于匹配多规则单词；<ul>
+<li>“com.#” 可以匹配到 com.rabbitmq.aaa</li>
+<li>“com.*” 可以匹配到 com.rabbitmq</li>
+</ul>
+</li>
+</ul>
+<p>&emsp;&emsp;<strong>举个实例</strong>：</p>
+<figure class="image-box">
+                <img src="8.webp" alt title class>
+                <p></p>
+            </figure>
+<ul>
+<li>路由键为 “com.rabbitmq.client” 的消息会同时路由到 Queue1 和 Queue2</li>
+<li>路由键为 “com.hidden.client” 的消息只会路由到 Queue2</li>
+<li>路由键为 “com.hidden.data” 的消息只会路由到 Queue2</li>
+<li>路由键为 “java.rabbitmq.data” 的消息只会路由到 Queue1</li>
+<li>路由键为 “java.util.map” 的消息将会被丢弃或者返回给生产者，因为它没有匹配任何的路由键。</li>
+</ul>
+<h2 id="RabbitMQ-特点"><a href="#RabbitMQ-特点" class="headerlink" title="RabbitMQ 特点"></a>RabbitMQ 特点</h2><p>&emsp;&emsp;RabbitMQ 最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。具体特点包括：</p>
+<ol>
+<li>可靠性<br>RabbitMQ 使用一些机制来保证可靠性，如持久化、传输确认、发布确认。</li>
+<li>灵活的路由（Flexible Routing）<br>在消息进入队列之前，通过 Exchange 来路由消息。对于典型的路由功能，RabbitMQ 已经提供了一些内置的 Exchange 来实现。针对更复杂的路由功能，可以将多个 Exchange 绑定在一起，也可以通过插件机制实现自己的 Exchange。</li>
+<li>消息集群（Clustering）<br>多个 RabbitMQ 服务器可以组成一个集群，形成一个逻辑 Broker 。</li>
+<li>高可用<br>队列可以在集群中的机器上进行镜像，使得在部分节点出问题的情况下队列仍然可用。</li>
+<li>多种协议（Multi-protocol）<br>RabbitMQ 支持多种消息队列协议，比如 STOMP、MQTT 等等。</li>
+<li>多语言客户端<br>RabbitMQ 几乎支持所有常用语言，比如 Java、.NET、Ruby 等等。</li>
+<li>管理界面<br>RabbitMQ 提供了一个易用的用户界面，使得用户可以监控和管理消息 Broker 的许多方面。</li>
+<li>跟踪机制<br>如果消息异常，RabbitMQ 提供了消息跟踪机制，使用者可以找出发生了什么。</li>
+<li>插件机制<br>RabbitMQ 提供了许多插件，来从多方面进行扩展，也可以编写自己的插件。</li>
+</ol>
+<h1 id="RabbitMQ-中的概念模型"><a href="#RabbitMQ-中的概念模型" class="headerlink" title="RabbitMQ 中的概念模型"></a>RabbitMQ 中的概念模型</h1><h2 id="消息模型"><a href="#消息模型" class="headerlink" title="消息模型"></a>消息模型</h2><p>&emsp;&emsp;所有 MQ 产品从模型抽象上来说都是一样的过程：<br>&emsp;&emsp;消费者（consumer）订阅某个队列。生产者（producer）创建消息，然后发布到队列（queue）中，最后将消息发送到监听的消费者。</p>
+<figure class="image-box">
+                <img src="9.webp" alt="消息流" title class>
+                <p>消息流</p>
+            </figure>
+
+<h2 id="RabbitMQ-基本概念"><a href="#RabbitMQ-基本概念" class="headerlink" title="RabbitMQ 基本概念"></a>RabbitMQ 基本概念</h2><p>&emsp;&emsp;上面只是最简单抽象的描述，具体到 RabbitMQ 则有更详细的概念需要解释。上面介绍过 RabbitMQ 是 AMQP 协议的一个开源实现，所以其内部实际上也是 AMQP 中的基本概念：</p>
+<figure class="image-box">
+                <img src="10.webp" alt="RabbitMQ 内部结构" title class>
+                <p>RabbitMQ 内部结构</p>
+            </figure>
+
+<h2 id="RabbitMQ-的作用和使用场景"><a href="#RabbitMQ-的作用和使用场景" class="headerlink" title="RabbitMQ 的作用和使用场景"></a>RabbitMQ 的作用和使用场景</h2><figure class="image-box">
+                <img src="11.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="RabbitMQ-的核心组件"><a href="#RabbitMQ-的核心组件" class="headerlink" title="RabbitMQ 的核心组件"></a>RabbitMQ 的核心组件</h2><figure class="image-box">
+                <img src="12.webp" alt title class>
+                <p></p>
+            </figure>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> RabbitMQ </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Redis 知识点]]></title>
+      <url>/2019/12/19/RedisKnowledgePoints/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://juejin.im/post/5dcaebea518825571f5c4ab0" target="_blank" rel="noopener">https://juejin.im/post/5dcaebea518825571f5c4ab0</a></p>
+</blockquote>
+<a id="more"></a>
+
+<figure class="image-box">
+                <img src="Redis.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="缓存知识点"><a href="#缓存知识点" class="headerlink" title="缓存知识点"></a>缓存知识点</h1><figure class="image-box">
+                <img src="16e62e9b721e11c3.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="缓存有哪些类型？"><a href="#缓存有哪些类型？" class="headerlink" title="缓存有哪些类型？"></a>缓存有哪些类型？</h2><p>&emsp;&emsp;缓存是高并发场景下提高热点数据访问性能的一个有效手段，在开发项目时会经常使用到。<br>&emsp;&emsp;缓存的类型分为：<strong>本地缓存</strong>、<strong>分布式缓存</strong>和<strong>多级缓存</strong>。  </p>
+<h3 id="本地缓存："><a href="#本地缓存：" class="headerlink" title="本地缓存："></a>本地缓存：</h3><p>&emsp;&emsp;<strong>本地缓存</strong>就是在进程的内存中进行缓存，比如我们的 <code>JVM</code> 堆中，可以用 <code>LRUMap</code> 来实现，也可以使用 <code>Ehcache</code> 这样的工具来实现。<br>&emsp;&emsp;本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。  </p>
+<h3 id="分布式缓存："><a href="#分布式缓存：" class="headerlink" title="分布式缓存："></a>分布式缓存：</h3><p>&emsp;&emsp;<strong>分布式缓存</strong>可以很好地解决这个问题。<br>&emsp;&emsp;分布式缓存一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。  </p>
+<h3 id="多级缓存："><a href="#多级缓存：" class="headerlink" title="多级缓存："></a>多级缓存：</h3><p>&emsp;&emsp;为了平衡这种情况，实际业务中一般采用<strong>多级缓存</strong>，本地缓存只保存访问频率最高的部分热点数据，其他的热点数据放在分布式缓存中。<br>&emsp;&emsp;在目前的一线大厂中，这也是最常用的缓存方案，单靠单一的缓存方案往往难以撑住很多高并发的场景。  </p>
+<h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><p>&emsp;&emsp;不管是本地缓存还是分布式缓存，为了保证较高性能，都是使用内存来保存数据，由于成本和内存限制，当存储的数据超过缓存容量时，需要对缓存的数据进行剔除。<br>&emsp;&emsp;一般的剔除策略有 <strong>FIFO</strong> 淘汰最早数据、<strong>LRU</strong> 剔除最近最少使用、和 <strong>LFU</strong> 剔除最近使用频率最低的数据几种策略。</p>
+<ul>
+<li><strong>noeviction</strong>: 返回错误当内存限制达到并且客户端尝试执行会让更多内存被使用的命令（大部分的写入指令，但 DEL 和几个例外）</li>
+<li><strong>allkeys-lru</strong>: 尝试回收最少使用的键（LRU），使得新添加的数据有空间存放。</li>
+<li><strong>volatile-lru</strong>: 尝试回收最少使用的键（LRU），但仅限于在过期集合的键,使得新添加的数据有空间存放。</li>
+<li><strong>allkeys-random</strong>: 回收随机的键使得新添加的数据有空间存放。</li>
+<li><strong>volatile-random</strong>: 回收随机的键使得新添加的数据有空间存放，但仅限于在过期集合的键。</li>
+<li><strong>volatile-ttl</strong>: 回收在过期集合的键，并且优先回收存活时间（TTL）较短的键,使得新添加的数据有空间存放。</li>
+</ul>
+<p>&emsp;&emsp;如果没有键满足回收的前提条件的话，策略 <strong>volatile-lru</strong>, <strong>volatile-random</strong> 以及 <strong>volatile-ttl</strong> 就和 <strong>noeviction</strong> 差不多了。  </p>
+<h2 id="Memcache"><a href="#Memcache" class="headerlink" title="Memcache"></a>Memcache</h2><p>&emsp;&emsp;注意后面会把 <strong>Memcache</strong> 简称为 MC。<br>&emsp;&emsp;先来看看 MC 的特点：</p>
+<ul>
+<li>MC 处理请求时使用多线程异步 I/O 的方式，可以合理利用 CPU 多核的优势，性能非常优秀；</li>
+<li>MC 功能简单，使用内存存储数据；</li>
+<li>MC 的内存结构以及钙化问题我就不细说了，大家可以查看<a href="http://www.memcached.org/about" target="_blank" rel="noopener">官网</a>了解下；</li>
+<li>MC 对缓存的数据可以设置失效期，过期后的数据会被清除；</li>
+<li>失效的策略采用延迟失效，就是当再次使用数据时检查是否失效；</li>
+<li>当容量存满时，会对缓存中的数据进行剔除，剔除时除了会对过期 key 进行清理，还会按 LRU 策略对数据进行剔除。</li>
+</ul>
+<p>&emsp;&emsp;另外，使用 MC 有一些限制，这些限制在现在的互联网场景下很致命，成为大家选择 <strong>Redis</strong>、<strong>MongoDB</strong> 的重要原因：</p>
+<ul>
+<li>key 不能超过 250 个字节；</li>
+<li>value 不能超过 1M 字节；</li>
+<li>key 的最大失效时间是 30 天；</li>
+<li>只支持 K-V 结构，不提供持久化和主从同步功能。</li>
+</ul>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>&emsp;&emsp;先简单说一下 <strong>Redis</strong> 的特点，方便和 MC 比较。</p>
+<ul>
+<li>与 MC 不同的是，Redis 采用单线程模式处理请求。这样做的原因有 2 个：一个是因为采用了非阻塞的异步事件处理机制；另一个是缓存数据都是内存操作 I/O 时间不会太长，单线程可以避免线程上下文切换产生的代价。</li>
+<li><strong>Redis</strong> 支持持久化，所以 Redis 不仅仅可以用作缓存，也可以用作 NoSQL 数据库。</li>
+<li>相比 MC，<strong>Redis</strong> 还有一个非常大的优势，就是除了 K-V 之外，还支持多种数据格式，例如 list、set、sorted set、hash 等。</li>
+<li><strong>Redis</strong> 提供主从同步机制，以及 <strong>Cluster</strong> 集群部署能力，能够提供高可用服务。</li>
+</ul>
+<h1 id="详解-Redis"><a href="#详解-Redis" class="headerlink" title="详解 Redis"></a>详解 Redis</h1><p>&emsp;&emsp;Redis 的知识点结构如下图所示。</p>
+<figure class="image-box">
+                <img src="16e62e9b727cc6fb.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>&emsp;&emsp;来看 <strong>Redis</strong> 提供的功能有哪些吧！  </p>
+<h3 id="我们先看基础类型："><a href="#我们先看基础类型：" class="headerlink" title="我们先看基础类型："></a>我们先看基础类型：</h3><h4 id="String："><a href="#String：" class="headerlink" title="String："></a>String：</h4><p>&emsp;&emsp;<strong>String</strong> 类型是 <strong>Redis</strong> 中最常使用的类型，内部的实现是通过 <strong>SDS</strong>（Simple Dynamic String）来存储的。SDS 类似于 <code>Java</code> 中的 <code>ArrayList</code>，可以通过预分配冗余空间的方式来减少内存的频繁分配。<br>&emsp;&emsp;这是最简单的类型，就是普通的 set 和 get，做简单的 KV 缓存。<br>&emsp;&emsp;String 的实际应用场景比较广泛的有：</p>
+<ul>
+<li><strong>缓存功能</strong>：<strong>String</strong> 字符串是最常用的数据类型，不仅仅是 <strong>Redis</strong>，各个语言都是最基本类型，因此，利用 <strong>Redis</strong> 作为缓存，配合其它数据库作为存储层，利用 <strong>Redis</strong> 支持高并发的特点，可以大大加快系统的读写速度、以及降低后端数据库的压力。</li>
+<li><strong>计数器</strong>：许多系统都会使用 <strong>Redis</strong> 作为系统的实时计数器，可以快速实现计数和查询的功能。而且最终的数据结果可以按照特定的时间落地到数据库或者其它存储介质当中进行永久保存。</li>
+<li><strong>共享用户 Session</strong>：用户重新刷新一次界面，可能需要访问一下数据进行重新登录，或者访问页面缓存 <strong>Cookie</strong>，但是可以利用 <strong>Redis</strong> 将用户的 <strong>Session</strong> 集中管理，在这种模式只需要保证 <strong>Redis</strong> 的高可用，每次用户 <strong>Session</strong> 的更新和获取都可以快速完成。大大提高效率。</li>
+</ul>
+<h4 id="Hash："><a href="#Hash：" class="headerlink" title="Hash："></a>Hash：</h4><p>&emsp;&emsp;这个是类似 <strong>Map</strong> 的一种结构，这个一般就是可以将结构化的数据，比如一个对象（前提是<strong>这个对象没嵌套其他的对象</strong>）给缓存在 <strong>Redis</strong> 里，然后每次读写缓存的时候，可以就操作 <strong>Hash</strong> 里的<strong>某个字段</strong>。<br>&emsp;&emsp;但是这个的场景其实还是多少单一了一些，因为现在很多对象都是比较复杂的，比如你的商品对象可能里面就包含了很多属性，其中也有对象。我自己使用的场景用得不是那么多。  </p>
+<h4 id="List："><a href="#List：" class="headerlink" title="List："></a>List：</h4><p>&emsp;&emsp;<strong>List</strong> 是有序列表，这个还是可以玩儿出很多花样的。<br>&emsp;&emsp;比如可以通过 <strong>List</strong> 存储一些列表型的数据结构，类似粉丝列表、文章的评论列表之类的东西。<br>&emsp;&emsp;比如可以通过 <code>lrange</code> 命令，读取某个闭区间内的元素，可以基于 <strong>List</strong> 实现分页查询，这个是很棒的一个功能，基于 <strong>Redis</strong> 实现简单的高性能分页，可以做类似微博那种下拉不断分页的东西，性能高，就一页一页走。<br>&emsp;&emsp;比如可以搞个简单的消息队列，从 <strong>List</strong> 头怼进去，从 <strong>List</strong> 屁股那里弄出来。<br>&emsp;&emsp;<strong>List</strong> 本身就是我们在开发过程中比较常用的数据结构了，热点数据更不用说了。</p>
+<ul>
+<li><strong>消息队列</strong>：<strong>Redis</strong>的链表结构，可以轻松实现阻塞队列，可以使用左进右出的命令组成来完成队列的设计。比如：数据的生产者可以通过 <code>Lpush</code> 命令从左边插入数据，多个数据消费者，可以使用 <code>BRpop</code> 命令阻塞的“抢”列表尾部的数据。</li>
+<li>文章列表或者数据分页展示的应用。<br>比如，我们常用的博客网站的文章列表，当用户量越来越多时，而且每一个用户都有自己的文章列表，而且当文章多时，都需要分页展示，这时可以考虑使用 <strong>Redis</strong> 的列表，列表不但有序同时还支持按照范围内获取元素，可以完美解决分页查询功能。大大提高查询效率。</li>
+</ul>
+<h4 id="Set："><a href="#Set：" class="headerlink" title="Set："></a>Set：</h4><p>&emsp;&emsp;<strong>Set</strong> 是无序集合，会自动去重的那种。<br>&emsp;&emsp;直接基于 <strong>Set</strong> 将系统里需要去重的数据扔进去，自动就给去重了，如果你需要对一些数据进行快速的全局去重，你当然也可以基于 <code>JVM</code> 内存里的 <code>HashSet</code> 进行去重，但是如果你的某个系统部署在多台机器上呢？得基于 <strong>Redis</strong> 进行全局的 <strong>Set</strong> 去重。<br>&emsp;&emsp;可以基于 <strong>Set</strong> 玩儿交集、并集、差集的操作，比如交集吧，我们可以把两个人的好友列表整一个交集，看看俩人的共同好友是谁？对吧。<br>&emsp;&emsp;反正这些场景比较多，因为对比很快，操作也简单，两个查询一个 <strong>Set</strong> 搞定。  </p>
+<h4 id="Sorted-Set："><a href="#Sorted-Set：" class="headerlink" title="Sorted Set："></a>Sorted Set：</h4><p>&emsp;&emsp;<strong>Sorted Set</strong> 是排序的 <strong>Set</strong>，去重但可以排序，写进去的时候给一个分数，自动根据分数排序。<br>&emsp;&emsp;有序集合的使用场景与集合类似，但是set集合不是自动有序的，而 <strong>Sorted Set</strong> 可以利用分数进行成员间的排序，而且是插入时就排序好。所以当你需要一个有序且不重复的集合列表时，就可以选择 <strong>Sorted Set</strong> 数据结构作为选择方案。</p>
+<ul>
+<li>排行榜：有序集合经典使用场景。例如视频网站需要对用户上传的视频做排行榜，榜单维护可能是多方面：按照时间、按照播放量、按照获得的赞数等。</li>
+<li>用 <strong>Sorted Set</strong> 来做带权重的队列，比如普通消息的 score 为 1，重要消息的 score 为 2，然后工作线程可以选择按 score 的倒序来获取工作任务。让重要的任务优先执行。<br>微博热搜榜，就是有个后面的热度值，前面就是名称。</li>
+</ul>
+<h3 id="高级用法："><a href="#高级用法：" class="headerlink" title="高级用法："></a>高级用法：</h3><h4 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap:"></a>Bitmap:</h4><p>&emsp;&emsp;位图是支持按 bit 位来存储信息，可以用来实现 <strong>布隆过滤器（BloomFilter）</strong>；  </p>
+<h4 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog:"></a>HyperLogLog:</h4><p>&emsp;&emsp;供不精确的去重计数功能，比较适合用来做大规模数据的去重统计，例如统计 UV；  </p>
+<h4 id="Geospatial"><a href="#Geospatial" class="headerlink" title="Geospatial:"></a>Geospatial:</h4><p>&emsp;&emsp;可以用来保存地理位置，并作位置距离计算或者根据半径计算位置等。有没有想过用 Redis 来实现附近的人？或者计算最优地图路径？  </p>
+<h4 id="pub-sub："><a href="#pub-sub：" class="headerlink" title="pub/sub："></a>pub/sub：</h4><p>&emsp;&emsp;功能是订阅发布功能，可以用作简单的消息队列。  </p>
+<h4 id="Pipeline："><a href="#Pipeline：" class="headerlink" title="Pipeline："></a>Pipeline：</h4><p>&emsp;&emsp;可以批量执行一组指令，一次性返回全部结果，可以减少频繁的请求应答。  </p>
+<h4 id="Lua："><a href="#Lua：" class="headerlink" title="Lua："></a>Lua：</h4><p>&emsp;&emsp;<strong>Redis</strong> 支持提交 <strong>Lua</strong> 脚本来执行一系列的功能。  </p>
+<h4 id="事务："><a href="#事务：" class="headerlink" title="事务："></a>事务：</h4><p>&emsp;&emsp;最后一个功能是事务，但 <strong>Redis</strong> 提供的不是严格的事务，<strong>Redis</strong> 只保证串行执行命令，并且能保证全部执行，但是执行命令失败时并不会回滚，而是会继续执行下去。  </p>
+<h2 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h2><p>&emsp;&emsp;<strong>Redis</strong> 提供了 RDB 和 AOF 两种持久化方式，RDB 是把内存中的数据集以快照形式写入磁盘，实际操作是通过 fork 子进程执行，采用二进制压缩存储；AOF 是以文本日志的形式记录 <strong>Redis</strong> 处理的每一个写入或删除操作。<br>&emsp;&emsp;<strong>RDB</strong> 把整个 Redis 的数据保存在单一文件中，比较适合用来做灾备，但缺点是快照保存完成之前如果宕机，这段时间的数据将会丢失，另外保存快照时可能导致服务短时间不可用。<br>&emsp;&emsp;<strong>AOF</strong> 对日志文件的写入操作使用的追加模式，有灵活的同步策略，支持每秒同步、每次修改同步和不同步，缺点就是相同规模的数据集，AOF 要大于 RDB，AOF 在运行效率上往往会慢于 RDB。  </p>
+<h2 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h2><p>&emsp;&emsp;来看 Redis 的高可用。Redis 支持主从同步，提供 Cluster 集群部署模式，通过 Sentinel 哨兵来监控 Redis 主服务器的状态。当主挂掉时，在从节点中根据一定策略选出新主，并调整其他从 slaveof 到新主。<br>&emsp;&emsp;选主的策略简单来说有三个：</p>
+<ul>
+<li>slave 的 priority 设置的越低，优先级越高；</li>
+<li>同等情况下，slave 复制的数据越多优先级越高；</li>
+<li>相同的条件下 runid 越小越容易被选中。</li>
+</ul>
+<p>&emsp;&emsp;在 Redis 集群中，sentinel 也会进行多实例部署，sentinel 之间通过 Raft 协议来保证自身的高可用。<br>&emsp;&emsp;Redis Cluster 使用分片机制，在内部分为 16384 个 slot 插槽，分布在所有 master 节点上，每个 master 节点负责一部分 slot。数据操作时按 key 做 CRC16 来计算在哪个 slot，由哪个 master 进行处理。数据的冗余是通过 slave 节点来保障。  </p>
+<h2 id="哨兵"><a href="#哨兵" class="headerlink" title="哨兵"></a>哨兵</h2><p>&emsp;&emsp;哨兵必须用三个实例去保证自己的健壮性的，哨兵 + 主从并<strong>不能保证数据不丢失</strong>，但是可以保证集群的<strong>高可用</strong>。<br>&emsp;&emsp;为啥必须要三个实例呢？我们先看看两个哨兵会咋样。</p>
+<figure class="image-box">
+                <img src="16e43d17b9133099.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;master 宕机了 s1 和 s2 两个哨兵只要有一个认为你宕机了就切换了，并且会选举出一个哨兵去执行故障，但是这个时候也需要大多数哨兵都是运行的。<br>&emsp;&emsp;那这样有啥问题呢？M1 宕机了，S1 没挂那其实是 OK 的，但是整个机器都挂了呢？哨兵就只剩下 S2 个裸屌了，没有哨兵去允许故障转移了，虽然另外一个机器上还有 R1，但是故障转移就是不执行。<br>&emsp;&emsp;经典的哨兵集群是这样的：</p>
+<figure class="image-box">
+                <img src="16e43d17ba5878cb.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;M1 所在的机器挂了，哨兵还有两个，两个人一看他不是挂了嘛，那我们就选举一个出来执行故障转移不就好了。<br>&emsp;&emsp;暖男我，小的总结下哨兵组件的主要功能：</p>
+<ul>
+<li>集群监控：负责监控 Redis master 和 slave 进程是否正常工作。</li>
+<li>消息通知：如果某个 <strong>Redis</strong> 实例有故障，那么哨兵负责发送消息作为报警通知给管理员。</li>
+<li>故障转移：如果 master node 挂掉了，会自动转移到 slave node 上。</li>
+<li>配置中心：如果故障转移发生了，通知 client 客户端新的 master 地址。</li>
+</ul>
+<h2 id="主从"><a href="#主从" class="headerlink" title="主从"></a>主从</h2><p>&emsp;&emsp;提到这个，就跟我前面提到的数据持久化的 <strong>RDB</strong> 和 <strong>AOF</strong> 有着比密切的关系了。<br>&emsp;&emsp;我先说下为啥要用主从这样的架构模式，前面提到了单机 <strong>QPS</strong> 是有上限的，而且 <strong>Redis</strong> 的特性就是必须支撑读高并发的，那你一台机器又读又写，<strong>这谁顶得住啊</strong>，不当人啊！但是你让这个 master 机器去写，数据同步给别的 slave 机器，他们都拿去读，分发掉大量的请求那是不是好很多，而且扩容的时候还可以轻松实现水平扩容。</p>
+<figure class="image-box">
+                <img src="16e43d17dfaf05bb.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;你启动一台 slave 的时候，他会发送一个 <code>psync</code> 命令给 master ，如果是这个 slave 第一次连接到 master，他会触发一个全量复制。master 就会启动一个线程，生成 <strong>RDB</strong> 快照，还会把新的写请求都缓存在内存中，<strong>RDB</strong> 文件生成后，master 会将这个 <strong>RDB</strong> 发送给 slave 的，slave 拿到之后做的第一件事情就是写进本地的磁盘，然后加载进内存，然后 master 会把内存里面缓存的那些新命名都发给 slave。</p>
+<blockquote>
+<p>&emsp;&emsp;我发出来之后来自 CSDN 的网友：Jian_Shen_Zer 问了个问题：<br>&emsp;&emsp;主从同步的时候，新的 slave 进来的时候用 <strong>RDB</strong>，那之后的数据呢？有新的数据进入 master 怎么同步到 slave 啊<br>&emsp;&emsp;敖丙答：笨，<strong>AOF</strong> 嘛，增量的就像 <strong>MySQL</strong> 的 <strong>Binlog</strong> 一样，把日志增量同步给从服务就好了。</p>
+</blockquote>
+<h3 id="key-失效机制"><a href="#key-失效机制" class="headerlink" title="key 失效机制"></a>key 失效机制</h3><p>&emsp;&emsp;<strong>Redis</strong> 的 key 可以设置过期时间，过期后 Redis 采用主动和被动结合的失效机制，一个是和 MC 一样在访问时触发被动删除，另一种是定期的主动删除。<br>&emsp;&emsp;定期 + 惰性 + 内存淘汰  </p>
+<h1 id="缓存常见问题"><a href="#缓存常见问题" class="headerlink" title="缓存常见问题"></a>缓存常见问题</h1><h2 id="缓存更新方式"><a href="#缓存更新方式" class="headerlink" title="缓存更新方式"></a>缓存更新方式</h2><p>&emsp;&emsp;这是决定在使用缓存时就该考虑的问题。<br>&emsp;&emsp;缓存的数据在数据源发生变更时需要对缓存进行更新，数据源可能是 DB，也可能是远程服务。更新的方式可以是主动更新。数据源是 DB 时，可以在更新完 DB 后就直接更新缓存。<br>&emsp;&emsp;当数据源不是 DB 而是其他远程服务，可能无法及时主动感知数据变更，这种情况下一般会选择对缓存数据设置失效期，也就是数据不一致的最大容忍时间。<br>&emsp;&emsp;这种场景下，可以选择失效更新，key 不存在或失效时先请求数据源获取最新数据，然后再次缓存，并更新失效期。<br>&emsp;&emsp;但这样做有个问题，如果依赖的远程服务在更新时出现异常，则会导致数据不可用。改进的办法是异步更新，就是当失效时先不清除数据，继续使用旧的数据，然后由异步线程去执行更新任务。这样就避免了失效瞬间的空窗期。另外还有一种纯异步更新方式，定时对数据进行分批更新。实际使用时可以根据业务场景选择更新方式。  </p>
+<h2 id="数据不一致"><a href="#数据不一致" class="headerlink" title="数据不一致"></a>数据不一致</h2><p>&emsp;&emsp;第二个问题是数据不一致的问题，可以说只要使用缓存，就要考虑如何面对这个问题。缓存不一致产生的原因一般是主动更新失败，例如更新 DB 后，更新 <strong>Redis</strong> 因为网络原因请求超时；或者是异步更新失败导致。<br>&emsp;&emsp;解决的办法是，如果服务对耗时不是特别敏感可以增加重试；如果服务对耗时敏感可以通过异步补偿任务来处理失败的更新，或者短期的数据不一致不会影响业务，那么只要下次更新时可以成功，能保证最终一致性就可以。  </p>
+<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>&emsp;&emsp;<strong>缓存穿透</strong>，产生这个问题的原因可能是外部的恶意攻击，例如，对用户信息进行了缓存，但恶意攻击者使用不存在的用户 id 频繁请求接口，导致查询缓存不命中，然后穿透 DB 查询依然不命中。这时会有大量请求穿透缓存访问到 DB。<br>&emsp;&emsp;解决的办法如下：</p>
+<ol>
+<li>对不存在的用户，在缓存中保存一个空对象进行标记，防止相同 ID 再次访问 DB。不过有时这个方法并不能很好解决问题，可能导致缓存中存储大量无用数据。</li>
+<li>使用 <strong>BloomFilter</strong> 过滤器，BloomFilter 的特点是存在性检测，如果 BloomFilter 中不存在，那么数据一定不存在；如果 BloomFilter 中存在，实际数据也有可能会不存在。非常适合解决这类的问题。</li>
+</ol>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p>&emsp;&emsp;<strong>缓存击穿</strong>，就是某个热点数据失效时，大量针对这个数据的请求会穿透到数据源。<br>&emsp;&emsp;解决这个问题有如下办法：</p>
+<ol>
+<li>可以使用互斥锁更新，保证同一个进程中针对同一个数据不会并发请求到 DB，减小 DB 压力。</li>
+<li>使用随机退避方式，失效时随机 sleep 一个很短的时间，再次查询，如果失败再执行更新。</li>
+<li>针对多个热点 key 同时失效的问题，可以在缓存时使用固定时间加上一个小的随机数，避免大量热点 key 同一时刻失效。</li>
+</ol>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p>&emsp;&emsp;<strong>缓存雪崩</strong>，产生的原因是缓存挂掉，这时所有的请求都会穿透到 DB。<br>&emsp;&emsp;解决方法：</p>
+<ol>
+<li>使用快速失败的熔断策略，减少 DB 瞬间压力；</li>
+<li>使用主从模式和集群模式来尽量保证缓存服务的高可用。</li>
+</ol>
+<p>&emsp;&emsp;实际场景中，这两种方法会结合使用。  </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Redis </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[微服务之间的最佳调用方式]]></title>
+      <url>/2019/12/19/BestCommunicationWayInMicroServices/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://blog.csdn.net/weixin_38748858/article/details/101062272" target="_blank" rel="noopener">https://blog.csdn.net/weixin_38748858/article/details/101062272</a></p>
+</blockquote>
+<p>&emsp;&emsp;在微服务架构中，需要调用很多服务才能完成一项功能。服务之间如何互相调用就变成微服务架构中的一个关键问题。服务调用有两种方式，一种是 RPC 方式，另一种是事件驱动（Event-driven）方式，也就是发消息方式。消息方式是松耦合方式，比紧耦合的 RPC 方式要优越，但 RPC 方式如果用在适合的场景也有它的一席之地。</p>
+<a id="more"></a>
+
+<p><strong>耦合的种类：</strong><br>&emsp;&emsp;我们总在谈耦合，那么耦合到底意味着什么呢？</p>
+<ol>
+<li>时间耦合：客户端和服务端必须同时上线才能工作。发消息时，接受消息队列必须运行，但后台处理程序暂时不工作也不影响。</li>
+<li>容量耦合：客户端和服务端的处理容量必须匹配。发消息时，如果后台处理能力不足也不要紧，消息队列会起到缓冲的作用。</li>
+<li>接口耦合：RPC 调用有函数标签，而消息队列只是一个消息。例如买了商品之后要调用发货服务，如果是发消息，那么就只需发送一个商品被买消息。</li>
+<li>发送方式耦合：RPC 是点对点方式，需要知道对方是谁，它的好处是能够传回返回值。消息既可以点对点，也可以用广播的方式，这样减少了耦合，但也使返回值比较困难。</li>
+</ol>
+<p>&emsp;&emsp;下面我们来逐一分析这些耦合的影响。 第一，时间耦合，对于多数应用来讲，你希望能马上得到回答，因此即使使用消息队列，后台也需要一直工作。第二，容量耦合，如果你对回复有时间要求，那么消息队列的缓冲功能作用不大，因为你希望及时响应。真正需要的是自动伸缩（Auto-scaling），它能自动调整服务端处理能力去匹配请求数量。第三和第四，接口耦合和发送方式耦合，这两个确实是 RPC 方式的软肋。  </p>
+<h1 id="事件驱动（Event-Driven）方式"><a href="#事件驱动（Event-Driven）方式" class="headerlink" title="事件驱动（Event-Driven）方式"></a>事件驱动（Event-Driven）方式</h1><p>&emsp;&emsp;Martin Fowler 把事件驱动分成四种方式（<a href="https://martinfowler.com/articles/201701-event-driven.html" target="_blank" rel="noopener">What do you mean by “Event-Driven”</a>），简化之后本质上只有两种方式。 一种就是我们熟悉的的事件通知（Event Notification），另一种是事件溯源（Event Sourcing）。事件通知就是微服务之间不直接调用，而是通过发消息来进行合作。事件溯源有点像记账，它把所有的事件都记录下来，作为永久存储层，再在它的基础之上构建应用程序。实际上从应用的角度来讲，它们并不应该分属一类，它们的用途完全不同。事件通知是微服务的调用（或集成）方式，应该和 RPC 分在一起。事件溯源是一种存储数据的方式，应该和数据库分在一起。  </p>
+<h2 id="事件通知（Event-Notification）方式"><a href="#事件通知（Event-Notification）方式" class="headerlink" title="事件通知（Event Notification）方式"></a>事件通知（Event Notification）方式</h2><p>&emsp;&emsp;让我们用具体的例子来看一下。在下面的例子中，有三个微服务，“Order Service”， “Customer Service” 和 “Product Service”。</p>
+<figure class="image-box">
+                <img src="20190920153708185.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;先说读数据，假设要创建一个 “Order”，在这个过程中需要读取 “Customer” 的数据和 “Product” 数据。如果用事件通知的方式就只能在 “Order Service” 本地也创建只读 “Customer” 和 “Product” 表，并把数据用消息的方式同步过来。<br>&emsp;&emsp;再说写数据，如果在创建一个 “Order” 时需要创建一个新的 “Customer” 或要修改 “Customer” 的信息，那么可以在界面上跳转到用户创建页面，然后在 “Customer Service” 创建用户之后再发”用户已创建“的消息，“Order Service” 接到消息，更新本地 “Customer” 表。<br>&emsp;&emsp;这并不是一个很好的使用事件驱动的例子，因为事件驱动的优点就是不同的程序之间可以独立运行，没有绑定关系。但现在 “Order Service” 需要等待 “Customer Service” 创建完了之后才能继续运行，来完成整个创建 “Order” 的工作。主要是因为 “Order” 和 “Customer” 本身从逻辑上来讲就是紧耦合关系，没有 “Customer” 你是不能创建 “Order” 的。<br>&emsp;&emsp;在这种紧耦合的情况下，也可以使用 RPC。你可以建立一个更高层级的管理程序来管理这些微服务之间的调用，这样 “Order Service” 就不必直接调用 “Customer Service” 了。当然它从本质上来讲并没有解除耦合，只是把耦合转移到了上一层，但至少现在 “order Service” 和 “Customer Service” 可以互不影响了。之所以不能根除这种紧耦合关系是因为它们在业务上是紧耦合的。<br>&emsp;&emsp;再举一个购物的例子。用户选好商品之后进行 “Checkout”，生成 “Order”，然后需要 “payment”，再从 “Inventory” 取货，最后由 “Shipment” 发货，它们每一个都是微服务。这个例子用 RPC 方式和事件通知方式都可以完成。当用 RPC 方式时，由 “Order” 服务调用其他几个服务来完成整个功能。用事件通知方式时，“Checkout” 服务完成之后发送 “Order Placed” 消息，“Payment” 服务收到消息，接收用户付款，发送 “Payment received” 消息。“Inventory” 服务收到消息，从仓库里取货，并发送 “Goods fetched” 消息。“Shipment” 服务得到消息，发送货物，并发送 “Goods shipped” 消息。</p>
+<figure class="image-box">
+                <img src="20190920153708514.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;对这个例子来讲，使用事件驱动是一个不错的选择，因为每个服务发消息之后它不需要任何反馈，这个消息由下一个模块接收来完成下一步动作，时间上的要求也比上一个要宽松。用事件驱动的好处是降低了耦合度，坏处是你现在不能在程序里找到整个购物过程的步骤。如果一个业务逻辑有它自己相对固定的流程和步骤，那么使用 RPC 或业务流程管理（BPM）能够更方便地管理这些流程。在这种情况下选哪种方案呢？在我看来好处和坏处是大致相当的。从技术上来讲要选事件驱动，从业务上来讲要选 RPC。不过现在越来越多的人采用事件通知作为微服务的集成方式，它似乎已经成了微服务之间的标椎调用方式。  </p>
+<h2 id="事件溯源（Event-Sourcing）"><a href="#事件溯源（Event-Sourcing）" class="headerlink" title="事件溯源（Event Sourcing）"></a>事件溯源（Event Sourcing）</h2><p>&emsp;&emsp;这是一种具有颠覆性质的的设计，它把系统中所有的数据都以事件（Event）的方式记录下来，它的持久存储叫 Event Store， 一般是建立在数据库或消息队列（例如 Kafka）基础之上，并提供了对事件进行操作的接口，例如事件的读写和查询。事件溯源是由领域驱动设计（<a href="https://dddcommunity.org/book/evans_2003/" target="_blank" rel="noopener">Domain-Driven Design</a>）提出来的。DDD 中有一个很重要的概念，有界上下文（<a href="https://martinfowler.com/bliki/BoundedContext.html" target="_blank" rel="noopener">Bounded Context</a>），可以用有界上下文来划分微服务，每个有界上下文都可以是一个微服务。 下面是有界上下文的示例。下图中有两个服务 “Sales” 和 “Support”。有界上下文的一个关键是如何处理共享成员， 在图中是 “Customer” 和 “Product”。在不同的有界上下文中，共享成员的含义、用法以及他们的对象属性都会有些不同，DDD 建议这些共享成员在各自的有界上下文中都分别建自己的类（包括数据库表），而不是共享。可以通过数据同步的手段来保持数据的一致性。下面还会详细讲解。</p>
+<figure class="image-box">
+                <img src="201909201537097.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;事件溯源是微服务的一种存储方式，它是微服务的内部实现细节。因此你可以决定哪些微服务采用事件溯源方式，哪些不采用，而不必所有的服务都变成事件溯源的。 通常整个应用程序只有一个 Event Store， 不同的微服务都通过向 Event Store 发送和接受消息而互相通信。Event Store 内部可以分成不同的 stream（相当于消息队列中的 Topic）， 供不同的微服务中的领域实体（Domain Entity）使用。<br>&emsp;&emsp;事件溯源的一个短板是数据查询，它有两种方式来解决。第一种是直接对 stream 进行查询，这只适合 stream 比较小并且查询比较简单的情况。查询复杂的话，就要采用第二种方式，那就是建立一个只读数据库，把需要的数据放在库中进行查询。数据库中的数据通过监听 Event Store 中相关的事件来更新。<br>&emsp;&emsp;数据库存储方式只能保存当前状态，而事件溯源则存储了所有的历史状态，因而能根据需要回放到历史上任何一点的状态，具有很大优势。但它也不是一点问题都没有。第一，它的程序比较复杂，因为事件是一等公民，你必须把业务逻辑按照事件的方式整理出来，然后用事件来驱动程序。第二，如果你要想修改事件或事件的格式就比较麻烦，因为旧的事件已经存储在 Event Store 里了（事件就像日志，是只读的），没有办法再改。<br>&emsp;&emsp;由于事件溯源和事件通知表面上看起来很像，不少人都搞不清楚它们的区别。事件通知只是微服务的集成方式，程序内部是不使用事件溯源的，内部实现仍然是传统的数据库方式。只有当要与其他微服务集成时才会发消息。而在事件溯源中，事件是一等公民，可以不要数据库，全部数据都是按照事件的方式存储的。<br>&emsp;&emsp;虽然事件溯源的践行者有不同的意见，但有不少人都认为事件溯源不是微服务的集成方式，而是微服务的一种内部实现方式。因此，在一个系统中，可以某些微服务用事件溯源，另外一些微服务用数据库。当你要集成这些微服务时，你可以用事件通知的方式。注意现在有两种不同的事件需要区分开，一种是微服务的内部事件，是颗粒度比较细的，这种事件只发送到这个微服务的 stream 中，只被事件溯源使用。另一种是其他微服务也关心的，是颗粒度比较粗的，这种事件会放到另外一个或几个 stream 中，被多个微服务使用，是用来做服务之间集成的。这样做的好处是限制了事件的作用范围，减少了不相关事件对程序的干扰。详见”<a href="https://www.innoq.com/en/blog/domain-events-versus-event-sourcing/" target="_blank" rel="noopener">Domain Events vs. Event Sourcing</a>“。<br>&emsp;&emsp;事件溯源出现已经很长时间了，虽然热度一直在上升（尤其是这两年），但总的来说非常缓慢，谈论的人不少，但生产环境使用的不多。究其原因就是因为它对现在的体系结构颠覆太大，需要更改数据存储结构和程序的工作方式，还是有一定风险的。另外，微服务已经形成了一整套体系，从程序部署，服务发现与注册，到监控，服务韧性（Service Resilience），它们基本上都是针对 RPC 的，虽然也支持消息，但成熟度就差多了，因此有不少工作还是要自己来做。有意思的是 Kafka 一直在推动它作为事件驱动的工具，也取得了很大的成功。但它却没有得到事件溯源圈内的认可（详见<a href="https://stackoverflow.com/a/49868866" target="_blank" rel="noopener">这里</a>）。<br>&emsp;&emsp;多数事件溯源都使用一个叫 <a href="https://eventstore.org/" target="_blank" rel="noopener">evenstore</a> 的开源 Event Store，或是基于某个数据库的 Event Store，只有比较少的人用 Kafka 做 Event Store。 但如果用 Kafka 实现事件通知就一点问题都没有。总的来说，对大多数公司来讲事件溯源是有一定挑战的，应用时需要找到合适的场景。如果你要尝试的话，可以先拿一个微服务试水。<br>&emsp;&emsp;虽然现在事件驱动还有些生涩，但从长远来讲，还是很看好它的。像其他全新的技术一样，事件溯源需要大规模的适用场景来推动。例如容器技术就是因为微服务的流行和推动，才走向主流。事件溯源以前的适用场景只限于记账和源代码库，局限性较大。区块链可能会成为它的下一个机遇，因为它用的也是事件溯源技术。另外 AI 今后会渗入到具体程序中，使程序具有学习功能。而 RPC 模式注定没有自适应功能。事件驱动本身就具有对事件进行反应的能力，这是自我学习的基础。因此，这项技术长远来讲定会大放异彩，但短期内（3-5年）大概不会成为主流。  </p>
+<h1 id="RPC方式"><a href="#RPC方式" class="headerlink" title="RPC方式"></a>RPC方式</h1><p>&emsp;&emsp;RPC 的方式就是远程函数调用，像 RESTFul，gRPC，DUBBO 都是这种方式。它一般是同步的，可以马上得到结果。在实际中，大多数应用都要求立刻得到结果，这时同步方式更有优势，代码也更简单。  </p>
+<h2 id="服务网关（API-Gateway）"><a href="#服务网关（API-Gateway）" class="headerlink" title="服务网关（API Gateway）"></a>服务网关（API Gateway）</h2><p>&emsp;&emsp;熟悉微服务的人可能都知道服务网关（API Gateway）。当UI需要调用很多微服务时，它需要了解每个服务的接口，这个工作量很大。于是就用服务网关创建了一个 Facade，把几个微服务封装起来，这样 UI 就只调用服务网关就可以了，不需要去对付每一个微服务。下面是 API Gateway 示例图：</p>
+<figure class="image-box">
+                <img src="20190920153709420.jpg" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;服务网关（API Gateway）不是为了解决微服务之间调用的紧耦合问题，它主要是为了简化客户端的工作。其实它还可以用来降低函数之间的耦合度。 有了 API Gateway 之后，一旦服务接口修改，你可能只需要修改 API Gateway， 而不必修改每个调用这个函数的客户端，这样就减少了程序的耦合性。  </p>
+<h2 id="服务调用"><a href="#服务调用" class="headerlink" title="服务调用"></a>服务调用</h2><p>&emsp;&emsp;可以借鉴 API Gateway 的思路来减少 RPC 调用的耦合度，例如把多个微服务组织起来形成一个完整功能的服务组合，并对外提供统一的服务接口。这种想法跟上面的 API Gateway 有些相似，都是把服务集中起来提供粗颗粒（Coarse Granular）服务，而不是细颗粒的服务（Fine Granular）。但这样建立的服务组合可能只适合一个程序使用，没有多少共享价值。因此如果有合适的场景就采用，否侧也不必强求。虽然我们不能降低 RPC 服务之间的耦合度，却可以减少这种紧耦合带来的影响。  </p>
+<h2 id="降低紧耦合的影响"><a href="#降低紧耦合的影响" class="headerlink" title="降低紧耦合的影响"></a>降低紧耦合的影响</h2><p>&emsp;&emsp;什么是紧耦合的主要问题呢？就是客户端和服务端的升级不同步。服务端总是先升级，客户端可能有很多，如果要求它们同时升级是不现实的。它们有各自的部署时间表，一般都会选择在下一次部署时顺带升级。<br>&emsp;&emsp;一般有两个办法可以解决这个问题：</p>
+<ol>
+<li>同时支持多个版本：这个工作量比较大，因此大多数公司都不会采用这种方式。</li>
+<li>服务端向后兼容：这是更通用的方式。例如你要加一个新功能或有些客户要求给原来的函数增加一个新的参数，但别的客户不需要这个参数。这时你只好新建一个函数，跟原来的功能差不多，只是多了一个参数。这样新旧客户的需求都能满足。它的好处是向后兼容（当然这取决于你使用的协议）。它的坏处是当以后新的客户来了，看到两个差不多的函数就糊涂了，不知道该用那个。而且时间越长越严重，你的服务端可能功能增加的不多，但相似的函数却越来越多，无法选择。</li>
+</ol>
+<p>&emsp;&emsp;它的解决办法就是使用一个支持向后兼容的 RPC 协议，现在最好的就是 Protobuf gRPC，尤其是在向后兼容上。它给每个服务定义了一个接口，这个接口是与编程语言无关的中性接口，然后你可以用工具生成各个语言的实现代码，供不同语言使用。函数定义的变量都有编号，变量可以是可选类型的，这样就比较好地解决了函数兼容的问题。就用上面的例子，当你要增加一个可选参数时，你就定义一个新的可选变量。由于它是可选的，原来的客户端不需要提供这个参数，因此不需要修改程序。而新的客户端可以提供这个参数。你只要在服务端能同时处理这两种情况就行了。这样服务端并没有增加新的函数，但用户的新需求满足了，而且还是向后兼容的。  </p>
+<h1 id="微服务的数量有没有上限？"><a href="#微服务的数量有没有上限？" class="headerlink" title="微服务的数量有没有上限？"></a>微服务的数量有没有上限？</h1><p>&emsp;&emsp;总的来说微服务的数量不要太多，不然会有比较重的运维负担。有一点需要明确的是微服务的流行不是因为技术上的创新，而是为了满足管理上的需要。单体程序大了之后，各个模块的部署时间要求不同，对服务器的优化要求也不同，而且团队人数众多，很难协调管理。把程序拆分成微服务之后，每个团队负责几个服务，就容易管理了，而且每个团队也可以按照自己的节奏进行创新，但它给运维带来了巨大的麻烦。所以在微服务刚出来时，我一直觉得它是一个退步，弊大于利。但由于管理上的问题没有其他解决方案，只有硬着头皮上了。值得庆幸的是微服务带来的麻烦都是可解的。直到后来，微服务建立了全套的自动化体系，从程序集成到部署，从全链路跟踪到日志，以及服务检测，服务发现和注册，这样才把微服务的工作量降了下来。虽然微服务在技术上一无是处，但它的流行还是大大推动了容器技术，服务网格（Service Mesh）和全链路跟踪等新技术的发展。不过它本身在技术上还是没有发现任何优势。。直到有一天，我意识到单体程序其实性能调试是很困难的（很难分离出瓶颈点），而微服务配置了全链路跟踪之后，能很快找到症结所在。看来微服务从技术来讲也不全是缺点，总算也有好的地方。但微服务的颗粒度不宜过细，否则工作量还是太大。<br>&emsp;&emsp;一般规模的公司十几个或几十个微服务都是可以承受的，但如果有几百个甚至上千个，那么绝不是一般公司可以管理的。尽管现有的工具已经很齐全了，而且与微服务有关的整个流程也已经基本上全部自动化了，但它还是会增加很多工作。Martin Fowler几年以前建议先从单体程序开始（详见 <a href="https://martinfowler.com/bliki/MonolithFirst.html" target="_blank" rel="noopener">MonolithFirst</a>），然后再逐步把功能拆分出去，变成一个个的微服务。但是后来有人反对这个建议，他也有些松口了。如果单体程序不是太大，这是个好主意。可以用数据额库表的数量来衡量程序的大小，我见过大的单体程序有几百张表，这就太多了，很难管理。正常情况下，一个微服务可以有两、三张表到五、六张表，一般不超过十张表。但如果要减少微服务数量的话，可以把这个标准放宽到不要超过二十张表。用这个做为大致的指标来创建微程序，如果使用一段时间之后还是觉得太大了，那么再逐渐拆分。当然，按照这个标准建立的服务更像是服务组合，而不是单个的微服务。不过它会为你减少工作量。只要不影响业务部门的创新进度，这是一个不错的方案。<br>&emsp;&emsp;到底应不应该选择微服务呢？如果单体程序已经没法管理了，那么你别无选择。如果没有管理上的问题，那么微服务带给你的只有问题和麻烦。其实，一般公司都没有太多选择，只能采用微服务，不过你可以选择建立比较少的微服务。如果还是没法决定，有一个折中的方案，“内部微服务设计”。  </p>
+<h2 id="内部微服务设计"><a href="#内部微服务设计" class="headerlink" title="内部微服务设计"></a>内部微服务设计</h2><p>&emsp;&emsp;这种设计表面上看起来是一个单体程序，它只有一个源代码存储仓库，一个数据库，一个部署，但在程序内部可以按照微服务的思想来进行设计。它可以分成多个模块，每个模块是一个微服务，可以由不同的团队管理。</p>
+<figure class="image-box">
+                <img src="20190920153709762.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;用这张图做例子。这个图里的每个圆角方块大致是一个微服务，但我们可以把它作为一个单体程序来设计，内部有五个微服务。每个模块都有自己的数据库表，它们都在一个数据库中，但模块之间不能跨数据库访问（不要建立模块之间数据库表的外键）。“User”（在 Conference Management 模块中）是一个共享的类，但在不同的模块中的名字不同，含义和用法也不同，成员也不一样（例如，在 “Customer Service” 里叫 “Customer”）。DDD（Domain-Driven Design）建议不要共享这个类，而是在每一个有界上下文（模块）中都建一个新类，并拥有新的名字。虽然它们的数据库中的数据应该大致相同，但DDD建议每一个有界上下文中都建一个新表，它们之间再进行数据同步。<br>&emsp;&emsp;这个所谓的“内部微服务设计”其实就是 DDD，但当时还没有微服务，因此外表看起来是单体程序，但内部已经是微服务的设计了。它的书在 2003 就出版了，当时就很有名。但它更偏重于业务逻辑的设计，践行起来也比较困难，因此大家谈论得很多，真正用的较少。直到十年之后，微服务出来之后，人们发现它其实内部就是微服务，而且微服务的设计需要用它的思想来指导，于是就又重新焕发了青春，而且这次更猛，已经到了每个谈论微服务的人都不得不谈论 DDD 的地步。不过一本软件书籍，在十年之后还能指导新技术的设计，非常令人钦佩。<br>&emsp;&emsp;这样设计的好处是它是一个单体程序，省去了多个微服务带来的部署、运维的麻烦。但它内部是按微服务设计的，如果以后要拆分成微服务会比较容易。至于什么时候拆分不是一个技术问题。如果负责这个单体程序的各个团队之间不能在部署时间表，服务器优化等方面达成一致，那么就需要拆分了。当然你也要应对随之而来的各种运维麻烦。内部微服务设计是一个折中的方案，如果你想试水微服务，但又不愿意冒太大风险时，这是一个不错的选择。  </p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>&emsp;&emsp;微服务之间的调用有两种方式，RPC 和事件驱动。事件驱动是更好的方式，因为它是松耦合的。但如果业务逻辑是紧耦合的，RPC 方式也是可行的（它的好处是代码更简单），而且你还可以通过选取合适的协议（Protobuf gRPC）来降低这种紧耦合带来的危害。由于事件溯源和事件通知的相似性，很多人把两者弄混了，但它们实际上是完全不同的东西。微服务的数量不宜太多，可以先创建比较大的微服务（更像是服务组合）。如果你还是不能确定是否采用微服务架构，可以先从“内部微服务设计”开始，再逐渐拆分。  </p>
+<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>[1] <a href="https://martinfowler.com/articles/201701-event-driven.html" target="_blank" rel="noopener">What do you mean by “Event-Driven”</a><br>[2] <a href="https://dddcommunity.org/book/evans_2003/" target="_blank" rel="noopener">Domain-Driven Design</a><br>[3] <a href="https://martinfowler.com/bliki/BoundedContext.html" target="_blank" rel="noopener">BoundedContext</a><br>[4] <a href="https://www.innoq.com/en/blog/domain-events-versus-event-sourcing/" target="_blank" rel="noopener">Domain Events vs. Event Sourcing</a><br>[5] <a href="https://stackoverflow.com/a/49868866" target="_blank" rel="noopener">Using Kafka as a (CQRS) Eventstore. Good idea</a><br>[6] <a href="https://eventstore.org/" target="_blank" rel="noopener">Evenstore</a><br>[7] <a href="https://martinfowler.com/bliki/MonolithFirst.html" target="_blank" rel="noopener">MonolithFirst</a>  </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> 微服务 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Cookie, Session, Token 对比]]></title>
       <url>/2019/12/18/CompareCookieSessionToken/</url>
-      <content type="html"><![CDATA[<p>&emsp;</p>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s/AlUN2dUKi07k9VWphLsMXA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/AlUN2dUKi07k9VWphLsMXA</a></p>
+</blockquote>
 <a id="more"></a>
 
 <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>&emsp;&emsp;Cookie 是一个非常具体的东西，指的就是浏览器里面能永久存储的一种数据，仅仅是浏览器实现的一种数据存储功能。<br>&emsp;&emsp;<strong>Cookie 由服务器生成，发送给浏览器，浏览器把 Cookie 以 K/V 形式保存到某个目录下的文本文件内，下一次请求同一网站时会把该 Cookie 发送给服务器。</strong>由于 Cookie 是存在客户端上的，所以浏览器加入了一些限制确保 Cookie 不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的 Cookie 数量是有限的。  </p>
@@ -122,14 +1090,13 @@
       <title><![CDATA[使用 .NET Core 创建 Windows 服务]]></title>
       <url>/2019/12/14/CreatingWindowsServicesInDotNetCore/</url>
       <content type="html"><![CDATA[<blockquote>
-<p>原文：</p>
+<p>作者：Dotnet Core Tutorials<br>原文：</p>
 <ul>
 <li>Part 1 - The “Microsoft” Way: <a href="https://dotnetcoretutorials.com/2019/09/19/creating-windows-services-in-net-core-part-1-the-microsoft-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/09/19/creating-windows-services-in-net-core-part-1-the-microsoft-way/</a>  </li>
 <li>Part 2 - The “Topshelf” Way: <a href="https://dotnetcoretutorials.com/2019/09/27/creating-windows-services-in-net-core-part-2-the-topshelf-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/09/27/creating-windows-services-in-net-core-part-2-the-topshelf-way/</a>  </li>
 <li>Part 3 – The “.NET Core Worker” Way: <a href="https://dotnetcoretutorials.com/2019/12/07/creating-windows-services-in-net-core-part-3-the-net-core-worker-way/" target="_blank" rel="noopener">https://dotnetcoretutorials.com/2019/12/07/creating-windows-services-in-net-core-part-3-the-net-core-worker-way/</a></li>
 </ul>
-<p>作者：Dotnet Core Tutorials<br>译者：Lamond Lu  </p>
-<p>译文：</p>
+<p>译者：Lamond Lu<br>译文：</p>
 <ul>
 <li>Part 1 - 使用官方推荐方式: <a href="https://www.cnblogs.com/lwqlun/p/11621186.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/11621186.html</a>  </li>
 <li>Part 2 - 使用 Topshelf 方式: <a href="https://www.cnblogs.com/lwqlun/p/11625789.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/11625789.html</a>  </li>
@@ -2392,6 +3359,7 @@
 <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><a href="https://redis.io/documentation" target="_blank" rel="noopener">Redis</a><br><a href="https://docs.mongodb.com/" target="_blank" rel="noopener">mongoDB</a><br><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/" target="_blank" rel="noopener">SQL Server</a><br><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a><br><a href="https://www.sqlite.org/docs.html" target="_blank" rel="noopener">SQLite</a>  </p>
 <h3 id="对象关系映射（ORM）"><a href="#对象关系映射（ORM）" class="headerlink" title="对象关系映射（ORM）"></a>对象关系映射（ORM）</h3><p><a href="docs.automapper.org/">AutoMapper</a><br><a href="https://github.com/2881099/FreeSql/wiki" target="_blank" rel="noopener">FreeSql</a><br><a href="https://github.com/StackExchange/Dapper" target="_blank" rel="noopener">Dapper</a><br><a href="https://github.com/2881099/csredis" target="_blank" rel="noopener">CSRedis</a><br><a href="https://stackexchange.github.io/StackExchange.Redis/" target="_blank" rel="noopener">StackExchange.Redis</a><br><a href="https://docs.mongodb.com/ecosystem/drivers/csharp/" target="_blank" rel="noopener">MongoDB.Driver</a>  </p>
 <h3 id="导入导出格式文件"><a href="#导入导出格式文件" class="headerlink" title="导入导出格式文件"></a>导入导出格式文件</h3><p><a href="https://github.com/JanKallman/EPPlus/wiki" target="_blank" rel="noopener">EPPlus</a><br><a href="https://joshclose.github.io/CsvHelper/getting-started" target="_blank" rel="noopener">CSVHelper</a><br><a href="https://www.newtonsoft.com/json/help/" target="_blank" rel="noopener">Json.NET</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.xml.xmlreader" target="_blank" rel="noopener">XmlReader</a><br><a href="https://docs.microsoft.com/en-us/dotnet/api/system.xml.xmlwriter" target="_blank" rel="noopener">XmlWriter</a><br><a href="https://anglesharp.github.io/docs.html" target="_blank" rel="noopener">AngleSharp</a><br><a href="https://github.com/rdvojmoc/DinkToPdf" target="_blank" rel="noopener">DinkToPdf</a>  </p>
+<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p><a href="https://github.com/henkmollema/CryptoHelper" target="_blank" rel="noopener">CryptoHelper</a>  </p>
 <h3 id="后台任务"><a href="#后台任务" class="headerlink" title="后台任务"></a>后台任务</h3><p><a href="https://www.quartz-scheduler.net/documentation/index.html" target="_blank" rel="noopener">Quartz.NET</a><br><a href="docs.topshelf-project.com/">Topshelf</a><br><a href="https://docs.hangfire.io/" target="_blank" rel="noopener">Hangfire</a>  </p>
 <h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ</a><br><a href="https://github.com/EasyNetQ/EasyNetQ/wiki/Introduction" target="_blank" rel="noopener">EasyNetQ</a><br><a href="https://masstransit-project.com/MassTransit/" target="_blank" rel="noopener">MassTransit</a>  </p>
 <h3 id="服务管理"><a href="#服务管理" class="headerlink" title="服务管理"></a>服务管理</h3><p><a href="https://www.consul.io/docs/index.html" target="_blank" rel="noopener">Consul</a><br><a href="https://github.com/ctripcorp/apollo/wiki" target="_blank" rel="noopener">Apollo</a>  </p>
@@ -2403,7 +3371,7 @@
 <h3 id="Web-UI"><a href="#Web-UI" class="headerlink" title="Web UI"></a>Web UI</h3><p><a href="https://angular.io/docs" target="_blank" rel="noopener">Angular</a><br><a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue</a><br><a href="https://zh-hans.reactjs.org/docs/" target="_blank" rel="noopener">React</a><br><a href="https://datatables.net/manual/" target="_blank" rel="noopener">DataTables</a><br><a href="https://github.com/alyssaxuu/flowy" target="_blank" rel="noopener">Flowy</a><br><a href="https://github.com/apache/incubator-echarts" target="_blank" rel="noopener">ECharts</a><br><a href="https://getbootstrap.com/docs/" target="_blank" rel="noopener">Bootstrap</a><br><a href="https://ng-bootstrap.github.io/#/getting-started" target="_blank" rel="noopener">NG-Bootstrap</a><br><a href="https://ant.design/docs/react/introduce-cn" target="_blank" rel="noopener">Ant Design of React</a><br><a href="https://ng.ant.design/docs/introduce/zh" target="_blank" rel="noopener">Ant Design of Angular</a><br><a href="https://vue.ant.design/docs/vue/introduce/" target="_blank" rel="noopener">Ant Design of Vue</a><br><a href="https://material.angular.io/components/categories" target="_blank" rel="noopener">Angular Material</a>  </p>
 <h3 id="WPF-UI"><a href="#WPF-UI" class="headerlink" title="WPF UI"></a>WPF UI</h3><p><a href="https://github.com/MahApps/MahApps.Metro/wiki" target="_blank" rel="noopener">MahApps.Metro</a><br><a href="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit/wiki" target="_blank" rel="noopener">MaterialDesignInXamlToolkit</a><br><a href="https://github.com/spiegelp/MaterialDesignExtensions/wiki" target="_blank" rel="noopener">MaterialDesignExtensions</a><br><a href="https://github.com/Panuon/PanuonUI.Silver" target="_blank" rel="noopener">PanuonUI.Silver</a><br><a href="https://github.com/ButchersBoy/Dragablz/wiki" target="_blank" rel="noopener">Dragablz</a><br><a href="https://lvcharts.net/App/examples/wpf/start" target="_blank" rel="noopener">LiveCharts</a><br><a href="https://reactiveui.net/docs/" target="_blank" rel="noopener">ReactiveUI</a>  </p>
 <h3 id="游戏设计"><a href="#游戏设计" class="headerlink" title="游戏设计"></a>游戏设计</h3><p><a href="https://docs.unity3d.com/Manual/" target="_blank" rel="noopener">Unity3D</a>  </p>
-<h3 id="图标符号"><a href="#图标符号" class="headerlink" title="图标符号"></a>图标符号</h3><p><a href="https://icons8.com/icons" target="_blank" rel="noopener">Icons8</a><br><a href="https://pattern.flaticon.com/" target="_blank" rel="noopener">FlatIcon</a><br><a href="https://materialdesignicons.com/" target="_blank" rel="noopener">Material Design Icons</a><br><a href="https://www.iconfont.cn/" target="_blank" rel="noopener">IconFont 阿里巴巴矢量图标库</a><br><a href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</a><br><a href="https://realfavicongenerator.net/" target="_blank" rel="noopener">Favicon</a><br><a href="https://unicode-table.com/" target="_blank" rel="noopener">Unicode</a>  </p>
+<h3 id="图标符号"><a href="#图标符号" class="headerlink" title="图标符号"></a>图标符号</h3><p><a href="https://icons8.com/icons" target="_blank" rel="noopener">Icons8</a><br><a href="https://pattern.flaticon.com/" target="_blank" rel="noopener">FlatIcon</a><br><a href="https://materialdesignicons.com/" target="_blank" rel="noopener">Material Design Icons</a><br><a href="https://www.iconfont.cn/" target="_blank" rel="noopener">IconFont 阿里巴巴矢量图标库</a><br><a href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</a><br><a href="https://realfavicongenerator.net/" target="_blank" rel="noopener">Favicon</a><br><a href="https://unicode-table.com/" target="_blank" rel="noopener">Unicode</a><br><a href="https://illlustrations.co/" target="_blank" rel="noopener">illlustrations</a>  </p>
 <h2 id="语言"><a href="#语言" class="headerlink" title="语言"></a>语言</h2><p><a href="https://docs.microsoft.com/zh-cn/sql/t-sql/" target="_blank" rel="noopener">T-SQL</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML" target="_blank" rel="noopener">HTML</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS" target="_blank" rel="noopener">CSS</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a><br><a href="https://api.jquery.com/" target="_blank" rel="noopener">jQuery</a><br><a href="https://www.typescriptlang.org/docs/" target="_blank" rel="noopener">TypeScript</a><br><a href="https://docs.python.org/" target="_blank" rel="noopener">Python</a><br><a href="https://doc.rust-lang.org/book/" target="_blank" rel="noopener">Rust</a><br><a href="https://docs.microsoft.com/en-us/powershell/" target="_blank" rel="noopener">PowerShell</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank" rel="noopener">正则表达式</a>  </p>
 <h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP" target="_blank" rel="noopener">HTTP</a><br><a href="https://visualgo.net/" target="_blank" rel="noopener">VisuAlgo</a><br><a href="https://www.connectionstrings.com/" target="_blank" rel="noopener">ConnectionStrings</a><br><a href="https://microsoft.github.io/TypeSearch/" target="_blank" rel="noopener">TypeScript Types Search</a>  </p>
 <h2 id="中文教程"><a href="#中文教程" class="headerlink" title="中文教程"></a>中文教程</h2><p><a href="http://manual.phpv.net/regular_expression.html" target="_blank" rel="noopener">正则表达式30分钟入门教程</a><br><a href="https://learnku.com/docs/tutorial/3.7.0" target="_blank" rel="noopener">Python官方文档：入门教程 3.7.0</a><br><a href="https://linux.vbird.org/" target="_blank" rel="noopener">鳥哥的 Linux 私房菜</a><br><a href="https://www.cnblogs.com/abcdwxc/archive/2007/10/30/942834.html" target="_blank" rel="noopener">C#设计模式（23种设计模式）</a><br><a href="https://www.cnblogs.com/zhili/p/DesignPatternSummery.html" target="_blank" rel="noopener">C#设计模式总结</a><br><a href="https://www.cnblogs.com/fatbird/p/SortAlgorithm.html" target="_blank" rel="noopener">8种主要排序算法的C#实现</a><br><a href="https://wangdoc.com/javascript/" target="_blank" rel="noopener">JavaScript教程 - 网道</a><br><a href="https://es6.ruanyifeng.com/" target="_blank" rel="noopener">ECMAScript 6 入门</a><br><a href="https://ts.xcatliu.com/" target="_blank" rel="noopener">TypeScript入门教程</a><br><a href="https://www.cnblogs.com/ZaraNet/p/10323105.html" target="_blank" rel="noopener">.NET Core IdentityServer4实战 - zaraNet</a><br><a href="https://www.cnblogs.com/stulzq/p/8119928.html" target="_blank" rel="noopener">IdentityServer4 中文文档与实战 - 晓晨Master</a><br><a href="https://www.cnblogs.com/viter/p/10474091.html" target="_blank" rel="noopener">Asp.NETCore轻松学系列阅读指引目录 - Ron Liang</a><br><a href="https://www.cnblogs.com/MrHSR/category/1368488.html" target="_blank" rel="noopener">asp.net Core系列篇 - 花阴偷移</a><br><a href="https://www.cnblogs.com/edisonchou/p/dotnetcore_microservice_foundation_blogs_index_final.html" target="_blank" rel="noopener">.NET Core微服务架构系列文章索引目录 - Edison Zhou</a><br><a href="https://www.cnblogs.com/edisonchou/p/4820676.html" target="_blank" rel="noopener">.NET全栈开发工程师学习路径 - Edison Zhou</a><br><a href="https://www.cnblogs.com/edisonchou/p/3843287.html" target="_blank" rel="noopener">博文资源汇总 - Edison Zhou</a><br><a href="https://rachel53461.wordpress.com/2011/05/08/simplemvvmexample/" target="_blank" rel="noopener">A Simple MVVM Example</a><br><a href="https://www.cnblogs.com/youring2/p/quartz_net.html" target="_blank" rel="noopener">Quartz.Net使用教程</a>  </p>
@@ -2428,7 +3396,7 @@
 <h2 id="比价"><a href="#比价" class="headerlink" title="比价"></a>比价</h2><p><a href="http://www.xitie.com/" target="_blank" rel="noopener">西贴 网上商品历史价格</a><br><a href="https://www.smzdm.com/" target="_blank" rel="noopener">什么值得买</a>  </p>
 <h2 id="运营商"><a href="#运营商" class="headerlink" title="运营商"></a>运营商</h2><p><a href="https://www.10086.cn/" target="_blank" rel="noopener">中国移动</a><br><a href="https://www.189.cn/" target="_blank" rel="noopener">中国电信</a><br><a href="https://www.10010.com/" target="_blank" rel="noopener">中国联通</a>  </p>
 <h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><p><a href="https://homenew.console.aliyun.com/" target="_blank" rel="noopener">阿里云控制台</a><br><a href="https://console.cloud.tencent.com/" target="_blank" rel="noopener">腾讯云控制台</a>  </p>
-<h2 id="其它-3"><a href="#其它-3" class="headerlink" title="其它"></a>其它</h2><p><a href="http://www.chongdiantou.com/" target="_blank" rel="noopener">充电头网</a>  </p>
+<h2 id="其它-3"><a href="#其它-3" class="headerlink" title="其它"></a>其它</h2><p><a href="http://www.chongdiantou.com/" target="_blank" rel="noopener">充电头网</a><br><a href="https://github.com/awesome-selfhosted/awesome-selfhosted" target="_blank" rel="noopener">Selfhosted</a>  </p>
 ]]></content>
       
         <categories>
