@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>ASP.NET Core Web API 最佳实践指南 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,Web,dotNET">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>ASP.NET Core Web API 最佳实践指南</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">ASP.NET Core Web API 最佳实践指南</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-19T13:29:09.000Z" itemprop="datePublished" class="page-time">
+  2019-12-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-AspNetCoreWebApiBestPracticesGuide"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">ASP.NET Core Web API 最佳实践指南</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-19 21:29:09" datetime="2019-12-19T13:29:09.000Z"  itemprop="datePublished">2019-12-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p>译文：<a href="https://www.cnblogs.com/hippieZhou/p/11966373.html" target="_blank" rel="noopener">https://www.cnblogs.com/hippieZhou/p/11966373.html</a><br>原文：<a href="https://code-maze.us12.list-manage.com/track/click?u=9bb15645129501e5249a9a8e1&id=986d07e1f0&e=1184a539da" target="_blank" rel="noopener">ASP.NET-Core-Web-API-Best-Practices-Guide</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+<p><strong>目录</strong></p>
+<ul>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#介绍">介绍</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#Startup-类-和-服务配置">Startup 类 和 服务配置</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#项目组织">项目组织</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#基于环境的设置">基于环境的设置</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#数据访问层">数据访问层</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#控制器">控制器</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#处理全局异常">处理全局异常</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#使用过滤器移除重复代码">使用过滤器移除重复代码</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#Microsoft-AspNetCore-All-元包">Microsoft.AspNetCore.All 元包</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#路由（ROUTING）">路由</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#日志（LOGGING）">日志</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#加密">加密</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#内容协商">内容协商</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#使用-JWT">使用 JWT</a></li>
+<li><a href="https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/#总结">总结</a></li>
+</ul>
+<figure class="image-box">
+                <a rel=ASP.NET Core Web API 最佳实践指南 href="749711-20191202210059663-465533847.png" title="" data-fancybox="images"><img src="749711-20191202210059663-465533847.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;当我们编写一个项目的时候，我们的主要目标是使它能如期运行，并尽可能地满足所有用户需求。<br>&emsp;&emsp;但是，你难道不认为创建一个能正常工作的项目还不够吗？同时这个项目不应该也是可维护和可读的吗？<br>&emsp;&emsp;事实证明，我们需要把更多的关注点放到我们项目的可读性和可维护性上。这背后的主要原因是我们或许不是这个项目的唯一编写者。一旦我们完成后，其他人也极有可能会加入到这里面来。<br>&emsp;&emsp;因此，我们应该把关注点放到哪里呢？<br>&emsp;&emsp;在这一份指南中，关于开发 .NET Core Web API 项目，我们将叙述一些我们认为会是最佳实践的方式。进而让我们的项目变得更好和更加具有可维护性。<br>&emsp;&emsp;现在，让我们开始想一些可以应用到 ASP.NET Web API 项目中的一些最佳实践。  </p>
+<h1 id="Startup-类-和-服务配置"><a href="#Startup-类-和-服务配置" class="headerlink" title="Startup 类 和 服务配置"></a>Startup 类 和 服务配置</h1><blockquote>
+<p>STARTUP CLASS AND THE SERVICE CONFIGURATION</p>
+</blockquote>
+<p>&emsp;&emsp;在 <code>Startup</code> 类中，有两个方法：<code>ConfigureServices</code> 是用于服务注册，<code>Configure</code> 方法是向应用程序的请求管道中添加中间件。<br>&emsp;&emsp;因此，最好的方式是保持 <code>ConfigureServices</code> 方法简洁，并且尽可能地具有可读性。当然，我们需要在该方法内部编写代码来注册服务，但是我们可以通过使用 <code>扩展方法</code> 来让我们的代码更加地可读和可维护。<br>&emsp;&emsp;例如，让我们看一个注册 CORS 服务的不好方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddCors(options =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">        options.AddPolicy(<span class="string">"CorsPolicy"</span>, builder =&gt; builder.AllowAnyOrigin()</span><br><span class="line">            .AllowAnyMethod()</span><br><span class="line">            .AllowAnyHeader()</span><br><span class="line">            .AllowCredentials());</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;尽管这种方式看起来挺好，也能正常地将 CORS 服务注册成功。但是想象一下，在注册了十几个服务之后这个方法体的长度。<br>&emsp;&emsp;这样一点也不具有可读性。<br>&emsp;&emsp;一种好的方式是通过在扩展类中创建静态方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ServiceExtensions</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ConfigureCors</span>(<span class="params"><span class="keyword">this</span> IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        services.AddCors(options =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            options.AddPolicy(<span class="string">"CorsPolicy"</span>, builder =&gt; builder.AllowAnyOrigin()</span><br><span class="line">                .AllowAnyMethod()</span><br><span class="line">                .AllowAnyHeader()</span><br><span class="line">                .AllowCredentials());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，只需要调用这个扩展方法即可：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.ConfigureCors();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;了解更多关于 .NET Core 的项目配置，请查看：<a href="https://code-maze.com/net-core-web-development-part2/" target="_blank" rel="noopener">.NET Core Project Configuration</a>  </p>
+<h1 id="项目组织"><a href="#项目组织" class="headerlink" title="项目组织"></a>项目组织</h1><blockquote>
+<p>PROJECT ORGANIZATION</p>
+</blockquote>
+<p>&emsp;&emsp;我们应该尝试将我们的应用程序拆分为多个小项目。通过这种方式，我们可以获得最佳的项目组织方式，并能将关注点分离（SoC）。我们的实体、契约、访问数据库操作、记录信息或者发送邮件的业务逻辑应该始终放在单独的 .NET Core 类库项目中。<br>&emsp;&emsp;应用程序中的每个小项目都应该包含多个文件夹用来组织业务逻辑。<br>&emsp;&emsp;这里有个简单的示例用来展示一个复杂的项目应该如何组织：</p>
+<figure class="image-box">
+                <a rel=ASP.NET Core Web API 最佳实践指南 href="749711-20191202210211630-1582297257.png" title="" data-fancybox="images"><img src="749711-20191202210211630-1582297257.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="基于环境的设置"><a href="#基于环境的设置" class="headerlink" title="基于环境的设置"></a>基于环境的设置</h1><blockquote>
+<p>ENVIRONMENT BASED SETTINGS</p>
+</blockquote>
+<p>&emsp;&emsp;当我们开发应用程序时，它处于开发环境。但是一旦我们发布之后，它将处于生产环境。因此，将每个环境进行隔离配置往往是一种好的实践方式。<br>&emsp;&emsp;在 .NET Core 中，这一点很容易实现。<br>&emsp;&emsp;一旦我们创建好了项目，就已经有一个 <code>appsettings.json</code> 文件，当我们展开它时会看到 <code>appsettings.Development.json</code> 文件：</p>
+<figure class="image-box">
+                <a rel=ASP.NET Core Web API 最佳实践指南 href="749711-20191202210228362-471063224.png" title="" data-fancybox="images"><img src="749711-20191202210228362-471063224.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;此文件中的所有设置将用于开发环境。<br>&emsp;&emsp;我们应该添加另一个文件 <code>appsettings.Production.json</code>，将其用于生产环境：</p>
+<figure class="image-box">
+                <a rel=ASP.NET Core Web API 最佳实践指南 href="749711-20191202210241965-1672669642.png" title="" data-fancybox="images"><img src="749711-20191202210241965-1672669642.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;生产文件将位于开发文件下面。<br>&emsp;&emsp;设置修改后，我们就可以通过不同的 appsettings 文件来加载不同的配置，取决于我们应用程序当前所处环境，.NET Core 将会给我们提供正确的设置。更多关于这一主题，请查阅：<a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.0" target="_blank" rel="noopener">Use Multiple Environments in ASP.NET Core</a>  </p>
+<h1 id="数据访问层"><a href="#数据访问层" class="headerlink" title="数据访问层"></a>数据访问层</h1><blockquote>
+<p>DATA ACCESS LAYER</p>
+</blockquote>
+<p>&emsp;&emsp;在一些不同的示例教程中，我们可能看到 DAL 的实现在主项目中，并且每个控制器中都有实例。我们不建议这么做。<br>&emsp;&emsp;当我们编写 DAL 时，我们应该将其作为一个独立的服务来创建。在 .NET Core 项目中，这一点很重要，因为当我们将 DAL 作为一个独立的服务时，我们就可以将其直接注入到 IOC（控制反转）容器中。IOC 是 .NET Core 内置功能。通过这种方式，我们可以在任何控制器中通过构造函数注入的方式来使用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span>: <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IRepository _repository;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OwnerController</span>(<span class="params">IRepository repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h1><blockquote>
+<p>CONTROLLERS</p>
+</blockquote>
+<p>&emsp;&emsp;控制器应该始终尽量保持整洁。我们不应该将任何业务逻辑放置于内。<br>&emsp;&emsp;因此，我们的控制器应该通过构造函数注入的方式接收服务实例，并组织 HTTP 的操作方法（GET，POST，PUT，DELETE，PATCH…）：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILoggerManager _logger;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IRepository _repository;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OwnerController</span>(<span class="params">ILoggerManager logger, IRepository repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">        _repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;"</span>, Name = <span class="meta-string">"OwnerById"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;/account"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerWithDetails</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpPost</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">CreateOwner</span>(<span class="params">[FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpPut(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">UpdateOwner</span>(<span class="params">Guid id, [FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpDelete(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">DeleteOwner</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们的 Action 应该尽量保持简洁，它们的职责应该包括处理 HTTP 请求，验证模型，捕捉异常和返回响应。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">HttpPost</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">CreateOwner</span>(<span class="params">[FromBody]Owner owner</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (owner.IsObjectNull())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Owner object is null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid model object"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        _repository.Owner.CreateOwner(owner);</span><br><span class="line">        <span class="keyword">return</span> CreatedAtRoute(<span class="string">"OwnerById"</span>, <span class="keyword">new</span> &#123; id = owner.Id &#125;, owner);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        _logger.LogError(<span class="string">$"Something went wrong inside the CreateOwner action: <span class="subst">&#123; ex&#125;</span> "</span>);</span><br><span class="line">        <span class="keyword">return</span> StatusCode(<span class="number">500</span>, <span class="string">"Internal server error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在大多数情况下，我们的 action 应该将 <code>IActonResult</code> 作为返回类型（有时我们希望返回一个特定类型或者是 <code>JsonResult</code> …）。通过使用这种方式，我们可以很好地使用 .NET Core 中内置方法的返回值和状态码。  </p>
+<p>&emsp;&emsp;使用最多的方法是：</p>
+<ul>
+<li>OK =&gt; returns the 200 status code</li>
+<li>NotFound =&gt; returns the 404 status code</li>
+<li>BadRequest =&gt; returns the 400 status code</li>
+<li>NoContent =&gt; returns the 204 status code</li>
+<li>Created, CreatedAtRoute, CreatedAtAction =&gt; returns the 201 status code</li>
+<li>Unauthorized =&gt; returns the 401 status code</li>
+<li>Forbid =&gt; returns the 403 status code</li>
+<li>StatusCode =&gt; returns the status code we provide as input</li>
+</ul>
+<h1 id="处理全局异常"><a href="#处理全局异常" class="headerlink" title="处理全局异常"></a>处理全局异常</h1><blockquote>
+<p>HANDLING ERRORS GLOBALLY</p>
+</blockquote>
+<p>&emsp;&emsp;在上面的示例中，我们的 action 内部有一个 <code>try-catch</code> 代码块。这一点很重要，我们需要在我们的 action 方法体中处理所有的异常（包括未处理的）。一些开发者在 action 中使用 <code>try-catch</code> 代码块，这种方式明显没有任何问题。但我们希望 action 尽量保持简洁。因此，从我们的 action 中删除 <code>try-catch</code>，并将其放在一个集中的地方会是一种更好的方式。.NET Core 给我们提供了一种处理全局异常的方式，只需要稍加修改，就可以使用内置且完善的的中间件。我们需要做的修改就是在 <code>Startup</code> 类中修改 <code>Configure</code> 方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseExceptionHandler(config =&gt; </span><br><span class="line">    &#123;</span><br><span class="line">        config.Run(<span class="keyword">async</span> context =&gt; </span><br><span class="line">        &#123;</span><br><span class="line">            context.Response.StatusCode = <span class="number">500</span>;</span><br><span class="line">            context.Response.ContentType = <span class="string">"application/json"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> error = context.Features.Get&lt;IExceptionHandlerFeature&gt;();</span><br><span class="line">            <span class="keyword">if</span> (error != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> ex = error.Error;</span><br><span class="line">                <span class="keyword">await</span> context.Response.WriteAsync(<span class="keyword">new</span> ErrorModel</span><br><span class="line">                &#123;</span><br><span class="line">                    StatusCode = <span class="number">500</span>,</span><br><span class="line">                    ErrorMessage = ex.Message</span><br><span class="line">                &#125;.ToString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapControllers();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以通过创建自定义的中间件来实现我们的自定义异常处理：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomExceptionMiddleware</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger&lt;CustomExceptionMiddleware&gt; _logger;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomExceptionMiddleware</span>(<span class="params">RequestDelegate next, ILogger&lt;CustomExceptionMiddleware&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext httpContext</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> _next(httpContext);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            _logger.LogError(<span class="string">"Unhandled exception...."</span>, ex);</span><br><span class="line">            <span class="keyword">await</span> HandleExceptionAsync(httpContext, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Task <span class="title">HandleExceptionAsync</span>(<span class="params">HttpContext httpContext, Exception ex</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">//todo</span></span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Extension method used to add the middleware to the HTTP request pipeline.</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">CustomExceptionMiddlewareExtensions</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IApplicationBuilder <span class="title">UseCustomExceptionMiddleware</span>(<span class="params"><span class="keyword">this</span> IApplicationBuilder builder</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> builder.UseMiddleware&lt;CustomExceptionMiddleware&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;之后，我们只需要将其注入到应用程序的请求管道中即可：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseCustomExceptionMiddleware();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用过滤器移除重复代码"><a href="#使用过滤器移除重复代码" class="headerlink" title="使用过滤器移除重复代码"></a>使用过滤器移除重复代码</h1><blockquote>
+<p>USING ACTIONFILTERS TO REMOVE DUPLICATED CODE</p>
+</blockquote>
+<p>&emsp;&emsp;ASP.NET Core 的过滤器可以让我们在请求管道的特定状态之前或之后运行一些代码。因此如果我们的 action 中有重复验证的话，可以使用它来简化验证操作。<br>&emsp;&emsp;当我们在 action 方法中处理 PUT 或者 POST 请求时，我们需要验证我们的模型对象是否符合我们的预期。作为结果，这将导致我们的验证代码重复，我们希望避免出现这种情况，（基本上，我们应该尽我们所能避免出现任何代码重复。）我们可以在代码中通过使用 ActionFilter 来代替我们的验证代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//bad request and logging logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们可以创建一个过滤器：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ModelValidationAttribute</span> : <span class="title">ActionFilterAttribute</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnActionExecuting</span>(<span class="params">ActionExecutingContext context</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!context.ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            context.Result = <span class="keyword">new</span> BadRequestObjectResult(context.ModelState);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在 <code>Startup</code> 类的 <code>ConfigureServices</code> 函数中将其注入：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;ModelValidationAttribute&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在，我们可以将上述注入的过滤器应用到我们的 action 中。  </p>
+<h1 id="Microsoft-AspNetCore-All-元包"><a href="#Microsoft-AspNetCore-All-元包" class="headerlink" title="Microsoft.AspNetCore.All 元包"></a>Microsoft.AspNetCore.All 元包</h1><blockquote>
+<p>MICROSOFT.ASPNETCORE.ALL META-PACKAGE</p>
+</blockquote>
+<p>&emsp;&emsp;注：如果你使用的是 2.1 和更高版本的 ASP.NET Core。建议使用 Microsoft.AspNetCore.App 包，而不是 Microsoft.AspNetCore.All。这一切都是出于安全原因。此外，如果使用 2.1 版本创建新的 WebAPI 项目，我们将自动获取 AspNetCore.App 包，而不是 AspNetCore.All。<br>&emsp;&emsp;这个元包包含了所有 AspNetCore 的相关包，EntityFrameworkCore 包，SignalR 包（version 2.1） 和依赖框架运行的支持包。采用这种方式创建一个新项目很方便，因为我们不需要手动安装一些我们可能使用到的包。<br>&emsp;&emsp;当然，为了能使用 Microsoft.AspNetCore.all 元包，需要确保你的机器安装了 .NET Core Runtime。  </p>
+<h1 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h1><blockquote>
+<p>ROUTING</p>
+</blockquote>
+<p>&emsp;&emsp;在 .NET Core Web API 项目中，我们应该使用属性路由代替传统路由，这是因为属性路由可以帮助我们匹配路由参数名称与 Action 内的实际参数方法。另一个原因是路由参数的描述，对我们而言，一个名为 “ownerId” 的参数要比 “id” 更加具有可读性。<br>&emsp;&emsp;我们可以使用 <code>[Route]</code> 属性来在控制器的顶部进行标注：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/[controller]"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Route(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;还有另一种方式为控制器和操作创建路由规则：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Route(<span class="meta-string">"&#123;id&#125;"</span>)</span>]</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;对于这两种方式哪种会好一些存在分歧，但是我们经常建议采用第二种方式。这是我们一直在项目中采用的方式。<br>&emsp;&emsp;当我们谈论路由时，我们需要提到路由的命名规则。我们可以为我们的操作使用描述性名称，但对于 路由/节点，我们应该使用 NOUNS 而不是 VERBS。<br>&emsp;&emsp;一个较差的示例：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"getAllOwners"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"getOwnerById/&#123;id&#125;"</span></span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;一个较好的示例：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/owner"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OwnerController</span> : <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetAllOwners</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">"&#123;id&#125;"</span></span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">GetOwnerById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;更多关于 Restful 实践的细节解释，请查阅：<a href="https://code-maze.com/top-rest-api-best-practices/" target="_blank" rel="noopener">Top REST API Best Practices</a>  </p>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><blockquote>
+<p>LOGGING</p>
+</blockquote>
+<p>&emsp;&emsp;如果我们打算将我们的应用程序发布到生产环境，我们应该在合适的位置添加一个日志记录机制。在生产环境中记录日志对于我们梳理应用程序的运行很有帮助。<br>&emsp;&emsp;.NET Core 通过继承 <code>ILogger</code> 接口实现了它自己的日志记录。通过借助依赖注入机制，它可以很容易地使用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestController</span>: <span class="title">Controller</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger _logger;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestController</span>(<span class="params">ILogger&lt;TestController&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，在我们的 action 中，我们可以通过使用 _logger 对象借助不同的日志级别来记录日志。<br>&emsp;&emsp;.NET Core 支持使用于各种日志记录的 Provider。因此，我们可能会在项目中使用不同的 Provider 来实现我们的日志逻辑。<br>&emsp;&emsp;NLog 是一个很不错的可以用于我们自定义的日志逻辑类库，它极具扩展性。支持结构化日志，且易于配置。我们可以将信息记录到控制台，文件甚至是数据库中。<br>&emsp;&emsp;想了解更多关于该类库在 .NET Core 中的应用，请查阅：<a href="https://code-maze.com/net-core-web-development-part3/" target="_blank" rel="noopener">.NET Core series – Logging With NLog</a><br>&emsp;&emsp;Serilog 也是一个很不错的类库，它适用于 .NET Core 内置的日志系统。  </p>
+<h1 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h1><blockquote>
+<p>CRYPTOHELPER</p>
+</blockquote>
+<p>&emsp;&emsp;我们不会建议将密码以明文形式存储到数据库中。处于安全原因，我们需要对其进行哈希处理。这超出了本指南的内容范围。互联网上有大量哈希算法，其中不乏一些不错的方法来将密码进行哈希处理。<br>&emsp;&emsp;但是如果需要为 .NET Core 的应用程序提供易于使用的加密类库，CryptoHelper 是一个不错的选择。<br>&emsp;&emsp;CryptoHelper 是适用于 .NET Core 的独立密码哈希库，它是基于 PBKDF2 来实现的。通过创建 Data Protection 栈来将密码进行哈希化。这个类库在 NuGet 上是可用的，并且使用也很简单：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> CryptoHelper;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hash a password</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">HashPassword</span>(<span class="params"><span class="keyword">string</span> password</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Crypto.HashPassword(password);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Verify the password hash against the given password</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">VerifyPassword</span>(<span class="params"><span class="keyword">string</span> hash, <span class="keyword">string</span> password</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Crypto.VerifyHashedPassword(hash, password);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="内容协商"><a href="#内容协商" class="headerlink" title="内容协商"></a>内容协商</h1><blockquote>
+<p>CONTENT NEGOTIATION</p>
+</blockquote>
+<p>&emsp;&emsp;默认情况下，.NET Core Web API 会返回 JSON 格式的结果。大多数情况下，这是我们所希望的。<br>&emsp;&emsp;但是如果客户希望我们的 Web API 返回其它的响应格式，例如 XML 格式呢？<br>&emsp;&emsp;为了解决这个问题，我们需要进行服务端配置，用于按需格式化我们的响应结果：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers().AddXmlSerializerFormatters();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;但有时客户端会请求一个我们 Web API 不支持的格式，因此最好的实践方式是对于未经处理的请求格式统一返回 <strong>406</strong> 状态码。这种方式也同样能在 <code>ConfigureServices</code> 方法中进行简单配置：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers(options =&gt; options.ReturnHttpNotAcceptable = <span class="literal">true</span>).AddXmlSerializerFormatters();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以创建我们自己的格式化规则。<br>&emsp;&emsp;这一部分内容是一个很大的主题，如果你希望了解更多，请查阅：<a href="https://code-maze.com/content-negotiation-dotnet-core/" target="_blank" rel="noopener">Content Negotiation in .NET Core</a>  </p>
+<h1 id="使用-JWT"><a href="#使用-JWT" class="headerlink" title="使用 JWT"></a>使用 JWT</h1><blockquote>
+<p>USING JWT</p>
+</blockquote>
+<p>&emsp;&emsp;现如今的 Web 开发中，JSON Web Tokens (JWT) 变得越来越流行。得益于 .NET Core 内置了对 JWT 的支持，因此实现起来非常容易。JWT 是一个开发标准，它允许我们以 JSON 格式在服务端和客户端进行安全的数据传输。<br>&emsp;&emsp;我们可以在 <code>ConfigureServices</code> 中配置 JWT 认证：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)</span><br><span class="line">        .AddJwtBearer(options =&gt; </span><br><span class="line">        &#123;</span><br><span class="line">            options.TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters</span><br><span class="line">            &#123;</span><br><span class="line">                ValidateIssuer = <span class="literal">true</span>,</span><br><span class="line">                ValidIssuer = _authToken.Issuer,</span><br><span class="line"></span><br><span class="line">                ValidateAudience = <span class="literal">true</span>,</span><br><span class="line">                ValidAudience = _authToken.Audience,</span><br><span class="line"></span><br><span class="line">                ValidateIssuerSigningKey = <span class="literal">true</span>,</span><br><span class="line">                IssuerSigningKey = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authToken.Key)),</span><br><span class="line"></span><br><span class="line">                RequireExpirationTime = <span class="literal">true</span>,</span><br><span class="line">                ValidateLifetime = <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">                <span class="comment">//others</span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;为了能在应用程序中使用它，我们还需要在 <code>Configure</code> 中调用下面一段代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseAuthentication();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此外，创建 Token 可以使用如下方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> securityToken = <span class="keyword">new</span> JwtSecurityToken(</span><br><span class="line">                claims: <span class="keyword">new</span> Claim[]</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">new</span> Claim(ClaimTypes.NameIdentifier,user.Id),</span><br><span class="line">                    <span class="keyword">new</span> Claim(ClaimTypes.Email,user.Email)</span><br><span class="line">                &#125;,</span><br><span class="line">                issuer: _authToken.Issuer,</span><br><span class="line">                audience: _authToken.Audience,</span><br><span class="line">                notBefore: DateTime.Now,</span><br><span class="line">                expires: DateTime.Now.AddDays(_authToken.Expires),</span><br><span class="line">                signingCredentials: <span class="keyword">new</span> SigningCredentials(</span><br><span class="line">                    <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authToken.Key)),</span><br><span class="line">                    SecurityAlgorithms.HmacSha256Signature));</span><br><span class="line"></span><br><span class="line">Token = <span class="keyword">new</span> JwtSecurityTokenHandler().WriteToken(securityToken)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;基于 Token 的用户验证可以在控制器中使用如下方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> auth = <span class="keyword">await</span> HttpContext.AuthenticateAsync();</span><br><span class="line"><span class="keyword">var</span> id = auth.Principal.Claims.FirstOrDefault(x =&gt; x.Type.Equals(ClaimTypes.NameIdentifier))?.Value;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们也可以将 JWT 用于授权部分，只需添加角色声明到 JWT 配置中即可。<br>&emsp;&emsp;更多关于 .NET Core 中 JWT 认证和授权部分，请查阅：<a href="https://code-maze.com/authentication-aspnetcore-jwt-1/" target="_blank" rel="noopener">authentication-aspnetcore-jwt-1</a> 和 <a href="https://code-maze.com/authentication-aspnetcore-jwt-2/" target="_blank" rel="noopener">authentication-aspnetcore-jwt-2</a>  </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
+<p>&emsp;&emsp;读到这里，可能会有朋友对上述一些最佳实践不是很认同，因为全篇都没有谈及更切合项目的实践指南，比如 TDD 、DDD 等。但我个人认为上述所有的最佳实践是基础，只有把这些基础掌握了，才能更好地理解一些更高层次的实践指南。万丈高楼平地起，所以你可以把这看作是一篇面向新手的最佳实践指南。</p>
+</blockquote>
+<p>&emsp;&emsp;在这份指南中，我们的主要目的是让你熟悉关于使用 .NET Core 开发 Web API 项目时的一些最佳实践。这里面的部分内容在其它框架中也同样适用。因此，熟练掌握它们很有用。<br>&emsp;&emsp;非常感谢你能阅读这份指南，希望它能对你有所帮助。  </p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-19T14:56:01.614Z" itemprop="dateUpdated">2019-12-19 22:56:01</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/19/AspNetCoreWebApiBestPracticesGuide/" target="_blank" rel="external">https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/&title=《ASP.NET Core Web API 最佳实践指南》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/&title=《ASP.NET Core Web API 最佳实践指南》 — Blog&source=
+译文：https://www.cnblogs.com/hippieZhou/p/11966373.html原文：ASP.NET-Core-Web-API..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/19/HowToUseDDD/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何运用领域驱动设计</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Startup-类-和-服务配置"><span class="post-toc-number">2.</span> <span class="post-toc-text">Startup 类 和 服务配置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#项目组织"><span class="post-toc-number">3.</span> <span class="post-toc-text">项目组织</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基于环境的设置"><span class="post-toc-number">4.</span> <span class="post-toc-text">基于环境的设置</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数据访问层"><span class="post-toc-number">5.</span> <span class="post-toc-text">数据访问层</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#控制器"><span class="post-toc-number">6.</span> <span class="post-toc-text">控制器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#处理全局异常"><span class="post-toc-number">7.</span> <span class="post-toc-text">处理全局异常</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用过滤器移除重复代码"><span class="post-toc-number">8.</span> <span class="post-toc-text">使用过滤器移除重复代码</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Microsoft-AspNetCore-All-元包"><span class="post-toc-number">9.</span> <span class="post-toc-text">Microsoft.AspNetCore.All 元包</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#路由"><span class="post-toc-number">10.</span> <span class="post-toc-text">路由</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#日志"><span class="post-toc-number">11.</span> <span class="post-toc-text">日志</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#加密"><span class="post-toc-number">12.</span> <span class="post-toc-text">加密</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内容协商"><span class="post-toc-number">13.</span> <span class="post-toc-text">内容协商</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用-JWT"><span class="post-toc-number">14.</span> <span class="post-toc-text">使用 JWT</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">15.</span> <span class="post-toc-text">总结</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/&title=《ASP.NET Core Web API 最佳实践指南》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/19/AspNetCoreWebApiBestPracticesGuide/&title=《ASP.NET Core Web API 最佳实践指南》 — Blog&source=
+译文：https://www.cnblogs.com/hippieZhou/p/11966373.html原文：ASP.NET-Core-Web-API..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACxElEQVR42u3a3YrjMAwG0L7/S8/CXg07Tfrpx+0OnFyVtMQ+LliOpMcjvr7+Xt8//7zz8/PV76++TX75OHHh4eHhtaZ+P0zv26vp3k/0fpR8znh4eHineb1gkG/WydJUeVHwwMPDw/soLz8KV5+ZLBYeHh7e7+XlR/A8PEzSH3h4eHif4uXTzdMN8wXqpT/w8PDwTvN6BbDPfj5e38PDw8NrVdV7x99Jq0ESZgqzxcPDwzvAywtO97tutcRVvZ+EhMIbAx4eHt6Ad2QjDgpaCWAhyYuHh4f3Fl5vE0/aC3pTz5f7yYh4eHh4B3h55jNvjconnRzNqyHhxfLh4eHhjXlJKqH6bb65Jy0F1ZATrQQeHh7egFcFJ5t1r8TV6wRY/j/x8PDwYl61vNRLzs6Pzr2yHB4eHt4uLwkDvVBRPVjnS1DOrODh4eGt8rbKVHkDVm/So9IaHh4e3iov34jzNES1TNVb1rWmKzw8PLwWr7fRVw/T1bRC9clRMgIPDw9vzMthk2JVtQo3aVe9PFjj4eHhLfFGdbO46JWEiiogOl7j4eHhHeDlA8/DRp7k7aVuL5+Jh4eHd4y3VbCvlrIKTQCTZAQeHh7eW/KcSQNWr7GgVyprjoWHh4e3yuu1k+aH7/tnJveryZFyPhgPDw+vyKtu3NXp9papN27hjQEPDw9vwKu2Uu0y5qEiqu/h4eHhHeP1Slz577cCT+FgjYeHh3eA10so5MffPMHRSxbnjQh4eHh4W7yv4jU/WOdNWpN08Is3Bjw8PLwBbzJMcrRNQksv/ODh4eF9lpds8ZNQMU/g5m8GT+7j4eHhHeNtBYM8TTxhNGMaHh4e3tt5vTJ/s/AfH9lfLAceHh7ef8DbCgb5rl5dmifJCDw8PLwDvDwZke+6+bTm6eDLWeHh4eEd4E3e6PMURrWUNVnEtYQFHh4e3r/XHw8gAyeP14wZAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
