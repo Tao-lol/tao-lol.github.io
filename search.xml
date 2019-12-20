@@ -198,9 +198,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> Web </tag>
             
             <tag> dotNET </tag>
             
@@ -2265,8 +2265,7 @@
       <content type="html"><![CDATA[<p>&emsp;</p>
 <a id="more"></a>
 
-<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C-35"><a href="#C-35" class="headerlink" title="C&#35;"></a>C&#35;</h1><blockquote>
-<p>构建某个类型的某个实例时系统所执行的操作：</p>
+<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C-35"><a href="#C-35" class="headerlink" title="C&#35;"></a>C&#35;</h1><p>构建某个类型的某个实例时系统所执行的操作：</p>
 <ol>
 <li>把存放静态变量的空间清零。</li>
 <li>执行静态变量的初始化语句。</li>
@@ -2278,8 +2277,7 @@
 <li>执行（本类的）实例构造函数。</li>
 </ol>
 <p>&emsp;&emsp;以后如果还要构造该类型的实例，那么会直接从第5步开始执行，因为类级别的初始化工作只执行一次就够了。此外，可以通过链式调用构造函数的办法来优化第6、7两步，使得编译器在制作程序码时不再生成重复的指令。</p>
-</blockquote>
-<blockquote>
+<hr>
 <p>在类的继承体系中，位于根部的那个基类应该做到以下几点：</p>
 <ul>
 <li>实现 IDisposable 接口，以便释放资源。</li>
@@ -2292,8 +2290,7 @@
 <li>如果子类自身的某个成员字段表示的是非托管资源，那么就实现 finalizer，若没有这样的字段，则不用实现 finalizer。</li>
 <li>记得调用基类的同名函数。</li>
 </ul>
-</blockquote>
-<blockquote>
+<hr>
 <p>实现 IDisposable.Dispose() 方法时，要注意以下四点：</p>
 <ol>
 <li>把非托管资源全都释放掉。</li>
@@ -2301,19 +2298,35 @@
 <li>设定相关的状态标志，用以表示该对象已经清理过了。如果对象已经清理过了之后还有人要访问其中的公有成员，那么你可以通过此标志得知这一状况，从而令这些操作抛出 ObjectDisposedException。</li>
 <li>阻止垃圾回收器重复清理该对象。这可以通过 GC.SuppressFinalize(this) 来完成。</li>
 </ol>
-</blockquote>
-<blockquote>
+<hr>
 <p>C# 提供了 4 种不同的函数，用来决定两个对象是否“相等”：</p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">ReferenceEquals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="keyword">operator</span> ==(MyClass left, MyClass right);</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
+
+<hr>
 <p>&emsp;&emsp;.NET 中的每个对象都有哈希码，其哈希码由 System.Object.GetHashCode() 决定。如果要重写该方法，那么必须遵守下面 3 条规则：</p>
 <ol>
 <li>如果（实例版本的 Equals() 方法认定的）两个对象相等，那么这两个对象的哈希码也必须相同，否则，容器无法通过正确的哈希码来寻找相应的元素。</li>
 <li>对于任何一个对象 A 来说，GetHashCode() 必须在实例层面上满足这样一种不变条件（或者说，在实例层面上具备这样一种固定的性质）—— 在 A 的生命期内，无论实例 A 在执行完 GetHashCode() 方法之后还执行过其他哪些方法，当它再度执行 GetHashCode() 时，必定返回与当初相同的值。这条性质用来确保容器总是能把 A 放在正确的桶中。</li>
 <li>对于常见的输入值来说，哈希函数应该把这些值均匀地映射到各个整数上，而不应该使自己所输出的哈希码仅仅集中在几个整数上。如果每一个整数都能有相似的概率来充当对象的哈希码，那么基于哈希的容器就能够较为高效地运作。简单来说，就是要保证自己所实现的 GetHashCode() 能够让元素均匀地保存在容器的每一个桶中。此外，每个桶的元素个数也不宜太多。</li>
 </ol>
-</blockquote>
+<hr>
+<p><code>Math.Round</code> 默认使用的并非是四舍五入的原则，而是<strong>四舍六入五成双</strong>的原则。<br>所谓的四舍六入五成双，就是说当确定有效位数之后，<strong>有效位数的下一位</strong>如果<strong>小于等于 4 就舍去</strong>，如果<strong>大于等于 6 就进一</strong>，当有效位数的下一位是 5 的时候</p>
+<ul>
+<li>如果 <strong>5 前为奇数，就舍五进一</strong></li>
+<li>如果 <strong>5 前为偶数，就舍五不进</strong>（0是偶数）</li>
+</ul>
+<p>C# 中的 <code>Math.Round</code> 提供了非常多的重载方法，其中有两个重载方法是：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">Round</span> (<span class="params"><span class="keyword">double</span> <span class="keyword">value</span>, <span class="keyword">int</span> digits, MidpointRounding mode</span>)</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">decimal</span> <span class="title">Round</span> (<span class="params"><span class="keyword">decimal</span> d, <span class="keyword">int</span> decimals, MidpointRounding mode</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这两个方法都提供了第三个参数 mode，mode 是一个 <code>MidpointRounding</code> 的枚举变量，它有 2 个可选值</p>
+<ul>
+<li><code>AwayFromZero</code> - 四舍五入</li>
+<li><code>ToEven</code> - 四舍六入五成双</li>
+</ul>
+<p>所以如果我们希望的到一个理想中四舍五入的结果，我们可以改用如下代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = Math.Round(<span class="number">12.125</span>, <span class="number">2</span>, MidpointRounding.AwayFromZero);</span><br></pre></td></tr></table></figure>
+
+<hr>
 ]]></content>
       
         <categories>
@@ -3426,6 +3439,7 @@
 <li>图片 <code>![图片说明](图片地址)</code>，地址可以是本地路径，也可以是网络地址</li>
 <li>无序列表 <code>*</code>，<code>+</code>，<code>-</code>，选其中之一，注意后面紧跟个空格</li>
 <li>有序列表 <code>1.</code>，<code>2.</code>，<code>3.</code>等，注意后面紧跟个空格</li>
+<li>代办事项 <code>- [ ] 未完成</code>，<code>- [x] 已完成</code></li>
 <li>分隔线 <code>---</code>或<code>***</code>或<code>___</code>，<code>-</code>或<code>*</code>或<code>_</code>的个数三个或以上</li>
 <li>半角空格<code>&amp;ensp;</code>或<code>&amp;#8194;</code></li>
 <li>全角空格<code>&amp;emsp;</code>或<code>&amp;#8195;</code></li>
@@ -3587,6 +3601,13 @@
 <li>有序3</li>
 </ol>
 </blockquote>
+<h1 id="代办事项"><a href="#代办事项" class="headerlink" title="代办事项"></a>代办事项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- [ ] 未完成事项</span><br><span class="line">- [x] 已完成事项</span><br></pre></td></tr></table></figure>
+
+<p>带 x 的代表已经完成的事项，空格的为还没有完成的事项</p>
+<ul>
+<li><input disabled type="checkbox"> 未完成事项</li>
+<li><input checked disabled type="checkbox"> 已完成事项</li>
+</ul>
 <h1 id="链接自动检测"><a href="#链接自动检测" class="headerlink" title="链接自动检测"></a>链接自动检测</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">百度：http://www.baidu.com/</span><br></pre></td></tr></table></figure>
 
 <blockquote>
