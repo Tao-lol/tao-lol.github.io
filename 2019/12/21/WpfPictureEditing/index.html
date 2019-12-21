@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>WPF 中的一些图片处理方法 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,dotNET,WPF">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>WPF 中的一些图片处理方法</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">WPF 中的一些图片处理方法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-21T12:35:40.000Z" itemprop="datePublished" class="page-time">
+  2019-12-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-WpfPictureEditing"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">WPF 中的一些图片处理方法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-21 20:35:40" datetime="2019-12-21T12:35:40.000Z"  itemprop="datePublished">2019-12-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/Big-Head/p/12068230.html" target="_blank" rel="noopener">https://www.cnblogs.com/Big-Head/p/12068230.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="视觉处理（控件展示）"><a href="#视觉处理（控件展示）" class="headerlink" title="视觉处理（控件展示）"></a>视觉处理（控件展示）</h1><h2 id="显示图片"><a href="#显示图片" class="headerlink" title="显示图片"></a>显示图片</h2><ul>
+<li><p>Image 控件展示</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">source</span>=<span class="string">"/Resources/Images/1.png"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>缩放位图渲染算法</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">Source</span>=<span class="string">"/Resources/Images/1.jpg"</span> <span class="attr">RenderOptions.BitmapScalingMode</span>=<span class="string">"Fant"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219153556097-1850707127.png" title="" data-fancybox="images"><img src="1339560-20191219153556097-1850707127.png" alt title class></a>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219153638399-1286296574.png" title="" data-fancybox="images"><img src="1339560-20191219153638399-1286296574.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<table>
+<thead>
+<tr>
+<th>枚举值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fant</td>
+<td>使用超高质量 Fant 位图缩放，虽然速度比所有其他位图缩放模式都慢，但输出质量更高。</td>
+</tr>
+<tr>
+<td>HighQuality</td>
+<td>使用高质量位图缩放，虽然速度比 LowQuality 模式慢，但输出质量更高。 HighQuality 模式与 Fant 模式相同。</td>
+</tr>
+<tr>
+<td>Linear</td>
+<td>使用线性位图缩放，虽然速度比 HighQuality 模式快，但输出质量较低。</td>
+</tr>
+<tr>
+<td>LowQuality</td>
+<td>使用双线性位图缩放，虽然速度比 HighQuality 快，但输出质量较低。 LowQuality 模式与 Linear 模式相同。</td>
+</tr>
+<tr>
+<td>NearesNeighbor</td>
+<td>使用最近邻域位图缩放，当使用软件光栅器时，该缩放提供优于 LowQuality 模式的性能。 该模式常用于放大位图。</td>
+</tr>
+<tr>
+<td>Unspecified</td>
+<td>使用默认位图缩放模式，即 Linear。</td>
+</tr>
+</tbody></table>
+<h2 id="Image-遮罩"><a href="#Image-遮罩" class="headerlink" title="Image 遮罩"></a>Image 遮罩</h2><ul>
+<li>OpacityMask</li>
+</ul>
+<blockquote>
+<p>来自微软官方的说明：<br><strong>获取或设置一个作为 Brush 实现的不透明蒙板，该蒙板可应用到此元素所呈现内容的任何 Alpha 通道蒙板。 这是依赖项属性。</strong></p>
+</blockquote>
+<blockquote>
+<p>来自个人的经验解释：<br><strong>OpacityMask 也是一张图片，它用来改变被它遮住的内容的显示区域</strong><br><strong>OpacityMasK 本身：有内容的区域被镂空，没有内容的区域被填充</strong><br><strong>被它遮住的控件或者画布：镂空的区域就展示，填充的区域变透明</strong></p>
+</blockquote>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219153907182-317533868.png" title="" data-fancybox="images"><img src="1339560-20191219153907182-317533868.png" alt title class></a>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219153940114-473450059.png" title="" data-fancybox="images"><img src="1339560-20191219153940114-473450059.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="图片-DPI"><a href="#图片-DPI" class="headerlink" title="图片 DPI"></a>图片 DPI</h2><ul>
+<li>图片 DPI 是每英寸显示的点的个数（点/英寸）</li>
+<li>图片的宽像素 = 宽 dpi * 尺寸</li>
+<li>图片的高像素 = 高 dpi * 尺寸</li>
+<li>WPF 中，所有图片在 Xaml 中都会被强制拉成 96 dpi。</li>
+</ul>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219154046318-2041824279.png" title="" data-fancybox="images"><img src="1339560-20191219154046318-2041824279.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="控件的-Transform"><a href="#控件的-Transform" class="headerlink" title="控件的 Transform"></a>控件的 Transform</h2><blockquote>
+<p>来自微软官方的说明：<br>Transform 定义如何将点从一个坐标空间映射或转换到另一个坐标空间。 此映射由转换 Matrix描述，该转换是包含三列 Double 值的三行的集合。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>枚举值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RotateTransform</td>
+<td>按指定角度旋转元素。</td>
+</tr>
+<tr>
+<td>ScaleTranform</td>
+<td>按指定的 ScaleX 和 ScaleY 量来缩放元素。</td>
+</tr>
+<tr>
+<td>SkewTransform</td>
+<td>按指定的 AngleX 和 AngleY 量倾斜元素。</td>
+</tr>
+<tr>
+<td>TranslateTransform</td>
+<td>按指定的 X 和 Y 量移动（平移）元素。</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">Width</span>=<span class="string">"450"</span> <span class="attr">Source</span>=<span class="string">"/Images/3.jpg"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Image.RenderTransform</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TransformGroup</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">TranslateTransform</span> <span class="attr">X</span>=<span class="string">"10"</span> <span class="attr">Y</span>=<span class="string">"10"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">RotateTransform</span> <span class="attr">Angle</span>=<span class="string">"20"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ScaleTransform</span> <span class="attr">ScaleX</span>=<span class="string">"1.5"</span> <span class="attr">ScaleY</span>=<span class="string">"1.5"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">SkewTransform</span> <span class="attr">AngleX</span>=<span class="string">"10"</span> <span class="attr">AngleY</span>=<span class="string">"10"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">TransformGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Image.RenderTransform</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Image</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219154150547-1910194833.png" title="" data-fancybox="images"><img src="1339560-20191219154150547-1910194833.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<hr>
+<h1 id="输出文件"><a href="#输出文件" class="headerlink" title="输出文件"></a>输出文件</h1><h2 id="显示图片-1"><a href="#显示图片-1" class="headerlink" title="显示图片"></a>显示图片</h2><h3 id="BitmapImage-的保存"><a href="#BitmapImage-的保存" class="headerlink" title="BitmapImage 的保存"></a>BitmapImage 的保存</h3><p>与 Bitmap.Save() 不同，需要对 BitmapImage 的数据转为 Stream，通过文件流保存</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">BitmapEncoder encoder = <span class="keyword">new</span> PngBitmapEncoder();</span><br><span class="line">encoder.Frame.Add(BitmapFrame.Create(bitmapImage));</span><br><span class="line"><span class="keyword">using</span>(<span class="keyword">var</span> stream=<span class="keyword">new</span> FileStream(path, FileMode.Create))</span><br><span class="line">&#123;</span><br><span class="line">    encoder.Save(stream);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="BitmapImage-的-Width-Height-和-PixelWidth-PixelHeight"><a href="#BitmapImage-的-Width-Height-和-PixelWidth-PixelHeight" class="headerlink" title="BitmapImage 的 Width, Height 和 PixelWidth, PixelHeight"></a>BitmapImage 的 Width, Height 和 PixelWidth, PixelHeight</h3><blockquote>
+<p>Width 和 Height：获取位图的宽/高度（以与设备无关的单位（每个单位 1/96 英寸）为单位）。<strong>（会根据电脑 DPI 的更改获取到不同的值）</strong><br>PixelWidth 和 PixelHeight：获取位图的宽/高度（以像素为单位）</p>
+</blockquote>
+<h3 id="BitmapImage-与-Bitmap-的互相转换"><a href="#BitmapImage-与-Bitmap-的互相转换" class="headerlink" title="BitmapImage 与 Bitmap 的互相转换"></a>BitmapImage 与 Bitmap 的互相转换</h3><p>同样是转为流数据，向Bitmap的构造函数传参</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="comment">//BitmapImage  to  Bitmap</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">GetBitmapByBitmapImage</span>(<span class="params"><span class="keyword">this</span> BitmapImage bitmapImage,<span class="keyword">bool</span> isPng=<span class="literal">false</span></span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bitmap bitmap;</span><br><span class="line">    MemoryStream outStream = <span class="keyword">new</span> MemoryStream();</span><br><span class="line">    BitmapEncoder enc = <span class="keyword">new</span> BmpBitmapEncoder();</span><br><span class="line">    <span class="keyword">if</span> (isPng) </span><br><span class="line">    &#123;</span><br><span class="line">        enc = <span class="keyword">new</span> PngBitmapEncoder();</span><br><span class="line">    &#125;</span><br><span class="line">    enc.Frames.Add(BitmapFrame.Create(bitmapImage));</span><br><span class="line">    enc.Save(outStream);</span><br><span class="line">    bitmap = <span class="keyword">new</span> Bitmap(outStream);</span><br><span class="line">    <span class="keyword">return</span> bitmap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Bitmap  to BitmapImage</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BitmapImage <span class="title">GetBitmapImageBybitmap</span>(<span class="params"><span class="keyword">this</span> Bitmap bitmap</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BitmapImage bitmapImage = <span class="keyword">new</span> BitmapImage();</span><br><span class="line">    <span class="keyword">try</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (MemoryStream ms = <span class="keyword">new</span> MemoryStream()) </span><br><span class="line">        &#123;</span><br><span class="line">            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);</span><br><span class="line">            bitmapImage.BeginInit();</span><br><span class="line">            bitmapImage.StreamSource = ms;</span><br><span class="line">            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;</span><br><span class="line">            bitmapImage.EndInit();</span><br><span class="line">            bitmapImage.Freeze();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex) </span><br><span class="line">    &#123;</span><br><span class="line">        log.ErrorFormat(<span class="string">"bitmap to BitmapImage Failed:"</span> + ex.Message);</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> bitmapImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Visual-和-DrawingContext"><a href="#Visual-和-DrawingContext" class="headerlink" title="Visual 和 DrawingContext"></a>Visual 和 DrawingContext</h2><h3 id="Visual"><a href="#Visual" class="headerlink" title="Visual"></a>Visual</h3><blockquote>
+<p>Visual：为 WPF 中的呈现提供支持，其中包括命中测试、坐标转换和边界框计算。</p>
+</blockquote>
+<p>层级关系：<br>System.Windows.Media.Visual<br>&emsp;&emsp;System.Windows.Media.ContainerVisual<br>&emsp;&emsp;&emsp;&emsp;System.Windows.UIElement</p>
+<h3 id="DrawingContext"><a href="#DrawingContext" class="headerlink" title="DrawingContext"></a>DrawingContext</h3><blockquote>
+<p>DrawingContext：使用绘图、推送和弹出命令描述可视内容。</p>
+</blockquote>
+<p>绘制方法：</p>
+<ul>
+<li>DrawDrawing：画 Drawing 对象</li>
+<li>DrawEllipse：画圆</li>
+<li>DrawGeometry：画几何图形</li>
+<li>DrawGlyphRun：画文字</li>
+<li>DrawImage： 画图</li>
+<li>DrawLine：画线</li>
+<li>DrawRectangle / DrawRoundedRectangle：画矩形</li>
+<li>DrawText：画带格式的文本</li>
+<li>DrawVideo：画视频</li>
+<li>PushClip：推送剪切区域</li>
+</ul>
+<h3 id="RenderTargetBitmap"><a href="#RenderTargetBitmap" class="headerlink" title="RenderTargetBitmap"></a>RenderTargetBitmap</h3><blockquote>
+<p>RenderTargetBitmap：将 System.Windows.Media.Visual 对象转换为位图。</p>
+</blockquote>
+<h3 id="Image-遮罩-1"><a href="#Image-遮罩-1" class="headerlink" title="Image 遮罩"></a>Image 遮罩</h3><p>和控件方式类似，在后台代码中使用 Visual 来展示</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; OpacityMask = imgBrush &#125;;    <span class="comment">//遮罩Visual</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<h3 id="图像变化"><a href="#图像变化" class="headerlink" title="图像变化"></a>图像变化</h3><p>同样是修改 Visual 的 Transform<br><strong>这里注意：文件渲染的 Transform 和前台的 Transform 不全相同！</strong><br><strong>因为界面显示的图片大小和实际大小不一样</strong></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">Copy</span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; Transform = img.RenderTransform &#125;;    <span class="comment">//修改 Transform</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<h3 id="PathGeometry"><a href="#PathGeometry" class="headerlink" title="PathGeometry"></a>PathGeometry</h3><blockquote>
+<p>来自微软官方的解释：表示一个可能由弧、曲线、椭圆、直线和矩形组成的复杂形状</p>
+</blockquote>
+<blockquote>
+<p>LineGeometry 直线<br><strong>PS：这个 LineGeometry 可以实现线头和线尾的圆滑笔触效果</strong>  </p>
+<p>EllipseGeometry 圆<br>RectangleGeometry 矩形</p>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="keyword">new</span> LineGeometry(start, end).GetWidenedPathGeometry(<span class="keyword">new</span> Pen(Brushes.Black, <span class="number">10</span>) &#123; StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="抠图"><a href="#抠图" class="headerlink" title="抠图"></a>抠图</h3><p>通过 DrawingContext 的 PushClip 可以将指定的剪辑区域推送到绘图上下文上。<br>需要利用到上面的 Geometry 几何图形<br>配合一些鼠标事件可以手动实现 inkcanvas 和类似 PS 的背景橡皮擦  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; OpacityMask = imgBrush &#125;;    <span class="comment">//遮罩 Visual</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    RectangleGeometry full = <span class="keyword">new</span> RectangleGeometry(<span class="keyword">new</span> Rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">777</span>,<span class="number">523</span>));    <span class="comment">//全图区域</span></span><br><span class="line">    <span class="keyword">var</span> clip= Geometry.Combine(full, <span class="keyword">new</span> RectangleGeometry(<span class="keyword">new</span> Rect(<span class="number">200</span>,<span class="number">200</span>,<span class="number">300</span>,<span class="number">300</span>)), GeometryCombineMode.Exclude, <span class="literal">null</span>);    <span class="comment">//减去一个矩形的区域</span></span><br><span class="line">    dc.PushClip(clip);    <span class="comment">//推送 clip 区域结果</span></span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219154338688-1538991805.png" title="正方形抠图" data-fancybox="images"><img src="1339560-20191219154338688-1538991805.png" alt="正方形抠图" title class></a>
+                <p>正方形抠图</p>
+            </figure>
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219154606518-534744335.png" title="线条抠图" data-fancybox="images"><img src="1339560-20191219154606518-534744335.png" alt="线条抠图" title class></a>
+                <p>线条抠图</p>
+            </figure>
+
+<h3 id="裁剪"><a href="#裁剪" class="headerlink" title="裁剪"></a>裁剪</h3><ul>
+<li>BitmapSource 中有一个方法叫做 CopyPixels，复制像素点集到一个新的 BitmapSource 里面。可以实现裁剪</li>
+</ul>
+<blockquote>
+<p>stride：位图的跨距（一行的字节数）。<br>pixels：表示位图图像内容的字节数组。</p>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BitmapSource <span class="title">CutImage</span>(<span class="params">BitmapSource bitmapSource, Int32Rect cut</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//计算Stride</span></span><br><span class="line">    <span class="keyword">var</span> stride = bitmapSource.Format.BitsPerPixel * cut.Width / <span class="number">8</span>;</span><br><span class="line">    <span class="comment">//声明字节数组</span></span><br><span class="line">    <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[cut.Height * stride];</span><br><span class="line">    <span class="comment">//调用CopyPixels</span></span><br><span class="line">    bitmapSource.CopyPixels(cut, data, stride, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> BitmapSource.Create(cut.Width, cut.Height, <span class="number">0</span>, <span class="number">0</span>, PixelFormats.Bgra32, <span class="literal">null</span>, data, stride);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=WPF 中的一些图片处理方法 href="1339560-20191219154400596-61755557.png" title="" data-fancybox="images"><img src="1339560-20191219154400596-61755557.png" alt title class></a>
+                <p></p>
+            </figure>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-21T13:30:58.967Z" itemprop="dateUpdated">2019-12-21 21:30:58</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/21/WpfPictureEditing/" target="_blank" rel="external">https://tao-lol.top/2019/12/21/WpfPictureEditing/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WPF/">WPF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/21/WpfPictureEditing/&title=《WPF 中的一些图片处理方法》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/21/WpfPictureEditing/&title=《WPF 中的一些图片处理方法》 — Blog&source=
+https://www.cnblogs.com/Big-Head/p/12068230.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/19/AspNetCoreWebApiBestPracticesGuide/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ASP.NET Core Web API 最佳实践指南</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#视觉处理（控件展示）"><span class="post-toc-number">1.</span> <span class="post-toc-text">视觉处理（控件展示）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#显示图片"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">显示图片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Image-遮罩"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Image 遮罩</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#图片-DPI"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">图片 DPI</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#控件的-Transform"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">控件的 Transform</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#输出文件"><span class="post-toc-number">2.</span> <span class="post-toc-text">输出文件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#显示图片-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">显示图片</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BitmapImage-的保存"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">BitmapImage 的保存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BitmapImage-的-Width-Height-和-PixelWidth-PixelHeight"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">BitmapImage 的 Width, Height 和 PixelWidth, PixelHeight</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BitmapImage-与-Bitmap-的互相转换"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">BitmapImage 与 Bitmap 的互相转换</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Visual-和-DrawingContext"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Visual 和 DrawingContext</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Visual"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">Visual</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DrawingContext"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">DrawingContext</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#RenderTargetBitmap"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">RenderTargetBitmap</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Image-遮罩-1"><span class="post-toc-number">2.2.4.</span> <span class="post-toc-text">Image 遮罩</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图像变化"><span class="post-toc-number">2.2.5.</span> <span class="post-toc-text">图像变化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PathGeometry"><span class="post-toc-number">2.2.6.</span> <span class="post-toc-text">PathGeometry</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#抠图"><span class="post-toc-number">2.2.7.</span> <span class="post-toc-text">抠图</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#裁剪"><span class="post-toc-number">2.2.8.</span> <span class="post-toc-text">裁剪</span></a></li></ol></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/21/WpfPictureEditing/&title=《WPF 中的一些图片处理方法》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/21/WpfPictureEditing/&title=《WPF 中的一些图片处理方法》 — Blog&source=
+https://www.cnblogs.com/Big-Head/p/12068230.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACOklEQVR42u3ay27jMAwF0Pz/T6dAVwWauPfSzmDCHK0Cww8dLRiK1O0Wj/v3+Pn75/h9Z349eedlAwMD420Z98Pxm/HsSjutZ+8/XrKn78TAwPgARvuZHJlMIl++p9cxMDAw4sQuD6azBcLAwMBIAu6ZRDAfGBgYGLNNbJvY5cW744B78V4cAwPjDRmzxsC/+f3y/gYGBsZ/z7iPRlsga5+q54OBgbGakZTSZondcRJ5voR3Sx7AwMBYwWg/Vq9QfDgjX4gHM8fAwFjNaJsBxwli8lTe7Dy1L8fAwFjNaMPf65K/vGGAgYGxm9GmfW0Ibotos40xBgbGbsYsOWtD5HF0P9NseNAYwMDAWMpop5skkXkempfwiv8QDAyMdYx8Eq8Lo23LIcpzMTAwFjGSm2bNy3bqbdMiOkWCgYGxgtEW7mflsFmrsj7dhoGBsY7Rvi4v7renIHLMgysYGBirGdcmc8mBsGu/9UcIxsDAWMTIE7v2iNh5XlHyw8DA+DBGu029qqmQLxMGBsYnM9r2wJn+Q3sErd4TY2BgrGPMJpQE63bSydvq2iEGBsabM2btzFlT86p2wvAmDAyMN2Tcy3Ftcpm0BKLwjYGBsZpxPlq3BbIWP2twYmBg7GMkQTZ/XRug2wbnH3txDAyM1Yyk0D9LB2dthiQBxcDAwJgV5c9vUPME8dauHwYGxgcwZk3HWeGsPniBgYHxAYzZhGYNhvZQRVERxMDAWMpoGwPtobE8QJ8J7hgYGEsZX2k5slBy4alZAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
