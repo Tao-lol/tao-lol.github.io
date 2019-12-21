@@ -3,6 +3,220 @@
   
     
     <entry>
+      <title><![CDATA[WPF 中的一些图片处理方法]]></title>
+      <url>/2019/12/21/WpfPictureEditing/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.cnblogs.com/Big-Head/p/12068230.html" target="_blank" rel="noopener">https://www.cnblogs.com/Big-Head/p/12068230.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="视觉处理（控件展示）"><a href="#视觉处理（控件展示）" class="headerlink" title="视觉处理（控件展示）"></a>视觉处理（控件展示）</h1><h2 id="显示图片"><a href="#显示图片" class="headerlink" title="显示图片"></a>显示图片</h2><ul>
+<li><p>Image 控件展示</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">source</span>=<span class="string">"/Resources/Images/1.png"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>缩放位图渲染算法</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">Source</span>=<span class="string">"/Resources/Images/1.jpg"</span> <span class="attr">RenderOptions.BitmapScalingMode</span>=<span class="string">"Fant"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="image-box">
+                <img src="1339560-20191219153556097-1850707127.png" alt title class>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <img src="1339560-20191219153638399-1286296574.png" alt title class>
+                <p></p>
+            </figure>
+
+<table>
+<thead>
+<tr>
+<th>枚举值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fant</td>
+<td>使用超高质量 Fant 位图缩放，虽然速度比所有其他位图缩放模式都慢，但输出质量更高。</td>
+</tr>
+<tr>
+<td>HighQuality</td>
+<td>使用高质量位图缩放，虽然速度比 LowQuality 模式慢，但输出质量更高。 HighQuality 模式与 Fant 模式相同。</td>
+</tr>
+<tr>
+<td>Linear</td>
+<td>使用线性位图缩放，虽然速度比 HighQuality 模式快，但输出质量较低。</td>
+</tr>
+<tr>
+<td>LowQuality</td>
+<td>使用双线性位图缩放，虽然速度比 HighQuality 快，但输出质量较低。 LowQuality 模式与 Linear 模式相同。</td>
+</tr>
+<tr>
+<td>NearesNeighbor</td>
+<td>使用最近邻域位图缩放，当使用软件光栅器时，该缩放提供优于 LowQuality 模式的性能。 该模式常用于放大位图。</td>
+</tr>
+<tr>
+<td>Unspecified</td>
+<td>使用默认位图缩放模式，即 Linear。</td>
+</tr>
+</tbody></table>
+<h2 id="Image-遮罩"><a href="#Image-遮罩" class="headerlink" title="Image 遮罩"></a>Image 遮罩</h2><ul>
+<li>OpacityMask</li>
+</ul>
+<blockquote>
+<p>来自微软官方的说明：<br><strong>获取或设置一个作为 Brush 实现的不透明蒙板，该蒙板可应用到此元素所呈现内容的任何 Alpha 通道蒙板。 这是依赖项属性。</strong></p>
+</blockquote>
+<blockquote>
+<p>来自个人的经验解释：<br><strong>OpacityMask 也是一张图片，它用来改变被它遮住的内容的显示区域</strong><br><strong>OpacityMasK 本身：有内容的区域被镂空，没有内容的区域被填充</strong><br><strong>被它遮住的控件或者画布：镂空的区域就展示，填充的区域变透明</strong></p>
+</blockquote>
+<figure class="image-box">
+                <img src="1339560-20191219153907182-317533868.png" alt title class>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <img src="1339560-20191219153940114-473450059.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="图片-DPI"><a href="#图片-DPI" class="headerlink" title="图片 DPI"></a>图片 DPI</h2><ul>
+<li>图片 DPI 是每英寸显示的点的个数（点/英寸）</li>
+<li>图片的宽像素 = 宽 dpi * 尺寸</li>
+<li>图片的高像素 = 高 dpi * 尺寸</li>
+<li>WPF 中，所有图片在 Xaml 中都会被强制拉成 96 dpi。</li>
+</ul>
+<figure class="image-box">
+                <img src="1339560-20191219154046318-2041824279.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="控件的-Transform"><a href="#控件的-Transform" class="headerlink" title="控件的 Transform"></a>控件的 Transform</h2><blockquote>
+<p>来自微软官方的说明：<br>Transform 定义如何将点从一个坐标空间映射或转换到另一个坐标空间。 此映射由转换 Matrix描述，该转换是包含三列 Double 值的三行的集合。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>枚举值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RotateTransform</td>
+<td>按指定角度旋转元素。</td>
+</tr>
+<tr>
+<td>ScaleTranform</td>
+<td>按指定的 ScaleX 和 ScaleY 量来缩放元素。</td>
+</tr>
+<tr>
+<td>SkewTransform</td>
+<td>按指定的 AngleX 和 AngleY 量倾斜元素。</td>
+</tr>
+<tr>
+<td>TranslateTransform</td>
+<td>按指定的 X 和 Y 量移动（平移）元素。</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Xaml 代码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Image</span> <span class="attr">Width</span>=<span class="string">"450"</span> <span class="attr">Source</span>=<span class="string">"/Images/3.jpg"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Image.RenderTransform</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TransformGroup</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">TranslateTransform</span> <span class="attr">X</span>=<span class="string">"10"</span> <span class="attr">Y</span>=<span class="string">"10"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">RotateTransform</span> <span class="attr">Angle</span>=<span class="string">"20"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ScaleTransform</span> <span class="attr">ScaleX</span>=<span class="string">"1.5"</span> <span class="attr">ScaleY</span>=<span class="string">"1.5"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">SkewTransform</span> <span class="attr">AngleX</span>=<span class="string">"10"</span> <span class="attr">AngleY</span>=<span class="string">"10"</span> <span class="attr">CenterX</span>=<span class="string">"200"</span> <span class="attr">CenterY</span>=<span class="string">"121"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">TransformGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Image.RenderTransform</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Image</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1339560-20191219154150547-1910194833.png" alt title class>
+                <p></p>
+            </figure>
+
+<hr>
+<h1 id="输出文件"><a href="#输出文件" class="headerlink" title="输出文件"></a>输出文件</h1><h2 id="显示图片-1"><a href="#显示图片-1" class="headerlink" title="显示图片"></a>显示图片</h2><h3 id="BitmapImage-的保存"><a href="#BitmapImage-的保存" class="headerlink" title="BitmapImage 的保存"></a>BitmapImage 的保存</h3><p>与 Bitmap.Save() 不同，需要对 BitmapImage 的数据转为 Stream，通过文件流保存</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">BitmapEncoder encoder = <span class="keyword">new</span> PngBitmapEncoder();</span><br><span class="line">encoder.Frame.Add(BitmapFrame.Create(bitmapImage));</span><br><span class="line"><span class="keyword">using</span>(<span class="keyword">var</span> stream=<span class="keyword">new</span> FileStream(path, FileMode.Create))</span><br><span class="line">&#123;</span><br><span class="line">    encoder.Save(stream);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="BitmapImage-的-Width-Height-和-PixelWidth-PixelHeight"><a href="#BitmapImage-的-Width-Height-和-PixelWidth-PixelHeight" class="headerlink" title="BitmapImage 的 Width, Height 和 PixelWidth, PixelHeight"></a>BitmapImage 的 Width, Height 和 PixelWidth, PixelHeight</h3><blockquote>
+<p>Width 和 Height：获取位图的宽/高度（以与设备无关的单位（每个单位 1/96 英寸）为单位）。<strong>（会根据电脑 DPI 的更改获取到不同的值）</strong><br>PixelWidth 和 PixelHeight：获取位图的宽/高度（以像素为单位）</p>
+</blockquote>
+<h3 id="BitmapImage-与-Bitmap-的互相转换"><a href="#BitmapImage-与-Bitmap-的互相转换" class="headerlink" title="BitmapImage 与 Bitmap 的互相转换"></a>BitmapImage 与 Bitmap 的互相转换</h3><p>同样是转为流数据，向Bitmap的构造函数传参</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="comment">//BitmapImage  to  Bitmap</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">GetBitmapByBitmapImage</span>(<span class="params"><span class="keyword">this</span> BitmapImage bitmapImage,<span class="keyword">bool</span> isPng=<span class="literal">false</span></span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bitmap bitmap;</span><br><span class="line">    MemoryStream outStream = <span class="keyword">new</span> MemoryStream();</span><br><span class="line">    BitmapEncoder enc = <span class="keyword">new</span> BmpBitmapEncoder();</span><br><span class="line">    <span class="keyword">if</span> (isPng) </span><br><span class="line">    &#123;</span><br><span class="line">        enc = <span class="keyword">new</span> PngBitmapEncoder();</span><br><span class="line">    &#125;</span><br><span class="line">    enc.Frames.Add(BitmapFrame.Create(bitmapImage));</span><br><span class="line">    enc.Save(outStream);</span><br><span class="line">    bitmap = <span class="keyword">new</span> Bitmap(outStream);</span><br><span class="line">    <span class="keyword">return</span> bitmap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Bitmap  to BitmapImage</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BitmapImage <span class="title">GetBitmapImageBybitmap</span>(<span class="params"><span class="keyword">this</span> Bitmap bitmap</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    BitmapImage bitmapImage = <span class="keyword">new</span> BitmapImage();</span><br><span class="line">    <span class="keyword">try</span> </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (MemoryStream ms = <span class="keyword">new</span> MemoryStream()) </span><br><span class="line">        &#123;</span><br><span class="line">            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);</span><br><span class="line">            bitmapImage.BeginInit();</span><br><span class="line">            bitmapImage.StreamSource = ms;</span><br><span class="line">            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;</span><br><span class="line">            bitmapImage.EndInit();</span><br><span class="line">            bitmapImage.Freeze();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex) </span><br><span class="line">    &#123;</span><br><span class="line">        log.ErrorFormat(<span class="string">"bitmap to BitmapImage Failed:"</span> + ex.Message);</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> bitmapImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Visual-和-DrawingContext"><a href="#Visual-和-DrawingContext" class="headerlink" title="Visual 和 DrawingContext"></a>Visual 和 DrawingContext</h2><h3 id="Visual"><a href="#Visual" class="headerlink" title="Visual"></a>Visual</h3><blockquote>
+<p>Visual：为 WPF 中的呈现提供支持，其中包括命中测试、坐标转换和边界框计算。</p>
+</blockquote>
+<p>层级关系：<br>System.Windows.Media.Visual<br>&emsp;&emsp;System.Windows.Media.ContainerVisual<br>&emsp;&emsp;&emsp;&emsp;System.Windows.UIElement</p>
+<h3 id="DrawingContext"><a href="#DrawingContext" class="headerlink" title="DrawingContext"></a>DrawingContext</h3><blockquote>
+<p>DrawingContext：使用绘图、推送和弹出命令描述可视内容。</p>
+</blockquote>
+<p>绘制方法：</p>
+<ul>
+<li>DrawDrawing：画 Drawing 对象</li>
+<li>DrawEllipse：画圆</li>
+<li>DrawGeometry：画几何图形</li>
+<li>DrawGlyphRun：画文字</li>
+<li>DrawImage： 画图</li>
+<li>DrawLine：画线</li>
+<li>DrawRectangle / DrawRoundedRectangle：画矩形</li>
+<li>DrawText：画带格式的文本</li>
+<li>DrawVideo：画视频</li>
+<li>PushClip：推送剪切区域</li>
+</ul>
+<h3 id="RenderTargetBitmap"><a href="#RenderTargetBitmap" class="headerlink" title="RenderTargetBitmap"></a>RenderTargetBitmap</h3><blockquote>
+<p>RenderTargetBitmap：将 System.Windows.Media.Visual 对象转换为位图。</p>
+</blockquote>
+<h3 id="Image-遮罩-1"><a href="#Image-遮罩-1" class="headerlink" title="Image 遮罩"></a>Image 遮罩</h3><p>和控件方式类似，在后台代码中使用 Visual 来展示</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; OpacityMask = imgBrush &#125;;    <span class="comment">//遮罩Visual</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<h3 id="图像变化"><a href="#图像变化" class="headerlink" title="图像变化"></a>图像变化</h3><p>同样是修改 Visual 的 Transform<br><strong>这里注意：文件渲染的 Transform 和前台的 Transform 不全相同！</strong><br><strong>因为界面显示的图片大小和实际大小不一样</strong></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">Copy</span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; Transform = img.RenderTransform &#125;;    <span class="comment">//修改 Transform</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<h3 id="PathGeometry"><a href="#PathGeometry" class="headerlink" title="PathGeometry"></a>PathGeometry</h3><blockquote>
+<p>来自微软官方的解释：表示一个可能由弧、曲线、椭圆、直线和矩形组成的复杂形状</p>
+</blockquote>
+<blockquote>
+<p>LineGeometry 直线<br><strong>PS：这个 LineGeometry 可以实现线头和线尾的圆滑笔触效果</strong>  </p>
+<p>EllipseGeometry 圆<br>RectangleGeometry 矩形</p>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="keyword">new</span> LineGeometry(start, end).GetWidenedPathGeometry(<span class="keyword">new</span> Pen(Brushes.Black, <span class="number">10</span>) &#123; StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="抠图"><a href="#抠图" class="headerlink" title="抠图"></a>抠图</h3><p>通过 DrawingContext 的 PushClip 可以将指定的剪辑区域推送到绘图上下文上。<br>需要利用到上面的 Geometry 几何图形<br>配合一些鼠标事件可以手动实现 inkcanvas 和类似 PS 的背景橡皮擦  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line">RenderTargetBitmap bmp = <span class="keyword">new</span> RenderTargetBitmap((<span class="keyword">int</span>)img.Source.Width, (<span class="keyword">int</span>)img.Source.Height, <span class="number">96</span>, <span class="number">96</span>, PixelFormats.Default);</span><br><span class="line">DrawingVisual visual = <span class="keyword">new</span> DrawingVisual() &#123; OpacityMask = imgBrush &#125;;    <span class="comment">//遮罩 Visual</span></span><br><span class="line"><span class="keyword">using</span> (DrawingContext dc = visual.RenderOpen()) </span><br><span class="line">&#123;</span><br><span class="line">    RectangleGeometry full = <span class="keyword">new</span> RectangleGeometry(<span class="keyword">new</span> Rect(<span class="number">0</span>,<span class="number">0</span>,<span class="number">777</span>,<span class="number">523</span>));    <span class="comment">//全图区域</span></span><br><span class="line">    <span class="keyword">var</span> clip= Geometry.Combine(full, <span class="keyword">new</span> RectangleGeometry(<span class="keyword">new</span> Rect(<span class="number">200</span>,<span class="number">200</span>,<span class="number">300</span>,<span class="number">300</span>)), GeometryCombineMode.Exclude, <span class="literal">null</span>);    <span class="comment">//减去一个矩形的区域</span></span><br><span class="line">    dc.PushClip(clip);    <span class="comment">//推送 clip 区域结果</span></span><br><span class="line">    dc.DrawImage(img.Source, <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, img.Source.Width, img.Source.Height));</span><br><span class="line">&#125;</span><br><span class="line">bmp.Render(visual);</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1339560-20191219154338688-1538991805.png" alt="正方形抠图" title class>
+                <p>正方形抠图</p>
+            </figure>
+<figure class="image-box">
+                <img src="1339560-20191219154606518-534744335.png" alt="线条抠图" title class>
+                <p>线条抠图</p>
+            </figure>
+
+<h3 id="裁剪"><a href="#裁剪" class="headerlink" title="裁剪"></a>裁剪</h3><ul>
+<li>BitmapSource 中有一个方法叫做 CopyPixels，复制像素点集到一个新的 BitmapSource 里面。可以实现裁剪</li>
+</ul>
+<blockquote>
+<p>stride：位图的跨距（一行的字节数）。<br>pixels：表示位图图像内容的字节数组。</p>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C# 代码</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BitmapSource <span class="title">CutImage</span>(<span class="params">BitmapSource bitmapSource, Int32Rect cut</span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//计算Stride</span></span><br><span class="line">    <span class="keyword">var</span> stride = bitmapSource.Format.BitsPerPixel * cut.Width / <span class="number">8</span>;</span><br><span class="line">    <span class="comment">//声明字节数组</span></span><br><span class="line">    <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[cut.Height * stride];</span><br><span class="line">    <span class="comment">//调用CopyPixels</span></span><br><span class="line">    bitmapSource.CopyPixels(cut, data, stride, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> BitmapSource.Create(cut.Width, cut.Height, <span class="number">0</span>, <span class="number">0</span>, PixelFormats.Bgra32, <span class="literal">null</span>, data, stride);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="1339560-20191219154400596-61755557.png" alt title class>
+                <p></p>
+            </figure>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> dotNET </tag>
+            
+            <tag> WPF </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[ASP.NET Core Web API 最佳实践指南]]></title>
       <url>/2019/12/19/AspNetCoreWebApiBestPracticesGuide/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -2265,7 +2479,7 @@
       <content type="html"><![CDATA[<p>&emsp;</p>
 <a id="more"></a>
 
-<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C-35"><a href="#C-35" class="headerlink" title="C&#35;"></a>C&#35;</h1><p>构建某个类型的某个实例时系统所执行的操作：</p>
+<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><h3 id="SignalR"><a href="#SignalR" class="headerlink" title="SignalR"></a>SignalR</h3><h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><h3 id="Razor-Pages"><a href="#Razor-Pages" class="headerlink" title="Razor Pages"></a>Razor Pages</h3><h3 id="Blazor"><a href="#Blazor" class="headerlink" title="Blazor"></a>Blazor</h3><h3 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h3><h2 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h2><h2 id="Xamarin"><a href="#Xamarin" class="headerlink" title="Xamarin"></a>Xamarin</h2><h1 id="C-35"><a href="#C-35" class="headerlink" title="C&#35;"></a>C&#35;</h1><h2 id="构建某个类型的某个实例时系统所执行的操作"><a href="#构建某个类型的某个实例时系统所执行的操作" class="headerlink" title="构建某个类型的某个实例时系统所执行的操作"></a>构建某个类型的某个实例时系统所执行的操作</h2><p>构建某个类型的某个实例时系统所执行的操作：</p>
 <ol>
 <li>把存放静态变量的空间清零。</li>
 <li>执行静态变量的初始化语句。</li>
@@ -2278,7 +2492,7 @@
 </ol>
 <p>&emsp;&emsp;以后如果还要构造该类型的实例，那么会直接从第5步开始执行，因为类级别的初始化工作只执行一次就够了。此外，可以通过链式调用构造函数的办法来优化第6、7两步，使得编译器在制作程序码时不再生成重复的指令。</p>
 <hr>
-<p>在类的继承体系中，位于根部的那个基类应该做到以下几点：</p>
+<h2 id="类继承时基类与子类应该做到的几点"><a href="#类继承时基类与子类应该做到的几点" class="headerlink" title="类继承时基类与子类应该做到的几点"></a>类继承时基类与子类应该做到的几点</h2><p>在类的继承体系中，位于根部的那个基类应该做到以下几点：</p>
 <ul>
 <li>实现 IDisposable 接口，以便释放资源。</li>
 <li>如果本身含有非托管资源，那就添加 finalizer，以防客户端忘记调用 Dispose() 方法。若是没有非托管资源，则不用添加 finalizer。</li>
@@ -2291,7 +2505,7 @@
 <li>记得调用基类的同名函数。</li>
 </ul>
 <hr>
-<p>实现 IDisposable.Dispose() 方法时，要注意以下四点：</p>
+<h2 id="实现-IDisposable-Dispose-方法时的注意点"><a href="#实现-IDisposable-Dispose-方法时的注意点" class="headerlink" title="实现 IDisposable.Dispose() 方法时的注意点"></a>实现 IDisposable.Dispose() 方法时的注意点</h2><p>实现 IDisposable.Dispose() 方法时，要注意以下四点：</p>
 <ol>
 <li>把非托管资源全都释放掉。</li>
 <li>把托管资源全都释放掉（这也包括不再订阅早前关注的那些事件）。</li>
@@ -2299,17 +2513,20 @@
 <li>阻止垃圾回收器重复清理该对象。这可以通过 GC.SuppressFinalize(this) 来完成。</li>
 </ol>
 <hr>
-<p>C# 提供了 4 种不同的函数，用来决定两个对象是否“相等”：</p>
+<h2 id="C-35-决定两个对象是否“相等”的-4-个函数"><a href="#C-35-决定两个对象是否“相等”的-4-个函数" class="headerlink" title="C&#35; 决定两个对象是否“相等”的 4 个函数"></a>C&#35; 决定两个对象是否“相等”的 4 个函数</h2><p>C# 提供了 4 种不同的函数，用来决定两个对象是否“相等”：</p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">ReferenceEquals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> left, <span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> right</span>)</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="keyword">operator</span> ==(MyClass left, MyClass right);</span><br></pre></td></tr></table></figure>
 
 <hr>
-<p>&emsp;&emsp;.NET 中的每个对象都有哈希码，其哈希码由 System.Object.GetHashCode() 决定。如果要重写该方法，那么必须遵守下面 3 条规则：</p>
+<h2 id="重写-System-Object-GetHashCode-方法必须遵守的-3-条规则"><a href="#重写-System-Object-GetHashCode-方法必须遵守的-3-条规则" class="headerlink" title="重写 System.Object.GetHashCode() 方法必须遵守的 3 条规则"></a>重写 System.Object.GetHashCode() 方法必须遵守的 3 条规则</h2><p>&emsp;&emsp;.NET 中的每个对象都有哈希码，其哈希码由 System.Object.GetHashCode() 决定。如果要重写该方法，那么必须遵守下面 3 条规则：</p>
 <ol>
 <li>如果（实例版本的 Equals() 方法认定的）两个对象相等，那么这两个对象的哈希码也必须相同，否则，容器无法通过正确的哈希码来寻找相应的元素。</li>
 <li>对于任何一个对象 A 来说，GetHashCode() 必须在实例层面上满足这样一种不变条件（或者说，在实例层面上具备这样一种固定的性质）—— 在 A 的生命期内，无论实例 A 在执行完 GetHashCode() 方法之后还执行过其他哪些方法，当它再度执行 GetHashCode() 时，必定返回与当初相同的值。这条性质用来确保容器总是能把 A 放在正确的桶中。</li>
 <li>对于常见的输入值来说，哈希函数应该把这些值均匀地映射到各个整数上，而不应该使自己所输出的哈希码仅仅集中在几个整数上。如果每一个整数都能有相似的概率来充当对象的哈希码，那么基于哈希的容器就能够较为高效地运作。简单来说，就是要保证自己所实现的 GetHashCode() 能够让元素均匀地保存在容器的每一个桶中。此外，每个桶的元素个数也不宜太多。</li>
 </ol>
 <hr>
+<h2 id="Math-Round-默认四舍六入五成双"><a href="#Math-Round-默认四舍六入五成双" class="headerlink" title="Math.Round 默认四舍六入五成双"></a>Math.Round 默认四舍六入五成双</h2><blockquote>
+<p><a href="https://www.cnblogs.com/lwqlun/p/12070839.html" target="_blank" rel="noopener">https://www.cnblogs.com/lwqlun/p/12070839.html</a></p>
+</blockquote>
 <p><code>Math.Round</code> 默认使用的并非是四舍五入的原则，而是<strong>四舍六入五成双</strong>的原则。<br>所谓的四舍六入五成双，就是说当确定有效位数之后，<strong>有效位数的下一位</strong>如果<strong>小于等于 4 就舍去</strong>，如果<strong>大于等于 6 就进一</strong>，当有效位数的下一位是 5 的时候</p>
 <ul>
 <li>如果 <strong>5 前为奇数，就舍五进一</strong></li>
@@ -2327,6 +2544,42 @@
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = Math.Round(<span class="number">12.125</span>, <span class="number">2</span>, MidpointRounding.AwayFromZero);</span><br></pre></td></tr></table></figure>
 
 <hr>
+<h1 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h1><h2 id="9-个小技巧"><a href="#9-个小技巧" class="headerlink" title="9 个小技巧"></a>9 个小技巧</h2><blockquote>
+<p><a href="http://blog.yidengxuetang.com/post/201912/11/" target="_blank" rel="noopener">http://blog.yidengxuetang.com/post/201912/11/</a></p>
+</blockquote>
+<h3 id="全部替换"><a href="#全部替换" class="headerlink" title="全部替换"></a>全部替换</h3><p>我们知道 <code>string.replace()</code> 函数仅替换第一次出现的情况。<br>你可以通过在正则表达式的末尾添加 <code>/g</code> 来替换所有出现的内容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> example = <span class="string">"potato potato"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(example.replace(<span class="regexp">/pot/</span>, <span class="string">"tom"</span>)); </span><br><span class="line"><span class="comment">// "tomato potato"</span></span><br><span class="line"><span class="built_in">console</span>.log(example.replace(<span class="regexp">/pot/g</span>, <span class="string">"tom"</span>)); </span><br><span class="line"><span class="comment">// "tomato tomato"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="提取唯一值"><a href="#提取唯一值" class="headerlink" title="提取唯一值"></a>提取唯一值</h3><p>通过使用 Set 对象和展开运算符，我们可以创建一个具有唯一值的新数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> entries = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>]</span><br><span class="line"><span class="keyword">var</span> unique_entries = [...new <span class="built_in">Set</span>(entries)];</span><br><span class="line"><span class="built_in">console</span>.log(unique_entries);</span><br><span class="line"><span class="comment">// [1, 2, 3, 4, 5, 6, 7, 8]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="将数字转换为字符串"><a href="#将数字转换为字符串" class="headerlink" title="将数字转换为字符串"></a>将数字转换为字符串</h3><p>我们只需要使用带空引号的串联运算符。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> converted_number = <span class="number">5</span> + <span class="string">""</span>;</span><br><span class="line"><span class="built_in">console</span>.log(converted_number);</span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> converted_number); </span><br><span class="line"><span class="comment">// string</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="将字符串转换为数字"><a href="#将字符串转换为数字" class="headerlink" title="将字符串转换为数字"></a>将字符串转换为数字</h3><p>我们需要的只是 <code>+</code> 运算符。<br>请注意它仅适用于“字符串数字”。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">the_string = <span class="string">"123"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(+the_string);</span><br><span class="line"><span class="comment">// 123</span></span><br><span class="line"></span><br><span class="line">the_string = <span class="string">"hello"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(+the_string);</span><br><span class="line"><span class="comment">// NaN</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="随机排列数组中的元素"><a href="#随机排列数组中的元素" class="headerlink" title="随机排列数组中的元素"></a>随机排列数组中的元素</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> my_list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>];</span><br><span class="line"><span class="built_in">console</span>.log(my_list.sort(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.random() - <span class="number">0.5</span></span><br><span class="line">&#125;)); </span><br><span class="line"><span class="comment">// [4, 8, 2, 9, 1, 3, 6, 5, 7]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="展平多维数组"><a href="#展平多维数组" class="headerlink" title="展平多维数组"></a>展平多维数组</h3><p>只需使用展开运算符。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> entries = [<span class="number">1</span>, [<span class="number">2</span>, <span class="number">5</span>], [<span class="number">6</span>, <span class="number">7</span>], <span class="number">9</span>];</span><br><span class="line"><span class="keyword">var</span> flat_entries = [].concat(...entries); </span><br><span class="line"><span class="comment">// [1, 2, 5, 6, 7, 9]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="缩短条件语句"><a href="#缩短条件语句" class="headerlink" title="缩短条件语句"></a>缩短条件语句</h3><p>让我们来看这个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (available) &#123;</span><br><span class="line">    addToCart();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过简单地使用变量和函数来缩短它：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">available &amp;&amp; addToCart()</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态属性名"><a href="#动态属性名" class="headerlink" title="动态属性名"></a>动态属性名</h3><p>我一直以为必须先声明一个对象，然后才能分配动态属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> dynamic = <span class="string">'flavour'</span>;</span><br><span class="line"><span class="keyword">var</span> item = &#123;</span><br><span class="line">    name: <span class="string">'Coke'</span>,</span><br><span class="line">    [dynamic]: <span class="string">'Cherry'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(item); </span><br><span class="line"><span class="comment">// &#123; name: "Coke", flavour: "Cherry" &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-length-调整-清空数组"><a href="#使用-length-调整-清空数组" class="headerlink" title="使用 length 调整/清空数组"></a>使用 length 调整/清空数组</h3><p>我们基本上覆盖了数组的 length 。<br>如果我们要调整数组的大小：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> entries = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>];  </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 7  </span></span><br><span class="line">entries.length = <span class="number">4</span>;  </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 4  </span></span><br><span class="line"><span class="built_in">console</span>.log(entries); </span><br><span class="line"><span class="comment">// [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们要清空数组：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> entries = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]; </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 7  </span></span><br><span class="line">entries.length = <span class="number">0</span>;   </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 0 </span></span><br><span class="line"><span class="built_in">console</span>.log(entries); </span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+
+<hr>
 ]]></content>
       
         <categories>
@@ -2341,6 +2594,8 @@
             <tag> CSharp </tag>
             
             <tag> dotNET </tag>
+            
+            <tag> JavaScript </tag>
             
         </tags>
         
