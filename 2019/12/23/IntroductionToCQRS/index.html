@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>浅谈命令查询职责分离（CQRS）模式 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="程序设计,CSharp">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>浅谈命令查询职责分离（CQRS）模式</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">浅谈命令查询职责分离（CQRS）模式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-23T09:39:21.000Z" itemprop="datePublished" class="page-time">
+  2019-12-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-IntroductionToCQRS"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">浅谈命令查询职责分离（CQRS）模式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-23 17:39:21" datetime="2019-12-23T09:39:21.000Z"  itemprop="datePublished">2019-12-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/yangecnu/p/Introduction-CQRS.html" target="_blank" rel="noopener">https://www.cnblogs.com/yangecnu/p/Introduction-CQRS.html</a><br>CQRS 和 Event Sourcing 没有直接的关系。</p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;在常用的三层架构中，通常都是通过数据访问层来修改或者查询数据，一般修改和查询使用的是相同的实体。在一些业务逻辑简单的系统中可能没有什么问题，但是随着系统逻辑变得复杂，用户增多，这种设计就会出现一些性能问题。虽然在 DB 上可以做一些读写分离的设计，但在业务上如果在读写方面混合在一起的话，仍然会出现一些问题。<br>&emsp;&emsp;本文介绍了命令查询职责分离模式（Command Query Responsibility Segregation，CQRS），该模式从业务上分离修改 （Command，增，删，改，会对系统状态进行修改）和查询（Query，查，不会对系统状态进行修改）的行为。从而使得逻辑更加清晰，便于对不同部分进行针对性的优化。文章首先简要介绍了传统的 CRUD 方式存在的问题，接着介绍了 CQRS 模式，最后以一个简单的在线日记系统演示了如何实现 CQRS 模式。要谈到读写操作，首先我们来看传统的 CRUD 的问题。  </p>
+<h1 id="CRUD-方式的问题"><a href="#CRUD-方式的问题" class="headerlink" title="CRUD 方式的问题"></a>CRUD 方式的问题</h1><p>&emsp;&emsp;在以前的管理系统中，命令（Command，通常用来更新数据，操作 DB）和查询（Query）通常使用的是在数据访问层中 Repository 中的实体对象（这些对象是对 DB 中表的映射），这些实体有可能是 SQLServer 中的一行数据或者多个表。<br>&emsp;&emsp;通常对 DB 执行的增，删，改，查（CRUD）都是针对的系统的实体对象。如通过数据访问层获取数据，然后通过数据传输对象 DTO 传给表现层。或者，用户需要更新数据，通过 DTO 对象将数据传给 Model，然后通过数据访问层写回数据库，系统中的所有交互都是和数据查询和存储有关，可以认为是数据驱动（<a href="http://en.wikipedia.org/wiki/Data-driven_programming" target="_blank" rel="noopener">Data-Driven</a>）的，如下图：</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851410161370.png" title="" data-fancybox="images"><img src="261851410161370.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;对于一些比较简单的系统，使用这种 CRUD 的设计方式能够满足要求。特别是通过一些代码生成工具及 ORM 等能够非常方便快速的实现功能。  </p>
+<p>但是<a href="http://msdn.microsoft.com/en-us/library/ms978509.aspx" target="_blank" rel="noopener">传统的 CRUD 方法有一些问题</a>：</p>
+<ul>
+<li>使用同一个对象实体来进行数据库读写可能会太粗糙，大多数情况下，比如编辑的时候可能只需要更新个别字段，但是却需要将整个对象都穿进去，有些字段其实是不需要更新的。在查询的时候在表现层可能只需要个别字段，但是需要查询和返回整个实体对象。</li>
+<li>使用同一实体对象对同一数据进行读写操作的时候，可能会遇到资源竞争的情况，经常要处理的锁的问题，在写入数据的时候，需要加锁。读取数据的时候需要判断是否允许脏读。这样使得系统的逻辑性和复杂性增加，并且会对系统吞吐量的增长会产生影响。</li>
+<li>同步的，直接与数据库进行交互在大数据量同时访问的情况下可能会影响性能和响应性，并且可能会产生性能瓶颈。</li>
+<li>由于同一实体对象都会在读写操作中用到，所以对于安全和权限的管理会变得比较复杂。</li>
+</ul>
+<p>&emsp;&emsp;这里面很重要的一个问题是，<strong>系统中的读写频率比</strong>，是偏向读，还是偏向写，就如同一般的<strong>数据结构在查找和修改上时间复杂度</strong>不一样，在设计系统的结构时也需要考虑这样的问题。解决方法就是我们经常用到的对数据库进行读写分离。 让主数据库处理事务性的增，删，改操作（Insert, Update, Delete 操作），让从数据库处理查询操作（Select 操作），数据库复制被用来将事务性操作导致的变更同步到集群中的从数据库。这只是从 DB 角度处理了读写分离，但是从业务或者系统上面读和写仍然是存放在一起的。他们都是用的同一个实体对象。<br>&emsp;&emsp;要从业务上将读和写分离，就是接下来要介绍的命令查询职责分离模式。  </p>
+<h1 id="什么是-CQRS"><a href="#什么是-CQRS" class="headerlink" title="什么是 CQRS"></a>什么是 CQRS</h1><p>&emsp;&emsp;CQRS 最早来自于 Betrand Meyer（Eiffel 语言之父，<a href="http://msdn.microsoft.com/en-us/magazine/cc546578.aspx" target="_blank" rel="noopener">开-闭原则</a> OCP 提出者）在 <a href="http://www.amazon.com/gp/product/0136291554" target="_blank" rel="noopener">Object-Oriented Software Construction</a> 这本书中提到的一种 <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html" target="_blank" rel="noopener">命令查询分离</a> （<a href="http://en.wikipedia.org/wiki/Command-query_separation" target="_blank" rel="noopener">Command Query Separation</a>, CQS） 的概念。其基本思想在于，任何一个对象的方法可以分为两大类：</p>
+<ul>
+<li>命令（Command）：不返回任何结果（void），但会改变对象的状态。</li>
+<li>查询（Query）：返回结果，但是不会改变对象的状态，对系统没有副作用。</li>
+</ul>
+<p>&emsp;&emsp;根据 CQS 的思想，任何一个方法都可以拆分为命令和查询两部分，比如：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">Increase</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    i += <span class="keyword">value</span>;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这个方法，我们执行了一个命令即对变量 i 进行相加，同时又执行了一个 Query，即查询返回了 i 的值，如果按照 CQS 的思想，该方法可以拆成 Command 和 Query 两个方法，如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">IncreaseCommand</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    i += <span class="keyword">value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">QueryValue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;操作和查询分离使得我们能够更好的把握对象的细节，能够更好的理解哪些操作会改变系统的状态。当然 <a href="http://en.wikipedia.org/wiki/Command-query_separation" target="_blank" rel="noopener">CQS</a> 也有一些缺点，比如代码需要处理多线程的情况。<br>&emsp;&emsp;CQRS 是对 CQS 模式的进一步改进成的一种简单模式。 它由 Greg Young 在 <a href="http://codebetter.com/gregyoung/2010/02/16/cqrs-task-based-uis-event-sourcing-agh/" target="_blank" rel="noopener">CQRS, Task Based UIs, Event Sourcing agh!</a> 这篇文章中提出。“ CQRS 只是简单的将之前只需要创建一个对象拆分成了两个对象，这种分离是基于方法是执行命令还是执行查询这一原则来定的（这个和 CQS 的定义一致）”。<br>&emsp;&emsp;CQRS 使用分离的接口将数据查询操作（Queries）和数据修改操作（Commands）分离开来，这也意味着在查询和更新过程中使用的数据模型也是不一样的。这样读和写逻辑就隔离开来了。</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851415951714.png" title="" data-fancybox="images"><img src="261851415951714.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;使用 CQRS 分离了读写职责之后，可以对数据进行读写分离操作来改进性能，可扩展性和安全。如下图：</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851421105570.png" title="" data-fancybox="images"><img src="261851421105570.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;主数据库处理 CUD，从库处理 R，从库的的结构可以和主库的结构完全一样，也可以不一样，从库主要用来进行只读的查询操作。在数量上从库的个数也可以根据查询的规模进行扩展，在业务逻辑上，也可以根据专题从主库中划分出不同的从库。从库也可以实现成 <a href="http://martinfowler.com/bliki/ReportingDatabase.html" target="_blank" rel="noopener">ReportingDatabase</a>，根据查询的业务需求，从主库中抽取一些必要的数据生成一系列查询报表来存储。</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851428451429.png" title="" data-fancybox="images"><img src="261851428451429.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>使用 ReportingDatabase 的一些优点通常可以使得查询变得更加简单高效：</p>
+<ul>
+<li>ReportingDatabase 的结构和数据表会针对常用的查询请求进行设计。</li>
+<li>ReportingDatabase 数据库通常会去正规化，存储一些冗余而减少必要的 Join 等联合查询操作，使得查询简化和高效，一些在主数据库中用不到的数据信息，在 ReportingDatabase 可以不用存储。</li>
+<li>可以对 ReportingDatabase 重构优化，而不用去改变操作数据库。</li>
+<li>对 ReportingDatabase 数据库的查询不会给操作数据库带来任何压力。</li>
+<li>可以针对不同的查询请求建立不同的 ReportingDatabase 库。</li>
+</ul>
+<p>&emsp;&emsp;当然这也有一些缺点，比如从库数据的更新。如果使用 SQLServer，本身也提供了一些如故障转移和复制机制来方便部署。</p>
+<h1 id="什么时候可以考虑-CQRS"><a href="#什么时候可以考虑-CQRS" class="headerlink" title="什么时候可以考虑 CQRS"></a>什么时候可以考虑 CQRS</h1><p>CQRS 模式有一些优点：</p>
+<ol>
+<li>分工明确，可以负责不同的部分</li>
+<li>将业务上的命令和查询的职责分离能够提高系统的性能、可扩展性和安全性。并且在系统的演化中能够保持高度的灵活性，能够防止出现 CRUD 模式中，对查询或者修改中的某一方进行改动，导致另一方出现问题的情况。</li>
+<li>逻辑清晰，能够看到系统中的那些行为或者操作导致了系统的状态变化。</li>
+<li>可以从数据驱动（Data-Driven） 转到任务驱动（Task-Driven）以及事件驱动（Event-Driven）.</li>
+</ol>
+<p>在下场景中，可以考虑使用 CQRS 模式：</p>
+<ol>
+<li>当在业务逻辑层有很多操作需要相同的实体或者对象进行操作的时候。CQRS 使得我们可以对读和写定义不同的实体和方法，从而可以减少或者避免对某一方面的更改造成冲突</li>
+<li>对于一些基于任务的用户交互系统，通常这类系统会引导用户通过一系列复杂的步骤和操作，通常会需要一些复杂的领域模型，并且整个团队已经熟悉领域驱动设计技术。写模型有很多和业务逻辑相关的命令操作的堆，输入验证，业务逻辑验证来保证数据的一致性。读模型没有业务逻辑以及验证堆，仅仅是返回 DTO 对象为视图模型提供数据。读模型最终和写模型相一致。</li>
+<li>适用于一些需要对查询性能和写入性能分开进行优化的系统，尤其是读/写比非常高的系统，横向扩展是必须的。比如，在很多系统中读操作的请求时远大于写操作。为适应这种场景，可以考虑将写模型抽离出来单独扩展，而将写模型运行在一个或者少数几个实例上。少量的写模型实例能够减少合并冲突发生的情况</li>
+<li>适用于一些团队中，一些有经验的开发者可以关注复杂的领域模型，这些用到写操作，而另一些经验较少的开发者可以关注用户界面上的读模型。</li>
+<li>对于系统在将来会随着时间不段演化，有可能会包含不同版本的模型，或者业务规则经常变化的系统</li>
+<li>需要和其他系统整合，特别是需要和事件溯源 Event Sourcing 进行整合的系统，这样子系统的临时异常不会影响整个系统的其他部分。</li>
+</ol>
+<p>但是在以下场景中，可能不适宜使用 CQRS：</p>
+<ol>
+<li>领域模型或者业务逻辑比较简单，这种情况下使用 CQRS 会把系统搞复杂。</li>
+<li>对于简单的，CRUD 模式的用户界面以及与之相关的数据访问操作已经足够的话，没必要使用 CQRS，这些都是一个简单的对数据进行增删改查。</li>
+<li>不适合在整个系统中到处使用该模式。在整个数据管理场景中的特定模块中 CQRS 可能比较有用。但是在有些地方使用 CQRS 会增加系统不必要的复杂性。</li>
+</ol>
+<h1 id="CQRS-与-Event-Sourcing-的关系"><a href="#CQRS-与-Event-Sourcing-的关系" class="headerlink" title="CQRS 与 Event Sourcing 的关系"></a>CQRS 与 Event Sourcing 的关系</h1><p>&emsp;&emsp;在 CQRS 中，查询方面，直接通过方法查询数据库，然后通过 DTO 将数据返回。在操作（Command）方面，是通过发送 Command 实现，由 CommandBus 处理特定的 Command，然后由 Command 将特定的 Event 发布到 EventBus 上，然后 EventBus 使用特定的 Handler 来处理事件，执行一些诸如，修改，删除，更新等操作。这里，所有与 Command 相关的操作都通过 Event 实现。这样我们可以通过记录 Event 来记录系统的运行历史记录，并且能够方便的回滚到某一历史状态。<a href="http://msdn.microsoft.com/en-us/library/dn589792.aspx" target="_blank" rel="noopener">Event Sourcing</a> 就是用来进行存储和管理事件的。这里不展开介绍。</p>
+<h1 id="CQRS-的简单实现"><a href="#CQRS-的简单实现" class="headerlink" title="CQRS 的简单实现"></a>CQRS 的简单实现</h1><p>&emsp;&emsp;CQRS 模式在思想上比较简单，但是实现上还是有些复杂。它涉及到 DDD，以及 Event Sourcing，这里使用 codeproject 上的 <a href="http://www.codeproject.com/Articles/555855/Introduction-to-CQRS" target="_blank" rel="noopener">Introduction to CQRS</a> 这篇文章的例子来说明 CQRS 模式。这个例子是一个简单的在线记日志（Diary）系统，实现了日志的增删改查功能。整体结构如下：</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851438603372.jpg" title="" data-fancybox="images"><img src="261851438603372.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;上图很清晰的说明了 CQRS 在读写方面的分离，在读方面，通过 QueryFacade 到数据库里去读取数据，这个库有可能是 ReportingDB。在写方面，比较复杂，操作通过 Command 发送到 CommandBus 上，然后特定的 CommandHandler 处理请求，产生对应的 Event，将 Eevnt 持久化后，通过 EventBus 特定的 EevntHandler 对数据库进行修改等操作。<br>&emsp;&emsp;例子代码可以到 <a href="http://www.codeproject.com/Articles/555855/Introduction-to-CQRS" target="_blank" rel="noopener">codeproject</a> 上下载，整体结构如下：</p>
+<figure class="image-box">
+                <a rel=浅谈命令查询职责分离（CQRS）模式 href="261851446735785.png" title="" data-fancybox="images"><img src="261851446735785.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;由三个项目构成，Diary.CQRS 包含了所有的 Domain 和消息对象。Configuration 通过使用一个名为 StructMap 的 IOC 来初始化一些变量方便 Web 调用，Web 是一个简单的 MVC3 项目，在 Controller 中有与 CQRS 交互的代码。<br>&emsp;&emsp;下面分别看 Query 和 Command 方面的实现：  </p>
+<h2 id="Query-方向的实现"><a href="#Query-方向的实现" class="headerlink" title="Query 方向的实现"></a>Query 方向的实现</h2><p>&emsp;&emsp;查询方面很简单，日志列表和明细获取就是简单的查询。下面先看列表查询部分的代码。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Index</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ViewBag.Model = ServiceLocator.ReportDatabase.GetItems();</span><br><span class="line">    <span class="keyword">return</span> View();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Edit</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> item = ServiceLocator.ReportDatabase.GetById(id);</span><br><span class="line">    <span class="keyword">var</span> model = <span class="keyword">new</span> DiaryItemDto()</span><br><span class="line">    &#123;</span><br><span class="line">        Description = item.Description,</span><br><span class="line">        From = item.From,</span><br><span class="line">        Id = item.Id,</span><br><span class="line">        Title = item.Title,</span><br><span class="line">        To = item.To,</span><br><span class="line">        Version = item.Version</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> View(model);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;ReportDatabase 的 GetItems 和 GetById(id) 方法就是简单的查询，从命名可以看出他是 ReportDatabase。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ReportDatabase</span> : <span class="title">IReportDatabase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> List&lt;DiaryItemDto&gt; items = <span class="keyword">new</span> List&lt;DiaryItemDto&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> DiaryItemDto <span class="title">GetById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> items.Where(a =&gt; a.Id == id).FirstOrDefault();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Add</span>(<span class="params">DiaryItemDto item</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        items.Add(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Delete</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        items.RemoveAll(i =&gt; i.Id == id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;DiaryItemDto&gt; <span class="title">GetItems</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> items;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;ReportDataBase 只是在内部维护了一个 List 的 DiaryItemDto 列表。在使用的时候，是通过 IRepositoryDatabase 对其进行操作的，这样便于 mock 代码。<br>&emsp;&emsp;Query 方面的代码很简单。在实际的应用中，这一块就是直接对 DB 进行查询，然后通过 DTO 对象返回，这个 DB 可能是应对特定场景的报表数据库，这样可以提升查询性能。<br>&emsp;&emsp;下面来看 Command 方向的实现：  </p>
+<h2 id="Command-方向的实现"><a href="#Command-方向的实现" class="headerlink" title="Command 方向的实现"></a>Command 方向的实现</h2><p>&emsp;&emsp;Command 的实现比较复杂，下面以简单的创建一个新的日志来说明。<br>&emsp;&emsp;在 MVC 的 Control 中，可以看到 Add 的 Controller 中只调用了一句话：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">HttpPost</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Add</span>(<span class="params">DiaryItemDto item</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ServiceLocator.CommandBus.Send(<span class="keyword">new</span> CreateItemCommand(Guid.NewGuid(), item.Title, item.Description, <span class="number">-1</span>, item.From, item.To));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> RedirectToAction(<span class="string">"Index"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;首先声明了一个 CreateItemCommand，这个 Command 只是保存了一些必要的信息。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CreateItemCommand</span>:<span class="title">Command</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Title &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Description &#123; <span class="keyword">get</span>;<span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime From &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime To &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CreateItemCommand</span>(<span class="params">Guid aggregateId, <span class="keyword">string</span> title, </span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">string</span> description,<span class="keyword">int</span> version,DateTime <span class="keyword">from</span>, DateTime to</span>)</span></span><br><span class="line"><span class="function">        : <span class="title">base</span>(<span class="params">aggregateId,version</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Title = title;</span><br><span class="line">        Description = description;</span><br><span class="line">        From = <span class="keyword">from</span>;</span><br><span class="line">        To = to;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后将 Command 发送到了 CommandBus 上，其实就是让 CommandBus 来选择合适的 CommandHandler 来处理。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CommandBus</span>:<span class="title">ICommandBus</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ICommandHandlerFactory _commandHandlerFactory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CommandBus</span>(<span class="params">ICommandHandlerFactory commandHandlerFactory</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _commandHandlerFactory = commandHandlerFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Send&lt;T&gt;(T command) <span class="keyword">where</span> T : Command</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> handler = _commandHandlerFactory.GetHandler&lt;T&gt;();</span><br><span class="line">        <span class="keyword">if</span> (handler != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            handler.Execute(command);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> UnregisteredDomainCommandException(<span class="string">"no handler registered"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这个里面需要值得注意的是 CommandHandlerFactory 这个类型的 GetHandler 方法，他接受一个类型为 T 的泛型，这里就是我们之前传入的 CreateItemCommand。来看他的 GetHandler 方法。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StructureMapCommandHandlerFactory</span> : <span class="title">ICommandHandlerFactory</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> ICommandHandler&lt;T&gt; GetHandler&lt;T&gt;() <span class="keyword">where</span> T : Command</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> handlers = GetHandlerTypes&lt;T&gt;().ToList();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> cmdHandler = handlers.Select(handler =&gt; </span><br><span class="line">            (ICommandHandler&lt;T&gt;)ObjectFactory.GetInstance(handler)).FirstOrDefault();</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> cmdHandler;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">private</span> IEnumerable&lt;Type&gt; GetHandlerTypes&lt;T&gt;() <span class="keyword">where</span> T : Command</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> handlers = <span class="keyword">typeof</span>(ICommandHandler&lt;&gt;).Assembly.GetExportedTypes()</span><br><span class="line">            .Where(x =&gt; x.GetInterfaces()</span><br><span class="line">                .Any(a =&gt; a.IsGenericType &amp;&amp; a.GetGenericTypeDefinition() == <span class="keyword">typeof</span>(ICommandHandler&lt;&gt;) ))</span><br><span class="line">                .Where(h=&gt;h.GetInterfaces()</span><br><span class="line">                    .Any(ii=&gt;ii.GetGenericArguments()</span><br><span class="line">                        .Any(aa=&gt;aa==<span class="keyword">typeof</span>(T)))).ToList();</span><br><span class="line"></span><br><span class="line">           </span><br><span class="line">        <span class="keyword">return</span> handlers;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里可以看到，他首先查找当前的程序集中（ICommandHandler）所在的程序集中的所有的实现了 ICommandHandler 的接口的类型，然后在所有的类型找查找实现了该泛型接口并且泛型的类型参数类型为 T 类型的所有类型。以上面的代码为例，就是要找出实现了 ICommandHandler&lt;CreateItemCommand&gt; 接口的类型。可以看到就是 CreateItemCommandHandler 类型。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class CreateItemCommandHandler : ICommandHandler&lt;CreateItemCommand&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IRepository&lt;DiaryItem&gt; _repository;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CreateItemCommandHandler</span>(<span class="params">IRepository&lt;DiaryItem&gt; repository</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _repository = repository;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">CreateItemCommand command</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (command == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentNullException(<span class="string">"command"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (_repository == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidOperationException(<span class="string">"Repository is not initialized."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> aggregate = <span class="keyword">new</span> DiaryItem(command.Id, command.Title, command.Description, command.From, command.To);</span><br><span class="line">        aggregate.Version = <span class="number">-1</span>;</span><br><span class="line">        _repository.Save(aggregate, aggregate.Version);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;找到之后然后使用 IOC 实例化了该对象返回。<br>&emsp;&emsp;现在 CommandBus 中，找到了处理特定 Command 的 Handler。然后执行该类型的 Execute 方法。<br>&emsp;&emsp;可以看到在该类型中实例化了一个名为 aggregate 的 DiaryItem 对象。这个和我们之前查询所用到的 DiaryItemDto 有所不同，这个一个领域对象，里面包含了一系列事件。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DiaryItem</span> : <span class="title">AggregateRoot</span>, </span><br><span class="line">    IHandle&lt;ItemCreatedEvent&gt;,</span><br><span class="line">    IHandle&lt;ItemRenamedEvent&gt;,</span><br><span class="line">    IHandle&lt;ItemFromChangedEvent&gt;, </span><br><span class="line">    IHandle&lt;ItemToChangedEvent&gt;,</span><br><span class="line">    IHandle&lt;ItemDescriptionChangedEvent&gt;,</span><br><span class="line">    IOriginator</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Title &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> DateTime From &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime To &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Description &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiaryItem</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiaryItem</span>(<span class="params">Guid id,<span class="keyword">string</span> title, <span class="keyword">string</span> description,  DateTime <span class="keyword">from</span>, DateTime to</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ApplyChange(<span class="keyword">new</span> ItemCreatedEvent(id, title,description, <span class="keyword">from</span>, to));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ChangeTitle</span>(<span class="params"><span class="keyword">string</span> title</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ApplyChange(<span class="keyword">new</span> ItemRenamedEvent(Id, title));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Handle</span>(<span class="params">ItemCreatedEvent e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Title = e.Title;</span><br><span class="line">        From = e.From;</span><br><span class="line">        To = e.To;</span><br><span class="line">        Id = e.AggregateId;</span><br><span class="line">        Description = e.Description;</span><br><span class="line">        Version = e.Version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Handle</span>(<span class="params">ItemRenamedEvent e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Title = e.Title;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;ItemCreatedEvent 事件的定义如下，其实就是用来存储传输过程中需要用到的数据。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ItemCreatedEvent</span>:<span class="title">Event</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Title &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime From &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime To &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Description &#123; <span class="keyword">get</span>;<span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ItemCreatedEvent</span>(<span class="params">Guid aggregateId, <span class="keyword">string</span> title ,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">string</span> description, DateTime <span class="keyword">from</span>, DateTime to</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        AggregateId = aggregateId;</span><br><span class="line">        Title = title;</span><br><span class="line">        From = <span class="keyword">from</span>;</span><br><span class="line">        To = to;</span><br><span class="line">        Description = description;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到在 Domain 对象中，除了定义基本的字段外，还定义了一些相应的事件，比如在构造函数中，实际上是发起了一个名为 ItemCreateEvent 的事件，同时还定义了处理时间的逻辑，这些逻辑都放在名为 Handle 的接口方法发，例如 ItemCerateEvent 的处理方法为 Handle(ItemCreateEvent) 方法。<br>&emsp;&emsp;ApplyChange 方法在 AggregateRoot 对象中，他是聚合根，这是 DDD 中的概念。通过这个根可以串起所有对象。 该类实现了 IEventProvider 接口，他保存了所有在 _changes 中的所有没有提交的变更，其中的 ApplyChange 的用来为特定的 Event 查找 Eventhandler 的方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">AggregateRoot</span> : <span class="title">IEventProvider</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;Event&gt; _changes;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Guid Id &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Version &#123; <span class="keyword">get</span>; <span class="keyword">internal</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> EventVersion &#123; <span class="keyword">get</span>; <span class="keyword">protected</span> <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">AggregateRoot</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _changes = <span class="keyword">new</span> List&lt;Event&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;Event&gt; <span class="title">GetUncommittedChanges</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> _changes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">MarkChangesAsCommitted</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _changes.Clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">LoadsFromHistory</span>(<span class="params">IEnumerable&lt;Event&gt; history</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> e <span class="keyword">in</span> history) ApplyChange(e, <span class="literal">false</span>);</span><br><span class="line">        Version = history.Last().Version;</span><br><span class="line">        EventVersion = Version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">ApplyChange</span>(<span class="params">Event @<span class="keyword">event</span></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ApplyChange(@<span class="keyword">event</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ApplyChange</span>(<span class="params">Event @<span class="keyword">event</span>, <span class="keyword">bool</span> isNew</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">dynamic</span> d = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">        d.Handle(Converter.ChangeTo(@<span class="keyword">event</span>, @<span class="keyword">event</span>.GetType()));</span><br><span class="line">        <span class="keyword">if</span> (isNew)</span><br><span class="line">        &#123;</span><br><span class="line">            _changes.Add(@<span class="keyword">event</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在 ApplyChange 的实现中，this 其实就是对应的实现了 AggregateRoot 的 DiaryItem 的 Domain 对象，调用的 Handle 方法就是我们之前在 DiaryItem 中定义的行为。然后将该 event 保存在内部的未提交的事件列表中。相关的信息及事件都保存在了定义的 aggregate 对象中并返回。<br>&emsp;&emsp;然后 Command 继续执行，然后调用了 _repository.Save(aggregate, aggregate.Version); 这个方法。先看这个 Repository 对象。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public class Repository&lt;T&gt; : IRepository&lt;T&gt; where T : AggregateRoot, new()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IEventStorage _storage;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">object</span> _lockStorage = <span class="keyword">new</span> <span class="keyword">object</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Repository</span>(<span class="params">IEventStorage storage</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _storage = storage;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Save</span>(<span class="params">AggregateRoot aggregate, <span class="keyword">int</span> expectedVersion</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (aggregate.GetUncommittedChanges().Any())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">lock</span> (_lockStorage)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> item = <span class="keyword">new</span> T();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (expectedVersion != <span class="number">-1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    item = GetById(aggregate.Id);</span><br><span class="line">                    <span class="keyword">if</span> (item.Version != expectedVersion)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrencyException(<span class="keyword">string</span>.Format(<span class="string">"Aggregate &#123;0&#125; has been previously modified"</span>,</span><br><span class="line">                                                                        item.Id));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                _storage.Save(aggregate);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">GetById</span>(<span class="params">Guid id</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        IEnumerable&lt;Event&gt; events;</span><br><span class="line">        <span class="keyword">var</span> memento = _storage.GetMemento&lt;BaseMemento&gt;(id);</span><br><span class="line">        <span class="keyword">if</span> (memento != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            events = _storage.GetEvents(id).Where(e=&gt;e.Version&gt;=memento.Version);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            events = _storage.GetEvents(id);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> obj = <span class="keyword">new</span> T();</span><br><span class="line">        <span class="keyword">if</span>(memento!=<span class="literal">null</span>)</span><br><span class="line">            ((IOriginator)obj).SetMemento(memento);</span><br><span class="line">            </span><br><span class="line">        obj.LoadsFromHistory(events);</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这个方法主要是用来对事件进行持久化的。所有的聚合的变动都会存在该 Repository 中，首先，检查当前的聚合是否和之前存储在 storage 中的聚合一致，如果不一致，则表示对象在其他地方被更改过，抛出 ConcurrencyException，否则将该变动保存在 Event Storage 中。<br>&emsp;&emsp;IEventStorage 用来存储所有的事件，其实现类型为 InMemoryEventStorage。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InMemoryEventStorage</span>:<span class="title">IEventStorage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Event&gt; _events;</span><br><span class="line">    <span class="keyword">private</span> List&lt;BaseMemento&gt; _mementos;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IEventBus _eventBus;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">InMemoryEventStorage</span>(<span class="params">IEventBus eventBus</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _events = <span class="keyword">new</span> List&lt;Event&gt;();</span><br><span class="line">        _mementos = <span class="keyword">new</span> List&lt;BaseMemento&gt;();</span><br><span class="line">        _eventBus = eventBus;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;Event&gt; <span class="title">GetEvents</span>(<span class="params">Guid aggregateId</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> events = _events.Where(p =&gt; p.AggregateId == aggregateId).Select(p =&gt; p);</span><br><span class="line">        <span class="keyword">if</span> (events.Count() == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AggregateNotFoundException(<span class="keyword">string</span>.Format(<span class="string">"Aggregate with Id: &#123;0&#125; was not found"</span>, aggregateId));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> events;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Save</span>(<span class="params">AggregateRoot aggregate</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> uncommittedChanges = aggregate.GetUncommittedChanges();</span><br><span class="line">        <span class="keyword">var</span> version = aggregate.Version;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> @<span class="keyword">event</span> <span class="keyword">in</span> uncommittedChanges)</span><br><span class="line">        &#123;</span><br><span class="line">            version++;</span><br><span class="line">            <span class="keyword">if</span> (version &gt; <span class="number">2</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (version % <span class="number">3</span> == <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> originator = (IOriginator)aggregate;</span><br><span class="line">                    <span class="keyword">var</span> memento = originator.GetMemento();</span><br><span class="line">                    memento.Version = version;</span><br><span class="line">                    SaveMemento(memento);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            @<span class="keyword">event</span>.Version=version;</span><br><span class="line">            _events.Add(@<span class="keyword">event</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> @<span class="keyword">event</span> <span class="keyword">in</span> uncommittedChanges)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> desEvent = Converter.ChangeTo(@<span class="keyword">event</span>, @<span class="keyword">event</span>.GetType());</span><br><span class="line">            _eventBus.Publish(desEvent);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> T GetMemento&lt;T&gt;(Guid aggregateId) <span class="keyword">where</span> T : BaseMemento</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> memento = _mementos.Where(m =&gt; m.Id == aggregateId).Select(m=&gt;m).LastOrDefault();</span><br><span class="line">        <span class="keyword">if</span> (memento != <span class="literal">null</span>)</span><br><span class="line">            <span class="keyword">return</span> (T) memento;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SaveMemento</span>(<span class="params">BaseMemento memento</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _mementos.Add(memento);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在 GetEvent 方法中，会找到所有的聚合根 Id 相关的事件。在 Save 方法中，将所有的事件保存在内存中，然后每隔三个事件建立一个快照。可以看到这里面使用了备忘录模式。<br>&emsp;&emsp;然后在 foreach 循环中，对于所有的没有提交的变更，EventBus 将该事件发布出去。<br>&emsp;&emsp;现在，所有的发生变更的事件已经记录下来了。事件已经被发布到 EventBus 上，然后对应的 EventHandler 再处理对应的事件，然后与 DB 交互。现在来看 EventBus 的 Publish 方法。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EventBus</span>:<span class="title">IEventBus</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IEventHandlerFactory _eventHandlerFactory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EventBus</span>(<span class="params">IEventHandlerFactory eventHandlerFactory</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _eventHandlerFactory = eventHandlerFactory;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> Publish&lt;T&gt;(T @<span class="keyword">event</span>) <span class="keyword">where</span> T : Event</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> handlers = _eventHandlerFactory.GetHandlers&lt;T&gt;();</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> eventHandler <span class="keyword">in</span> handlers)</span><br><span class="line">        &#123;</span><br><span class="line">            eventHandler.Handle(@<span class="keyword">event</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到 EventBus 的 Publish 和 CommandBus 中的 Send 方法很相似，都是首先通过 EventHandlerFactory 查找对应 Event 的 Handler，然后调用其 Handler 方法。比如：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StructureMapEventHandlerFactory</span> : <span class="title">IEventHandlerFactory</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> IEnumerable&lt;IEventHandler&lt;T&gt;&gt; GetHandlers&lt;T&gt;() <span class="keyword">where</span> T : Event</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> handlers = GetHandlerType&lt;T&gt;();</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">var</span> lstHandlers = handlers.Select(handler =&gt; (IEventHandler&lt;T&gt;) ObjectFactory.GetInstance(handler)).ToList();</span><br><span class="line">        <span class="keyword">return</span> lstHandlers;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;Type&gt; GetHandlerType&lt;T&gt;() <span class="keyword">where</span> T : Event</span><br><span class="line">    &#123;</span><br><span class="line">           </span><br><span class="line">        <span class="keyword">var</span> handlers = <span class="keyword">typeof</span>(IEventHandler&lt;&gt;).Assembly.GetExportedTypes()</span><br><span class="line">            .Where(x =&gt; x.GetInterfaces()</span><br><span class="line">                .Any(a =&gt; a.IsGenericType &amp;&amp; a.GetGenericTypeDefinition() == <span class="keyword">typeof</span>(IEventHandler&lt;&gt;)))</span><br><span class="line">                .Where(h =&gt; h.GetInterfaces()</span><br><span class="line">                    .Any(ii =&gt; ii.GetGenericArguments()</span><br><span class="line">                        .Any(aa =&gt; aa == <span class="keyword">typeof</span>(T))))</span><br><span class="line">                 .ToList();</span><br><span class="line">        <span class="keyword">return</span> handlers;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后返回并实例化了 ItemCreatedEventHandler 对象，该对象的实现如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class ItemCreatedEventHandler : IEventHandler&lt;ItemCreatedEvent&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IReportDatabase _reportDatabase;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ItemCreatedEventHandler</span>(<span class="params">IReportDatabase reportDatabase</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _reportDatabase = reportDatabase;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Handle</span>(<span class="params">ItemCreatedEvent handle</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        DiaryItemDto item = <span class="keyword">new</span> DiaryItemDto()</span><br><span class="line">            &#123;</span><br><span class="line">                Id = handle.AggregateId,</span><br><span class="line">                Description =  handle.Description,</span><br><span class="line">                From = handle.From,</span><br><span class="line">                Title = handle.Title,</span><br><span class="line">                To=handle.To,</span><br><span class="line">                Version =  handle.Version</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">        _reportDatabase.Add(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到在 Handler 方法中，从事件中获取参数，然后新建 DTO 对象，然后将该对象更新到DB中。<br>&emsp;&emsp;到此，整个 Command 执行完成。  </p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>&emsp;&emsp;CQRS 是一种思想很简单清晰的设计模式，他通过在业务上分离操作和查询来使得系统具有更好的可扩展性及性能，使得能够对系统的不同部分进行扩展和优化。在 CQRS 中，所有的涉及到对 DB 的操作都是通过发送 Command，然后特定的 Command 触发对应事件来完成操作，这个过程是异步的，并且所有涉及到对系统的变更行为都包含在具体的事件中，结合 Event Sourcing 模式，可以记录下所有的事件，而不是以往的某一点的数据信息，这些信息可以作为系统的操作日志，可以来对系统进行回退或者重放。<br>&emsp;&emsp;CQRS 模式在实现上有些复杂，很多地方比如 AggregateRoot、Domain Object 都涉及到 DDD 中的相关概念，本人对 DDD 不太懂。这里仅为了演示 CQRS 模式，所以使用的例子是 codeproject 上的，末尾列出了一些参考文章，如果您想了解更多，可以有针对性的阅读。<br>&emsp;&emsp;最后，希望 CQRS 模式能让您在设计高性能，可扩展性的程序时能够多一种选择和考虑。  </p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li>Introduction to CQRS <a href="http://www.codeproject.com/Articles/555855/Introduction-to-CQRS" target="_blank" rel="noopener">http://www.codeproject.com/Articles/555855/Introduction-to-CQRS</a></li>
+<li>CQRS <a href="http://martinfowler.com/bliki/CQRS.html" target="_blank" rel="noopener">http://martinfowler.com/bliki/CQRS.html</a></li>
+<li>CQRS Journey <a href="http://msdn.microsoft.com/en-us/library/jj554200.aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/en-us/library/jj554200.aspx</a></li>
+<li>Command and Query Responsibility Segregation (CQRS) Pattern <a href="http://msdn.microsoft.com/en-us/library/dn568103.aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/en-us/library/dn568103.aspx</a></li>
+<li>EntityFramework之领域驱动设计实践：CQRS 体系结构模式 <a href="http://www.cnblogs.com/daxnet/archive/2010/08/02/1790299.html" target="_blank" rel="noopener">http://www.cnblogs.com/daxnet/archive/2010/08/02/1790299.html</a></li>
+<li>Event Sourcing Pattern <a href="http://msdn.microsoft.com/en-us/library/dn589792.aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/en-us/library/dn589792.aspx</a></li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-24T09:47:37.019Z" itemprop="dateUpdated">2019-12-24 17:47:37</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/23/IntroductionToCQRS/" target="_blank" rel="external">https://tao-lol.top/2019/12/23/IntroductionToCQRS/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/程序设计/">程序设计</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/23/IntroductionToCQRS/&title=《浅谈命令查询职责分离（CQRS）模式》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/23/IntroductionToCQRS/&title=《浅谈命令查询职责分离（CQRS）模式》 — Blog&source=
+https://www.cnblogs.com/yangecnu/p/Introduction-CQRS.htmlCQRS 和 Event Sourci..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/24/UseMicrosoftDependencyInjectionInWPF/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/21/WpfPictureEditing/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">WPF 中的一些图片处理方法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CRUD-方式的问题"><span class="post-toc-number">1.</span> <span class="post-toc-text">CRUD 方式的问题</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#什么是-CQRS"><span class="post-toc-number">2.</span> <span class="post-toc-text">什么是 CQRS</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#什么时候可以考虑-CQRS"><span class="post-toc-number">3.</span> <span class="post-toc-text">什么时候可以考虑 CQRS</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CQRS-与-Event-Sourcing-的关系"><span class="post-toc-number">4.</span> <span class="post-toc-text">CQRS 与 Event Sourcing 的关系</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CQRS-的简单实现"><span class="post-toc-number">5.</span> <span class="post-toc-text">CQRS 的简单实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Query-方向的实现"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">Query 方向的实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Command-方向的实现"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">Command 方向的实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#结语"><span class="post-toc-number">6.</span> <span class="post-toc-text">结语</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考文献"><span class="post-toc-number">7.</span> <span class="post-toc-text">参考文献</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/23/IntroductionToCQRS/&title=《浅谈命令查询职责分离（CQRS）模式》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/23/IntroductionToCQRS/&title=《浅谈命令查询职责分离（CQRS）模式》 — Blog&source=
+https://www.cnblogs.com/yangecnu/p/Introduction-CQRS.htmlCQRS 和 Event Sourci..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3aQY4CMQwEQP7/6dnrohXQ7bBIJDUnhIZJCiRjO77d4uv6dc3u//v60T35KvWFgYHxtYzr6bWywPOtP0fme8PAwDiHkWwiIb1Y7MGKCe/FnjEwMDCChVdg+boYGBgYKwE3SSjbBBQDAwOjLWJnITIvVj9Ui2NgYHwhY9Y4+8zrfznfwMDA+CrGVV5J079NFmc7uXsOBgbG1ow8wLXNtXcF7mL4AwMD4wDGrOnWBs2VRt6tlmFgYOzDeNcwRJ5Etulg0sjDwMDYm7EywrVy5Nk+szjCxMDA2JrRjnatt+ryo9AX/xUYGBibMmbt/tnCK2nlMJPFwMDYjpGEyDyYtgG3/QruPoWBgbE1Ix+MyAcp2sCdHzZEgRgDA2NTRj68lSeRs5K4DcHF74CBgfG1jLxx1g5htOF4NjWBgYFxDuNdR4x5Q61lv3gHAwNja0abxiUhsi1925QRAwPjZMbsQTNYvsW6X4iBgbE1o/3YSjLXPjMK+hgYGIcx2oI2H4nIjzlrDAYGxmGMPHFs78+PQpcGwjAwMDZl5IlgC5uVvnUxjIGBsSnjKq/8QHGlxZ+Pa2BgYJzAeFvMLrfYDnDk7TwMDIxdGUmQnX0rbRG7coyKgYFxAmM9UM5CavsP8PBODAwMjDaXXH5acSSAgYGBsdzEn4XpupGHgYFxACMpYttC9DkpaeQl5TEGBsYJjFnp2B55tq20eoAVAwNjT8YPYqS8KpsHkQgAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>

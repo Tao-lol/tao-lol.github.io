@@ -7,7 +7,7 @@
     <title>微服务之间的最佳调用方式 | Blog | tao-lol</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="程序设计,微服务">
+    <meta name="keywords" content="程序设计">
     <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
     <link rel="stylesheet" href="/css/style.css?v=1.4.4">
@@ -246,7 +246,8 @@
 
 <p>&emsp;&emsp;服务网关（API Gateway）不是为了解决微服务之间调用的紧耦合问题，它主要是为了简化客户端的工作。其实它还可以用来降低函数之间的耦合度。 有了 API Gateway 之后，一旦服务接口修改，你可能只需要修改 API Gateway， 而不必修改每个调用这个函数的客户端，这样就减少了程序的耦合性。  </p>
 <h2 id="服务调用"><a href="#服务调用" class="headerlink" title="服务调用"></a>服务调用</h2><p>&emsp;&emsp;可以借鉴 API Gateway 的思路来减少 RPC 调用的耦合度，例如把多个微服务组织起来形成一个完整功能的服务组合，并对外提供统一的服务接口。这种想法跟上面的 API Gateway 有些相似，都是把服务集中起来提供粗颗粒（Coarse Granular）服务，而不是细颗粒的服务（Fine Granular）。但这样建立的服务组合可能只适合一个程序使用，没有多少共享价值。因此如果有合适的场景就采用，否侧也不必强求。虽然我们不能降低 RPC 服务之间的耦合度，却可以减少这种紧耦合带来的影响。  </p>
-<h2 id="降低紧耦合的影响"><a href="#降低紧耦合的影响" class="headerlink" title="降低紧耦合的影响"></a>降低紧耦合的影响</h2><p>&emsp;&emsp;什么是紧耦合的主要问题呢？就是客户端和服务端的升级不同步。服务端总是先升级，客户端可能有很多，如果要求它们同时升级是不现实的。它们有各自的部署时间表，一般都会选择在下一次部署时顺带升级。<br>&emsp;&emsp;一般有两个办法可以解决这个问题：</p>
+<h2 id="降低紧耦合的影响"><a href="#降低紧耦合的影响" class="headerlink" title="降低紧耦合的影响"></a>降低紧耦合的影响</h2><p>&emsp;&emsp;什么是紧耦合的主要问题呢？就是客户端和服务端的升级不同步。服务端总是先升级，客户端可能有很多，如果要求它们同时升级是不现实的。它们有各自的部署时间表，一般都会选择在下一次部署时顺带升级。  </p>
+<p>&emsp;&emsp;一般有两个办法可以解决这个问题：</p>
 <ol>
 <li>同时支持多个版本：这个工作量比较大，因此大多数公司都不会采用这种方式。</li>
 <li>服务端向后兼容：这是更通用的方式。例如你要加一个新功能或有些客户要求给原来的函数增加一个新的参数，但别的客户不需要这个参数。这时你只好新建一个函数，跟原来的功能差不多，只是多了一个参数。这样新旧客户的需求都能满足。它的好处是向后兼容（当然这取决于你使用的协议）。它的坏处是当以后新的客户来了，看到两个差不多的函数就糊涂了，不知道该用那个。而且时间越长越严重，你的服务端可能功能增加的不多，但相似的函数却越来越多，无法选择。</li>
@@ -269,7 +270,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-19T13:14:37.332Z" itemprop="dateUpdated">2019-12-19 21:14:37</time>
+    最后更新时间：<time datetime="2019-12-24T05:57:06.718Z" itemprop="dateUpdated">2019-12-24 13:57:06</time>
 </span><br>
 
 
@@ -288,7 +289,7 @@
         
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/程序设计/">程序设计</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/程序设计/">程序设计</a></li></ul>
 
             <div class="page-share-wrap">
     

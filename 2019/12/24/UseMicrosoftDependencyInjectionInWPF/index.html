@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,dotNET,WPF">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-24T03:41:04.000Z" itemprop="datePublished" class="page-time">
+  2019-12-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-UseMicrosoftDependencyInjectionInWPF"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-24 11:41:04" datetime="2019-12-24T03:41:04.000Z"  itemprop="datePublished">2019-12-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/muran/p/11759899.html" target="_blank" rel="noopener">https://www.cnblogs.com/muran/p/11759899.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;我们都知道 .NET Core 提供了对依赖项注入的内置支持。我们通常在 ASP.NET Core 中使用它（从 Startup.cs 文件中的 ConfigureServices 方法开始），但是该功能不限于此框架，我们可以在 WPF 和 Windows Forms 应用程序中使用它。</p>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><h2 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2><figure class="image-box">
+                <a rel=在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序 href="mrDyWlXKsqhETjQ.png" title="" data-fancybox="images"><img src="mrDyWlXKsqhETjQ.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="将所需的-NuGet-包添加到项目中"><a href="#将所需的-NuGet-包添加到项目中" class="headerlink" title="将所需的 NuGet 包添加到项目中"></a>将所需的 NuGet 包添加到项目中</h2><ul>
+<li>Microsoft.Extensions.DependencyInjection</li>
+<li>Microsoft.Extensions.Options.ConfigurationExtensions</li>
+<li>Microsoft.Extensions.Configuration.Json</li>
+</ul>
+<figure class="image-box">
+                <a rel=在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序 href="pIobqx4eXm8APMB.png" title="" data-fancybox="images"><img src="pIobqx4eXm8APMB.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="然后，将一个名为-appsettings-json-的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“-复制”（如果较新）"><a href="#然后，将一个名为-appsettings-json-的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“-复制”（如果较新）" class="headerlink" title="然后，将一个名为 appsettings.json 的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“ 复制”（如果较新）"></a>然后，将一个名为 appsettings.json 的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“ 复制”（如果较新）</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"AppSettings"</span>: &#123;</span><br><span class="line">    <span class="attr">"AppName"</span>: <span class="string">"SampleNetCore3WpfDependencyInjection"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建一个-AppSettings-cs-文件来保存配置设置。该文件将映射我们在-appsettings-json-中编写的设置"><a href="#创建一个-AppSettings-cs-文件来保存配置设置。该文件将映射我们在-appsettings-json-中编写的设置" class="headerlink" title="创建一个 AppSettings.cs 文件来保存配置设置。该文件将映射我们在 appsettings.json 中编写的设置"></a>创建一个 AppSettings.cs 文件来保存配置设置。该文件将映射我们在 appsettings.json 中编写的设置</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppSettings</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> AppName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建一个示例服务"><a href="#创建一个示例服务" class="headerlink" title="创建一个示例服务"></a>创建一个示例服务</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ISampleService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">Task&lt;<span class="keyword">string</span>&gt; <span class="title">GetCurrentDate</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SampleService</span> : <span class="title">ISampleService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;<span class="keyword">string</span>&gt; <span class="title">GetCurrentDate</span>(<span class="params"></span>)</span> =&gt; </span><br><span class="line">    <span class="keyword">await</span> Task.FromResult(DateTime.Now.ToLongDateString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后像往常一样在 IOC 容器中注册服务：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;ISampleService, SampleService&gt;();</span><br></pre></td></tr></table></figure>
+
+<h2 id="打开-App-xaml-文件并删除-Application-类的-StartupUri-属性。然后，我们需要重写-App-xaml-cs-中的-OnStartup-方法"><a href="#打开-App-xaml-文件并删除-Application-类的-StartupUri-属性。然后，我们需要重写-App-xaml-cs-中的-OnStartup-方法" class="headerlink" title="打开 App.xaml 文件并删除 Application 类的 StartupUri 属性。然后，我们需要重写 App.xaml.cs 中的 OnStartup 方法"></a>打开 App.xaml 文件并删除 Application 类的 StartupUri 属性。然后，我们需要重写 App.xaml.cs 中的 OnStartup 方法</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">App</span> : <span class="title">Application</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> IServiceProvider ServiceProvider &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> IConfiguration Configuration &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnStartup</span>(<span class="params">StartupEventArgs e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> builder = <span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">                .SetBasePath(Directory.GetCurrentDirectory())</span><br><span class="line">                .AddJsonFile(<span class="string">"appsettings.json"</span>, optional: <span class="literal">false</span>, reloadOnChange: <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        Configuration = builder.Build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> serviceCollection = <span class="keyword">new</span> ServiceCollection();</span><br><span class="line">        ConfigureServices(serviceCollection);</span><br><span class="line"></span><br><span class="line">        ServiceProvider = serviceCollection.BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> mainWindow = ServiceProvider.GetRequiredService&lt;MainWindow&gt;();</span><br><span class="line">        mainWindow.Show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        services.Configure&lt;AppSettings&gt;(Configuration.GetSection(<span class="keyword">nameof</span>(AppSettings)));</span><br><span class="line">        services.AddScoped&lt;ISampleService, SampleService&gt;();</span><br><span class="line">        services.AddTransient(<span class="keyword">typeof</span>(MainWindow));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MainWindow-简单布局及代码改造"><a href="#MainWindow-简单布局及代码改造" class="headerlink" title="MainWindow 简单布局及代码改造"></a>MainWindow 简单布局及代码改造</h2><p>&emsp;&emsp;如上所述，MainWindow 位于 IOC 容器中。因此，当我们从服务提供商处获得服务时，它将自动注入所有必需的服务（如果有）。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">MainWindow</span> : <span class="title">Window</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ISampleService sampleService;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> AppSettings settings;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MainWindow</span>(<span class="params">ISampleService sampleService, IOptions&lt;AppSettings&gt; settings</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        InitializeComponent();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.sampleService = sampleService;</span><br><span class="line">        <span class="keyword">this</span>.settings = settings.Value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">async</span> <span class="keyword">void</span> <span class="title">Button_Click</span>(<span class="params"><span class="keyword">object</span> sender, RoutedEventArgs e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> serviceData =<span class="keyword">await</span> sampleService.GetCurrentDate();</span><br><span class="line">        <span class="keyword">var</span> settingsData = settings;</span><br><span class="line">        TextBox1.Text = <span class="string">$"serviceData:<span class="subst">&#123;serviceData&#125;</span><span class="subst">&#123;Environment.NewLine&#125;</span>settingsData:<span class="subst">&#123;settings.AppName&#125;</span>"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序 href="fT2GzqF65CP1Wc8.png" title="" data-fancybox="images"><img src="fT2GzqF65CP1Wc8.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="Demo-地址"><a href="#Demo-地址" class="headerlink" title="Demo 地址"></a>Demo 地址</h2><p><a href="https://github.com/xhanb/NetCore3WpfDependencyInjection" target="_blank" rel="noopener">https://github.com/xhanb/NetCore3WpfDependencyInjection</a></p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-24T06:29:26.931Z" itemprop="dateUpdated">2019-12-24 14:29:26</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/24/UseMicrosoftDependencyInjectionInWPF/" target="_blank" rel="external">https://tao-lol.top/2019/12/24/UseMicrosoftDependencyInjectionInWPF/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WPF/">WPF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/24/UseMicrosoftDependencyInjectionInWPF/&title=《在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/24/UseMicrosoftDependencyInjectionInWPF/&title=《在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序》 — Blog&source=
+https://www.cnblogs.com/muran/p/11759899.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/23/IntroductionToCQRS/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">浅谈命令查询职责分离（CQRS）模式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实践"><span class="post-toc-number">2.</span> <span class="post-toc-text">实践</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#新建项目"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">新建项目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#将所需的-NuGet-包添加到项目中"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">将所需的 NuGet 包添加到项目中</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#然后，将一个名为-appsettings-json-的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“-复制”（如果较新）"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">然后，将一个名为 appsettings.json 的文件添加到项目的根文件夹。将其“构建操作”属性设置为“内容”，将“复制到输出目录”设置为“ 复制”（如果较新）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建一个-AppSettings-cs-文件来保存配置设置。该文件将映射我们在-appsettings-json-中编写的设置"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">创建一个 AppSettings.cs 文件来保存配置设置。该文件将映射我们在 appsettings.json 中编写的设置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建一个示例服务"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">创建一个示例服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#打开-App-xaml-文件并删除-Application-类的-StartupUri-属性。然后，我们需要重写-App-xaml-cs-中的-OnStartup-方法"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">打开 App.xaml 文件并删除 Application 类的 StartupUri 属性。然后，我们需要重写 App.xaml.cs 中的 OnStartup 方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MainWindow-简单布局及代码改造"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">MainWindow 简单布局及代码改造</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Demo-地址"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">Demo 地址</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/24/UseMicrosoftDependencyInjectionInWPF/&title=《在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/24/UseMicrosoftDependencyInjectionInWPF/&title=《在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序》 — Blog&source=
+https://www.cnblogs.com/muran/p/11759899.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACr0lEQVR42u3aS2rDQBAFwNz/0skmi4Cx9PoztgOllSGypBqDuvN6vr7i4/vPUT0/Oa6v8/h5+cDDw8MbPPqzG18/yrMzk2vmj57fBQ8PD+81vK2X8uOZeTHoLc2NBQ8PD+9jeEnZ2G2s8fDw8P47r3f73n3x8PDwPpPXCw6uC0a+BNdF4jocWcta8PDw8Dq9ayFCfe/nI/M9PDw8vGMD/knM+tJoAw8PD+9YapoHB0kLWx2A5TFH9Tnx8PDwTvDygCAPF6pRRa8gRSEvHh4e3kt4vci1F8JuDc+ifBoPDw9viZfHBAlv0hDnYcSo7cbDw8M7zMtf35NNBvkyVTdv4eHh4Z3jVV/9efCavNB7T1UIl/Hw8PCO8fK2NS8n1bJRHa1Ff8XDw8Nb5U1GXFVGeXw1GKHh4eHhneZVqZNbVgtPdSmbUzI8PDy8Fq8aQ+Sv8kl5mDToeHh4eOd41fKQlJZ8gapbEArlAQ8PD+8YbzLOz4PdKrjX6D8NI/Dw8PCWeNWjt6Gqt0EhLwn5ouPh4eFt8ZIXd74ek6Z8XmBu/m/Aw8PDW+JVNw3kxWMy4srHb8ky4eHh4W3xql+btNS9Zr36Y9w003h4eHhLvN7texuweldb23SFh4eHN+ZNGuvekKy6jSAvP+UxGB4eHt6ANw9tq8Wmt4Gg+Yvh4eHhHebNw9y8XU5ihaSZvrkLHh4e3jFeL9Ktbi29Zk9K1GjN8PDw8MawaiiQBw29AlONj38/4+Hh4R3gbU2L8nhid8lGAzA8PDy8Aa9aDKrD/utr5gUgv+/NzjI8PDy8JV6vRZ6cs9UQR4UBDw8P76286gi/WnLm38LDw8P7TF4+Y5oM/ssbBbYKAx4eHt5gwt4LCCbDsHwpo61deHh4eAd4vX/4k8H/BJYXjIUDDw8PL+X9AD/oc6gfai5QAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
