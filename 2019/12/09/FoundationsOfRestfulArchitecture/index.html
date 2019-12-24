@@ -235,7 +235,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://fakelibrary.org + /book/isbn/978-0596801687</span><br></pre></td></tr></table></figure>
 
 <p>&emsp;&emsp;接下来我们会先介绍 GET 请求。客户端在需要时发出 GET 请求获取指定资源。客户端可以在本地缓存请求结果，服务器可以在远程缓存结果，系统的中间层可以在请求链路中间缓存结果。这是一个与具体应用程序无关的特性，可以加入系统设计中。<br>&emsp;&emsp;正因为可以操作资源，也就意味着并不是每个人都可以这样做。我们完全可以建立一个防护模型，要求用户在操作前验证身份，证明他们具有该操作的授权。在本文的最后，将提供一些提升 RESTful 服务安全性的内容。  </p>
-<h1 id="REST-和-SOAP-比怎么样？"><a href="#REST-和-SOAP-比怎么样？" class="headerlink" title="REST 和 SOAP 比怎么样？"></a>REST 和 SOAP 比怎么样？</h1><p>&emsp;&emsp;SOAP：简单对象访问协议（Simple Object Access Protocol）。是交换数据的一种协议规范，是一种轻量的、简单的、基于XML的协议。一条 SOAP 消息就是一个普通的 XML 文档，包含必需的 Envelope 元素、可选的 Header 元素、必需的 Body 元素和可选的 Fault 元素。<br>&emsp;&emsp;把 REST 与 SOAP 划等号是错误的。在这两者之间进行比较，带来的困扰远多于好处。简单来说，它们不是一回事。尽管可以用这两种方法解决许多架构问题，但是它们不能相互替换。<br>&emsp;&emsp;这种混淆很大程度上源于对 “REST 是通过 URL 调用 Web 服务”这句话的误解。这种观点与 RESTful 架构的功能相距甚远。如果不全面深入理解 RESTful 的架构实现，就很容易误解 REST 实践的本意。<br>&emsp;&emsp;利用 REST 的最佳方式，是<strong>将生产和消费过程中的信息与技术分离实现解耦</strong>，进而更好地管理系统，让架构具备以下特性：  </p>
+<h1 id="REST-和-SOAP-比怎么样？"><a href="#REST-和-SOAP-比怎么样？" class="headerlink" title="REST 和 SOAP 比怎么样？"></a>REST 和 SOAP 比怎么样？</h1><p>&emsp;&emsp;SOAP：简单对象访问协议（Simple Object Access Protocol）。是交换数据的一种协议规范，是一种轻量的、简单的、基于XML的协议。一条 SOAP 消息就是一个普通的 XML 文档，包含必需的 Envelope 元素、可选的 Header 元素、必需的 Body 元素和可选的 Fault 元素。<br>&emsp;&emsp;把 REST 与 SOAP 划等号是错误的。在这两者之间进行比较，带来的困扰远多于好处。简单来说，它们不是一回事。尽管可以用这两种方法解决许多架构问题，但是它们不能相互替换。<br>&emsp;&emsp;这种混淆很大程度上源于对 “REST 是通过 URL 调用 Web 服务”这句话的误解。这种观点与 RESTful 架构的功能相距甚远。如果不全面深入理解 RESTful 的架构实现，就很容易误解 REST 实践的本意。  </p>
+<p>&emsp;&emsp;利用 REST 的最佳方式，是<strong>将生产和消费过程中的信息与技术分离实现解耦</strong>，进而更好地管理系统，让架构具备以下特性：  </p>
 <ul>
 <li>高性能</li>
 <li>可扩展</li>
@@ -445,7 +446,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-09T17:24:51.664Z" itemprop="dateUpdated">2019-12-10 01:24:51</time>
+    最后更新时间：<time datetime="2019-12-24T05:43:32.966Z" itemprop="dateUpdated">2019-12-24 13:43:32</time>
 </span><br>
 
 

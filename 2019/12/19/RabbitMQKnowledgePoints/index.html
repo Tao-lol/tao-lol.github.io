@@ -270,7 +270,8 @@
                 <p></p>
             </figure>
 
-<p>&emsp;&emsp;<strong>它会将所有发送到该交换器的消息路由到所有与该交换器绑定的队列中。</strong>fanout 交换器不处理路由键，只是简单的将队列绑定到交换器上，每个发送到交换器的消息都会被转发到与该交换器绑定的所有队列上。就像子网广播，每台子网内的主机都获得了一份复制的消息。fanout 类型转发消息是最快的。<br>&emsp;&emsp;这种模式的特点：</p>
+<p>&emsp;&emsp;<strong>它会将所有发送到该交换器的消息路由到所有与该交换器绑定的队列中。</strong>fanout 交换器不处理路由键，只是简单的将队列绑定到交换器上，每个发送到交换器的消息都会被转发到与该交换器绑定的所有队列上。就像子网广播，每台子网内的主机都获得了一份复制的消息。fanout 类型转发消息是最快的。  </p>
+<p>&emsp;&emsp;这种模式的特点：</p>
 <ol>
 <li>不需要 RoutingKey，我们将路由键设置为空即可。</li>
 <li>需要提前将 Exchange 和 Queue 进行绑定，一个 Exchange 可以绑定多个 Queue，一个 Queue 可以同时与多个 Exchange 进行绑定（”多对多关系”）。</li>
@@ -343,7 +344,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-19T06:50:28.567Z" itemprop="dateUpdated">2019-12-19 14:50:28</time>
+    最后更新时间：<time datetime="2019-12-24T05:53:33.542Z" itemprop="dateUpdated">2019-12-24 13:53:33</time>
 </span><br>
 
 
