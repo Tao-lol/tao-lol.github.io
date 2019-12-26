@@ -345,14 +345,83 @@
 <li>使用 <code>UseSystemd()</code> 替换 <code>UseWindowsService()</code>。</li>
 </ul>
 <h1 id="Microsoft-vs-Topshelf-vs-NET-Core-Workers"><a href="#Microsoft-vs-Topshelf-vs-NET-Core-Workers" class="headerlink" title="Microsoft vs Topshelf vs .NET Core Workers"></a>Microsoft vs Topshelf vs .NET Core Workers</h1><p>&emsp;&emsp;到现在为止，我们已经介绍了借助 3 种不同的方式来创建 Windows 服务。<br>&emsp;&emsp;你可能会问 “ 好吧，那我到底应该选择哪一种 ？”<br>&emsp;&emsp;这里呢，我们可以首先把 “ Microsoft “ 这种老派学院式的方式抛弃。以为它的调试实在是太麻烦了，而且没有什么实际的用处。<br>&emsp;&emsp;然后剩下的就是 <code>Topshelf</code> 和 .NET Core 工作器两种方式了。在我看来，.NET Core 工作器，已经很好的融入 .NET Core 生态系统，如果你正在开发 ASP.NET Core 应用，那么使用 .NET Core 工作器就很有意义。最重要的是，当你创建一个后台服务的时候，你可以让它在一个 ASP.NET Core 网站中的任意位置运行，这非常的方便。但是缺点是安装。你必须使用 <code>SC</code> 命令来安装服务。这一部分 <code>Topshelf</code> 可能更胜一筹。<br>&emsp;&emsp;<code>Topshelf</code> 总体上将非常的友好，并且具有最好的安装方式，但是使用额外的库，也增加了学习的成本。<br>&emsp;&emsp;所以 <code>Topshelf</code> 和 .NET Core 工作器，大家可以自行选择，都是不错的方案。  </p>
+<hr>
+<h1 id="部署-Linux-服务"><a href="#部署-Linux-服务" class="headerlink" title="部署 Linux 服务"></a>部署 Linux 服务</h1><blockquote>
+<p><a href="https://www.cnblogs.com/RainFate/p/12095793.html" target="_blank" rel="noopener">https://www.cnblogs.com/RainFate/p/12095793.html</a></p>
+</blockquote>
+<p>环境：一台全新的 Centos 7.7.1908 系统  </p>
+<h2 id="安装-net-core相关环境"><a href="#安装-net-core相关环境" class="headerlink" title="安装 .net core相关环境"></a>安装 .net core相关环境</h2><p>参考：<a href="https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-centos7" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-centos7</a>  </p>
+<p>注册 Microsoft 密钥和源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm</span><br></pre></td></tr></table></figure>
 
+<p>安装 .NET Core SDK：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install dotnet-sdk-3.0  -y</span><br></pre></td></tr></table></figure>
+
+<p>安装完成之后可以输入 <code>dotnet --version</code> 查看是否可以返回对应版本  </p>
+<h2 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h2><p>程序代码需要引用 <code>Microsoft.Extensions.Hosting.Systemd</code> Nuget包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Extensions.Hosting.Systemd</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>Program.cs</code> 文件，添加 <code>UseSystemd()</code> 方法调用，可以和 <code>UseWindowsService()</code> 共存</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">    Host.CreateDefaultBuilder(args)</span><br><span class="line">        .ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">        &#125;)</span><br><span class="line">          .UseWindowsService()</span><br><span class="line">          .UseSystemd();</span><br></pre></td></tr></table></figure>
+
+<p>然后把发布文件移至 Linux 系统</p>
+<h2 id="部署服务-1"><a href="#部署服务-1" class="headerlink" title="部署服务"></a>部署服务</h2><p>Linux 的服务是通过 <code>systemd</code> 守护进程部署的。现在在系统中我们有了一个发布后的应用程序，我们需要为 systemd 创建配置文件部署服务。步骤如下：<br>创建一个 <strong>.service</strong> 文件（我们要部署服务，因此需要 <strong>.service</strong> 文件），填入以下内容。可以在 Linux 中直接创建或者通过 Windows 创建然后拷贝至 Linux。<br><a href="https://github.com/RainFate/WindowsServiceDemo/blob/Init/WorkerService/%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85%E5%8D%B8%E8%BD%BD/Linux/testapp.service" target="_blank" rel="noopener">参考链接</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description = my test app</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type = notify</span><br><span class="line">ExecStart = /usr/bin/dotnet/home/demo/WorkerService.dll</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy = multi-user.target</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>Description</code>：描述，看个人需要是否添加。不需要可以去掉。只留下 <code>[Service]</code> 和 <code>[Install]</code></li>
+<li><code>Type=notify</code>：当前服务启动完毕，会通知 <code>Systemd</code>，再继续往下执行</li>
+<li><code>ExecStart</code>：启动当前服务的命令，程序如何启动，第一个路径是固定路径。第二个路径是应用程序的 dll 路径（可以自定义）</li>
+<li><code>WantedBy</code>：表示该服务所在的 Target 服务组；<code>multi-user.target</code> 表示多用户命令行状态。</li>
+</ul>
+<p>把 <strong>.service</strong> 文件移动至 <strong>/etc/systemd/system/</strong> 固定目录下，假设自定义文件名称为：<strong>testapp.service</strong>（如果使用其他名称，请更改 testapp）</p>
+<figure class="image-box">
+                <a rel=使用 .NET Core 创建 Windows 服务 href="1.png" title="" data-fancybox="images"><img src="1.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>使用 <code>systemctl</code> 命令重新加载新的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<p>查看相关服务状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status testapp</span><br></pre></td></tr></table></figure>
+
+<p>您应该看到类似以下的内容：</p>
+<figure class="image-box">
+                <a rel=使用 .NET Core 创建 Windows 服务 href="2.png" title="" data-fancybox="images"><img src="2.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>这表明您已注册的新服务已禁用，我们可以通过运行以下命令来启动我们的服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start testapp.service</span><br></pre></td></tr></table></figure>
+
+<p>重新运行 <code>sudo systemctl status testapp</code> 查看服务状态显示已激活正在运行中</p>
+<figure class="image-box">
+                <a rel=使用 .NET Core 创建 Windows 服务 href="3.png" title="" data-fancybox="images"><img src="3.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>设置服务开机自启</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable testapp.service</span><br></pre></td></tr></table></figure>
+
+<p>到此我们的服务已经完整的部署到了 Linux 系统中<br>现在我们有一个运行了 <code>systemd</code> 的应用程序，我们可以看看日志记录集成。使用 <code>systemd</code> 的好处之一是可以使用 <code>journalctl</code> 访问的集中式日志记录系统。<br>首先，我们可以使用 <code>journalctl</code>（访问日志的命令）查看服务日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo journalctl -u testapp</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=使用 .NET Core 创建 Windows 服务 href="4.png" title="" data-fancybox="images"><img src="4.png" alt title class></a>
+                <p></p>
+            </figure>
+
+
+<p>可以看到我们的程序正在运行，可以使用 ↑ ↓ ← → 查看日志内容，或者使用 <code>grep</code> 搜索，q 键退出。</p>
+<h2 id="卸载自定义服务"><a href="#卸载自定义服务" class="headerlink" title="卸载自定义服务"></a>卸载自定义服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">servicename=testapp.service</span><br><span class="line"></span><br><span class="line">systemctl stop $servicename</span><br><span class="line">systemctl disable $servicename</span><br><span class="line">rm -rf /etc/systemd/system/$servicename</span><br><span class="line">rm -rf /etc/systemd/system/$servicename symlinks that might be related</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl reset-failed</span><br></pre></td></tr></table></figure>
         </div>
         
 <blockquote class="post-copyright">
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-24T05:54:45.568Z" itemprop="dateUpdated">2019-12-24 13:54:45</time>
+    最后更新时间：<time datetime="2019-12-26T10:02:58.991Z" itemprop="dateUpdated">2019-12-26 18:02:58</time>
 </span><br>
 
 
@@ -444,7 +513,7 @@ Part 1 - The “Microsoft” Way: https://dotnetcor..." data-title=" QQ">
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用官方推荐方式"><span class="post-toc-number">1.</span> <span class="post-toc-text">使用官方推荐方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务部署"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">服务部署</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务调试"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">服务调试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#后续"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">后续</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用-Topshelf-方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用 Topshelf 方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#部署服务"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">部署服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调试服务"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">调试服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#后续-1"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">后续</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用-NET-Core-工作器方式"><span class="post-toc-number">3.</span> <span class="post-toc-text">使用 .NET Core 工作器方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装步骤"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">安装步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#运行-调试我们的应用"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">运行 / 调试我们的应用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#将我们的应用转换成-Windows-服务"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">将我们的应用转换成 Windows 服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在-Linux-中运行服务"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">在 Linux 中运行服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Microsoft-vs-Topshelf-vs-NET-Core-Workers"><span class="post-toc-number">4.</span> <span class="post-toc-text">Microsoft vs Topshelf vs .NET Core Workers</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用官方推荐方式"><span class="post-toc-number">1.</span> <span class="post-toc-text">使用官方推荐方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务部署"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">服务部署</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务调试"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">服务调试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#后续"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">后续</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用-Topshelf-方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用 Topshelf 方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码-1"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#部署服务"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">部署服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调试服务"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">调试服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#后续-1"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">后续</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用-NET-Core-工作器方式"><span class="post-toc-number">3.</span> <span class="post-toc-text">使用 .NET Core 工作器方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装步骤"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">安装步骤</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#运行-调试我们的应用"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">运行 / 调试我们的应用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#将我们的应用转换成-Windows-服务"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">将我们的应用转换成 Windows 服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在-Linux-中运行服务"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">在 Linux 中运行服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Microsoft-vs-Topshelf-vs-NET-Core-Workers"><span class="post-toc-number">4.</span> <span class="post-toc-text">Microsoft vs Topshelf vs .NET Core Workers</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#部署-Linux-服务"><span class="post-toc-number">5.</span> <span class="post-toc-text">部署 Linux 服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-net-core相关环境"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">安装 .net core相关环境</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#修改代码"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">修改代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#部署服务-1"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">部署服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#卸载自定义服务"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">卸载自定义服务</span></a></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
