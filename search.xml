@@ -3,6 +3,327 @@
   
     
     <entry>
+      <title><![CDATA[前端开发必备技能 —— 三大基础层]]></title>
+      <url>/2019/12/26/FrontEndThreeInfrastructures/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA</a></p>
+</blockquote>
+<p>&emsp;&emsp;前端简单说就是我们能够看到的东西，比如页面内容，颜色，图片等，后端主要负责的是后台数据的传输等。前端页面主要分为三层：结构层（Html）、表示层（CSS）、应用层（JavaScript）。</p>
+<a id="more"></a>
+
+<h1 id="HTML（结构层），用-HTML-实现页面结构"><a href="#HTML（结构层），用-HTML-实现页面结构" class="headerlink" title="HTML（结构层），用 HTML 实现页面结构"></a>HTML（结构层），用 HTML 实现页面结构</h1><p>&emsp;&emsp;HTML（Hyper Text Markup Language，超文本标记语言），用来描述网页的一种语言，它不是一种编程语言，而是一种标记语言（标记标签），总的来说，HTML 使用标记标签来描述网页，而我们上网所看到网页，多数都是由 HTML 写成的。<br>&emsp;&emsp;“超文本”是指页面内可以包含图片、链接甚至音视频、程序等非文字元素。<br>&emsp;&emsp;“标记”指的是这些超文本必须由包含属性的开头与结尾标志来标记。<br>&emsp;&emsp;浏览器通过解码 HTML，就可以把网页内容显示出来，它也构成了互联网兴起的基础。  </p>
+<h2 id="HTML-的基本结构"><a href="#HTML-的基本结构" class="headerlink" title="HTML 的基本结构"></a>HTML 的基本结构</h2><figure class="image-box">
+                <img src="1.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="标签的三大分类"><a href="#标签的三大分类" class="headerlink" title="标签的三大分类"></a>标签的三大分类</h2><ol>
+<li>块级元素<br><code>div</code>，默认占整行，宽高可设，但设完后，还是占整行</li>
+<li>行内块元素<br><code>img</code>，不默认占整行，宽和高由自身内容决定，宽高可设</li>
+<li>行内元素<br><code>b</code>、<code>span</code>，不默认占整行，宽和高由自身内容决定，宽高不可设</li>
+</ol>
+<h2 id="HTML-页面包含内容"><a href="#HTML-页面包含内容" class="headerlink" title="HTML 页面包含内容"></a>HTML 页面包含内容</h2><ol>
+<li>文本<figure class="image-box">
+                <img src="2.webp" alt title class>
+                <p></p>
+            </figure></li>
+<li>超文本<br>“超文本”是指页面内可以包含图片、链接，甚至音乐、程序等非文字元素</li>
+</ol>
+<h2 id="HTML-常用标签"><a href="#HTML-常用标签" class="headerlink" title="HTML 常用标签"></a>HTML 常用标签</h2><ol>
+<li><code>&lt;!DOCTYPE html&gt;</code><br>doc（document 文档），type（类型）声明文档类型，在浏览器打开的时候，告诉浏览器这是一个什么文件。</li>
+<li><code>&lt;html&gt; &lt;/html&gt;</code> 根标签，双标签<br><code>&lt;html&gt;</code> 是开始标签，<code>&lt;/html&gt;</code> 是结束标签 / 闭合标签</li>
+<li><code>&lt;head&gt; &lt;/head&gt;</code> 头部标签</li>
+<li><code>&lt;body&gt; &lt;/body&gt;</code> 身体标签</li>
+<li><code>&lt;title&gt; &lt;/title&gt;</code> 标题标签</li>
+<li><code>&lt;meta&gt;</code> 设置标签<br><code>&lt;meta charset=&quot;utf-8&quot;&gt;</code>  charset 用来设置编码格式，utf-8 汉字</li>
+<li><code>&lt;img src=&quot;img/....jpg&quot;/&gt;</code><br>img 图像标签，用来引入图片，路径由 src 来引入。  </li>
+<li><code>&lt;link&gt;</code> 外部引入</li>
+<li><code>&lt;b&gt; &lt;/b&gt;</code> 加粗文字</li>
+<li><code>&lt;button&gt; &lt;/button&gt;</code> 按钮标签 </li>
+<li><code>&lt;br /&gt;</code> br 换行</li>
+</ol>
+<h1 id="CSS（表示层），用-CSS-完成页面的表现与风格"><a href="#CSS（表示层），用-CSS-完成页面的表现与风格" class="headerlink" title="CSS（表示层），用 CSS 完成页面的表现与风格"></a>CSS（表示层），用 CSS 完成页面的表现与风格</h1><p>&emsp;&emsp;CSS（Cascading Style Sheets，层叠样式表）是一种用来表现 HTML（标准通用标记语言的一个应用）或 XML（标准通用标记语言的一个子集）等文件样式的计算机语言。<br>&emsp;&emsp;CSS 主要负责页面中各个部分的样式，如：字体大小、颜色，布局等。CSS 样式可以放到 HTML 页面中，也可以单独的放到 CSS 文件中。<br>&emsp;&emsp;CSS 不仅可以静态地修饰网页，还可以配合各种脚本语言动态地对网页各元素进行格式化。  </p>
+<h2 id="样式引入的方式"><a href="#样式引入的方式" class="headerlink" title="样式引入的方式"></a>样式引入的方式</h2><ol>
+<li>行内样式：就是把样式属性写到标签里 <code>style=&quot;&quot;</code></li>
+<li>内部样式：head 标签里引入 style 标签</li>
+<li>外部样式：link 元素</li>
+</ol>
+<h2 id="筛选器"><a href="#筛选器" class="headerlink" title="筛选器"></a>筛选器</h2><ol>
+<li>class（命名）：类，不具有唯一性，<code>.</code> 代表 <code>class</code></li>
+<li>id：特指、具体，具有唯一性，<code>#</code> 代表 <code>id</code></li>
+</ol>
+<h2 id="属性（直接属性、间接属性）"><a href="#属性（直接属性、间接属性）" class="headerlink" title="属性（直接属性、间接属性）"></a>属性（直接属性、间接属性）</h2><ol>
+<li>宽度：<code>width</code></li>
+<li>高度：<code>height</code>，单位是 px，像素</li>
+<li>背景颜色：<code>background-color</code></li>
+<li>背景图片：<code>background-image</code>，用 <code>url</code> 引入路径</li>
+<li>背景大小：<code>background-size</code></li>
+<li>字体颜色：<code>color</code></li>
+<li>转换元素：<code>display</code></li>
+</ol>
+<h2 id="转换元素"><a href="#转换元素" class="headerlink" title="转换元素"></a>转换元素</h2><ol>
+<li><code>display:block</code> 块级元素</li>
+<li><code>display:inline-block</code> 行内块元素</li>
+<li><code>display:inline</code> 行内元素</li>
+</ol>
+<figure class="image-box">
+                <img src="3.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><ol>
+<li>新建：<code>Ctrl+N</code></li>
+<li>隐藏辅助线：<code>Ctrl+H</code></li>
+<li>注释：<code>Ctrl+？</code></li>
+<li>空格：<code>Tab</code></li>
+</ol>
+<h2 id="图片格式"><a href="#图片格式" class="headerlink" title="图片格式"></a>图片格式</h2><ol>
+<li>有背景图案存成 jpg 格式</li>
+<li>没有背景图案存成 png 格式</li>
+</ol>
+<h1 id="JavaScript（行为层），用-js-脚本语言，实现一些客户端的功能与业务"><a href="#JavaScript（行为层），用-js-脚本语言，实现一些客户端的功能与业务" class="headerlink" title="JavaScript（行为层），用 js 脚本语言，实现一些客户端的功能与业务"></a>JavaScript（行为层），用 js 脚本语言，实现一些客户端的功能与业务</h1><p>&emsp;&emsp;JavaScript是一种直译式脚本语言，是一种动态类型、弱类型、基于原型的语言，内置支持类型，包含类似 java 的语法（数据类型，数组，条件分支，循环，对象…），它的解释器被称为 JavaScript 引擎，为浏览器的一部分，广泛用于客户端的脚本语言，是连接前台和后台服务器的桥梁，它是操纵 HTML 的能手，为页面添加各种操作，使页面具有动态功能。如我们在页面上看到的按钮单击后的页面跳转或者弹不出的对话框、警告框等，都是通过 JavaScript（下面简称 “JS”）实现的。</p>
+<h2 id="JS的组成"><a href="#JS的组成" class="headerlink" title="JS的组成"></a>JS的组成</h2><ol>
+<li>ECMAScript（核心），JavaScript 语言基础</li>
+<li>DOM（文档对象模型），规定了访问 HTML 和 XML 的接口</li>
+<li>BOM（浏览器对象模型），提供了浏览器窗口之间进行交互的对象和方法</li>
+</ol>
+<h2 id="JS的基本数据类型和引用数据类型"><a href="#JS的基本数据类型和引用数据类型" class="headerlink" title="JS的基本数据类型和引用数据类型"></a>JS的基本数据类型和引用数据类型</h2><ol>
+<li>基本数据类型：<code>undefined</code>、<code>null</code>、<code>boolean</code>、<code>number</code>、<code>string</code>、<code>symbol</code></li>
+<li>引用数据类型：<code>object</code>、<code>array</code>、<code>function</code></li>
+</ol>
+<h2 id="检测浏览器版本的方式"><a href="#检测浏览器版本的方式" class="headerlink" title="检测浏览器版本的方式"></a>检测浏览器版本的方式</h2><ol>
+<li>根据 <code>navigator.userAgent</code> / <code>UA.toLowerCase.indexOf(‘chrome’)</code></li>
+<li>根据 window 对象的成员 <code>‘ActiveXObject’ in window</code></li>
+</ol>
+<h2 id="JS-有哪些内置对象"><a href="#JS-有哪些内置对象" class="headerlink" title="JS 有哪些内置对象"></a>JS 有哪些内置对象</h2><ol>
+<li>数据封装类对象：<code>Object</code>、<code>Array</code>、<code>Boolean</code>、<code>Number</code>、<code>String</code></li>
+<li>其他对象：<code>Function</code>、<code>Arguments</code>、<code>Math</code>、<code>Date</code>、<code>RegExp</code>、<code>Error</code></li>
+<li>ES6新增对象：<code>Symbol</code>、<code>Map</code>、<code>Set</code>、<code>Promises</code>、<code>Proxy</code>、<code>Reflect</code></li>
+</ol>
+<h2 id="JS-的基本规范"><a href="#JS-的基本规范" class="headerlink" title="JS 的基本规范"></a>JS 的基本规范</h2><ol>
+<li>代码缩进，建议使用 “四个空格” 缩进</li>
+<li>代码段使用花括号 <code>{}</code> 包裹</li>
+<li>语句结束使用分号 <code>;</code>； 变量和函数在使用前进行声明</li>
+<li>以大写字母开头命名构造函数，全大写命名常量</li>
+<li>规范定义 JSON 对象，补全双引号；用 <code>{}</code> 和声明对象和数组</li>
+</ol>
+<h2 id="如何编写高性能的-JS"><a href="#如何编写高性能的-JS" class="headerlink" title="如何编写高性能的 JS"></a>如何编写高性能的 JS</h2><ol>
+<li>遵循严格模式：<code>&quot;use strict&quot;</code></li>
+<li>将 js 脚本放在页面底部，加快渲染页面</li>
+<li>将 js 脚本将脚本成组打包，减少请求</li>
+<li>使用非阻塞方式下载 js 脚本</li>
+<li>尽量使用局部变量来保存全局变量</li>
+<li>尽量减少使用闭包</li>
+<li>使用 window 对象属性方法时，省略 window</li>
+<li>尽量减少对象成员嵌套；缓存 DOM 节点的访问</li>
+<li>通过避免使用 eval 和 Function 构造器</li>
+<li>给 setTimeout 和 setInterval 传递函数而不是字符串作为参数</li>
+<li>尽量使用直接量创建对象和数组</li>
+<li>最小化重绘（repaint）和回流（reflow</li>
+</ol>
+<h2 id="浏览器的渲染"><a href="#浏览器的渲染" class="headerlink" title="浏览器的渲染"></a>浏览器的渲染</h2><h3 id="浏览器的渲染过程："><a href="#浏览器的渲染过程：" class="headerlink" title="浏览器的渲染过程："></a>浏览器的渲染过程：</h3><ol>
+<li>解析 HTML 构建 DOM（DOM 树），并行请求 css / image / js</li>
+<li>CSS 文件下载完成，开始构建 CSSOM（CSS 树） </li>
+<li>CSSOM 构建结束后，和 DOM 一起生成 Render Tree（渲染树） </li>
+<li>布局（Layout）：计算出每个节点在屏幕中的位置</li>
+<li>显示（Painting）：通过显卡把页面画到屏幕上</li>
+</ol>
+<h3 id="DOM-树和渲染树的区别"><a href="#DOM-树和渲染树的区别" class="headerlink" title="DOM 树和渲染树的区别"></a>DOM 树和渲染树的区别</h3><ol>
+<li>DOM 树与 HTML 标签一一对应，包括 head 和隐藏元素；</li>
+<li>渲染树不包括 head 和隐藏元素，大段文本的每一个行都是独立节点，每一个节点都有对应的 css 属性。</li>
+</ol>
+<h2 id="重绘和回流（重排）的区别和关系"><a href="#重绘和回流（重排）的区别和关系" class="headerlink" title="重绘和回流（重排）的区别和关系"></a>重绘和回流（重排）的区别和关系</h2><ol>
+<li>重绘：当渲染树中的元素外观（如：颜色）发生改变，不影响布局时，产生重绘；</li>
+<li>回流：当渲染树中的元素的布局（如：尺寸、位置、隐藏/状态状态）发生改变时，产生重绘回流；</li>
+<li>注意：JS 获取 Layout 属性值（如：offsetLeft、scrollTop、getComputedStyle 等）也会引起回流。因为浏览器需要通过回流计算最新值。回流必将引起重绘，而重绘不一定会引起回流。</li>
+</ol>
+<h2 id="如何最小化重绘（repaint）和回流（reflow）"><a href="#如何最小化重绘（repaint）和回流（reflow）" class="headerlink" title="如何最小化重绘（repaint）和回流（reflow）"></a>如何最小化重绘（repaint）和回流（reflow）</h2><ol>
+<li>需要要对元素进行复杂的操作时，可以先隐藏（<code>display:“none”</code>），操作完成后再显示；</li>
+<li>需要创建多个 DOM 节点时，使用 DocumentFragment 创建完后一次性的加入 document；</li>
+<li>缓存 Layout 属性值，如：<code>var left = elem.offsetLeft;</code> 这样，多次使用 left 只产生一次回流；</li>
+<li>尽量避免用 table 布局（table 元素一旦触发回流就会导致 table 里所有的其它元素回流）；</li>
+<li>避免使用 css 表达式（expression），因为每次调用都会重新计算值（包括加载页面）；</li>
+<li>尽量使用 css 属性简写，如：用 <code>border</code> 代替 <code>border-width</code>, <code>border-style</code>, <code>border-color</code>；</li>
+<li>批量修改元素样式：<code>elem.className</code> 和 <code>elem.style.cssText</code> 代替 <code>elem.style.xxx</code>；</li>
+</ol>
+<h2 id="script-的位置是否会影响首屏显示时间"><a href="#script-的位置是否会影响首屏显示时间" class="headerlink" title="script 的位置是否会影响首屏显示时间"></a>script 的位置是否会影响首屏显示时间</h2><ol>
+<li>在解析 HTML 生成 DOM 过程中，js 文件的下载是并行的，不需要 DOM 处理到 script 节点；因此，script 的位置不影响首屏显示的开始时间。</li>
+<li>浏览器解析 HTML 是自上而下的线性过程，script 作为 HTML 的一部分同样遵循这个原则；因此，script 会延迟 DomContentLoad，只显示其上部分首屏内容，从而影响首屏显示的完成时间。</li>
+</ol>
+<h2 id="解释-JS-中的作用域与变量声明提升"><a href="#解释-JS-中的作用域与变量声明提升" class="headerlink" title="解释 JS 中的作用域与变量声明提升"></a>解释 JS 中的作用域与变量声明提升</h2><ol>
+<li>JavaScript作用域：<br>&emsp;&emsp;在 Java、C 等语言中，作用域为 <code>for</code> 语句、<code>if</code> 语句或 <code>{}</code> 内的一块区域，称为作用域；而在 JavaScript 中，作用域为 <code>function{}</code> 内的区域，称为函数作用域。</li>
+<li>JavaScript 变量声明提升：<br>&emsp;&emsp;在 JavaScript 中，函数声明与变量声明经常被 JavaScript 引擎隐式地提升到当前作用域的顶部。声明语句中的赋值部分并不会被提升，只有名称被提升函数声明的优先级高于变量，如果变量名跟函数名相同且未赋值，则函数声明会覆盖变量声明，如果函数有多个同名参数，那么最后一个参数（即使没有定义）会覆盖前面的同名参数。</li>
+</ol>
+<h2 id="JS-的原型、原型链以及特点"><a href="#JS-的原型、原型链以及特点" class="headerlink" title="JS 的原型、原型链以及特点"></a>JS 的原型、原型链以及特点</h2><ol>
+<li>原型：JavaScript 的所有对象中都包含了一个 <code>[proto]</code> 内部属性，这个属性所对应的就是该对象的原型，JavaScript的函数对象，除了原型 <code>[proto]</code> 之外，还预置了 <code>prototype</code> 属性，当函数对象作为构造函数创建实例时，该 <code>prototype</code> 属性值将被作为实例对象的原型 <code>[proto]</code>。</li>
+<li>原型链：当一个对象调用的属性 / 方法自身不存在时，就会去自己 <code>[proto]</code> 关联的前辈 <code>prototype</code> 对象上去找，如果没找到，就会去该 <code>prototype</code> 原型 <code>[proto]</code> 关联的前辈 <code>prototype</code> 去找。依此类推，直到找到属性 / 方法或 undefined 为止。从而形成了所谓的“原型链”。</li>
+<li>原型特点：<code>JavaScript</code> 对象是通过引用来传递的，当修改原型时，与之相关的对象也会继承这一改变。</li>
+</ol>
+<h2 id="JS-数据类型"><a href="#JS-数据类型" class="headerlink" title="JS 数据类型"></a>JS 数据类型</h2><ol>
+<li>原始数据类型（Undefined，Null，Boolean，Number、String）—— 栈</li>
+<li>引用数据类型（对象、数组和函数）—— 堆</li>
+</ol>
+<p>两种类型的区别：<br>&emsp;&emsp;存储位置不同。原始数据类型是直接存储在栈（stack）中的简单数据段，占据空间小、大小固定，属于被频繁使用数据；引用数据类型存储在堆（heap）中的对象，占据空间大、大小不固定，如果存储在栈中，将会影响程序运行的性能；引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体。  </p>
+<h2 id="this对象"><a href="#this对象" class="headerlink" title="this对象"></a>this对象</h2><p><code>this</code> 总是指向函数的直接调用者，如果有 <code>new</code> 关键字，<code>this</code> 指向 <code>new</code> 出来的实例对象，在事件中，<code>this</code> 指向触发这个事件的对象，IE 下 <code>attachEvent</code> 中的 <code>this</code> 总是指向全局对象 <code>Window</code>。</p>
+<h2 id="eval-是做什么的"><a href="#eval-是做什么的" class="headerlink" title="eval 是做什么的"></a>eval 是做什么的</h2><p><code>eval</code> 的功能是把对应的字符串解析成 JS 代码并运行，个人感觉应该避免使用 <code>eval</code>，不安全，非常耗性能（先解析成 js 语句，再执行），由 JSON 字符串转换为 JSON 对象的时候可以用 <code>eval(’(’+ str +’)’)</code>。</p>
+<h2 id="Window-对象和-Document-对象"><a href="#Window-对象和-Document-对象" class="headerlink" title="Window 对象和 Document 对象"></a>Window 对象和 Document 对象</h2><ol>
+<li><code>Window</code> 对象表示当前浏览器的窗口，是 JavaScript 的顶级对象，我们创建的所有对象、函数、变量都是 <code>Window</code> 对象的成员，<code>Window</code> 对象的方法和属性是在全局范围内有效的；</li>
+<li><code>Document</code> 对象是 HTML 文档的根节点与所有其他节点（元素节点，文本节点，属性节点, 注释节点），<code>Document</code> 对象使我们可以通过脚本对HTML页面中的所有元素进行访问，<code>Document</code> 对象是 <code>Window</code> 对象的一部分，可通过 <code>window.document</code> 属性对其进行访问。</li>
+</ol>
+<h2 id="原生-js、js-库、js-框架和-js-插件"><a href="#原生-js、js-库、js-框架和-js-插件" class="headerlink" title="原生 js、js 库、js 框架和 js 插件"></a>原生 js、js 库、js 框架和 js 插件</h2><ol>
+<li>原生 js，是指最基础的 js，没有封装过，但因为各浏览器对 js 的支持不同，就导致用基础的 js 编程需要为不同的浏览器写兼容代码；</li>
+<li>js 库、js 框架，是指集成一系列 DOM 操作，API 封装，界面 UI 封装的的库类，常见的有 jQuery，extjs 等等，使用 js 库可以解决浏览器之间的兼容问题，简化 JS 代码；</li>
+<li>js 插件，就是集成了帮助程序员轻松完成功能的程序。js 插件用得比较多，网页制作上随处可见，如图片轮换功能，导航制作，上传图片等等。</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Web </tag>
+            
+            <tag> JavaScript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[IdentityServer4 学习笔记汇总]]></title>
+      <url>/2019/12/26/LearningIdentityServer4/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.cnblogs.com/linhuiy/p/12084933.html" target="_blank" rel="noopener">https://www.cnblogs.com/linhuiy/p/12084933.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;互联网时代，对信息和资源的保护越发苛刻，在所有应用中授权和认证是必不可少缺少的一部分。如果一个应用没有授权和认证那么这个应用就是不完整或者说不安全的应用。在 .Net 平台给我们提供了一套完整的授权认证框架，那就是 IdentityServer4。它实现了 OpenId Connect 和 OAuth2.0 协议的认证授权。</p>
+<figure class="image-box">
+                <img src="1.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="授权认证"><a href="#授权认证" class="headerlink" title="授权认证"></a>授权认证</h1><p>&emsp;&emsp;很多人喜欢把授权和认证混为一谈，但是其实授权（Authorization）和认证（Authentication）是有区别的。</p>
+<ul>
+<li>Authorization（授权） - 侧重点是用户能干嘛，而不关心用户是谁。</li>
+<li>Authentication（认证） - 侧重点是用户是谁，而不是用户能干嘛。</li>
+</ul>
+<h1 id="OpenId"><a href="#OpenId" class="headerlink" title="OpenId"></a>OpenId</h1><p>&emsp;&emsp;OpenID 是一个以用户为中心的数字身份识别框架，是一个以 URL 为身份标识的分散式身份验证解决方案，它具有开放、分散、自由等特性。  </p>
+<p>OpenID相关基本术语：</p>
+<ul>
+<li>用户 - 想要向某个网站表明身份的人。</li>
+<li>标识 - 用户用以标识其身份的URL。</li>
+<li>身份提供者 - 提供 OpenID URL 注册和验证服务的服务提供者。</li>
+<li>依赖方 - 想要对最终用户的 OpenId 进行验证的网站应用。</li>
+</ul>
+<p>&emsp;&emsp;举个例子，我使用 QQ（身份提供者）登陆京东（依赖方），我打开京东主页点击 QQ 登陆并不会要我输入我的 QQ 账号和密码，会先跳转到 QQ 授权登陆页面，当你扫码或者密码登陆的时候 QQ 会返回给京东一个 OpenId，京东就会拿着这个 OpenId 来问 QQ 你这里是不是有这么一个用户。<br>&emsp;&emsp;OpenId 关注的是 Authentication（认证）。  </p>
+<h1 id="OAuth2"><a href="#OAuth2" class="headerlink" title="OAuth2"></a>OAuth2</h1><p>&emsp;&emsp;OAuth 是当下比较流行的授权第三方应用读取用户的资源的机制。OAuth 能在不涉及到用户的账号信息的情况下，读取用户的一些资源信息。<br>&emsp;&emsp;举个例子，每周都会有保洁阿姨来家里打扫，但是保洁阿姨并不知道我家大门的密码，所以每次保洁阿姨在要上门的时候会在 app 上申请获取一个临时密码，当我收到保洁阿姨的申请后，确认给予临时密码后保洁阿姨就能通过这个密码进入房子啦。<br>&emsp;&emsp;我就是用户，家，和房间就是我的资源，临时密码是 token。阿姨是第三方应用。阿姨申请临时密码需要进入我的家（第三方应用申请读取我的数据），我（用户）收到申请后给予临时密码（用户确认授权读取数据）。阿姨收到临时密码进入房间（获取到相应的 token 读取数据）。<br>&emsp;&emsp;但是临时密码（token）还是有很多局限性的，比如时效性（规定时间内使用才有效），局限性（只能开一次门，不能进去我私人房间），我还可以在中途撤销授权，使临时密码（token）无法进去我的房间（无法读取我的数据）。</p>
+<figure class="image-box">
+                <img src="2.png" alt title class>
+                <p></p>
+            </figure> 
+
+<h2 id="授权过程"><a href="#授权过程" class="headerlink" title="授权过程"></a>授权过程</h2><ol>
+<li>用户打开客户端以后，客户端要求用户给予授权。（阿姨打开某公寓 App 申请临时密码）</li>
+<li>用户同意给予客户端授权。 （我同意给予临时密码）</li>
+<li>客户端使用上一步获得的授权，向认证服务器申请令牌。 （同意后，向某某公寓后台申请临时密码）</li>
+<li>认证服务器对客户端进行认证以后，确认无误，同意发放令牌。（某某公寓后台确认我同意给予临时密码后，给阿姨发放临时密码）</li>
+<li>客户端使用令牌，向资源服务器申请获取资源。（阿姨使用临时密码来开门）</li>
+<li>资源服务器确认令牌无误，同意向客户端开放资源。（密码锁收到临时密码验证后开门）</li>
+</ol>
+<p>&emsp;&emsp;OAuth 关注的是 Authorization（授权）。</p>
+<h1 id="OpenId-Connect"><a href="#OpenId-Connect" class="headerlink" title="OpenId Connect"></a>OpenId Connect</h1><p>&emsp;&emsp;OpenID Connect 简称 OIDC。因为 OAuth2 是一个授权协议，它无法提供完善的身份认证功能。所以它在 OAuth2 上构建了一个身份层，是一个基于 OAuth2 协议的身份认证标准协议。OIDC 使用 OAuth2 的授权来为第三方客户端提供用户的身份认证,并把对应的身份认证信息传递给客户端，且可以适用于各种类型的客户端,并且完全兼容 OAuth2，也就是说你搭建了一个OIDC的服务后，也可以当作一个 OAuth2 的服务来用。</p>
+<h1 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h1><figure class="image-box">
+                <img src="3.png" alt title class>
+                <p></p>
+            </figure>
+
+<ul>
+<li>User - 用户。</li>
+<li>Client - 客户端。</li>
+<li>IdentityServer - 授权认证服务器。</li>
+<li>Resources - 需要保护的资源。</li>
+<li>Access Token - 访问令牌,允许用户哪些资源。</li>
+<li>Identity Token - 身份令牌,用户确认用户身份。</li>
+</ul>
+<h1 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h1><p>&emsp;&emsp;Json Web Token (JWT)，是为了在网络应用环境间传递声明而执行的一种基于 JSON 的开放标准（RFC 7519）。该 token 被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该 token 也可直接被用于认证，也可被加密。<br>&emsp;&emsp;JWT 是由三段字符串拼接而成的,使用 <code>.</code> 分割的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJSUzI1NiIsImtpZCI6IjIxNmd3ZUVTZTA3d29hSDhpWHAzMUEiLCJ0eXAiOiJhdCtqd3QifQ.eyJuYmYiOjE1NzY2NTYwOTMsImV4cCI6MTU3NjY1OTY5MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAzIiwiYXVkIjoiQXBpX0EiLCJjbGllbnRfaWQiOiJjbGllbnRfYSIsInNjb3BlIjpbIkFwaV9BIl19.kdszQIZFTS8aURbF5lIL1-qFzkJ79plH0seM4TsrTPdZoWakJVTH76-qmRpu6H6eaQt7U10R-Y8fn5N2FFh6XHRuDufEsDL8R2Tv7Cu0qbHKHTi-LgZcU2CxM22RyL6Df7Z0IpG5uEQqJ2LyxHJg3W-D3TgSNXUA8ge87ghGrhLRQ8hywH5gM4EZy9lKO7vMZml1IIfuyXTC8FU-HUn6-ZmvC1mADlAQJv84WHyg7fzzgNXqztvSyXA2p6jJG5FDgAjA9-yWnqJPxlZe7-Qi5Dj67lEF9kSII0tblV8JpxxJTpUvM2iPMLKWw77HDGaZkfAUu9WsbpQv-zWXPBBpbw</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们通过 <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a> 解析出来。</p>
+<figure class="image-box">
+                <img src="4.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="第一部分-Header"><a href="#第一部分-Header" class="headerlink" title="第一部分 Header"></a>第一部分 Header</h2><ul>
+<li>alg - 签名算法</li>
+<li>kid - 密钥的 Id</li>
+<li>typ - token 类型</li>
+</ul>
+<p>&emsp;&emsp;这三个参数是最常见的。</p>
+<h2 id="第二部分-PayLoad"><a href="#第二部分-PayLoad" class="headerlink" title="第二部分 PayLoad"></a>第二部分 PayLoad</h2><ul>
+<li>nbf - 生效时间</li>
+<li>exp - 过期时间</li>
+<li>iss - 令牌发放者</li>
+<li>chlien_Id - 发放客户端 Id</li>
+<li>aud - 令牌接收方</li>
+<li>scope - 可访问资源</li>
+</ul>
+<p>&emsp;&emsp;在 PayLoad 中可以放置任何你想要的参数。</p>
+<h2 id="第三部分-Signature"><a href="#第三部分-Signature" class="headerlink" title="第三部分 Signature"></a>第三部分 Signature</h2><p>&emsp;&emsp;Signature 是对前两部分的签名，防止数据篡改。</p>
+<h2 id="JWT-的认证过程"><a href="#JWT-的认证过程" class="headerlink" title="JWT 的认证过程"></a>JWT 的认证过程</h2><figure class="image-box">
+                <img src="5.png" alt title class>
+                <p></p>
+            </figure>
+
+<ol>
+<li>用户使用账号密码或别的方式登陆</li>
+<li>服务器接受到登陆请求后生成一个 jwt token</li>
+<li>服务器把 jwt token 返回给客户端</li>
+<li>客户端在请求资源在 Header 中的 authorization 带上 jwt token</li>
+<li>服务器对 jwt 进行验签,验签成功后根据 PayLoad 中的信息判断认证是否通过</li>
+<li>响应客户端结果</li>
+</ol>
+<h1 id="授权方式"><a href="#授权方式" class="headerlink" title="授权方式"></a>授权方式</h1><ul>
+<li>Client Credentials - 客户端授权模式。 - <a href="https://www.cnblogs.com/linhuiy/p/12084944.html" target="_blank" rel="noopener">实现传送门</a></li>
+<li>Resource Owner Password Credentials - 密码模式。 - <a href="https://www.cnblogs.com/linhuiy/p/12084940.html" target="_blank" rel="noopener">实现传送门</a></li>
+<li>Implicit - 授权码简化模式。</li>
+<li>Authorization Code - 授权码模式。</li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> Web </tag>
+            
+            <tag> dotNET </tag>
+            
+            <tag> ASPNETCore </tag>
+            
+            <tag> IdentityServer4 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序]]></title>
       <url>/2019/12/24/UseMicrosoftDependencyInjectionInWPF/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -668,7 +989,10 @@
       <title><![CDATA[如何运用领域驱动设计]]></title>
       <url>/2019/12/19/HowToUseDDD/</url>
       <content type="html"><![CDATA[<blockquote>
-<p>值对象：<a href="https://www.cnblogs.com/uoyo/p/11951840.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11951840.html</a><br>实体：<a href="https://www.cnblogs.com/uoyo/p/11984311.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11984311.html</a><br>领域服务：<a href="https://www.cnblogs.com/uoyo/p/12023896.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12023896.html</a><br>聚合：<a href="https://www.cnblogs.com/uoyo/p/12061334.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12061334.html</a>  </p>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p>值对象：<a href="https://www.cnblogs.com/uoyo/p/11951840.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11951840.html</a><br>实体：<a href="https://www.cnblogs.com/uoyo/p/11984311.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/11984311.html</a><br>领域服务：<a href="https://www.cnblogs.com/uoyo/p/12023896.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12023896.html</a><br>聚合：<a href="https://www.cnblogs.com/uoyo/p/12061334.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12061334.html</a><br>存储库：<a href="https://www.cnblogs.com/uoyo/p/12097737.html" target="_blank" rel="noopener">https://www.cnblogs.com/uoyo/p/12097737.html</a>  </p>
 </blockquote>
 <a id="more"></a>]]></content>
       
@@ -1695,7 +2019,76 @@
 <li>使用 <code>UseSystemd()</code> 替换 <code>UseWindowsService()</code>。</li>
 </ul>
 <h1 id="Microsoft-vs-Topshelf-vs-NET-Core-Workers"><a href="#Microsoft-vs-Topshelf-vs-NET-Core-Workers" class="headerlink" title="Microsoft vs Topshelf vs .NET Core Workers"></a>Microsoft vs Topshelf vs .NET Core Workers</h1><p>&emsp;&emsp;到现在为止，我们已经介绍了借助 3 种不同的方式来创建 Windows 服务。<br>&emsp;&emsp;你可能会问 “ 好吧，那我到底应该选择哪一种 ？”<br>&emsp;&emsp;这里呢，我们可以首先把 “ Microsoft “ 这种老派学院式的方式抛弃。以为它的调试实在是太麻烦了，而且没有什么实际的用处。<br>&emsp;&emsp;然后剩下的就是 <code>Topshelf</code> 和 .NET Core 工作器两种方式了。在我看来，.NET Core 工作器，已经很好的融入 .NET Core 生态系统，如果你正在开发 ASP.NET Core 应用，那么使用 .NET Core 工作器就很有意义。最重要的是，当你创建一个后台服务的时候，你可以让它在一个 ASP.NET Core 网站中的任意位置运行，这非常的方便。但是缺点是安装。你必须使用 <code>SC</code> 命令来安装服务。这一部分 <code>Topshelf</code> 可能更胜一筹。<br>&emsp;&emsp;<code>Topshelf</code> 总体上将非常的友好，并且具有最好的安装方式，但是使用额外的库，也增加了学习的成本。<br>&emsp;&emsp;所以 <code>Topshelf</code> 和 .NET Core 工作器，大家可以自行选择，都是不错的方案。  </p>
-]]></content>
+<hr>
+<h1 id="部署-Linux-服务"><a href="#部署-Linux-服务" class="headerlink" title="部署 Linux 服务"></a>部署 Linux 服务</h1><blockquote>
+<p><a href="https://www.cnblogs.com/RainFate/p/12095793.html" target="_blank" rel="noopener">https://www.cnblogs.com/RainFate/p/12095793.html</a></p>
+</blockquote>
+<p>环境：一台全新的 Centos 7.7.1908 系统  </p>
+<h2 id="安装-net-core相关环境"><a href="#安装-net-core相关环境" class="headerlink" title="安装 .net core相关环境"></a>安装 .net core相关环境</h2><p>参考：<a href="https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-centos7" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-centos7</a>  </p>
+<p>注册 Microsoft 密钥和源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm</span><br></pre></td></tr></table></figure>
+
+<p>安装 .NET Core SDK：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install dotnet-sdk-3.0  -y</span><br></pre></td></tr></table></figure>
+
+<p>安装完成之后可以输入 <code>dotnet --version</code> 查看是否可以返回对应版本  </p>
+<h2 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h2><p>程序代码需要引用 <code>Microsoft.Extensions.Hosting.Systemd</code> Nuget包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Extensions.Hosting.Systemd</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>Program.cs</code> 文件，添加 <code>UseSystemd()</code> 方法调用，可以和 <code>UseWindowsService()</code> 共存</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">    Host.CreateDefaultBuilder(args)</span><br><span class="line">        .ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">        &#125;)</span><br><span class="line">          .UseWindowsService()</span><br><span class="line">          .UseSystemd();</span><br></pre></td></tr></table></figure>
+
+<p>然后把发布文件移至 Linux 系统</p>
+<h2 id="部署服务-1"><a href="#部署服务-1" class="headerlink" title="部署服务"></a>部署服务</h2><p>Linux 的服务是通过 <code>systemd</code> 守护进程部署的。现在在系统中我们有了一个发布后的应用程序，我们需要为 systemd 创建配置文件部署服务。步骤如下：<br>创建一个 <strong>.service</strong> 文件（我们要部署服务，因此需要 <strong>.service</strong> 文件），填入以下内容。可以在 Linux 中直接创建或者通过 Windows 创建然后拷贝至 Linux。<br><a href="https://github.com/RainFate/WindowsServiceDemo/blob/Init/WorkerService/%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85%E5%8D%B8%E8%BD%BD/Linux/testapp.service" target="_blank" rel="noopener">参考链接</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description = my test app</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type = notify</span><br><span class="line">ExecStart = /usr/bin/dotnet/home/demo/WorkerService.dll</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy = multi-user.target</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>Description</code>：描述，看个人需要是否添加。不需要可以去掉。只留下 <code>[Service]</code> 和 <code>[Install]</code></li>
+<li><code>Type=notify</code>：当前服务启动完毕，会通知 <code>Systemd</code>，再继续往下执行</li>
+<li><code>ExecStart</code>：启动当前服务的命令，程序如何启动，第一个路径是固定路径。第二个路径是应用程序的 dll 路径（可以自定义）</li>
+<li><code>WantedBy</code>：表示该服务所在的 Target 服务组；<code>multi-user.target</code> 表示多用户命令行状态。</li>
+</ul>
+<p>把 <strong>.service</strong> 文件移动至 <strong>/etc/systemd/system/</strong> 固定目录下，假设自定义文件名称为：<strong>testapp.service</strong>（如果使用其他名称，请更改 testapp）</p>
+<figure class="image-box">
+                <img src="1.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>使用 <code>systemctl</code> 命令重新加载新的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<p>查看相关服务状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status testapp</span><br></pre></td></tr></table></figure>
+
+<p>您应该看到类似以下的内容：</p>
+<figure class="image-box">
+                <img src="2.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>这表明您已注册的新服务已禁用，我们可以通过运行以下命令来启动我们的服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start testapp.service</span><br></pre></td></tr></table></figure>
+
+<p>重新运行 <code>sudo systemctl status testapp</code> 查看服务状态显示已激活正在运行中</p>
+<figure class="image-box">
+                <img src="3.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>设置服务开机自启</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable testapp.service</span><br></pre></td></tr></table></figure>
+
+<p>到此我们的服务已经完整的部署到了 Linux 系统中<br>现在我们有一个运行了 <code>systemd</code> 的应用程序，我们可以看看日志记录集成。使用 <code>systemd</code> 的好处之一是可以使用 <code>journalctl</code> 访问的集中式日志记录系统。<br>首先，我们可以使用 <code>journalctl</code>（访问日志的命令）查看服务日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo journalctl -u testapp</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="4.png" alt title class>
+                <p></p>
+            </figure>
+
+
+<p>可以看到我们的程序正在运行，可以使用 ↑ ↓ ← → 查看日志内容，或者使用 <code>grep</code> 搜索，q 键退出。</p>
+<h2 id="卸载自定义服务"><a href="#卸载自定义服务" class="headerlink" title="卸载自定义服务"></a>卸载自定义服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">servicename=testapp.service</span><br><span class="line"></span><br><span class="line">systemctl stop $servicename</span><br><span class="line">systemctl disable $servicename</span><br><span class="line">rm -rf /etc/systemd/system/$servicename</span><br><span class="line">rm -rf /etc/systemd/system/$servicename symlinks that might be related</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl reset-failed</span><br></pre></td></tr></table></figure>]]></content>
       
         <categories>
             
@@ -2803,9 +3196,9 @@
             
             <tag> CSharp </tag>
             
-            <tag> dotNET </tag>
-            
             <tag> JavaScript </tag>
+            
+            <tag> dotNET </tag>
             
         </tags>
         
@@ -3838,8 +4231,8 @@
 <h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><p><a href="https://docs.microsoft.com/zh-cn/dotnet/api/index" target="_blank" rel="noopener">.NET API 浏览器</a><br><a href="https://try.dot.net/" target="_blank" rel="noopener">try.dot.net</a>  </p>
 <h2 id="微软官方文档"><a href="#微软官方文档" class="headerlink" title="微软官方文档"></a>微软官方文档</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/" target="_blank" rel="noopener">.NET</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/" target="_blank" rel="noopener">.NET Standard</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/" target="_blank" rel="noopener">.NET Framework</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/core/" target="_blank" rel="noopener">.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/" target="_blank" rel="noopener">C#</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/" target="_blank" rel="noopener">ASP.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/razor-pages/" target="_blank" rel="noopener">Razor Pages</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/mvc/" target="_blank" rel="noopener">MVC</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/blazor/" target="_blank" rel="noopener">Blazor</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/web-api/" target="_blank" rel="noopener">Web API</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/signalr/" target="_blank" rel="noopener">SignalR</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/grpc/" target="_blank" rel="noopener">gRPC</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/wpf/" target="_blank" rel="noopener">WPF</a><br><a href="https://docs.microsoft.com/zh-cn/xamarin/" target="_blank" rel="noopener">Xamarin</a><br><a href="https://docs.microsoft.com/zh-cn/ef/core/" target="_blank" rel="noopener">Entity Framework Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/machine-learning/" target="_blank" rel="noopener">ML.NET</a><br><a href="https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md" target="_blank" rel="noopener">Microsoft REST API Guidelines</a><br><a href="https://docs.microsoft.com/zh-cn/azure/devops/" target="_blank" rel="noopener">Azure Devops</a><br><a href="https://docs.microsoft.com/en-us/azure/architecture/" target="_blank" rel="noopener">Azure Architecture</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/architecture/microservices/" target="_blank" rel="noopener">MicroServices</a><br><a href="https://github.com/dotnet-architecture/eShopOnContainers" target="_blank" rel="noopener">eShopOnContainers</a>  </p>
 <h2 id="第三方组件"><a href="#第三方组件" class="headerlink" title="第三方组件"></a>第三方组件</h2><h3 id="代码增强"><a href="#代码增强" class="headerlink" title="代码增强"></a>代码增强</h3><p><a href="https://github.com/App-vNext/Polly/wiki" target="_blank" rel="noopener">Polly</a><br><a href="https://fluentvalidation.net/start" target="_blank" rel="noopener">FluentValidation</a><br><a href="https://github.com/scottksmith95/LINQKit" target="_blank" rel="noopener">LINQKit</a>  </p>
-<h3 id="音频视频"><a href="#音频视频" class="headerlink" title="音频视频"></a>音频视频</h3><p><a href="https://trac.ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a>  </p>
-<h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a><br><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
+<h3 id="图像音频视频"><a href="#图像音频视频" class="headerlink" title="图像音频视频"></a>图像音频视频</h3><p><a href="https://trac.ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a><br><a href="https://github.com/dlemstra/Magick.NET" target="_blank" rel="noopener">Magick</a>  </p>
+<h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a><br><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a><br><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
 <h3 id="应用程序接口"><a href="#应用程序接口" class="headerlink" title="应用程序接口"></a>应用程序接口</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
 <h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p><a href="http://unitycontainer.org/" target="_blank" rel="noopener">Unity</a><br><a href="https://autofac.readthedocs.io/" target="_blank" rel="noopener">Autofac</a><br><a href="https://github.com/jbogard/MediatR/wiki" target="_blank" rel="noopener">MediatR</a><br><a href="https://github.com/dotnet-state-machine/stateless" target="_blank" rel="noopener">Stateless</a>  </p>
 <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><a href="https://redis.io/documentation" target="_blank" rel="noopener">Redis</a><br><a href="https://docs.mongodb.com/" target="_blank" rel="noopener">mongoDB</a><br><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/" target="_blank" rel="noopener">SQL Server</a><br><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a><br><a href="https://www.sqlite.org/docs.html" target="_blank" rel="noopener">SQLite</a>  </p>
@@ -3857,6 +4250,7 @@
 <h3 id="Web-UI"><a href="#Web-UI" class="headerlink" title="Web UI"></a>Web UI</h3><p><a href="https://angular.io/docs" target="_blank" rel="noopener">Angular</a><br><a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue</a><br><a href="https://zh-hans.reactjs.org/docs/" target="_blank" rel="noopener">React</a><br><a href="https://datatables.net/manual/" target="_blank" rel="noopener">DataTables</a><br><a href="https://github.com/alyssaxuu/flowy" target="_blank" rel="noopener">Flowy</a><br><a href="https://github.com/apache/incubator-echarts" target="_blank" rel="noopener">ECharts</a><br><a href="https://getbootstrap.com/docs/" target="_blank" rel="noopener">Bootstrap</a><br><a href="https://ng-bootstrap.github.io/#/getting-started" target="_blank" rel="noopener">NG-Bootstrap</a><br><a href="https://ant.design/docs/react/introduce-cn" target="_blank" rel="noopener">Ant Design of React</a><br><a href="https://ng.ant.design/docs/introduce/zh" target="_blank" rel="noopener">Ant Design of Angular</a><br><a href="https://vue.ant.design/docs/vue/introduce/" target="_blank" rel="noopener">Ant Design of Vue</a><br><a href="https://material.angular.io/components/categories" target="_blank" rel="noopener">Angular Material</a>  </p>
 <h3 id="WPF"><a href="#WPF" class="headerlink" title="WPF"></a>WPF</h3><p><a href="https://github.com/HandyOrg/HandyControl" target="_blank" rel="noopener">HandyControl</a><br><a href="https://github.com/MahApps/MahApps.Metro" target="_blank" rel="noopener">MahApps.Metro</a><br><a href="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit" target="_blank" rel="noopener">MaterialDesignInXamlToolkit</a><br><a href="https://github.com/spiegelp/MaterialDesignExtensions" target="_blank" rel="noopener">MaterialDesignExtensions</a><br><a href="https://github.com/Panuon/PanuonUI.Silver" target="_blank" rel="noopener">PanuonUI.Silver</a><br><a href="https://github.com/ButchersBoy/Dragablz" target="_blank" rel="noopener">Dragablz</a><br><a href="https://lvcharts.net/App/examples/wpf/start" target="_blank" rel="noopener">LiveCharts</a><br><a href="https://reactiveui.net/docs/" target="_blank" rel="noopener">ReactiveUI</a>  </p>
 <h3 id="游戏设计"><a href="#游戏设计" class="headerlink" title="游戏设计"></a>游戏设计</h3><p><a href="https://docs.unity3d.com/Manual/" target="_blank" rel="noopener">Unity3D</a>  </p>
+<h3 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h3><p><a href="https://github.com/tensorflow/tensorflow" target="_blank" rel="noopener">TensorFlow</a><br><a href="https://botsharp.readthedocs.io/" target="_blank" rel="noopener">BotSharp</a><br><a href="https://github.com/SciSharp/NumSharp" target="_blank" rel="noopener">NumSharp</a><br><a href="https://github.com/SciSharp/SiaNet" target="_blank" rel="noopener">SiaNet</a><br><a href="https://github.com/SciSharp/Pandas.NET" target="_blank" rel="noopener">Pandas.NET</a>  </p>
 <h3 id="图标符号"><a href="#图标符号" class="headerlink" title="图标符号"></a>图标符号</h3><p><a href="https://icons8.com/icons" target="_blank" rel="noopener">Icons8</a><br><a href="https://pattern.flaticon.com/" target="_blank" rel="noopener">FlatIcon</a><br><a href="https://materialdesignicons.com/" target="_blank" rel="noopener">Material Design Icons</a><br><a href="https://www.iconfont.cn/" target="_blank" rel="noopener">IconFont 阿里巴巴矢量图标库</a><br><a href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</a><br><a href="https://realfavicongenerator.net/" target="_blank" rel="noopener">Favicon</a><br><a href="https://unicode-table.com/" target="_blank" rel="noopener">Unicode</a><br><a href="https://illlustrations.co/" target="_blank" rel="noopener">illlustrations</a>  </p>
 <h2 id="语言"><a href="#语言" class="headerlink" title="语言"></a>语言</h2><p><a href="https://docs.microsoft.com/zh-cn/sql/t-sql/" target="_blank" rel="noopener">T-SQL</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML" target="_blank" rel="noopener">HTML</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS" target="_blank" rel="noopener">CSS</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a><br><a href="https://api.jquery.com/" target="_blank" rel="noopener">jQuery</a><br><a href="https://www.typescriptlang.org/docs/" target="_blank" rel="noopener">TypeScript</a><br><a href="https://docs.python.org/" target="_blank" rel="noopener">Python</a><br><a href="https://doc.rust-lang.org/book/" target="_blank" rel="noopener">Rust</a><br><a href="https://docs.microsoft.com/en-us/powershell/" target="_blank" rel="noopener">PowerShell</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank" rel="noopener">正则表达式</a>  </p>
 <h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP" target="_blank" rel="noopener">HTTP</a><br><a href="https://visualgo.net/" target="_blank" rel="noopener">VisuAlgo</a><br><a href="https://www.connectionstrings.com/" target="_blank" rel="noopener">ConnectionStrings</a><br><a href="https://microsoft.github.io/TypeSearch/" target="_blank" rel="noopener">TypeScript Types Search</a>  </p>
@@ -3874,7 +4268,7 @@
 <h1 id="其它-2"><a href="#其它-2" class="headerlink" title="其它"></a>其它</h1><h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p><a href="https://antecer.gitee.io/amusingkeypad/" target="_blank" rel="noopener">AmusingKeypad</a><br><a href="https://github.com/Y2Z/monolith" target="_blank" rel="noopener">Monolith</a><br><a href="https://www.draw.io/" target="_blank" rel="noopener">draw.io</a><br><a href="https://www.urlgot.com/" target="_blank" rel="noopener">urlgot</a><br><a href="https://www.toolfk.com/" target="_blank" rel="noopener">TOOLFK - 程序员开发工具</a><br><a href="http://www.nicetool.net/" target="_blank" rel="noopener">NiceTool</a><br><a href="http://www.alltoall.net/" target="_blank" rel="noopener">在线格式转换 All2All</a><br><a href="https://qxk.bnu.edu.cn/" target="_blank" rel="noopener">汉字全息资源应用系统</a><br><a href="https://dillinger.io/" target="_blank" rel="noopener">Online Markdown Editor - Dillinger</a><br><a href="https://markdownapp.now.sh/" target="_blank" rel="noopener">Markdown Editor</a><br><a href="https://todo.microsoft.com/" target="_blank" rel="noopener">Microsoft To-Do</a><br><a href="https://whiteboard.microsoft.com/" target="_blank" rel="noopener">Microsoft Whiteboard</a><br><a href="https://online.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Online</a><br><a href="https://getavatars.app/" target="_blank" rel="noopener">Get an Avatar</a>  </p>
 <h2 id="梯子"><a href="#梯子" class="headerlink" title="梯子"></a>梯子</h2><p><a href="https://bwh1.net/" target="_blank" rel="noopener">BandwagonHost</a><br><a href="https://shadowsky.world/" target="_blank" rel="noopener">ShadowSky</a><br><a href="https://www.v2ray.com/" target="_blank" rel="noopener">V2Ray</a>  </p>
 <h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><p><a href="https://www.baidu.com/" target="_blank" rel="noopener">百度</a><br><a href="https://cn.bing.com/" target="_blank" rel="noopener">Bing</a><br><a href="https://www.google.com/" target="_blank" rel="noopener">Google</a>  </p>
-<h2 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h2><p><a href="https://leetcode-cn.com/" target="_blank" rel="noopener">力扣 LeetCode</a><br><a href="https://www.sololearn.com/" target="_blank" rel="noopener">SoloLearn</a><br><a href="https://www.w3cschool.cn/" target="_blank" rel="noopener">W3Cschool</a><br><a href="https://easychen.gitee.io/foxdict/" target="_blank" rel="noopener">Fox Dict</a><br><a href="http://www.kekenet.com/" target="_blank" rel="noopener">可可英语</a><br><a href="https://studyspanish.com/" target="_blank" rel="noopener">StudySpanish</a>  </p>
+<h2 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h2><p><a href="https://leetcode-cn.com/" target="_blank" rel="noopener">力扣 LeetCode</a><br><a href="https://www.sololearn.com/" target="_blank" rel="noopener">SoloLearn</a><br><a href="https://www.w3cschool.cn/" target="_blank" rel="noopener">W3Cschool</a><br><a href="https://easychen.gitee.io/foxdict/" target="_blank" rel="noopener">Fox Dict</a><br><a href="http://www.kekenet.com/" target="_blank" rel="noopener">可可英语</a><br><a href="https://app.mtutor.engkoo.com/englishwriting/" target="_blank" rel="noopener">微软小英写作网站</a><br><a href="https://studyspanish.com/" target="_blank" rel="noopener">StudySpanish</a>  </p>
 <h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p><a href="https://www.coolapk.com/" target="_blank" rel="noopener">酷安网</a><br><a href="https://apkpure.com/" target="_blank" rel="noopener">APKPure</a><br><a href="https://play.google.com/" target="_blank" rel="noopener">Google Play</a><br><a href="https://www.appinn.com/" target="_blank" rel="noopener">小众软件</a><br><a href="https://msdn.itellyou.cn/" target="_blank" rel="noopener">MSDN, 我告诉你</a>  </p>
 <h2 id="壁纸"><a href="#壁纸" class="headerlink" title="壁纸"></a>壁纸</h2><p><a href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels</a><br><a href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a><br><a href="https://stocksnap.io/" target="_blank" rel="noopener">StockSnap.io</a><br><a href="http://streetwill.co/" target="_blank" rel="noopener">StreetWill</a><br><a href="https://gratisography.com/" target="_blank" rel="noopener">Gratisography</a><br><a href="https://www.textures.com/" target="_blank" rel="noopener">textures</a><br><a href="https://pixabay.com/" target="_blank" rel="noopener">pixabay</a><br><a href="https://www.lifeofpix.com/" target="_blank" rel="noopener">Life Of Pix</a><br><a href="https://www.hippopx.com/" target="_blank" rel="noopener">Hippo px</a><br><a href="https://www.colorhub.me/" target="_blank" rel="noopener">Color Hub</a><br><a href="https://www.pinterest.com/" target="_blank" rel="noopener">Pinterest</a><br><a href="https://visualhunt.com/" target="_blank" rel="noopener">VisualHunt</a><br><a href="http://cupcake.nilssonlee.se/" target="_blank" rel="noopener">Cupcake</a><br><a href="https://wall.alphacoders.com/" target="_blank" rel="noopener">Wallpaper Abyss</a><br><a href="https://wallpapersite.com/" target="_blank" rel="noopener">WallpaperSite</a><br><a href="https://wallpaperscraft.com/" target="_blank" rel="noopener">WallpapersCraft</a><br><a href="https://wallhaven.cc/" target="_blank" rel="noopener">WallHaven</a><br><a href="https://www.ssyer.com/" target="_blank" rel="noopener">SSYER | 沙沙野</a><br><a href="https://www.toptal.com/designers/subtlepatterns/" target="_blank" rel="noopener">Subtle Patterns</a>  </p>
 <h2 id="地图"><a href="#地图" class="headerlink" title="地图"></a>地图</h2><p><a href="https://www.amap.com/" target="_blank" rel="noopener">高德地图</a><br><a href="https://map.baidu.com/" target="_blank" rel="noopener">百度地图</a><br><a href="https://www.google.com/maps" target="_blank" rel="noopener">Google 地图</a>  </p>

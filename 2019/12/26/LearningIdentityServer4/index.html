@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>IdentityServer4 学习笔记汇总 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,Web,dotNET,ASPNETCore,IdentityServer4">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>IdentityServer4 学习笔记汇总</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">IdentityServer4 学习笔记汇总</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-26T10:05:32.000Z" itemprop="datePublished" class="page-time">
+  2019-12-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-LearningIdentityServer4"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">IdentityServer4 学习笔记汇总</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-26 18:05:32" datetime="2019-12-26T10:05:32.000Z"  itemprop="datePublished">2019-12-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.cnblogs.com/linhuiy/p/12084933.html" target="_blank" rel="noopener">https://www.cnblogs.com/linhuiy/p/12084933.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;互联网时代，对信息和资源的保护越发苛刻，在所有应用中授权和认证是必不可少缺少的一部分。如果一个应用没有授权和认证那么这个应用就是不完整或者说不安全的应用。在 .Net 平台给我们提供了一套完整的授权认证框架，那就是 IdentityServer4。它实现了 OpenId Connect 和 OAuth2.0 协议的认证授权。</p>
+<figure class="image-box">
+                <a rel=IdentityServer4 学习笔记汇总 href="1.png" title="" data-fancybox="images"><img src="1.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="授权认证"><a href="#授权认证" class="headerlink" title="授权认证"></a>授权认证</h1><p>&emsp;&emsp;很多人喜欢把授权和认证混为一谈，但是其实授权（Authorization）和认证（Authentication）是有区别的。</p>
+<ul>
+<li>Authorization（授权） - 侧重点是用户能干嘛，而不关心用户是谁。</li>
+<li>Authentication（认证） - 侧重点是用户是谁，而不是用户能干嘛。</li>
+</ul>
+<h1 id="OpenId"><a href="#OpenId" class="headerlink" title="OpenId"></a>OpenId</h1><p>&emsp;&emsp;OpenID 是一个以用户为中心的数字身份识别框架，是一个以 URL 为身份标识的分散式身份验证解决方案，它具有开放、分散、自由等特性。  </p>
+<p>OpenID相关基本术语：</p>
+<ul>
+<li>用户 - 想要向某个网站表明身份的人。</li>
+<li>标识 - 用户用以标识其身份的URL。</li>
+<li>身份提供者 - 提供 OpenID URL 注册和验证服务的服务提供者。</li>
+<li>依赖方 - 想要对最终用户的 OpenId 进行验证的网站应用。</li>
+</ul>
+<p>&emsp;&emsp;举个例子，我使用 QQ（身份提供者）登陆京东（依赖方），我打开京东主页点击 QQ 登陆并不会要我输入我的 QQ 账号和密码，会先跳转到 QQ 授权登陆页面，当你扫码或者密码登陆的时候 QQ 会返回给京东一个 OpenId，京东就会拿着这个 OpenId 来问 QQ 你这里是不是有这么一个用户。<br>&emsp;&emsp;OpenId 关注的是 Authentication（认证）。  </p>
+<h1 id="OAuth2"><a href="#OAuth2" class="headerlink" title="OAuth2"></a>OAuth2</h1><p>&emsp;&emsp;OAuth 是当下比较流行的授权第三方应用读取用户的资源的机制。OAuth 能在不涉及到用户的账号信息的情况下，读取用户的一些资源信息。<br>&emsp;&emsp;举个例子，每周都会有保洁阿姨来家里打扫，但是保洁阿姨并不知道我家大门的密码，所以每次保洁阿姨在要上门的时候会在 app 上申请获取一个临时密码，当我收到保洁阿姨的申请后，确认给予临时密码后保洁阿姨就能通过这个密码进入房子啦。<br>&emsp;&emsp;我就是用户，家，和房间就是我的资源，临时密码是 token。阿姨是第三方应用。阿姨申请临时密码需要进入我的家（第三方应用申请读取我的数据），我（用户）收到申请后给予临时密码（用户确认授权读取数据）。阿姨收到临时密码进入房间（获取到相应的 token 读取数据）。<br>&emsp;&emsp;但是临时密码（token）还是有很多局限性的，比如时效性（规定时间内使用才有效），局限性（只能开一次门，不能进去我私人房间），我还可以在中途撤销授权，使临时密码（token）无法进去我的房间（无法读取我的数据）。</p>
+<figure class="image-box">
+                <a rel=IdentityServer4 学习笔记汇总 href="2.png" title="" data-fancybox="images"><img src="2.png" alt title class></a>
+                <p></p>
+            </figure> 
+
+<h2 id="授权过程"><a href="#授权过程" class="headerlink" title="授权过程"></a>授权过程</h2><ol>
+<li>用户打开客户端以后，客户端要求用户给予授权。（阿姨打开某公寓 App 申请临时密码）</li>
+<li>用户同意给予客户端授权。 （我同意给予临时密码）</li>
+<li>客户端使用上一步获得的授权，向认证服务器申请令牌。 （同意后，向某某公寓后台申请临时密码）</li>
+<li>认证服务器对客户端进行认证以后，确认无误，同意发放令牌。（某某公寓后台确认我同意给予临时密码后，给阿姨发放临时密码）</li>
+<li>客户端使用令牌，向资源服务器申请获取资源。（阿姨使用临时密码来开门）</li>
+<li>资源服务器确认令牌无误，同意向客户端开放资源。（密码锁收到临时密码验证后开门）</li>
+</ol>
+<p>&emsp;&emsp;OAuth 关注的是 Authorization（授权）。</p>
+<h1 id="OpenId-Connect"><a href="#OpenId-Connect" class="headerlink" title="OpenId Connect"></a>OpenId Connect</h1><p>&emsp;&emsp;OpenID Connect 简称 OIDC。因为 OAuth2 是一个授权协议，它无法提供完善的身份认证功能。所以它在 OAuth2 上构建了一个身份层，是一个基于 OAuth2 协议的身份认证标准协议。OIDC 使用 OAuth2 的授权来为第三方客户端提供用户的身份认证,并把对应的身份认证信息传递给客户端，且可以适用于各种类型的客户端,并且完全兼容 OAuth2，也就是说你搭建了一个OIDC的服务后，也可以当作一个 OAuth2 的服务来用。</p>
+<h1 id="术语介绍"><a href="#术语介绍" class="headerlink" title="术语介绍"></a>术语介绍</h1><figure class="image-box">
+                <a rel=IdentityServer4 学习笔记汇总 href="3.png" title="" data-fancybox="images"><img src="3.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<ul>
+<li>User - 用户。</li>
+<li>Client - 客户端。</li>
+<li>IdentityServer - 授权认证服务器。</li>
+<li>Resources - 需要保护的资源。</li>
+<li>Access Token - 访问令牌,允许用户哪些资源。</li>
+<li>Identity Token - 身份令牌,用户确认用户身份。</li>
+</ul>
+<h1 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h1><p>&emsp;&emsp;Json Web Token (JWT)，是为了在网络应用环境间传递声明而执行的一种基于 JSON 的开放标准（RFC 7519）。该 token 被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。JWT 的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该 token 也可直接被用于认证，也可被加密。<br>&emsp;&emsp;JWT 是由三段字符串拼接而成的,使用 <code>.</code> 分割的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJSUzI1NiIsImtpZCI6IjIxNmd3ZUVTZTA3d29hSDhpWHAzMUEiLCJ0eXAiOiJhdCtqd3QifQ.eyJuYmYiOjE1NzY2NTYwOTMsImV4cCI6MTU3NjY1OTY5MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAzIiwiYXVkIjoiQXBpX0EiLCJjbGllbnRfaWQiOiJjbGllbnRfYSIsInNjb3BlIjpbIkFwaV9BIl19.kdszQIZFTS8aURbF5lIL1-qFzkJ79plH0seM4TsrTPdZoWakJVTH76-qmRpu6H6eaQt7U10R-Y8fn5N2FFh6XHRuDufEsDL8R2Tv7Cu0qbHKHTi-LgZcU2CxM22RyL6Df7Z0IpG5uEQqJ2LyxHJg3W-D3TgSNXUA8ge87ghGrhLRQ8hywH5gM4EZy9lKO7vMZml1IIfuyXTC8FU-HUn6-ZmvC1mADlAQJv84WHyg7fzzgNXqztvSyXA2p6jJG5FDgAjA9-yWnqJPxlZe7-Qi5Dj67lEF9kSII0tblV8JpxxJTpUvM2iPMLKWw77HDGaZkfAUu9WsbpQv-zWXPBBpbw</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们通过 <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a> 解析出来。</p>
+<figure class="image-box">
+                <a rel=IdentityServer4 学习笔记汇总 href="4.png" title="" data-fancybox="images"><img src="4.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="第一部分-Header"><a href="#第一部分-Header" class="headerlink" title="第一部分 Header"></a>第一部分 Header</h2><ul>
+<li>alg - 签名算法</li>
+<li>kid - 密钥的 Id</li>
+<li>typ - token 类型</li>
+</ul>
+<p>&emsp;&emsp;这三个参数是最常见的。</p>
+<h2 id="第二部分-PayLoad"><a href="#第二部分-PayLoad" class="headerlink" title="第二部分 PayLoad"></a>第二部分 PayLoad</h2><ul>
+<li>nbf - 生效时间</li>
+<li>exp - 过期时间</li>
+<li>iss - 令牌发放者</li>
+<li>chlien_Id - 发放客户端 Id</li>
+<li>aud - 令牌接收方</li>
+<li>scope - 可访问资源</li>
+</ul>
+<p>&emsp;&emsp;在 PayLoad 中可以放置任何你想要的参数。</p>
+<h2 id="第三部分-Signature"><a href="#第三部分-Signature" class="headerlink" title="第三部分 Signature"></a>第三部分 Signature</h2><p>&emsp;&emsp;Signature 是对前两部分的签名，防止数据篡改。</p>
+<h2 id="JWT-的认证过程"><a href="#JWT-的认证过程" class="headerlink" title="JWT 的认证过程"></a>JWT 的认证过程</h2><figure class="image-box">
+                <a rel=IdentityServer4 学习笔记汇总 href="5.png" title="" data-fancybox="images"><img src="5.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<ol>
+<li>用户使用账号密码或别的方式登陆</li>
+<li>服务器接受到登陆请求后生成一个 jwt token</li>
+<li>服务器把 jwt token 返回给客户端</li>
+<li>客户端在请求资源在 Header 中的 authorization 带上 jwt token</li>
+<li>服务器对 jwt 进行验签,验签成功后根据 PayLoad 中的信息判断认证是否通过</li>
+<li>响应客户端结果</li>
+</ol>
+<h1 id="授权方式"><a href="#授权方式" class="headerlink" title="授权方式"></a>授权方式</h1><ul>
+<li>Client Credentials - 客户端授权模式。 - <a href="https://www.cnblogs.com/linhuiy/p/12084944.html" target="_blank" rel="noopener">实现传送门</a></li>
+<li>Resource Owner Password Credentials - 密码模式。 - <a href="https://www.cnblogs.com/linhuiy/p/12084940.html" target="_blank" rel="noopener">实现传送门</a></li>
+<li>Implicit - 授权码简化模式。</li>
+<li>Authorization Code - 授权码模式。</li>
+</ul>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-26T13:04:30.542Z" itemprop="dateUpdated">2019-12-26 21:04:30</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/26/LearningIdentityServer4/" target="_blank" rel="external">https://tao-lol.top/2019/12/26/LearningIdentityServer4/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ASPNETCore/">ASPNETCore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IdentityServer4/">IdentityServer4</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/26/LearningIdentityServer4/&title=《IdentityServer4 学习笔记汇总》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/26/LearningIdentityServer4/&title=《IdentityServer4 学习笔记汇总》 — Blog&source=
+待更新
+
+
+https://www.cnblogs.com/linhuiy/p/12084933.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/26/FrontEndThreeInfrastructures/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前端开发必备技能 —— 三大基础层</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/24/UseMicrosoftDependencyInjectionInWPF/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在 WPF 中使用 .NET Core 3.0 依赖项注入和服务提供程序</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#授权认证"><span class="post-toc-number">2.</span> <span class="post-toc-text">授权认证</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#OpenId"><span class="post-toc-number">3.</span> <span class="post-toc-text">OpenId</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#OAuth2"><span class="post-toc-number">4.</span> <span class="post-toc-text">OAuth2</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#授权过程"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">授权过程</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#OpenId-Connect"><span class="post-toc-number">5.</span> <span class="post-toc-text">OpenId Connect</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#术语介绍"><span class="post-toc-number">6.</span> <span class="post-toc-text">术语介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JWT"><span class="post-toc-number">7.</span> <span class="post-toc-text">JWT</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第一部分-Header"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">第一部分 Header</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第二部分-PayLoad"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">第二部分 PayLoad</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第三部分-Signature"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">第三部分 Signature</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JWT-的认证过程"><span class="post-toc-number">7.4.</span> <span class="post-toc-text">JWT 的认证过程</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#授权方式"><span class="post-toc-number">8.</span> <span class="post-toc-text">授权方式</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/26/LearningIdentityServer4/&title=《IdentityServer4 学习笔记汇总》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/26/LearningIdentityServer4/&title=《IdentityServer4 学习笔记汇总》 — Blog&source=
+待更新
+
+
+https://www.cnblogs.com/linhuiy/p/12084933.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMElEQVR42u3aS27bQBAFQN//0gyQlYFY8ns9sgM1a1YCRJFTXLSmPx8f8br+rufffr7merAeffvoPi9eGBgYb8u4nq5/GbNrkk3nr+MLKgYGxg0Yz4NssvVZJExeR/QHgIGBgVFSH/1qdk8MDAyM2RaTkJqnxP/hfwMDA+MNGbMCWYtsX8GP5OIYGBhvyGgbA7/5+Qf7GxgYGG/CuMqVtC3bZ71gVxgYGKsZSUp5cgTM09G2zVlnxhgYGOsYLXI2ZpEX9aIXjYGBsZSRl9XyxLI99p2k0xgYGHdg5Me7PAgmwbctt+UtCgwMjN2MvMSWHOny0lty/+IaDAyMGzDaEYcZrAUUJTwMDIx1jDZNnTHaYa/kdXzRicXAwFjKaANuO2yRj1a8rJmKgYGxjpEX6GdNyvZ1DI+eGBgYqxmzI91Jc/FksKwYC8PAwFjEyIPd+YhGG5qLFBoDA+P2jNc2MotORT5mgYGBsZpxPgzRlvJnY2TFORcDA+MGjPYHyXbbZ7WHTgwMjN2MepThoDTWIuvwioGBsZrxvMaehOA2rT0Z1PimeYmBgbGOkZe9To53J+W2IsRjYGAsZVzlygPiMGjO2hUYGBirGa9KI3N8+6zZWAYGBsY+RrKJtj0wO2gOhyowMDBuw2jbk/lhsS70z9qrGBgYGKPS2Kzl2TZHMTAwMNpkMimi5c8qkmQMDIwbMJLNtcOps2GOYXKLgYGxmnFerJ+1NvOwnnyLgYGxlPEH8oqTYXX2i/IAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>

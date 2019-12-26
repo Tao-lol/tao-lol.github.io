@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>前端开发必备技能 —— 三大基础层 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="Web,JavaScript">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>前端开发必备技能 —— 三大基础层</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">前端开发必备技能 —— 三大基础层</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-26T10:23:13.000Z" itemprop="datePublished" class="page-time">
+  2019-12-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-FrontEndThreeInfrastructures"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">前端开发必备技能 —— 三大基础层</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-26 18:23:13" datetime="2019-12-26T10:23:13.000Z"  itemprop="datePublished">2019-12-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA</a></p>
+</blockquote>
+<p>&emsp;&emsp;前端简单说就是我们能够看到的东西，比如页面内容，颜色，图片等，后端主要负责的是后台数据的传输等。前端页面主要分为三层：结构层（Html）、表示层（CSS）、应用层（JavaScript）。</p>
+<a id="more"></a>
+
+<h1 id="HTML（结构层），用-HTML-实现页面结构"><a href="#HTML（结构层），用-HTML-实现页面结构" class="headerlink" title="HTML（结构层），用 HTML 实现页面结构"></a>HTML（结构层），用 HTML 实现页面结构</h1><p>&emsp;&emsp;HTML（Hyper Text Markup Language，超文本标记语言），用来描述网页的一种语言，它不是一种编程语言，而是一种标记语言（标记标签），总的来说，HTML 使用标记标签来描述网页，而我们上网所看到网页，多数都是由 HTML 写成的。<br>&emsp;&emsp;“超文本”是指页面内可以包含图片、链接甚至音视频、程序等非文字元素。<br>&emsp;&emsp;“标记”指的是这些超文本必须由包含属性的开头与结尾标志来标记。<br>&emsp;&emsp;浏览器通过解码 HTML，就可以把网页内容显示出来，它也构成了互联网兴起的基础。  </p>
+<h2 id="HTML-的基本结构"><a href="#HTML-的基本结构" class="headerlink" title="HTML 的基本结构"></a>HTML 的基本结构</h2><figure class="image-box">
+                <a rel=前端开发必备技能 —— 三大基础层 href="1.webp" title="" data-fancybox="images"><img src="1.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="标签的三大分类"><a href="#标签的三大分类" class="headerlink" title="标签的三大分类"></a>标签的三大分类</h2><ol>
+<li>块级元素<br><code>div</code>，默认占整行，宽高可设，但设完后，还是占整行</li>
+<li>行内块元素<br><code>img</code>，不默认占整行，宽和高由自身内容决定，宽高可设</li>
+<li>行内元素<br><code>b</code>、<code>span</code>，不默认占整行，宽和高由自身内容决定，宽高不可设</li>
+</ol>
+<h2 id="HTML-页面包含内容"><a href="#HTML-页面包含内容" class="headerlink" title="HTML 页面包含内容"></a>HTML 页面包含内容</h2><ol>
+<li>文本<figure class="image-box">
+                <a rel=前端开发必备技能 —— 三大基础层 href="2.webp" title="" data-fancybox="images"><img src="2.webp" alt title class></a>
+                <p></p>
+            </figure></li>
+<li>超文本<br>“超文本”是指页面内可以包含图片、链接，甚至音乐、程序等非文字元素</li>
+</ol>
+<h2 id="HTML-常用标签"><a href="#HTML-常用标签" class="headerlink" title="HTML 常用标签"></a>HTML 常用标签</h2><ol>
+<li><code>&lt;!DOCTYPE html&gt;</code><br>doc（document 文档），type（类型）声明文档类型，在浏览器打开的时候，告诉浏览器这是一个什么文件。</li>
+<li><code>&lt;html&gt; &lt;/html&gt;</code> 根标签，双标签<br><code>&lt;html&gt;</code> 是开始标签，<code>&lt;/html&gt;</code> 是结束标签 / 闭合标签</li>
+<li><code>&lt;head&gt; &lt;/head&gt;</code> 头部标签</li>
+<li><code>&lt;body&gt; &lt;/body&gt;</code> 身体标签</li>
+<li><code>&lt;title&gt; &lt;/title&gt;</code> 标题标签</li>
+<li><code>&lt;meta&gt;</code> 设置标签<br><code>&lt;meta charset=&quot;utf-8&quot;&gt;</code>  charset 用来设置编码格式，utf-8 汉字</li>
+<li><code>&lt;img src=&quot;img/....jpg&quot;/&gt;</code><br>img 图像标签，用来引入图片，路径由 src 来引入。  </li>
+<li><code>&lt;link&gt;</code> 外部引入</li>
+<li><code>&lt;b&gt; &lt;/b&gt;</code> 加粗文字</li>
+<li><code>&lt;button&gt; &lt;/button&gt;</code> 按钮标签 </li>
+<li><code>&lt;br /&gt;</code> br 换行</li>
+</ol>
+<h1 id="CSS（表示层），用-CSS-完成页面的表现与风格"><a href="#CSS（表示层），用-CSS-完成页面的表现与风格" class="headerlink" title="CSS（表示层），用 CSS 完成页面的表现与风格"></a>CSS（表示层），用 CSS 完成页面的表现与风格</h1><p>&emsp;&emsp;CSS（Cascading Style Sheets，层叠样式表）是一种用来表现 HTML（标准通用标记语言的一个应用）或 XML（标准通用标记语言的一个子集）等文件样式的计算机语言。<br>&emsp;&emsp;CSS 主要负责页面中各个部分的样式，如：字体大小、颜色，布局等。CSS 样式可以放到 HTML 页面中，也可以单独的放到 CSS 文件中。<br>&emsp;&emsp;CSS 不仅可以静态地修饰网页，还可以配合各种脚本语言动态地对网页各元素进行格式化。  </p>
+<h2 id="样式引入的方式"><a href="#样式引入的方式" class="headerlink" title="样式引入的方式"></a>样式引入的方式</h2><ol>
+<li>行内样式：就是把样式属性写到标签里 <code>style=&quot;&quot;</code></li>
+<li>内部样式：head 标签里引入 style 标签</li>
+<li>外部样式：link 元素</li>
+</ol>
+<h2 id="筛选器"><a href="#筛选器" class="headerlink" title="筛选器"></a>筛选器</h2><ol>
+<li>class（命名）：类，不具有唯一性，<code>.</code> 代表 <code>class</code></li>
+<li>id：特指、具体，具有唯一性，<code>#</code> 代表 <code>id</code></li>
+</ol>
+<h2 id="属性（直接属性、间接属性）"><a href="#属性（直接属性、间接属性）" class="headerlink" title="属性（直接属性、间接属性）"></a>属性（直接属性、间接属性）</h2><ol>
+<li>宽度：<code>width</code></li>
+<li>高度：<code>height</code>，单位是 px，像素</li>
+<li>背景颜色：<code>background-color</code></li>
+<li>背景图片：<code>background-image</code>，用 <code>url</code> 引入路径</li>
+<li>背景大小：<code>background-size</code></li>
+<li>字体颜色：<code>color</code></li>
+<li>转换元素：<code>display</code></li>
+</ol>
+<h2 id="转换元素"><a href="#转换元素" class="headerlink" title="转换元素"></a>转换元素</h2><ol>
+<li><code>display:block</code> 块级元素</li>
+<li><code>display:inline-block</code> 行内块元素</li>
+<li><code>display:inline</code> 行内元素</li>
+</ol>
+<figure class="image-box">
+                <a rel=前端开发必备技能 —— 三大基础层 href="3.webp" title="" data-fancybox="images"><img src="3.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><ol>
+<li>新建：<code>Ctrl+N</code></li>
+<li>隐藏辅助线：<code>Ctrl+H</code></li>
+<li>注释：<code>Ctrl+？</code></li>
+<li>空格：<code>Tab</code></li>
+</ol>
+<h2 id="图片格式"><a href="#图片格式" class="headerlink" title="图片格式"></a>图片格式</h2><ol>
+<li>有背景图案存成 jpg 格式</li>
+<li>没有背景图案存成 png 格式</li>
+</ol>
+<h1 id="JavaScript（行为层），用-js-脚本语言，实现一些客户端的功能与业务"><a href="#JavaScript（行为层），用-js-脚本语言，实现一些客户端的功能与业务" class="headerlink" title="JavaScript（行为层），用 js 脚本语言，实现一些客户端的功能与业务"></a>JavaScript（行为层），用 js 脚本语言，实现一些客户端的功能与业务</h1><p>&emsp;&emsp;JavaScript是一种直译式脚本语言，是一种动态类型、弱类型、基于原型的语言，内置支持类型，包含类似 java 的语法（数据类型，数组，条件分支，循环，对象…），它的解释器被称为 JavaScript 引擎，为浏览器的一部分，广泛用于客户端的脚本语言，是连接前台和后台服务器的桥梁，它是操纵 HTML 的能手，为页面添加各种操作，使页面具有动态功能。如我们在页面上看到的按钮单击后的页面跳转或者弹不出的对话框、警告框等，都是通过 JavaScript（下面简称 “JS”）实现的。</p>
+<h2 id="JS的组成"><a href="#JS的组成" class="headerlink" title="JS的组成"></a>JS的组成</h2><ol>
+<li>ECMAScript（核心），JavaScript 语言基础</li>
+<li>DOM（文档对象模型），规定了访问 HTML 和 XML 的接口</li>
+<li>BOM（浏览器对象模型），提供了浏览器窗口之间进行交互的对象和方法</li>
+</ol>
+<h2 id="JS的基本数据类型和引用数据类型"><a href="#JS的基本数据类型和引用数据类型" class="headerlink" title="JS的基本数据类型和引用数据类型"></a>JS的基本数据类型和引用数据类型</h2><ol>
+<li>基本数据类型：<code>undefined</code>、<code>null</code>、<code>boolean</code>、<code>number</code>、<code>string</code>、<code>symbol</code></li>
+<li>引用数据类型：<code>object</code>、<code>array</code>、<code>function</code></li>
+</ol>
+<h2 id="检测浏览器版本的方式"><a href="#检测浏览器版本的方式" class="headerlink" title="检测浏览器版本的方式"></a>检测浏览器版本的方式</h2><ol>
+<li>根据 <code>navigator.userAgent</code> / <code>UA.toLowerCase.indexOf(‘chrome’)</code></li>
+<li>根据 window 对象的成员 <code>‘ActiveXObject’ in window</code></li>
+</ol>
+<h2 id="JS-有哪些内置对象"><a href="#JS-有哪些内置对象" class="headerlink" title="JS 有哪些内置对象"></a>JS 有哪些内置对象</h2><ol>
+<li>数据封装类对象：<code>Object</code>、<code>Array</code>、<code>Boolean</code>、<code>Number</code>、<code>String</code></li>
+<li>其他对象：<code>Function</code>、<code>Arguments</code>、<code>Math</code>、<code>Date</code>、<code>RegExp</code>、<code>Error</code></li>
+<li>ES6新增对象：<code>Symbol</code>、<code>Map</code>、<code>Set</code>、<code>Promises</code>、<code>Proxy</code>、<code>Reflect</code></li>
+</ol>
+<h2 id="JS-的基本规范"><a href="#JS-的基本规范" class="headerlink" title="JS 的基本规范"></a>JS 的基本规范</h2><ol>
+<li>代码缩进，建议使用 “四个空格” 缩进</li>
+<li>代码段使用花括号 <code>{}</code> 包裹</li>
+<li>语句结束使用分号 <code>;</code>； 变量和函数在使用前进行声明</li>
+<li>以大写字母开头命名构造函数，全大写命名常量</li>
+<li>规范定义 JSON 对象，补全双引号；用 <code>{}</code> 和声明对象和数组</li>
+</ol>
+<h2 id="如何编写高性能的-JS"><a href="#如何编写高性能的-JS" class="headerlink" title="如何编写高性能的 JS"></a>如何编写高性能的 JS</h2><ol>
+<li>遵循严格模式：<code>&quot;use strict&quot;</code></li>
+<li>将 js 脚本放在页面底部，加快渲染页面</li>
+<li>将 js 脚本将脚本成组打包，减少请求</li>
+<li>使用非阻塞方式下载 js 脚本</li>
+<li>尽量使用局部变量来保存全局变量</li>
+<li>尽量减少使用闭包</li>
+<li>使用 window 对象属性方法时，省略 window</li>
+<li>尽量减少对象成员嵌套；缓存 DOM 节点的访问</li>
+<li>通过避免使用 eval 和 Function 构造器</li>
+<li>给 setTimeout 和 setInterval 传递函数而不是字符串作为参数</li>
+<li>尽量使用直接量创建对象和数组</li>
+<li>最小化重绘（repaint）和回流（reflow</li>
+</ol>
+<h2 id="浏览器的渲染"><a href="#浏览器的渲染" class="headerlink" title="浏览器的渲染"></a>浏览器的渲染</h2><h3 id="浏览器的渲染过程："><a href="#浏览器的渲染过程：" class="headerlink" title="浏览器的渲染过程："></a>浏览器的渲染过程：</h3><ol>
+<li>解析 HTML 构建 DOM（DOM 树），并行请求 css / image / js</li>
+<li>CSS 文件下载完成，开始构建 CSSOM（CSS 树） </li>
+<li>CSSOM 构建结束后，和 DOM 一起生成 Render Tree（渲染树） </li>
+<li>布局（Layout）：计算出每个节点在屏幕中的位置</li>
+<li>显示（Painting）：通过显卡把页面画到屏幕上</li>
+</ol>
+<h3 id="DOM-树和渲染树的区别"><a href="#DOM-树和渲染树的区别" class="headerlink" title="DOM 树和渲染树的区别"></a>DOM 树和渲染树的区别</h3><ol>
+<li>DOM 树与 HTML 标签一一对应，包括 head 和隐藏元素；</li>
+<li>渲染树不包括 head 和隐藏元素，大段文本的每一个行都是独立节点，每一个节点都有对应的 css 属性。</li>
+</ol>
+<h2 id="重绘和回流（重排）的区别和关系"><a href="#重绘和回流（重排）的区别和关系" class="headerlink" title="重绘和回流（重排）的区别和关系"></a>重绘和回流（重排）的区别和关系</h2><ol>
+<li>重绘：当渲染树中的元素外观（如：颜色）发生改变，不影响布局时，产生重绘；</li>
+<li>回流：当渲染树中的元素的布局（如：尺寸、位置、隐藏/状态状态）发生改变时，产生重绘回流；</li>
+<li>注意：JS 获取 Layout 属性值（如：offsetLeft、scrollTop、getComputedStyle 等）也会引起回流。因为浏览器需要通过回流计算最新值。回流必将引起重绘，而重绘不一定会引起回流。</li>
+</ol>
+<h2 id="如何最小化重绘（repaint）和回流（reflow）"><a href="#如何最小化重绘（repaint）和回流（reflow）" class="headerlink" title="如何最小化重绘（repaint）和回流（reflow）"></a>如何最小化重绘（repaint）和回流（reflow）</h2><ol>
+<li>需要要对元素进行复杂的操作时，可以先隐藏（<code>display:“none”</code>），操作完成后再显示；</li>
+<li>需要创建多个 DOM 节点时，使用 DocumentFragment 创建完后一次性的加入 document；</li>
+<li>缓存 Layout 属性值，如：<code>var left = elem.offsetLeft;</code> 这样，多次使用 left 只产生一次回流；</li>
+<li>尽量避免用 table 布局（table 元素一旦触发回流就会导致 table 里所有的其它元素回流）；</li>
+<li>避免使用 css 表达式（expression），因为每次调用都会重新计算值（包括加载页面）；</li>
+<li>尽量使用 css 属性简写，如：用 <code>border</code> 代替 <code>border-width</code>, <code>border-style</code>, <code>border-color</code>；</li>
+<li>批量修改元素样式：<code>elem.className</code> 和 <code>elem.style.cssText</code> 代替 <code>elem.style.xxx</code>；</li>
+</ol>
+<h2 id="script-的位置是否会影响首屏显示时间"><a href="#script-的位置是否会影响首屏显示时间" class="headerlink" title="script 的位置是否会影响首屏显示时间"></a>script 的位置是否会影响首屏显示时间</h2><ol>
+<li>在解析 HTML 生成 DOM 过程中，js 文件的下载是并行的，不需要 DOM 处理到 script 节点；因此，script 的位置不影响首屏显示的开始时间。</li>
+<li>浏览器解析 HTML 是自上而下的线性过程，script 作为 HTML 的一部分同样遵循这个原则；因此，script 会延迟 DomContentLoad，只显示其上部分首屏内容，从而影响首屏显示的完成时间。</li>
+</ol>
+<h2 id="解释-JS-中的作用域与变量声明提升"><a href="#解释-JS-中的作用域与变量声明提升" class="headerlink" title="解释 JS 中的作用域与变量声明提升"></a>解释 JS 中的作用域与变量声明提升</h2><ol>
+<li>JavaScript作用域：<br>&emsp;&emsp;在 Java、C 等语言中，作用域为 <code>for</code> 语句、<code>if</code> 语句或 <code>{}</code> 内的一块区域，称为作用域；而在 JavaScript 中，作用域为 <code>function{}</code> 内的区域，称为函数作用域。</li>
+<li>JavaScript 变量声明提升：<br>&emsp;&emsp;在 JavaScript 中，函数声明与变量声明经常被 JavaScript 引擎隐式地提升到当前作用域的顶部。声明语句中的赋值部分并不会被提升，只有名称被提升函数声明的优先级高于变量，如果变量名跟函数名相同且未赋值，则函数声明会覆盖变量声明，如果函数有多个同名参数，那么最后一个参数（即使没有定义）会覆盖前面的同名参数。</li>
+</ol>
+<h2 id="JS-的原型、原型链以及特点"><a href="#JS-的原型、原型链以及特点" class="headerlink" title="JS 的原型、原型链以及特点"></a>JS 的原型、原型链以及特点</h2><ol>
+<li>原型：JavaScript 的所有对象中都包含了一个 <code>[proto]</code> 内部属性，这个属性所对应的就是该对象的原型，JavaScript的函数对象，除了原型 <code>[proto]</code> 之外，还预置了 <code>prototype</code> 属性，当函数对象作为构造函数创建实例时，该 <code>prototype</code> 属性值将被作为实例对象的原型 <code>[proto]</code>。</li>
+<li>原型链：当一个对象调用的属性 / 方法自身不存在时，就会去自己 <code>[proto]</code> 关联的前辈 <code>prototype</code> 对象上去找，如果没找到，就会去该 <code>prototype</code> 原型 <code>[proto]</code> 关联的前辈 <code>prototype</code> 去找。依此类推，直到找到属性 / 方法或 undefined 为止。从而形成了所谓的“原型链”。</li>
+<li>原型特点：<code>JavaScript</code> 对象是通过引用来传递的，当修改原型时，与之相关的对象也会继承这一改变。</li>
+</ol>
+<h2 id="JS-数据类型"><a href="#JS-数据类型" class="headerlink" title="JS 数据类型"></a>JS 数据类型</h2><ol>
+<li>原始数据类型（Undefined，Null，Boolean，Number、String）—— 栈</li>
+<li>引用数据类型（对象、数组和函数）—— 堆</li>
+</ol>
+<p>两种类型的区别：<br>&emsp;&emsp;存储位置不同。原始数据类型是直接存储在栈（stack）中的简单数据段，占据空间小、大小固定，属于被频繁使用数据；引用数据类型存储在堆（heap）中的对象，占据空间大、大小不固定，如果存储在栈中，将会影响程序运行的性能；引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体。  </p>
+<h2 id="this对象"><a href="#this对象" class="headerlink" title="this对象"></a>this对象</h2><p><code>this</code> 总是指向函数的直接调用者，如果有 <code>new</code> 关键字，<code>this</code> 指向 <code>new</code> 出来的实例对象，在事件中，<code>this</code> 指向触发这个事件的对象，IE 下 <code>attachEvent</code> 中的 <code>this</code> 总是指向全局对象 <code>Window</code>。</p>
+<h2 id="eval-是做什么的"><a href="#eval-是做什么的" class="headerlink" title="eval 是做什么的"></a>eval 是做什么的</h2><p><code>eval</code> 的功能是把对应的字符串解析成 JS 代码并运行，个人感觉应该避免使用 <code>eval</code>，不安全，非常耗性能（先解析成 js 语句，再执行），由 JSON 字符串转换为 JSON 对象的时候可以用 <code>eval(’(’+ str +’)’)</code>。</p>
+<h2 id="Window-对象和-Document-对象"><a href="#Window-对象和-Document-对象" class="headerlink" title="Window 对象和 Document 对象"></a>Window 对象和 Document 对象</h2><ol>
+<li><code>Window</code> 对象表示当前浏览器的窗口，是 JavaScript 的顶级对象，我们创建的所有对象、函数、变量都是 <code>Window</code> 对象的成员，<code>Window</code> 对象的方法和属性是在全局范围内有效的；</li>
+<li><code>Document</code> 对象是 HTML 文档的根节点与所有其他节点（元素节点，文本节点，属性节点, 注释节点），<code>Document</code> 对象使我们可以通过脚本对HTML页面中的所有元素进行访问，<code>Document</code> 对象是 <code>Window</code> 对象的一部分，可通过 <code>window.document</code> 属性对其进行访问。</li>
+</ol>
+<h2 id="原生-js、js-库、js-框架和-js-插件"><a href="#原生-js、js-库、js-框架和-js-插件" class="headerlink" title="原生 js、js 库、js 框架和 js 插件"></a>原生 js、js 库、js 框架和 js 插件</h2><ol>
+<li>原生 js，是指最基础的 js，没有封装过，但因为各浏览器对 js 的支持不同，就导致用基础的 js 编程需要为不同的浏览器写兼容代码；</li>
+<li>js 库、js 框架，是指集成一系列 DOM 操作，API 封装，界面 UI 封装的的库类，常见的有 jQuery，extjs 等等，使用 js 库可以解决浏览器之间的兼容问题，简化 JS 代码；</li>
+<li>js 插件，就是集成了帮助程序员轻松完成功能的程序。js 插件用得比较多，网页制作上随处可见，如图片轮换功能，导航制作，上传图片等等。</li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-26T15:06:12.714Z" itemprop="dateUpdated">2019-12-26 23:06:12</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/26/FrontEndThreeInfrastructures/" target="_blank" rel="external">https://tao-lol.top/2019/12/26/FrontEndThreeInfrastructures/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/26/FrontEndThreeInfrastructures/&title=《前端开发必备技能 —— 三大基础层》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/26/FrontEndThreeInfrastructures/&title=《前端开发必备技能 —— 三大基础层》 — Blog&source=
+https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA
+
+&emsp;&emsp;前端简单说就是我们能够看到..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/26/LearningIdentityServer4/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">IdentityServer4 学习笔记汇总</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#HTML（结构层），用-HTML-实现页面结构"><span class="post-toc-number">1.</span> <span class="post-toc-text">HTML（结构层），用 HTML 实现页面结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTML-的基本结构"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">HTML 的基本结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标签的三大分类"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">标签的三大分类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTML-页面包含内容"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">HTML 页面包含内容</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTML-常用标签"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">HTML 常用标签</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CSS（表示层），用-CSS-完成页面的表现与风格"><span class="post-toc-number">2.</span> <span class="post-toc-text">CSS（表示层），用 CSS 完成页面的表现与风格</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#样式引入的方式"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">样式引入的方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#筛选器"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">筛选器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#属性（直接属性、间接属性）"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">属性（直接属性、间接属性）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#转换元素"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">转换元素</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#快捷键"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">快捷键</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#图片格式"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">图片格式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JavaScript（行为层），用-js-脚本语言，实现一些客户端的功能与业务"><span class="post-toc-number">3.</span> <span class="post-toc-text">JavaScript（行为层），用 js 脚本语言，实现一些客户端的功能与业务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS的组成"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">JS的组成</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS的基本数据类型和引用数据类型"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">JS的基本数据类型和引用数据类型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#检测浏览器版本的方式"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">检测浏览器版本的方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS-有哪些内置对象"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">JS 有哪些内置对象</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS-的基本规范"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">JS 的基本规范</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何编写高性能的-JS"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">如何编写高性能的 JS</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#浏览器的渲染"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">浏览器的渲染</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#浏览器的渲染过程："><span class="post-toc-number">3.7.1.</span> <span class="post-toc-text">浏览器的渲染过程：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DOM-树和渲染树的区别"><span class="post-toc-number">3.7.2.</span> <span class="post-toc-text">DOM 树和渲染树的区别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重绘和回流（重排）的区别和关系"><span class="post-toc-number">3.8.</span> <span class="post-toc-text">重绘和回流（重排）的区别和关系</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何最小化重绘（repaint）和回流（reflow）"><span class="post-toc-number">3.9.</span> <span class="post-toc-text">如何最小化重绘（repaint）和回流（reflow）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#script-的位置是否会影响首屏显示时间"><span class="post-toc-number">3.10.</span> <span class="post-toc-text">script 的位置是否会影响首屏显示时间</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解释-JS-中的作用域与变量声明提升"><span class="post-toc-number">3.11.</span> <span class="post-toc-text">解释 JS 中的作用域与变量声明提升</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS-的原型、原型链以及特点"><span class="post-toc-number">3.12.</span> <span class="post-toc-text">JS 的原型、原型链以及特点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JS-数据类型"><span class="post-toc-number">3.13.</span> <span class="post-toc-text">JS 数据类型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#this对象"><span class="post-toc-number">3.14.</span> <span class="post-toc-text">this对象</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#eval-是做什么的"><span class="post-toc-number">3.15.</span> <span class="post-toc-text">eval 是做什么的</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Window-对象和-Document-对象"><span class="post-toc-number">3.16.</span> <span class="post-toc-text">Window 对象和 Document 对象</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原生-js、js-库、js-框架和-js-插件"><span class="post-toc-number">3.17.</span> <span class="post-toc-text">原生 js、js 库、js 框架和 js 插件</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/26/FrontEndThreeInfrastructures/&title=《前端开发必备技能 —— 三大基础层》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/26/FrontEndThreeInfrastructures/&title=《前端开发必备技能 —— 三大基础层》 — Blog&source=
+https://mp.weixin.qq.com/s/_jsGJG8sbpwkVxhOwTaXtA
+
+&emsp;&emsp;前端简单说就是我们能够看到..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMklEQVR42u3aS3KDMBAFQN//0uQCEX4zglQkNauUg5GbxdT8Pp/4ugZX7/7k888bFwYGxrKM6/a6P6CHuX/yPXhIxcDAOIAx+hHJPdWDR68juXP4OQYGBkbrnjywzpyLgYGBkaRrSfCdSRwxMDAwZh5X/e9MA+6xWhwDA2NBRt51//u/X5lvYGBgLMW4ilevcZ+ME66JCwMDY29GHuDuR5jVwnU+4GJgYJzDqAbHmdWKmbWwL59gYGAcw8hbWkma2CuGqyPPQoaLgYGxLKOX9t1HuSpv/lViYGDszegBqg2yvOmWr4B8KWIxMDA2YiRpWTWwJuG4F9C/4DEwMDZlVNte1dZ/niYmBfDwxWFgYBzASI6coeZhN08ff8lwMTAwDmD0SspqGlflFcpXDAyMTRnVZG6m6ZaUvr2XiIGBcQLjDczMolg+SHg97GJgYPwbRjVczowEesOA8s4IBgbGRozkcdUDkkJ3ftliOBjAwMDYjpGvXPSWM6r5aR6gm5sjGBgYyzJ6j8sDcdJo640QhgkiBgbGAYxkYStP9aqDgeqKBgYGxjmM6pejR7eCb3OciYGBsSmjtyoxX9AmvHyEgIGBsTej19ZPitXqKkYvKGNgYJzDqDa2nkol8yK2+aYxMDC2Y5TXGuIVjSRcPlaLY2BgYBTXJqqnVJt3GBgYGHlqWP1WNbhHBTAGBsYBjKSIzQvOfMyQJ5cPLFtgYGAsy3g278qXzHpj0QfmGxgYGCsxfgBr+MdlhXmSAwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
