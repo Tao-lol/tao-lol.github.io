@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>深入剖析 Redis | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="Redis">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>深入剖析 Redis</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">深入剖析 Redis</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-30T05:34:36.000Z" itemprop="datePublished" class="page-time">
+  2019-12-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-LearningRedis"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">深入剖析 Redis</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-30 13:34:36" datetime="2019-12-30T05:34:36.000Z"  itemprop="datePublished">2019-12-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p>Windows 环境搭建：<a href="https://www.cnblogs.com/igeekfan/p/12115033.html" target="_blank" rel="noopener">https://www.cnblogs.com/igeekfan/p/12115033.html</a><br>CSRedis 使用：<a href="https://www.cnblogs.com/igeekfan/p/12115048.html" target="_blank" rel="noopener">https://www.cnblogs.com/igeekfan/p/12115048.html</a>  </p>
+</blockquote>
+<blockquote>
+<p>入门简介与主从搭建：<a href="https://juejin.im/post/5b76e732f265da4376203849" target="_blank" rel="noopener">https://juejin.im/post/5b76e732f265da4376203849</a><br>哨兵模式与高可用集群：<a href="https://juejin.im/post/5b7d226a6fb9a01a1e01ff64" target="_blank" rel="noopener">https://juejin.im/post/5b7d226a6fb9a01a1e01ff64</a><br>集群模式搭建与原理详解：<a href="https://juejin.im/post/5b8fc5536fb9a05d2d01fb11" target="_blank" rel="noopener">https://juejin.im/post/5b8fc5536fb9a05d2d01fb11</a><br>数据结构与全局命令概述：<a href="https://juejin.im/post/5bb01064e51d453eb93d8028" target="_blank" rel="noopener">https://juejin.im/post/5bb01064e51d453eb93d8028</a><br>数据结构之字符串：<a href="https://juejin.im/post/5bbc9d03f265da0ab915e3b5" target="_blank" rel="noopener">https://juejin.im/post/5bbc9d03f265da0ab915e3b5</a><br>数据结构之哈希：<a href="https://juejin.im/post/5bc359ff5188255c7b16ab72" target="_blank" rel="noopener">https://juejin.im/post/5bc359ff5188255c7b16ab72</a><br>数据结构之列表：<a href="https://juejin.im/post/5bcb3b066fb9a05d1c14c712" target="_blank" rel="noopener">https://juejin.im/post/5bcb3b066fb9a05d1c14c712</a><br>数据结构之集合：<a href="https://juejin.im/post/5be455d75188250e8601b3e0" target="_blank" rel="noopener">https://juejin.im/post/5be455d75188250e8601b3e0</a>  </p>
+</blockquote>
+<blockquote>
+<p>内存回收机制：<a href="https://juejin.im/post/5d107ad851882576df7fba9e" target="_blank" rel="noopener">https://juejin.im/post/5d107ad851882576df7fba9e</a><br>磁盘持久化机制：<a href="https://juejin.im/post/5da14c37e51d45784603adb7" target="_blank" rel="noopener">https://juejin.im/post/5da14c37e51d45784603adb7</a>  </p>
+</blockquote>
+<a id="more"></a>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-30T05:51:10.119Z" itemprop="dateUpdated">2019-12-30 13:51:10</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/30/LearningRedis/" target="_blank" rel="external">https://tao-lol.top/2019/12/30/LearningRedis/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/30/LearningRedis/&title=《深入剖析 Redis》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/30/LearningRedis/&title=《深入剖析 Redis》 — Blog&source=
+待更新
+
+
+Windows 环境搭建：https://www.cnblogs.com/igeekfan/p/12115033.htmlCSRedis 使..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/30/WhatIsMessageQueuing/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">浅谈消息队列及常见的消息中间件</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/30/MultiCacheLayeredArchitecture/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">一篇文章让你明白你多级缓存的分层架构</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/30/LearningRedis/&title=《深入剖析 Redis》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/30/LearningRedis/&title=《深入剖析 Redis》 — Blog&source=
+待更新
+
+
+Windows 环境搭建：https://www.cnblogs.com/igeekfan/p/12115033.htmlCSRedis 使..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACH0lEQVR42u3aS5KDMAwFwNz/0pkDJMCTBFMVu71KEcBuFi7r83rF4/0xqterT72eGBgYGD/LeJ+O84mP3vN5PQEk9x+uAQMDYwPG0bKSe3obbv6e87VhYGBgnG+C1aNeTsLAwMCYb7jJlV7IioGBgTEJYvOnzgPOedoOAwNjN0aedf//34/UNzAwMH6K0ds0e0fAB1eFgYGxNCOfJoflR7fJhouBgbEbo1oGmG+7kwTcBRUDA2MDRm+C3hZ5b7ETAwNjbcb8kDeHVbd1DAyMfRjVx86Pks+FtRf3YGBgbMCoHsiS9ou8qSIPdKPAFQMDYznGPBBN/q2WP3stIBgYGKsyeim2PIeXt27ks3x5CgMDY2lG3vTQa7PIYSMABgbG9oxChaFYEM0TfIUaLAYGxgaM3kaZt2LkCbhycxgGBsYGjPx1k8C1l7ArBLEYGBjLMZItslpczLfXaom0fCjEwMBYgtE79t1VpKweJS9mwcDA2IBxbzEyCUd7JYTDpzAwMDZg5ItLllJtp6gGzxgYGHsyzhed/9srTDYzhXmcjYGB8bOMd3Hk01SLCtXA9UthAAMDY1FGPnrNFtXANeFFRQIMDIzlGNXEVv4NqrDkAFr+0hgYGAsxJhtfvqweuNBsgYGBgRE822unuOGjYGBgYIzTXkkhM8EfHhwxMDA2YFQTalXkvJnj4qNgYGAszZjnsiZlzrzAmR8rMTAwFmL8AYssslCFmRErAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
