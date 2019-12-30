@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>理解分布式 ID 生成算法 SnowFlake | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="算法">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>理解分布式 ID 生成算法 SnowFlake</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">理解分布式 ID 生成算法 SnowFlake</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-28T09:48:18.000Z" itemprop="datePublished" class="page-time">
+  2019-12-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-UnderstandSnowFlake"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">理解分布式 ID 生成算法 SnowFlake</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-28 17:48:18" datetime="2019-12-28T09:48:18.000Z"  itemprop="datePublished">2019-12-28</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://segmentfault.com/a/1190000011282426" target="_blank" rel="noopener">https://segmentfault.com/a/1190000011282426</a>  </p>
+</blockquote>
+<blockquote>
+<p>扩展阅读：  </p>
+<p>如何在高并发分布式系统中生成全局唯一 Id：<a href="https://www.cnblogs.com/heyuquan/p/global-guid-identity-maxId.html" target="_blank" rel="noopener">https://www.cnblogs.com/heyuquan/p/global-guid-identity-maxId.html</a><br>高并发分布式系统中生成全局唯一 Id 汇总：<a href="https://www.cnblogs.com/baiwa/p/5318432.html" target="_blank" rel="noopener">https://www.cnblogs.com/baiwa/p/5318432.html</a>  </p>
+<p>关于全局 ID，雪花（snowflake）算法的说明：<a href="https://www.cnblogs.com/dunitian/p/6130543.html" target="_blank" rel="noopener">https://www.cnblogs.com/dunitian/p/6130543.html</a><br>雪花 ID C# 实现：<a href="https://github.com/stulzq/snowflake-net" target="_blank" rel="noopener">https://github.com/stulzq/snowflake-net</a>  </p>
+<p>使用有序 GUID：提升其在各数据库中作为主键时的性能：<a href="https://www.cnblogs.com/CameronWu/p/guids-as-fast-primary-keys-under-multiple-database.html" target="_blank" rel="noopener">https://www.cnblogs.com/CameronWu/p/guids-as-fast-primary-keys-under-multiple-database.html</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+<p>分布式 id 生成算法的有很多种，Twitter 的 SnowFlake 就是其中经典的一种。</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>SnowFlake 算法生成 id 的结果是一个 64 bit 大小的整数，它的结构如下图：</p>
+<figure class="image-box">
+                <a rel=理解分布式 ID 生成算法 SnowFlake href="350263808-59c2254083397_articlex.jpg" title="" data-fancybox="images"><img src="350263808-59c2254083397_articlex.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<ul>
+<li><code>1位</code>，不用。<ul>
+<li>二进制中最高位为 1 的都是负数，但是我们生成的 id 一般都使用整数，所以这个最高位固定是 0</li>
+</ul>
+</li>
+<li><code>41位</code>，用来记录时间戳（毫秒）。<ul>
+<li>41 位可以表示 $2^{41}-1$ 个数字</li>
+<li>如果只用来表示正整数（计算机中正数包含0），可以表示的数值范围是：0 至 $2^{41}-1$，减 1 是因为可表示的数值范围是从 0 开始算的，而不是 1</li>
+<li>也就是说 41 位可以表示 $2^{41}-1$ 个毫秒的值，转化成单位年则是 $(2^{41}-1)/(1000\times60\times60\times24\times365)=69$ 年</li>
+</ul>
+</li>
+<li><code>10 位</code>，用来记录工作机器 id。<ul>
+<li>可以部署在 $2^{10}=1024$ 个节点，包括<code>5 位 datacenterId</code>和<code>5 位 workerId</code></li>
+<li><code>5 位(bit)</code>可以表示的最大正整数是 $2^5-1=31$ ，即可以用 0, 1, 2, 3, $\cdots$, 31 这 32 个数字，来表示不同的 datecenterId 或 workerId</li>
+</ul>
+</li>
+<li><code>12 位</code>，序列号，用来记录同毫秒内产生的不同 id。<ul>
+<li><code>12 位(bit)</code>可以表示的最大正整数是 $2^{12}-1=4095$ ，即可以用 0, 1, 2, 3, $\cdots$, 4094 这 4095 个数字，来表示同一机器同一时间截（毫秒）内产生的 4095 个 ID 序号</li>
+</ul>
+</li>
+</ul>
+<p>由于在 Java 中 64 bit 的整数是 long 类型，所以在 Java 中 SnowFlake 算法生成的 id 就是 long 来存储的。  </p>
+<p>SnowFlake 可以保证：</p>
+<ul>
+<li>所有生成的 id 按时间趋势递增</li>
+<li>整个分布式系统内不会产生重复 id（因为有 datacenterId 和 workerId 来做区分）</li>
+</ul>
+<h1 id="Talk-is-cheap-show-you-the-code"><a href="#Talk-is-cheap-show-you-the-code" class="headerlink" title="Talk is cheap, show you the code"></a>Talk is cheap, show you the code</h1><p><strong>以下是 <a href="https://github.com/twitter/snowflake/blob/snowflake-2010/src/main/scala/com/twitter/service/snowflake/IdWorker.scala" target="_blank" rel="noopener">Twitter 官方原版</a> 的，用 Scala 写的</strong>（我也不懂 Scala，当成 Java 看即可）：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Copyright 2010-2012 Twitter, Inc.*/</span></span><br><span class="line"><span class="keyword">package</span> com.twitter.service.snowflake</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.twitter.ostrich.stats.<span class="type">Stats</span></span><br><span class="line"><span class="keyword">import</span> com.twitter.service.snowflake.gen._</span><br><span class="line"><span class="keyword">import</span> java.util.<span class="type">Random</span></span><br><span class="line"><span class="keyword">import</span> com.twitter.logging.<span class="type">Logger</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An object that generates IDs.</span></span><br><span class="line"><span class="comment"> * This is broken into a separate class in case</span></span><br><span class="line"><span class="comment"> * we ever want to support multiple worker threads</span></span><br><span class="line"><span class="comment"> * per process</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IdWorker</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    val workerId: <span class="type">Long</span>, </span></span></span><br><span class="line"><span class="class"><span class="params">    val datacenterId: <span class="type">Long</span>, </span></span></span><br><span class="line"><span class="class"><span class="params">    private val reporter: <span class="type">Reporter</span>, </span></span></span><br><span class="line"><span class="class"><span class="params">    var sequence: <span class="type">Long</span> = 0L</span>) <span class="keyword">extends</span> <span class="title">Snowflake</span>.<span class="title">Iface</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="function"><span class="keyword">def</span> <span class="title">genCounter</span></span>(agent: <span class="type">String</span>) = &#123;</span><br><span class="line">    <span class="type">Stats</span>.incr(<span class="string">"ids_generated"</span>)</span><br><span class="line">    <span class="type">Stats</span>.incr(<span class="string">"ids_generated_%s"</span>.format(agent))</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> exceptionCounter = <span class="type">Stats</span>.getCounter(<span class="string">"exceptions"</span>)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> log = <span class="type">Logger</span>.get</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> rand = <span class="keyword">new</span> <span class="type">Random</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> twepoch = <span class="number">1288834974657</span>L</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> workerIdBits = <span class="number">5</span>L</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> datacenterIdBits = <span class="number">5</span>L</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> maxWorkerId = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; workerIdBits)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> maxDatacenterId = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; datacenterIdBits)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> sequenceBits = <span class="number">12</span>L</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> workerIdShift = sequenceBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> datacenterIdShift = sequenceBits + workerIdBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> sequenceMask = <span class="number">-1</span>L ^ (<span class="number">-1</span>L &lt;&lt; sequenceBits)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">var</span> lastTimestamp = <span class="number">-1</span>L</span><br><span class="line"></span><br><span class="line">  <span class="comment">// sanity check for workerId</span></span><br><span class="line">  <span class="keyword">if</span> (workerId &gt; maxWorkerId || workerId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">"worker Id can't be greater than %d or less than 0"</span>.format(maxWorkerId))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (datacenterId &gt; maxDatacenterId || datacenterId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">"datacenter Id can't be greater than %d or less than 0"</span>.format(maxDatacenterId))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  log.info(<span class="string">"worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d"</span>,</span><br><span class="line">    timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_id</span></span>(useragent: <span class="type">String</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (!validUseragent(useragent)) &#123;</span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">InvalidUserAgentError</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> id = nextId()</span><br><span class="line">    genCounter(useragent)</span><br><span class="line"></span><br><span class="line">    reporter.report(<span class="keyword">new</span> <span class="type">AuditLogEntry</span>(id, useragent, rand.nextLong))</span><br><span class="line">    id</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_worker_id</span></span>(): <span class="type">Long</span> = workerId</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_datacenter_id</span></span>(): <span class="type">Long</span> = datacenterId</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">get_timestamp</span></span>() = <span class="type">System</span>.currentTimeMillis</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span>[snowflake] <span class="function"><span class="keyword">def</span> <span class="title">nextId</span></span>(): <span class="type">Long</span> = synchronized &#123;</span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>)</span><br><span class="line">      log.error(<span class="string">"clock is moving backwards.  Rejecting requests until %d."</span>, lastTimestamp);</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">InvalidSystemClock</span>(<span class="string">"Clock moved backwards.  Refusing to generate id for %d milliseconds"</span>.format(</span><br><span class="line">        lastTimestamp - timestamp))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastTimestamp == timestamp) &#123;</span><br><span class="line">      sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask</span><br><span class="line">      <span class="keyword">if</span> (sequence == <span class="number">0</span>) &#123;</span><br><span class="line">        timestamp = tilNextMillis(lastTimestamp)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      sequence = <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastTimestamp = timestamp</span><br><span class="line">    ((timestamp - twepoch) &lt;&lt; timestampLeftShift) |</span><br><span class="line">      (datacenterId &lt;&lt; datacenterIdShift) |</span><br><span class="line">      (workerId &lt;&lt; workerIdShift) | </span><br><span class="line">      sequence</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">tilNextMillis</span></span>(lastTimestamp: <span class="type">Long</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line">    <span class="keyword">while</span> (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">      timestamp = timeGen()</span><br><span class="line">    &#125;</span><br><span class="line">    timestamp</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">timeGen</span></span>(): <span class="type">Long</span> = <span class="type">System</span>.currentTimeMillis()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> <span class="type">AgentParser</span> = <span class="string">""</span><span class="string">"([a-zA-Z][a-zA-Z\-0-9]*)"</span><span class="string">""</span>.r</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">validUseragent</span></span>(useragent: <span class="type">String</span>): <span class="type">Boolean</span> = useragent <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">AgentParser</span>(_) =&gt; <span class="literal">true</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Scala 是一门可以编译成字节码的语言，简单理解是在 Java 语法基础上加上了很多语法糖，例如不用每条语句后写分号，可以使用动态类型等等。抱着试一试的心态，我把 Scala 版的代码“翻译”成 Java 版本的，对 scala 代码改动的地方如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Copyright 2010-2012 Twitter, Inc.*/</span></span><br><span class="line"><span class="keyword">package</span> com.twitter.service.snowflake</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.twitter.ostrich.stats.Stats </span><br><span class="line"><span class="keyword">import</span> com.twitter.service.snowflake.gen._</span><br><span class="line"><span class="keyword">import</span> java.util.Random</span><br><span class="line"><span class="keyword">import</span> com.twitter.logging.Logger</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An object that generates IDs.</span></span><br><span class="line"><span class="comment"> * This is broken into a separate class in case</span></span><br><span class="line"><span class="comment"> * we ever want to support multiple worker threads</span></span><br><span class="line"><span class="comment"> * per process</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IdWorker</span>(                                        // |</span></span><br><span class="line">    val workerId: Long,                                // |</span><br><span class="line">    val datacenterId: Long,                            <span class="comment">// |&lt;--这部分改成Java的构造函数形式</span></span><br><span class="line">    <span class="keyword">private</span> val reporter: Reporter,<span class="comment">//日志相关，删       // |</span></span><br><span class="line">    <span class="keyword">var</span> sequence: Long = <span class="number">0L</span>)                           <span class="comment">// |</span></span><br><span class="line">       extends Snowflake.Iface &#123; <span class="comment">//接口找不到，删       // |     </span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="function">def <span class="title">genCounter</span><span class="params">(agent: String)</span> </span>= &#123;                     <span class="comment">// |</span></span><br><span class="line">    Stats.incr(<span class="string">"ids_generated"</span>)                                       <span class="comment">// |</span></span><br><span class="line">    Stats.incr(<span class="string">"ids_generated_%s"</span>.format(agent))                      <span class="comment">// |&lt;--错误、日志处理相关，删</span></span><br><span class="line">  &#125;                                                                   <span class="comment">// | </span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val exceptionCounter = Stats.getCounter(<span class="string">"exceptions"</span>) <span class="comment">// |</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val log = Logger.get                                  <span class="comment">// |</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val rand = <span class="keyword">new</span> Random                                 <span class="comment">// | </span></span><br><span class="line"></span><br><span class="line">  val twepoch = <span class="number">1288834974657L</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val workerIdBits = <span class="number">5L</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val datacenterIdBits = <span class="number">5L</span></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val maxWorkerId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; workerIdBits)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val maxDatacenterId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; datacenterIdBits)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val sequenceBits = <span class="number">12L</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val workerIdShift = sequenceBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val datacenterIdShift = sequenceBits + workerIdBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] val sequenceMask = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; sequenceBits)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">var</span> lastTimestamp = -<span class="number">1L</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//----------------------------------------------------------------------------------------------------------------------------//</span></span><br><span class="line">  <span class="comment">// sanity check for workerId                                                                                                  //</span></span><br><span class="line">  <span class="keyword">if</span> (workerId &gt; maxWorkerId || workerId &lt; <span class="number">0</span>) &#123;                                                                                 <span class="comment">//</span></span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>) <span class="comment">//&lt;--错误处理相关，删                                                                               //</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"worker Id can't be greater than %d or less than 0"</span>.format(maxWorkerId))                 <span class="comment">//这</span></span><br><span class="line">    <span class="comment">// |--&gt;改成：throw new IllegalArgumentException                                                                              //部</span></span><br><span class="line">    <span class="comment">//            (String.format("worker Id can't be greater than %d or less than 0",maxWorkerId))                              //分</span></span><br><span class="line">  &#125;                                                                                                                             <span class="comment">//放</span></span><br><span class="line">                                                                                                                                <span class="comment">//到</span></span><br><span class="line">  <span class="keyword">if</span> (datacenterId &gt; maxDatacenterId || datacenterId &lt; <span class="number">0</span>) &#123;                                                                     <span class="comment">//构</span></span><br><span class="line">    exceptionCounter.incr(<span class="number">1</span>) <span class="comment">//&lt;--错误处理相关，删                                                                               //造</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"datacenter Id can't be greater than %d or less than 0"</span>.format(maxDatacenterId))         <span class="comment">//函</span></span><br><span class="line">    <span class="comment">// |--&gt;改成：throw new IllegalArgumentException                                                                             //数</span></span><br><span class="line">    <span class="comment">//             (String.format("datacenter Id can't be greater than %d or less than 0",maxDatacenterId))                     //中</span></span><br><span class="line">  &#125;                                                                                                                             <span class="comment">//</span></span><br><span class="line">                                                                                                                                <span class="comment">//</span></span><br><span class="line">  log.info(<span class="string">"worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d"</span>, <span class="comment">//  </span></span><br><span class="line">    timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId)                                                 <span class="comment">//   </span></span><br><span class="line">  <span class="comment">// |--&gt;改成：System.out.printf("worker...%d...",timestampLeftShift,...);                                                      //</span></span><br><span class="line">  <span class="comment">//----------------------------------------------------------------------------------------------------------------------------//</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//-------------------------------------------------------------------//  </span></span><br><span class="line">  <span class="comment">//这个函数删除错误处理相关的代码后，剩下一行代码：val id = nextId()      //</span></span><br><span class="line">  <span class="comment">//所以我们直接调用nextId()函数可以了，所以在“翻译”时可以删除这个函数      //</span></span><br><span class="line">  <span class="function">def <span class="title">get_id</span><span class="params">(useragent: String)</span>: Long </span>= &#123;                              <span class="comment">// </span></span><br><span class="line">    <span class="keyword">if</span> (!validUseragent(useragent)) &#123;                                  <span class="comment">//</span></span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>)                                         <span class="comment">//</span></span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> InvalidUserAgentError                                  <span class="comment">//删</span></span><br><span class="line">    &#125;                                                                  <span class="comment">//除</span></span><br><span class="line">                                                                       <span class="comment">// </span></span><br><span class="line">    val id = nextId()                                                  <span class="comment">// </span></span><br><span class="line">    genCounter(useragent)                                              <span class="comment">//</span></span><br><span class="line">                                                                       <span class="comment">//</span></span><br><span class="line">    reporter.report(<span class="keyword">new</span> AuditLogEntry(id, useragent, rand.nextLong))   <span class="comment">//</span></span><br><span class="line">    id                                                                 <span class="comment">//</span></span><br><span class="line">  &#125;                                                                    <span class="comment">// </span></span><br><span class="line">  <span class="comment">//-------------------------------------------------------------------//</span></span><br><span class="line"></span><br><span class="line">  <span class="function">def <span class="title">get_worker_id</span><span class="params">()</span>: Long </span>= workerId           <span class="comment">// |</span></span><br><span class="line">  <span class="function">def <span class="title">get_datacenter_id</span><span class="params">()</span>: Long </span>= datacenterId   <span class="comment">// |&lt;--改成Java函数</span></span><br><span class="line">  <span class="function">def <span class="title">get_timestamp</span><span class="params">()</span> </span>= System.currentTimeMillis <span class="comment">// |</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span>[snowflake] <span class="function">def <span class="title">nextId</span><span class="params">()</span>: Long </span>= <span class="keyword">synchronized</span> &#123; <span class="comment">// 改成Java函数</span></span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">      exceptionCounter.incr(<span class="number">1</span>) <span class="comment">// 错误处理相关，删</span></span><br><span class="line">      log.error(<span class="string">"clock is moving backwards.  Rejecting requests until %d."</span>, lastTimestamp); <span class="comment">// 改成System.err.printf(...)</span></span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> InvalidSystemClock(<span class="string">"Clock moved backwards.  Refusing to generate id for %d milliseconds"</span>.format(</span><br><span class="line">        lastTimestamp - timestamp)) <span class="comment">// 改成RumTimeException</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lastTimestamp == timestamp) &#123;</span><br><span class="line">      sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask</span><br><span class="line">      <span class="keyword">if</span> (sequence == <span class="number">0</span>) &#123;</span><br><span class="line">        timestamp = tilNextMillis(lastTimestamp)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      sequence = <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lastTimestamp = timestamp</span><br><span class="line">    ((timestamp - twepoch) &lt;&lt; timestampLeftShift) | <span class="comment">// |&lt;--加上关键字return</span></span><br><span class="line">      (datacenterId &lt;&lt; datacenterIdShift) |         <span class="comment">// |</span></span><br><span class="line">      (workerId &lt;&lt; workerIdShift) |                 <span class="comment">// |</span></span><br><span class="line">      sequence                                      <span class="comment">// |</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> def <span class="title">tilNextMillis</span><span class="params">(lastTimestamp: Long)</span>: Long </span>= &#123; <span class="comment">// 改成Java函数</span></span><br><span class="line">    <span class="keyword">var</span> timestamp = timeGen()</span><br><span class="line">    <span class="keyword">while</span> (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">      timestamp = timeGen()</span><br><span class="line">    &#125;</span><br><span class="line">    timestamp <span class="comment">// 加上关键字return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> def <span class="title">timeGen</span><span class="params">()</span>: Long </span>= System.currentTimeMillis() <span class="comment">// 改成Java函数</span></span><br><span class="line"></span><br><span class="line">  val AgentParser = <span class="string">""</span><span class="string">"([a-zA-Z][a-zA-Z\-0-9]*)"</span><span class="string">""</span>.r                  <span class="comment">// |</span></span><br><span class="line">                                                                      <span class="comment">// | </span></span><br><span class="line">  <span class="function">def <span class="title">validUseragent</span><span class="params">(useragent: String)</span>: Boolean </span>= useragent match &#123;  <span class="comment">// |&lt;--日志相关，删</span></span><br><span class="line">    <span class="function"><span class="keyword">case</span> <span class="title">AgentParser</span><span class="params">(_)</span> </span>=&gt; <span class="keyword">true</span>                                       <span class="comment">// |</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="keyword">false</span>                                                   <span class="comment">// |   </span></span><br><span class="line">  &#125;                                                                   <span class="comment">// | </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>改出来的 Java 版：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IdWorker</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> workerId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> datacenterId;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> sequence;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">IdWorker</span><span class="params">(<span class="keyword">long</span> workerId, <span class="keyword">long</span> datacenterId, <span class="keyword">long</span> sequence)</span></span>&#123;</span><br><span class="line">        <span class="comment">// sanity check for workerId</span></span><br><span class="line">        <span class="keyword">if</span> (workerId &gt; maxWorkerId || workerId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"worker Id can't be greater than %d or less than 0"</span>,maxWorkerId));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (datacenterId &gt; maxDatacenterId || datacenterId &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(<span class="string">"datacenter Id can't be greater than %d or less than 0"</span>,maxDatacenterId));</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.printf(<span class="string">"worker starting. timestamp left shift %d, datacenter id bits %d, worker id bits %d, sequence bits %d, workerid %d"</span>,</span><br><span class="line">                timestampLeftShift, datacenterIdBits, workerIdBits, sequenceBits, workerId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.workerId = workerId;</span><br><span class="line">        <span class="keyword">this</span>.datacenterId = datacenterId;</span><br><span class="line">        <span class="keyword">this</span>.sequence = sequence;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> twepoch = <span class="number">1288834974657L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> workerIdBits = <span class="number">5L</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> datacenterIdBits = <span class="number">5L</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> maxWorkerId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; workerIdBits);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> maxDatacenterId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; datacenterIdBits);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> sequenceBits = <span class="number">12L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> workerIdShift = sequenceBits;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> datacenterIdShift = sequenceBits + workerIdBits;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> sequenceMask = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; sequenceBits);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> lastTimestamp = -<span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getWorkerId</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> workerId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getDatacenterId</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> datacenterId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getTimestamp</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">nextId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> timestamp = timeGen();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">            System.err.printf(<span class="string">"clock is moving backwards.  Rejecting requests until %d."</span>, lastTimestamp);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(String.format(<span class="string">"Clock moved backwards.  Refusing to generate id for %d milliseconds"</span>,</span><br><span class="line">                    lastTimestamp - timestamp));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (lastTimestamp == timestamp) &#123;</span><br><span class="line">            sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask;</span><br><span class="line">            <span class="keyword">if</span> (sequence == <span class="number">0</span>) &#123;</span><br><span class="line">                timestamp = tilNextMillis(lastTimestamp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sequence = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        lastTimestamp = timestamp;</span><br><span class="line">        <span class="keyword">return</span> ((timestamp - twepoch) &lt;&lt; timestampLeftShift) |</span><br><span class="line">                (datacenterId &lt;&lt; datacenterIdShift) |</span><br><span class="line">                (workerId &lt;&lt; workerIdShift) |</span><br><span class="line">                sequence;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">tilNextMillis</span><span class="params">(<span class="keyword">long</span> lastTimestamp)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> timestamp = timeGen();</span><br><span class="line">        <span class="keyword">while</span> (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">            timestamp = timeGen();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> timestamp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">timeGen</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//---------------测试---------------</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        IdWorker worker = <span class="keyword">new</span> IdWorker(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) &#123;</span><br><span class="line">            System.out.println(worker.nextId());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="代码理解"><a href="#代码理解" class="headerlink" title="代码理解"></a>代码理解</h1><p>上面的代码中，有部分位运算的代码，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> maxWorkerId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; workerIdBits);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> ((timestamp - twepoch) &lt;&lt; timestampLeftShift) |</span><br><span class="line">        (datacenterId &lt;&lt; datacenterIdShift) |</span><br><span class="line">        (workerId &lt;&lt; workerIdShift) |</span><br><span class="line">        sequence;</span><br></pre></td></tr></table></figure>
+
+<p>为了能更好理解，我对相关知识研究了一下。</p>
+<h2 id="负数的二进制表示"><a href="#负数的二进制表示" class="headerlink" title="负数的二进制表示"></a>负数的二进制表示</h2><p>在计算机中，负数的二进制是用 <strong>补码</strong> 来表示的。<br>假设我是用 Java 中的 int 类型来存储数字的，<br>int 类型的大小是 32 个二进制位（bit），即 4 个字节（byte）。（1 byte = 8 bit）<br>那么十进制数字<code>3</code>在二进制中的表示应该是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">00000000 00000000 00000000 00000011</span><br><span class="line">// 3 的二进制表示，就是原码</span><br></pre></td></tr></table></figure>
+
+<p>那数字<code>-3</code>在二进制中应该如何表示？<br>我们可以反过来想想，因为 -3+3=0，<br>在二进制运算中<strong>把 -3 的二进制看成未知数 x 来求解</strong>，<br>求解算式的二进制表示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   00000000 00000000 00000000 00000011 //3，原码</span><br><span class="line">+  xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx //-3，补码</span><br><span class="line">-----------------------------------------------</span><br><span class="line">   00000000 00000000 00000000 00000000</span><br></pre></td></tr></table></figure>
+
+<p>反推 x 的值，3 的二进制加上什么值才使结果变成 <code>00000000 00000000 00000000 00000000</code>？：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">   00000000 00000000 00000000 00000011 //3，原码</span><br><span class="line">+  11111111 11111111 11111111 11111101 //-3，补码</span><br><span class="line">-----------------------------------------------</span><br><span class="line"> 1 00000000 00000000 00000000 00000000</span><br></pre></td></tr></table></figure>
+
+<p>反推的思路是 3 的二进制数从最低位开始逐位加 1，使溢出的 1 不断向高位溢出，直到溢出到第 33 位。然后由于 int 类型最多只能保存 32 个二进制位，所以最高位的 1 溢出了，剩下的 32 位就成了（十进制的）0。  </p>
+<p><strong>补码的意义就是可以拿补码和原码（3的二进制）相加，最终加出一个 “溢出的 0”</strong>  </p>
+<p>以上是理解的过程，实际中记住<strong>公式</strong>就很容易算出来：</p>
+<ul>
+<li>补码 = 反码 + 1</li>
+<li>补码 = （原码 - 1）再取反码</li>
+</ul>
+<p>因此<code>-1</code>的二进制应该这样算：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">00000000 00000000 00000000 00000001 //原码：1 的二进制</span><br><span class="line">11111111 11111111 11111111 11111110 //取反码：1 的二进制的反码</span><br><span class="line">11111111 11111111 11111111 11111111 //加 1：-1 的二进制表示（补码）</span><br></pre></td></tr></table></figure>
+
+<h2 id="用位运算计算-n-个-bit-能表示的最大数值"><a href="#用位运算计算-n-个-bit-能表示的最大数值" class="headerlink" title="用位运算计算 n 个 bit 能表示的最大数值"></a>用位运算计算 n 个 bit 能表示的最大数值</h2><p>比如这样一行代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> workerIdBits = <span class="number">5L</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> maxWorkerId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; workerIdBits);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码换成这样看方便一点：<br><code>long maxWorkerId = -1L ^ (-1L &lt;&lt; 5L)</code>  </p>
+<p>咋一看真的看不准哪个部分先计算，于是查了一下Java运算符的优先级表：</p>
+<figure class="image-box">
+                <a rel=理解分布式 ID 生成算法 SnowFlake href="974688567-59c21de65c521_articlex.png" title="" data-fancybox="images"><img src="974688567-59c21de65c521_articlex.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>所以上面那行代码中，运行顺序是：</p>
+<ul>
+<li>-1 左移 5，得结果 a</li>
+<li>-1 异或 a</li>
+</ul>
+<p><code>long maxWorkerId = -1L ^ (-1L &lt;&lt; 5L)</code> 的二进制运算过程如下：  </p>
+<p><strong>-1 左移 5，得结果 a</strong> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">      11111111 11111111 11111111 11111111 //-1 的二进制表示（补码）</span><br><span class="line">11111 11111111 11111111 11111111 11100000 //高位溢出的不要，低位补 0</span><br><span class="line">      11111111 11111111 11111111 11100000 //结果 a</span><br></pre></td></tr></table></figure>
+
+<p><strong>-1 异或 a</strong> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        11111111 11111111 11111111 11111111 //-1 的二进制表示（补码）</span><br><span class="line">    ^   11111111 11111111 11111111 11100000 //两个操作数的位中，相同则为 0，不同则为 1</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">        00000000 00000000 00000000 00011111 //最终结果 31</span><br></pre></td></tr></table></figure>
+
+<p>最终结果是 31，二进制<code>00000000 00000000 00000000 00011111</code>转十进制可以这么算：<br>$$ 2^4+2^3+2^2+2^1+2^0=16+8+4+2+1=31 $$</p>
+<p>那既然现在知道算出来<code>long maxWorkerId = -1L ^ (-1L &lt;&lt; 5L)</code>中的<code>maxWorkerId = 31</code>，有什么含义？为什么要用左移 5 来算？如果你看过<strong>概述</strong>部分，请找到这段内容看看：</p>
+<blockquote>
+<p><code>5 位(bit)</code>可以表示的最大正整数是 $2^5-1=31$，即可以用 0, 1, 2, 3, $\cdots$, 31 这 32 个数字，来表示不同的 datecenterId 或 workerId</p>
+</blockquote>
+<p><code>-1L ^ (-1L &lt;&lt; 5L)</code>结果是 31，$2^5-1$ 的结果也是 31，所以在代码中，<code>-1L ^ (-1L &lt;&lt; 5L)</code>的写法是<strong>利用位运算计算出 5 位能表示的最大正整数是多少</strong></p>
+<h2 id="用-mask-防止溢出"><a href="#用-mask-防止溢出" class="headerlink" title="用 mask 防止溢出"></a>用 mask 防止溢出</h2><p>有一段有趣的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask;</span><br></pre></td></tr></table></figure>
+
+<p>分别用不同的值测试一下，你就知道它怎么有趣了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> seqMask = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; <span class="number">12L</span>); <span class="comment">//计算 12 位能存储的最大正整数，相当于：2^12-1 = 4095</span></span><br><span class="line">System.out.println(<span class="string">"seqMask: "</span>+seqMask);</span><br><span class="line">System.out.println(<span class="number">1L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">2L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">3L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">4L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">4095L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">4096L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">4097L</span> &amp; seqMask);</span><br><span class="line">System.out.println(<span class="number">4098L</span> &amp; seqMask);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">seqMask: 4095</span></span><br><span class="line"><span class="comment">1</span></span><br><span class="line"><span class="comment">2</span></span><br><span class="line"><span class="comment">3</span></span><br><span class="line"><span class="comment">4</span></span><br><span class="line"><span class="comment">4095</span></span><br><span class="line"><span class="comment">0</span></span><br><span class="line"><span class="comment">1</span></span><br><span class="line"><span class="comment">2</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这段代码通过<code>位与</code>运算保证计算的结果范围始终是 0 - 4095 ！</strong></p>
+<h2 id="用位运算汇总结果"><a href="#用位运算汇总结果" class="headerlink" title="用位运算汇总结果"></a>用位运算汇总结果</h2><p>还有另外一段诡异的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ((timestamp - twepoch) &lt;&lt; timestampLeftShift) |</span><br><span class="line">        (datacenterId &lt;&lt; datacenterIdShift) |</span><br><span class="line">        (workerId &lt;&lt; workerIdShift) |</span><br><span class="line">        sequence;</span><br></pre></td></tr></table></figure>
+
+<p>为了弄清楚这段代码，  </p>
+<p><strong>首先</strong> 需要计算一下相关的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> twepoch = <span class="number">1288834974657L</span>; <span class="comment">//起始时间戳，用于用当前时间戳减去这个时间戳，算出偏移量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> workerIdBits = <span class="number">5L</span>; <span class="comment">//workerId 占用的位数：5</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> datacenterIdBits = <span class="number">5L</span>; <span class="comment">//datacenterId 占用的位数：5</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> maxWorkerId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; workerIdBits);  <span class="comment">// workerId 可以使用的最大数值：31</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> maxDatacenterId = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; datacenterIdBits); <span class="comment">// datacenterId 可以使用的最大数值：31</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> sequenceBits = <span class="number">12L</span>;<span class="comment">//序列号占用的位数：12</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> workerIdShift = sequenceBits; <span class="comment">// 12</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> datacenterIdShift = sequenceBits + workerIdBits; <span class="comment">// 12+5 = 17</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits; <span class="comment">// 12+5+5 = 22</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> sequenceMask = -<span class="number">1L</span> ^ (-<span class="number">1L</span> &lt;&lt; sequenceBits);<span class="comment">//4095</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> lastTimestamp = -<span class="number">1L</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其次</strong> 写个测试，把参数都写死，并运行打印信息，方便后面来核对计算结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//---------------测试---------------</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> timestamp = <span class="number">1505914988849L</span>;</span><br><span class="line">    <span class="keyword">long</span> twepoch = <span class="number">1288834974657L</span>;</span><br><span class="line">    <span class="keyword">long</span> datacenterId = <span class="number">17L</span>;</span><br><span class="line">    <span class="keyword">long</span> workerId = <span class="number">25L</span>;</span><br><span class="line">    <span class="keyword">long</span> sequence = <span class="number">0L</span>;</span><br><span class="line"></span><br><span class="line">    System.out.printf(<span class="string">"\ntimestamp: %d \n"</span>,timestamp);</span><br><span class="line">    System.out.printf(<span class="string">"twepoch: %d \n"</span>,twepoch);</span><br><span class="line">    System.out.printf(<span class="string">"datacenterId: %d \n"</span>,datacenterId);</span><br><span class="line">    System.out.printf(<span class="string">"workerId: %d \n"</span>,workerId);</span><br><span class="line">    System.out.printf(<span class="string">"sequence: %d \n"</span>,sequence);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.printf(<span class="string">"(timestamp - twepoch): %d \n"</span>,(timestamp - twepoch));</span><br><span class="line">    System.out.printf(<span class="string">"((timestamp - twepoch) &lt;&lt; 22L): %d \n"</span>,((timestamp - twepoch) &lt;&lt; <span class="number">22L</span>));</span><br><span class="line">    System.out.printf(<span class="string">"(datacenterId &lt;&lt; 17L): %d \n"</span> ,(datacenterId &lt;&lt; <span class="number">17L</span>));</span><br><span class="line">    System.out.printf(<span class="string">"(workerId &lt;&lt; 12L): %d \n"</span>,(workerId &lt;&lt; <span class="number">12L</span>));</span><br><span class="line">    System.out.printf(<span class="string">"sequence: %d \n"</span>,sequence);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> result = ((timestamp - twepoch) &lt;&lt; <span class="number">22L</span>) |</span><br><span class="line">            (datacenterId &lt;&lt; <span class="number">17L</span>) |</span><br><span class="line">            (workerId &lt;&lt; <span class="number">12L</span>) |</span><br><span class="line">            sequence;</span><br><span class="line">    System.out.println(result);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 打印信息：</span></span><br><span class="line"><span class="comment">    timestamp: 1505914988849 </span></span><br><span class="line"><span class="comment">    twepoch: 1288834974657 </span></span><br><span class="line"><span class="comment">    datacenterId: 17 </span></span><br><span class="line"><span class="comment">    workerId: 25 </span></span><br><span class="line"><span class="comment">    sequence: 0 </span></span><br><span class="line"><span class="comment">    </span></span><br><span class="line"><span class="comment">    (timestamp - twepoch): 217080014192 </span></span><br><span class="line"><span class="comment">    ((timestamp - twepoch) &lt;&lt; 22L): 910499571845562368 </span></span><br><span class="line"><span class="comment">    (datacenterId &lt;&lt; 17L): 2228224 </span></span><br><span class="line"><span class="comment">    (workerId &lt;&lt; 12L): 102400 </span></span><br><span class="line"><span class="comment">    sequence: 0 </span></span><br><span class="line"><span class="comment">    910499571847892992</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>代入位移的值得之后，就是这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ((timestamp - <span class="number">1288834974657</span>) &lt;&lt; <span class="number">22</span>) |</span><br><span class="line">        (datacenterId &lt;&lt; <span class="number">17</span>) |</span><br><span class="line">        (workerId &lt;&lt; <span class="number">12</span>) |</span><br><span class="line">        sequence;</span><br></pre></td></tr></table></figure>
+
+<p>对于尚未知道的值，我们可以先看看<strong>概述</strong>中对 SnowFlake 结构的解释，再代入在合法范围的值（Windows系统可以用计算器方便计算这些值的二进制），来了解计算的过程。<br>当然，由于我的测试代码已经把这些值写死了，那直接用这些值来手工验证计算结果即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> timestamp = <span class="number">1505914988849L</span>;</span><br><span class="line"><span class="keyword">long</span> twepoch = <span class="number">1288834974657L</span>;</span><br><span class="line"><span class="keyword">long</span> datacenterId = <span class="number">17L</span>;</span><br><span class="line"><span class="keyword">long</span> workerId = <span class="number">25L</span>;</span><br><span class="line"><span class="keyword">long</span> sequence = <span class="number">0L</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">设：timestamp  = 1505914988849，twepoch = 1288834974657</span><br><span class="line">1505914988849 - 1288834974657 = 217080014192 (timestamp 相对于起始时间的毫秒偏移量)，其(a)二进制左移 22 位计算过程如下：                                </span><br><span class="line"></span><br><span class="line">                        |&lt;--这里开始左右 22 位                            ‭</span><br><span class="line">00000000 00000000 000000|00 00110010 10001010 11111010 00100101 01110000 // a = 217080014192</span><br><span class="line">00001100 10100010 10111110 10001001 01011100 00|000000 00000000 00000000 // a 左移 22 位后的值(la)</span><br><span class="line">                                               |&lt;--这里后面的位补 0</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">设：datacenterId  = 17，其（b）二进制左移 17 位计算过程如下：</span><br><span class="line"></span><br><span class="line">                   |&lt;--这里开始左移 17 位    </span><br><span class="line">00000000 00000000 0|0000000 ‭00000000 00000000 00000000 00000000 00010001 // b = 17</span><br><span class="line">0000000‭0 00000000 00000000 00000000 00000000 0010001|0 00000000 00000000 // b 左移 17 位后的值(lb)</span><br><span class="line">                                                    |&lt;--这里后面的位补 0</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">设：workerId  = 25，其（c）二进制左移 12 位计算过程如下：</span><br><span class="line"></span><br><span class="line">             |&lt;--这里开始左移 12 位    </span><br><span class="line">‭00000000 0000|0000 00000000 00000000 00000000 00000000 00000000 00011001‬ // c = 25</span><br><span class="line">00000000 00000000 00000000 00000000 00000000 00000001 1001|0000 00000000‬ // c 左移 12 位后的值(lc)                                                                 </span><br><span class="line">                                                          |&lt;--这里后面的位补 0</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">设：sequence = 0，其二进制如下：</span><br><span class="line"></span><br><span class="line">00000000 00000000 00000000 00000000 00000000 00000000 0000‭0000 00000000‬ // sequence = 0</span><br></pre></td></tr></table></figure>
+
+<p>现在知道了每个部分左移后的值 (la, lb, lc)，代码可以简化成下面这样去理解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ((timestamp - <span class="number">1288834974657</span>) &lt;&lt; <span class="number">22</span>) |</span><br><span class="line">        (datacenterId &lt;&lt; <span class="number">17</span>) |</span><br><span class="line">        (workerId &lt;&lt; <span class="number">12</span>) |</span><br><span class="line">        sequence;</span><br><span class="line">-----------------------------</span><br><span class="line">           |</span><br><span class="line">           | 简化</span><br><span class="line">          \|/</span><br><span class="line">-----------------------------</span><br><span class="line"><span class="keyword">return</span> (la) |</span><br><span class="line">        (lb) |</span><br><span class="line">        (lc) |</span><br><span class="line">        sequence;</span><br></pre></td></tr></table></figure>
+
+<p>上面的管道符号 <code>|</code> 在 Java 中也是一个位运算符。其含义是：<br><strong>x 的第 n 位和 y 的第 n 位 只要有一个是 1，则结果的第 n 位也为 1，否则为 0</strong>，因此，我们对四个数的<code>位或</code>运算如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> 1  |                    41                        |  5  |   5  |     12      </span><br><span class="line">    </span><br><span class="line">   0|0001100 10100010 10111110 10001001 01011100 00|00000|0 0000|0000 00000000 //la</span><br><span class="line">   0|000000‭0 00000000 00000000 00000000 00000000 00|10001|0 0000|0000 00000000 //lb</span><br><span class="line">   0|0000000 00000000 00000000 00000000 00000000 00|00000|1 1001|0000 00000000 //lc</span><br><span class="line">or 0|0000000 00000000 00000000 00000000 00000000 00|00000|0 0000|‭0000 00000000‬ //sequence</span><br><span class="line">------------------------------------------------------------------------------------------</span><br><span class="line">   0|0001100 10100010 10111110 10001001 01011100 00|10001|1 1001|‭0000 00000000‬ //结果：910499571847892992</span><br></pre></td></tr></table></figure>
+
+<p><strong>结果计算过程：</strong></p>
+<ol>
+<li><p>从至左列出 1 出现的下标（从 0 开始算）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0000  1   1   00  1   0  1  000  1   0  1  0  1  1  1  1  1  0 1   000 1 00 1  0 1  0   1  1  1  0000 1   000  1  1  1  00  1‭   0000 0000 0000</span><br><span class="line">      59  58      55     53      49     47    45 44 43 42 41   39      35   32   30     28 27 26      21       17 16 15     12</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>各个下标作为 2 的幂数来计算，并相加：<br>$$ 2^{59}+2^{58}+2^{55}+2^{53}+2^{49}+2^{47}+2^{45}+2^{44}+2^{43}+2^{42}+2^{41}+ \\ 2^{39}+2^{35}+2^{32}+2^{30}+2^{28}+2^{27}+2^{26}+2^{21}+2^{17}+2^{16}+2^{15}+2^{12} $$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">    2^59&#125;  : 576460752303423488</span><br><span class="line">    2^58&#125;  : 288230376151711744</span><br><span class="line">    2^55&#125;  :  36028797018963968</span><br><span class="line">    2^53&#125;  :   9007199254740992</span><br><span class="line">    2^49&#125;  :    562949953421312</span><br><span class="line">    2^47&#125;  :    140737488355328</span><br><span class="line">    2^45&#125;  :     35184372088832</span><br><span class="line">    2^44&#125;  :     17592186044416</span><br><span class="line">    2^43&#125;  :      8796093022208</span><br><span class="line">    2^42&#125;  :      4398046511104</span><br><span class="line">    2^41&#125;  :      2199023255552</span><br><span class="line">    2^39&#125;  :       549755813888</span><br><span class="line">    2^35&#125;  :        34359738368</span><br><span class="line">    2^32&#125;  :         4294967296</span><br><span class="line">    2^30&#125;  :         1073741824</span><br><span class="line">    2^28&#125;  :          268435456</span><br><span class="line">    2^27&#125;  :          134217728</span><br><span class="line">    2^26&#125;  :           67108864</span><br><span class="line">    2^21&#125;  :            2097152</span><br><span class="line">    2^17&#125;  :             131072</span><br><span class="line">    2^16&#125;  :              65536</span><br><span class="line">    2^15&#125;  :              32768</span><br><span class="line">+   2^12&#125;  :               4096</span><br><span class="line">---------------------------------------- </span><br><span class="line">             910499571847892992</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>计算截图：</p>
+<figure class="image-box">
+                <a rel=理解分布式 ID 生成算法 SnowFlake href="582624281-59c27ffe44bc5_articlex.png" title="" data-fancybox="images"><img src="582624281-59c27ffe44bc5_articlex.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>跟测试程序打印出来的结果一样，手工验证完毕！</p>
+<h1 id="观察"><a href="#观察" class="headerlink" title="观察"></a>观察</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> 1  |                    41                        |  5  |   5  |     12      </span><br><span class="line">    </span><br><span class="line">   0|0001100 10100010 10111110 10001001 01011100 00|     |      |              //la</span><br><span class="line">   0|                                              |10001|      |              //lb</span><br><span class="line">   0|                                              |     |1 1001|              //lc</span><br><span class="line">or 0|                                              |     |      |‭0000 00000000‬ //sequence</span><br><span class="line">------------------------------------------------------------------------------------------</span><br><span class="line">   0|0001100 10100010 10111110 10001001 01011100 00|10001|1 1001|‭0000 00000000‬ //结果：910499571847892992</span><br></pre></td></tr></table></figure>
+
+<p>上面的 64 位我按 1、41、5、5、12 的位数截开了，方便观察。</p>
+<ul>
+<li><strong>纵向</strong> 观察发现：<ul>
+<li>在 41 位那一段，除了 la 一行有值，其它行（lb、lc、sequence）都是 0，（我爸其它）</li>
+<li>在左起第一个 5 位那一段，除了 lb 一行有值，其它行都是 0</li>
+<li>在左起第二个 5 位那一段，除了 lc 一行有值，其它行都是 0</li>
+<li>按照这规律，如果 sequence 是 0 以外的其它值，12 位那段也会有值的，其它行都是 0</li>
+</ul>
+</li>
+<li><strong>横向</strong> 观察发现：<ul>
+<li>在 la 行，由于左移了 5+5+12 位，5、5、12 这三段都补 0 了，所以 la 行除了 41 那段外，其它肯定都是 0</li>
+<li>同理，lb、lc、sequnece 行也以此类推</li>
+<li>正因为左移的操作，使四个不同的值移到了 SnowFlake 理论上相应的位置，然后四行做位或运算（只要有 1 结果就是 1），就把 4 段的二进制数合并成一个二进制数。</li>
+</ul>
+</li>
+</ul>
+<p><strong>结论</strong>：<br>所以，在这段代码中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ((timestamp - <span class="number">1288834974657</span>) &lt;&lt; <span class="number">22</span>) |</span><br><span class="line">        (datacenterId &lt;&lt; <span class="number">17</span>) |</span><br><span class="line">        (workerId &lt;&lt; <span class="number">12</span>) |</span><br><span class="line">        sequence;</span><br></pre></td></tr></table></figure>
+
+<p>左移运算是为了将数值移动到对应的段（41、5、5、12 那段因为本来就在最右，因此不用左移）。<br>然后对每个左移后的值（la、lb、lc、sequence）做位或运算，是为了把各个短的数据合并起来，合并成一个二进制数。<br>最后转换成十进制，就是最终生成的 id  </p>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>在理解了这个算法之后，其实还有一些扩展的事情可以做：</p>
+<ol>
+<li>根据自己业务修改每个位段存储的信息。算法是通用的，可以根据自己需求适当调整每段的大小以及存储的信息。</li>
+<li>解密 id，由于 id 的每段都保存了特定的信息，所以拿到一个 id，应该可以尝试反推出原始的每个段的信息。反推出的信息可以帮助我们分析。比如作为订单，可以知道该订单的生成日期，负责处理的数据中心等等。</li>
+</ol>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-29T15:41:49.160Z" itemprop="dateUpdated">2019-12-29 23:41:49</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/28/UnderstandSnowFlake/" target="_blank" rel="external">https://tao-lol.top/2019/12/28/UnderstandSnowFlake/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/28/UnderstandSnowFlake/&title=《理解分布式 ID 生成算法 SnowFlake》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/28/UnderstandSnowFlake/&title=《理解分布式 ID 生成算法 SnowFlake》 — Blog&source=
+https://segmentfault.com/a/1190000011282426  
+
+
+扩展阅读：  
+如何在高并发分布式系统中生成全局唯一 I..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/30/WhatIsOAuth/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">理解 OAuth 2.0</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/28/HowToChangeSingleAppIntoMicroServices/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何把单体式应用拆解成微服务？</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Talk-is-cheap-show-you-the-code"><span class="post-toc-number">2.</span> <span class="post-toc-text">Talk is cheap, show you the code</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#代码理解"><span class="post-toc-number">3.</span> <span class="post-toc-text">代码理解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#负数的二进制表示"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">负数的二进制表示</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用位运算计算-n-个-bit-能表示的最大数值"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">用位运算计算 n 个 bit 能表示的最大数值</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用-mask-防止溢出"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">用 mask 防止溢出</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用位运算汇总结果"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">用位运算汇总结果</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#观察"><span class="post-toc-number">4.</span> <span class="post-toc-text">观察</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#扩展"><span class="post-toc-number">5.</span> <span class="post-toc-text">扩展</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/28/UnderstandSnowFlake/&title=《理解分布式 ID 生成算法 SnowFlake》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/28/UnderstandSnowFlake/&title=《理解分布式 ID 生成算法 SnowFlake》 — Blog&source=
+https://segmentfault.com/a/1190000011282426  
+
+
+扩展阅读：  
+如何在高并发分布式系统中生成全局唯一 I..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMUlEQVR42u3a0W7EIAxE0fz/T6dSX1vIzJjsCnN5qrLJhkMlrzG+Lnncv0O/cg/G6M6/T11vDBgwYGzLuKejztCnOH9qNDcYMGCcw5gH2fkklMllS2a8EQYMGDCm98wn5C4HDBgwYKwKuPrU9eTvC78bMGDA2IqRhU7lxfVvXrwXhwEDxoYM92Dgk3+/eL4BAwaMTRi3OZSQ6hbd3CD7z6xgwIDRmqEfT9aLZaNn3fLccLFgwIDRlFHZfOp5mpsUuo0dMGDA6M2ot3BV0j7lm41PYcCA0ZShp3rzUKgH2SzsSqkhDBgwmjLc8pnbcrEqoBu/GzBgwGjHCEvw0UJkSyMtFgwYMA5juEU0N+5l7WgPaSgMGDAOY6xqiXDxpSQVBgwYrRl6Q0NWaMvCdNj2AQMGjKYM/QX6dSWk6m8M2yxgwIBxAEOfot4ili2NNCsYMGC0ZlTCq9tsoWyD9evGysGAAaMRIwtwlWYLF+YGaBgwYHRiZEeMbltGFlKNDTMMGDCaMlY1RmStEvUtMQwYMM5h6GV95Vn3GMA9QhgmhTBgwGjKcB/WWyUqeD3sPvxPYMCA0YJRSfjq5bNljWIwYMBozcjOAbPDgFVJZ2kzDAMGjG0ZbuHM3YhWymrGN8CAAeMAhh5klfBXSuCy5g8YMGDAMPvLlPvdJrOHQAwDBgwYwuvDVglzyaTzDRgwYDRlVA4DKuU2fcsqBVwYMGA0ZdRrWe5CrGopK51vwIABYw/GD9rRqHaFnJCTAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>

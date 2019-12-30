@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>浅谈消息队列及常见的消息中间件 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="RabbitMQ">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>浅谈消息队列及常见的消息中间件</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">浅谈消息队列及常见的消息中间件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-30T05:36:04.000Z" itemprop="datePublished" class="page-time">
+  2019-12-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-WhatIsMessageQueuing"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">浅谈消息队列及常见的消息中间件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-30 13:36:04" datetime="2019-12-30T05:36:04.000Z"  itemprop="datePublished">2019-12-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://juejin.im/post/5b41fe36e51d45191252e79e" target="_blank" rel="noopener">https://juejin.im/post/5b41fe36e51d45191252e79e</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;消息队列 已经逐渐成为企业应用系统 内部通信 的核心手段。它具有 低耦合、可靠投递、广播、流量控制、最终一致性 等一系列功能。<br>&emsp;&emsp;当前使用较多的 消息队列 有 RabbitMQ、RocketMQ、ActiveMQ、Kafka、ZeroMQ、MetaMQ 等，而部分 数据库 如 Redis、MySQL 以及 phxsql 也可实现消息队列的功能。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ed095ffed.webp" title="" data-fancybox="images"><img src="16479c8ed095ffed.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="消息队列概述"><a href="#消息队列概述" class="headerlink" title="消息队列概述"></a>消息队列概述</h2><p>&emsp;&emsp;消息队列 是指利用 高效可靠 的 消息传递机制 进行与平台无关的 数据交流，并基于 数据通信 来进行分布式系统的集成。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e7c77109d.webp" title="" data-fancybox="images"><img src="16479c8e7c77109d.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;通过提供 消息传递 和 消息排队 模型，它可以在 分布式环境 下提供 应用解耦、弹性伸缩、冗余存储、流量削峰、异步通信、数据同步 等等功能，其作为 分布式系统架构 中的一个重要组件，有着举足轻重的地位。</p>
+<h2 id="消息队列的特点"><a href="#消息队列的特点" class="headerlink" title="消息队列的特点"></a>消息队列的特点</h2><h3 id="采用异步处理模式"><a href="#采用异步处理模式" class="headerlink" title="采用异步处理模式"></a>采用异步处理模式</h3><p>&emsp;&emsp;消息发送者 可以发送一个消息而无须等待响应。消息发送者 将消息发送到一条 虚拟的通道（主题 或 队列）上，消息接收者 则 订阅 或是 监听 该通道。一条信息可能最终转发给 一个或多个 消息接收者，这些接收者都无需对 消息发送者 做出 同步回应。整个过程都是 异步的。</p>
+<h3 id="应用系统之间解耦合"><a href="#应用系统之间解耦合" class="headerlink" title="应用系统之间解耦合"></a>应用系统之间解耦合</h3><p>主要体现在如下两点：</p>
+<ol>
+<li>发送者和接受者不必了解对方、只需要 确认消息；</li>
+<li>发送者和接受者 不必同时在线。</li>
+</ol>
+<p>&emsp;&emsp;比如在线交易系统为了保证数据的 最终一致，在 支付系统 处理完成后会把 支付结果 放到 消息中间件 里，通知 订单系统 修改 订单支付状态。两个系统是通过消息中间件解耦的。</p>
+<h2 id="消息队列的传递服务模型"><a href="#消息队列的传递服务模型" class="headerlink" title="消息队列的传递服务模型"></a>消息队列的传递服务模型</h2><p>&emsp;&emsp;消息队列的 传递服务模型 如下图所示：</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e7c831340.jpg" title="" data-fancybox="images"><img src="16479c8e7c831340.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="消息队列的的传输模式"><a href="#消息队列的的传输模式" class="headerlink" title="消息队列的的传输模式"></a>消息队列的的传输模式</h2><h3 id="点对点模型"><a href="#点对点模型" class="headerlink" title="点对点模型"></a>点对点模型</h3><p>&emsp;&emsp;点对点模型 用于 消息生产者 和 消息消费者 之间 点到点 的通信。消息生产者将消息发送到由某个名字标识的特定消费者。这个名字实际上对于消费服务中的一个 队列（Queue），在消息传递给消费者之前它被 存储 在这个队列中。队列消息 可以放在 内存 中也可以 持久化，以保证在消息服务出现故障时仍然能够传递消息。<br>&emsp;&emsp;传统的点对点消息中间件通常由 消息队列服务、消息传递服务、消息队列 和 消息应用程序接口 API 组成，其典型的结构如下图所示。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e7c97b0c3.jpg" title="" data-fancybox="images"><img src="16479c8e7c97b0c3.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ol>
+<li>每个消息只用一个消费者；</li>
+<li>发送者和接受者没有时间依赖；</li>
+<li>接受者确认消息接受和处理成功。</li>
+</ol>
+<p>示意图如下所示：</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e7c89962f.jpg" title="" data-fancybox="images"><img src="16479c8e7c89962f.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="发布-订阅模型（Pub-Sub）"><a href="#发布-订阅模型（Pub-Sub）" class="headerlink" title="发布/订阅模型（Pub/Sub）"></a>发布/订阅模型（Pub/Sub）</h3><p>&emsp;&emsp;发布者/订阅者 模型支持向一个特定的 消息主题 生产消息。0 或 多个订阅者 可能对接收来自 特定消息主题 的消息感兴趣。<br>&emsp;&emsp;在这种模型下，发布者和订阅者彼此不知道对方，就好比是匿名公告板。这种模式被概况为：多个消费者可以获得消息，在 发布者 和 订阅者 之间存在 时间依赖性。发布者需要建立一个 订阅（subscription），以便能够消费者订阅。订阅者 必须保持 持续的活动状态 并 接收消息。<br>&emsp;&emsp;在这种情况下，在订阅者 未连接时，发布的消息将在订阅者 重新连接 时 重新发布，如下图所示：</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e7faf60a5.jpg" title="" data-fancybox="images"><img src="16479c8e7faf60a5.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h4><ol>
+<li>每个消息可以有多个订阅者；</li>
+<li>客户端只有订阅后才能接收到消息；</li>
+<li>持久订阅和非持久订阅。</li>
+</ol>
+<blockquote>
+<p>注意：</p>
+<ol>
+<li>发布者和订阅者有时间依赖：接受者和发布者只有建立订阅关系才能收到消息；</li>
+<li>持久订阅：订阅关系建立后，消息就不会消失，不管订阅者是否都在线；</li>
+<li>非持久订阅：订阅者为了接受消息，必须一直在线。 当只有一个订阅者时约等于点对点模式</li>
+</ol>
+</blockquote>
+<h2 id="消息队列应用场景"><a href="#消息队列应用场景" class="headerlink" title="消息队列应用场景"></a>消息队列应用场景</h2><p>&emsp;&emsp;当你需要使用 消息队列 时，首先需要考虑它的必要性。可以使用消息队列的场景有很多，最常用的几种，是做 应用程序松耦合、异步处理模式、发布与订阅、最终一致性、错峰流控 和 日志缓冲 等。反之，如果需要 强一致性，关注业务逻辑的处理结果，则使用 RPC 显得更为合适。</p>
+<h3 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h3><p>&emsp;&emsp;非核心 流程 异步化，减少系统 响应时间，提高 吞吐量。例如：短信通知、终端状态推送、App 推送、用户注册 等。<br>&emsp;&emsp;消息队列 一般都内置了 高效的通信机制，因此也可以用于单纯的消息通讯，比如实现 点对点消息队列 或者 聊天室 等。</p>
+<h4 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a>应用案例</h4><p>&emsp;&emsp;网站用户注册，注册成功后会过一会发送邮件确认或者短息。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8e800ce905.jpg" title="" data-fancybox="images"><img src="16479c8e800ce905.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="系统解耦"><a href="#系统解耦" class="headerlink" title="系统解耦"></a>系统解耦</h3><ul>
+<li>系统之间不是 强耦合的，消息接受者 可以随意增加，而不需要修改 消息发送者的代码。消息发送者 的成功不依赖 消息接受者（比如：有些银行接口不稳定，但调用方并不需要依赖这些接口）。</li>
+<li>不强依赖 于非本系统的核心流程，对于 非核心流程，可以放到消息队列中让 消息消费者 去按需消费，而 不影响核心主流程。</li>
+</ul>
+<h3 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h3><p>&emsp;&emsp;最终一致性 不是 消息队列 的必备特性，但确实可以依靠 消息队列 来做 最终一致性 的事情。</p>
+<ul>
+<li>先写消息再操作，确保操作完成后再修改消息状态。定时任务补偿机制 实现消息 可靠发送接收、业务操作的可靠执行，要注意 消息重复 与 幂等设计。</li>
+<li>所有不保证 100% 不丢消息 的消息队列，理论上无法实现 最终一致性。</li>
+</ul>
+<blockquote>
+<p>&emsp;&emsp;像 Kafka 一类的设计，在设计层面上就有 丢消息 的可能（比如 定时刷盘，如果掉电就会丢消息）。哪怕只丢千分之一的消息，业务也必须用其他的手段来保证结果正确。</p>
+</blockquote>
+<h3 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h3><p>&emsp;&emsp;生产者/消费者 模式，只需要关心消息是否 送达队列，至于谁希望订阅和需要消费，是 下游 的事情，无疑极大地减少了开发和联调的工作量。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ea267f536.webp" title="" data-fancybox="images"><img src="16479c8ea267f536.webp" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="流量削峰和流控"><a href="#流量削峰和流控" class="headerlink" title="流量削峰和流控"></a>流量削峰和流控</h3><p>&emsp;&emsp;当 上下游系统 处理能力存在差距的时候，利用 消息队列 做一个通用的 “漏斗”，进行 限流控制。在下游有能力处理的时候，再进行分发。</p>
+<blockquote>
+<p>&emsp;&emsp;举个例子：用户在支付系统成功结账后，订单系统会通过短信系统向用户推送扣费通知。短信系统 可能由于 短板效应，速度卡在 网关 上（每秒几百次请求），跟 前端的并发量 不是一个数量级。于是，就造成 支付系统 和 短信系统 的处理能力出现差异化。</p>
+</blockquote>
+<p>&emsp;&emsp;然而用户晚上个半分钟左右收到短信，一般是不会有太大问题的。如果没有消息队列，两个系统之间通过 协商、滑动窗口 等复杂的方案也不是说不能实现。但 系统复杂性 指数级增长，势必在 上游 或者 下游 做 存储，并且要处理 定时、拥塞 等一系列问题。而且每当有 处理能力有差距 的时候，都需要 单独 开发一套逻辑来维护这套逻辑。<br>&emsp;&emsp;所以，利用中间系统转储两个系统的通信内容，并在下游系统有能力处理这些消息的时候，再处理这些消息，是一套相对较通用的方式。</p>
+<h4 id="应用案例-1"><a href="#应用案例-1" class="headerlink" title="应用案例"></a>应用案例</h4><ol>
+<li>把消息队列当成可靠的 消息暂存地，进行一定程度的 消息堆积；</li>
+<li>定时进行消息投递，比如模拟 用户秒杀 访问，进行 系统性能压测。</li>
+</ol>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ea3e6231a.jpg" title="" data-fancybox="images"><img src="16479c8ea3e6231a.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="日志处理"><a href="#日志处理" class="headerlink" title="日志处理"></a>日志处理</h3><p>&emsp;&emsp;将消息队列用在 日志处理 中，比如 Kafka 的应用，解决 海量日志 传输和缓冲的问题。</p>
+<h4 id="应用案例-2"><a href="#应用案例-2" class="headerlink" title="应用案例"></a>应用案例</h4><p>&emsp;&emsp;把日志进行集中收集，用于计算 PV、用户行为分析 等等。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ea41e864b.jpg" title="" data-fancybox="images"><img src="16479c8ea41e864b.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="消息通讯"><a href="#消息通讯" class="headerlink" title="消息通讯"></a>消息通讯</h3><p>&emsp;&emsp;消息队列一般都内置了 高效的通信机制，因此也可以用于单纯的 消息通讯，比如实现 点对点消息队列 或者 聊天室 等。</p>
+<h2 id="消息队列的推拉模型"><a href="#消息队列的推拉模型" class="headerlink" title="消息队列的推拉模型"></a>消息队列的推拉模型</h2><h3 id="Push-推消息模型"><a href="#Push-推消息模型" class="headerlink" title="Push 推消息模型"></a>Push 推消息模型</h3><p>&emsp;&emsp;消息生产者 将消息发送给 消息队列，消息队列 又将消息推给 消息消费者。</p>
+<h3 id="Pull-拉消息模型"><a href="#Pull-拉消息模型" class="headerlink" title="Pull 拉消息模型"></a>Pull 拉消息模型</h3><p>&emsp;&emsp;消费者 请求 消息队列 接受消息，消息生产者 从 消息队列 中拉该消息。</p>
+<h3 id="两种类型的区别"><a href="#两种类型的区别" class="headerlink" title="两种类型的区别"></a>两种类型的区别</h3><figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ea4b19ea9.jpg" title="" data-fancybox="images"><img src="16479c8ea4b19ea9.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="消息队列技术对比"><a href="#消息队列技术对比" class="headerlink" title="消息队列技术对比"></a>消息队列技术对比</h2><p>&emsp;&emsp;本部分主要介绍四种常用的消息队列（ActiveMQ / RabbitMQ / RocketMQ / Kafka）的主要特性、优点、缺点。</p>
+<h3 id="ActiveMQ"><a href="#ActiveMQ" class="headerlink" title="ActiveMQ"></a>ActiveMQ</h3><p>&emsp;&emsp;ActiveMQ 是由 Apache 出品，ActiveMQ 是一个完全支持JMS1.1 和 J2EE 1.4 规范的 JMS Provider 实现。它非常快速，支持 多种语言的客户端 和 协议，而且可以非常容易的嵌入到企业的应用环境中，并有许多高级功能。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ea7cdc2c0.png" title="" data-fancybox="images"><img src="16479c8ea7cdc2c0.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h4><ol>
+<li>服从JMS规范：JMS 规范提供了良好的标准和保证，包括：同步 或 异步 的消息分发，一次和仅一次的消息分发，消息接收 和 订阅 等等。遵从 JMS 规范的好处在于，不论使用什么 JMS 实现提供者，这些基础特性都是可用的；</li>
+<li>连接灵活性：ActiveMQ 提供了广泛的 连接协议，支持的协议有：HTTP/S，IP 多播，SSL，TCP，UDP 等等。对众多协议的支持让 ActiveMQ 拥有了很好的灵活性；</li>
+<li>支持的协议种类多：OpenWire、STOMP、REST、XMPP、AMQP；</li>
+<li>持久化插件和安全插件：ActiveMQ 提供了 多种持久化 选择。而且，ActiveMQ 的安全性也可以完全依据用户需求进行 自定义鉴权 和 授权；</li>
+<li>支持的客户端语言种类多：除了 Java 之外，还有：C/C++，.NET，Perl，PHP，Python，Ruby；</li>
+<li>代理集群：多个 ActiveMQ 代理 可以组成一个 集群 来提供服务；</li>
+<li>异常简单的管理：ActiveMQ 是以开发者思维被设计的。所以，它并不需要专门的管理员，因为它提供了简单又使用的管理特性。有很多中方法可以 监控 ActiveMQ 不同层面的数据，包括使用在 JConsole 或者在 ActiveMQ 的 Web Console 中使用 JMX。通过处理 JMX 的告警消息，通过使用 命令行脚本，甚至可以通过监控各种类型的 日志。</li>
+</ol>
+<h4 id="部署环境"><a href="#部署环境" class="headerlink" title="部署环境"></a>部署环境</h4><p>&emsp;&emsp;ActiveMQ 可以运行在 Java 语言所支持的平台之上。使用 ActiveMQ 需要：</p>
+<ul>
+<li>Java JDK</li>
+<li>ActiveMQ 安装包</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>跨平台 (JAVA 编写与平台无关，ActiveMQ 几乎可以运行在任何的 JVM 上)；</li>
+<li>可以用 JDBC：可以将 数据持久化 到数据库。虽然使用 JDBC 会降低 ActiveMQ 的性能，但是数据库一直都是开发人员最熟悉的存储介质；</li>
+<li>支持 JMS 规范：支持 JMS 规范提供的 统一接口;</li>
+<li>支持 自动重连 和 错误重试机制；</li>
+<li>有安全机制：支持基于 shiro，jaas 等多种 安全配置机制，可以对 Queue/Topic 进行 认证和授权；</li>
+<li>监控完善：拥有完善的 监控，包括 Web Console，JMX，Shell 命令行，Jolokia 的 RESTful API；</li>
+<li>界面友善：提供的 Web Console 可以满足大部分情况，还有很多 第三方的组件 可以使用，比如 hawtio；</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>社区活跃度不及 RabbitMQ 高；</li>
+<li>根据其他用户反馈，会出莫名其妙的问题，会 丢失消息；</li>
+<li>目前重心放到 activemq 6.0 产品 Apollo，对 5.x 的维护较少；</li>
+<li>不适合用于 上千个队列 的应用场景；</li>
+</ol>
+<h3 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h3><p>&emsp;&emsp;RabbitMQ 于 2007 年发布，是一个在 AMQP (高级消息队列协议)基础上完成的，可复用的企业消息系统，是当前最主流的消息中间件之一。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ece3b5d7a.png" title="" data-fancybox="images"><img src="16479c8ece3b5d7a.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="主要特性-1"><a href="#主要特性-1" class="headerlink" title="主要特性"></a>主要特性</h4><ol>
+<li>可靠性：提供了多种技术可以让你在 性能 和 可靠性 之间进行 权衡。这些技术包括 持久性机制、投递确认、发布者证实 和 高可用性机制；</li>
+<li>灵活的路由：消息在到达队列前是通过 交换机 进行 路由 的。RabbitMQ 为典型的路由逻辑提供了 多种内置交换机 类型。如果你有更复杂的路由需求，可以将这些交换机组合起来使用，你甚至可以实现自己的交换机类型，并且当做 RabbitMQ 的 插件 来使用；</li>
+<li>消息集群：在相同局域网中的多个 RabbitMQ 服务器可以 聚合 在一起，作为一个独立的逻辑代理来使用；</li>
+<li>队列高可用：队列可以在集群中的机器上 进行镜像，以确保在硬件问题下还保证 消息安全；</li>
+<li>支持多种协议：支持 多种消息队列协议；</li>
+<li>支持多种语言：用 Erlang 语言编写，支持只要是你能想到的 所有编程语言；</li>
+<li>管理界面： RabbitMQ 有一个易用的 用户界面，使得用户可以 监控 和 管理 消息 Broker 的许多方面；</li>
+<li>跟踪机制：如果 消息异常，RabbitMQ 提供消息跟踪机制，使用者可以找出发生了什么；</li>
+<li>插件机制：提供了许多 插件，来从多方面进行扩展，也可以编写自己的插件。</li>
+</ol>
+<h4 id="部署环境-1"><a href="#部署环境-1" class="headerlink" title="部署环境"></a>部署环境</h4><p>&emsp;&emsp;RabbitMQ 可以运行在 Erlang 语言所支持的平台之上，包括 Solaris，BSD，Linux，MacOSX，TRU64，Windows 等。使用 RabbitMQ 需要：</p>
+<ul>
+<li>ErLang 语言包</li>
+<li>RabbitMQ 安装包</li>
+</ul>
+<h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>由于 Erlang 语言的特性，消息队列性能较好，支持 高并发；</li>
+<li>健壮、稳定、易用、跨平台、支持 多种语言、文档齐全；</li>
+<li>有消息 确认机制 和 持久化机制，可靠性高；</li>
+<li>高度可定制的 路由；</li>
+<li>管理界面 较丰富，在互联网公司也有较大规模的应用，社区活跃度高。</li>
+</ol>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>尽管结合 Erlang 语言本身的并发优势，性能较好，但是不利于做 二次开发和维护；</li>
+<li>实现了 代理架构，意味着消息在发送到客户端之前可以在 中央节点 上排队。此特性使得 RabbitMQ 易于使用和部署，但是使得其 运行速度较慢，因为中央节点 增加了延迟，消息封装后 也比较大；</li>
+<li>需要学习 比较复杂 的 接口和协议，学习和维护成本较高。</li>
+</ol>
+<h3 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h3><p>&emsp;&emsp;RocketMQ 出自 阿里 的开源产品，用 Java 语言实现，在设计时参考了 Kafka，并做出了自己的一些改进，消息可靠性上 比 Kafka 更好。RocketMQ 在阿里内部被广泛应用在 订单，交易，充值，流计算，消息推送，日志流式处理，binglog 分发 等场景。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ec333c809.png" title="" data-fancybox="images"><img src="16479c8ec333c809.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="主要特性-2"><a href="#主要特性-2" class="headerlink" title="主要特性"></a>主要特性</h4><ol>
+<li>基于 队列模型：具有 高性能、高可靠、高实时、分布式 等特点；</li>
+<li>Producer、Consumer、队列 都支持 分布式；</li>
+<li>Producer 向一些队列轮流发送消息，队列集合 称为 Topic。Consumer 如果做 广播消费，则一个 Consumer 实例消费这个 Topic 对应的 所有队列；如果做 集群消费，则 多个 Consumer 实例 平均消费 这个 Topic 对应的队列集合；</li>
+<li>能够保证 严格的消息顺序；</li>
+<li>提供丰富的 消息拉取模式；</li>
+<li>高效的订阅者 水平扩展能力；</li>
+<li>实时 的 消息订阅机制；</li>
+<li>亿级 消息堆积 能力；</li>
+<li>较少的外部依赖。</li>
+</ol>
+<h4 id="部署环境-2"><a href="#部署环境-2" class="headerlink" title="部署环境"></a>部署环境</h4><p>&emsp;&emsp;RocketMQ 可以运行在 Java 语言所支持的平台之上。使用 RocketMQ 需要：</p>
+<ul>
+<li>Java JDK</li>
+<li>安装 git、Maven</li>
+<li>RocketMQ 安装包</li>
+</ul>
+<h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>单机 支持 1 万以上 持久化队列；</li>
+<li>RocketMQ 的所有消息都是 持久化的，先写入系统  PAGECACHE，然后 刷盘，可以保证 内存 与 磁盘 都有一份数据，而 访问 时，直接 从内存读取。</li>
+<li>模型简单，接口易用（JMS 的接口很多场合并不太实用）；</li>
+<li>性能非常好，可以允许 大量堆积消息 在 Broker 中；</li>
+<li>支持 多种消费模式，包括 集群消费、广播消费等；</li>
+<li>各个环节 分布式扩展设计，支持 主从 和 高可用；</li>
+<li>开发度较活跃，版本更新很快。</li>
+</ol>
+<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>支持的 客户端语言 不多，目前是 Java 及 C++，其中 C++ 还不成熟；</li>
+<li>RocketMQ 社区关注度及成熟度也不及前两者；</li>
+<li>没有 Web 管理界面，提供了一个 CLI (命令行界面) 管理工具带来 查询、管理 和 诊断各种问题；</li>
+<li>没有在 MQ 核心里实现 JMS 等接口；</li>
+</ol>
+<h3 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h3><p>&emsp;&emsp;Apache Kafka 是一个 分布式消息发布订阅 系统。它最初由 LinkedIn 公司基于独特的设计实现为一个 分布式的日志提交系统 (a distributed commit log)，之后成为 Apache 项目的一部分。Kafka 性能高效、可扩展良好 并且 可持久化。它的 分区特性，可复制 和 可容错 都是其不错的特性。</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ec4ba760a.png" title="" data-fancybox="images"><img src="16479c8ec4ba760a.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h4 id="主要特性-3"><a href="#主要特性-3" class="headerlink" title="主要特性"></a>主要特性</h4><ol>
+<li>快速持久化：可以在 O(1) 的系统开销下进行 消息持久化；</li>
+<li>高吞吐：在一台普通的服务器上既可以达到 10W/s 的 吞吐速率；</li>
+<li>完全的分布式系统：Broker、Producer 和 Consumer 都原生自动支持 分布式，自动实现 负载均衡；</li>
+<li>支持 同步 和 异步 复制两种 高可用机制；</li>
+<li>支持 数据批量发送 和 拉取；</li>
+<li>零拷贝技术（zero-copy）：减少 IO 操作步骤，提高 系统吞吐量；</li>
+<li>数据迁移、扩容 对用户透明；</li>
+<li>无需停机 即可扩展机器；</li>
+<li>其他特性：丰富的 消息拉取模型、高效 订阅者水平扩展、实时的 消息订阅、亿级的 消息堆积能力、定期删除机制；</li>
+</ol>
+<h4 id="部署环境-3"><a href="#部署环境-3" class="headerlink" title="部署环境"></a>部署环境</h4><p>&emsp;&emsp;使用 Kafka 需要：</p>
+<ul>
+<li>Java JDK</li>
+<li>Kafka 安装包</li>
+</ul>
+<h4 id="优点-3"><a href="#优点-3" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>客户端语言丰富：支持 Java、.Net、PHP、Ruby、Python、Go 等多种语言；</li>
+<li>高性能：单机写入 TPS 约在 100 万条/秒，消息大小 10 个字节；</li>
+<li>提供 完全分布式架构，并有 replica 机制，拥有较高的 可用性 和 可靠性，理论上支持 消息无限堆积；</li>
+<li>支持批量操作；</li>
+<li>消费者 采用 Pull 方式获取消息。消息有序，通过控制 能够保证所有消息被消费且仅被消费 一次；</li>
+<li>有优秀的第三方 Kafka Web 管理界面 Kafka-Manager；</li>
+<li>在 日志领域 比较成熟，被多家公司和多个开源项目使用。</li>
+</ol>
+<h4 id="缺点-3"><a href="#缺点-3" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>Kafka 单机超过 64 个 队列/分区 时，Load 时会发生明显的飙高现象。队列 越多，负载 越高，发送消息 响应时间变长；</li>
+<li>使用 短轮询方式，实时性 取决于 轮询间隔时间；</li>
+<li>消费失败 不支持重试；</li>
+<li>支持 消息顺序，但是 一台代理宕机 后，就会产生 消息乱序；</li>
+<li>社区更新较慢。</li>
+</ol>
+<h3 id="几种消息队列对比"><a href="#几种消息队列对比" class="headerlink" title="几种消息队列对比"></a>几种消息队列对比</h3><p>&emsp;&emsp;这里列举了上述四种消息队列的差异对比：</p>
+<figure class="image-box">
+                <a rel=浅谈消息队列及常见的消息中间件 href="16479c8ecf7ad3ef.png" title="" data-fancybox="images"><img src="16479c8ecf7ad3ef.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;Kafka 在于 分布式架构，RabbitMQ 基于 AMQP 协议 来实现，RocketMQ 的思路来源于 Kafka，改成了 主从结构，在 事务性 和 可靠性 方面做了优化。广泛来说，电商、金融 等对 事务一致性 要求很高的，可以考虑 RabbitMQ 和 RocketMQ，对 性能要求高 的可考虑 Kafka。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;本文介绍了消息队列的特点，消息队列的 传递服务模型，消息的 传输方式，消息的 推拉模式。然后介绍了 ActiveMQ，RabbitMQ，RocketMQ 和 Kafka 几种常见的消息队列，阐述了 各种消息队列 的 主要特点 和 优缺点。通过本文，对于消息队列及相关技术选型，相信你会有了更深入的理解和认识。更多细节和原理性的东西，还需在实践中见真知！</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-30T13:24:00.697Z" itemprop="dateUpdated">2019-12-30 21:24:00</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/30/WhatIsMessageQueuing/" target="_blank" rel="external">https://tao-lol.top/2019/12/30/WhatIsMessageQueuing/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/">RabbitMQ</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/30/WhatIsMessageQueuing/&title=《浅谈消息队列及常见的消息中间件》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/30/WhatIsMessageQueuing/&title=《浅谈消息队列及常见的消息中间件》 — Blog&source=
+https://juejin.im/post/5b41fe36e51d45191252e79e  
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/30/UsingSystemTextJsonInNetCore31/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">.NET Core 3.1 中的 Json 互操作最全解读</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/30/LearningRedis/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">深入剖析 Redis</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#正文"><span class="post-toc-number">2.</span> <span class="post-toc-text">正文</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列概述"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">消息队列概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列的特点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">消息队列的特点</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#采用异步处理模式"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">采用异步处理模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#应用系统之间解耦合"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">应用系统之间解耦合</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列的传递服务模型"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">消息队列的传递服务模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列的的传输模式"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">消息队列的的传输模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#点对点模型"><span class="post-toc-number">2.4.1.</span> <span class="post-toc-text">点对点模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点"><span class="post-toc-number">2.4.1.1.</span> <span class="post-toc-text">特点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#发布-订阅模型（Pub-Sub）"><span class="post-toc-number">2.4.2.</span> <span class="post-toc-text">发布/订阅模型（Pub/Sub）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点-1"><span class="post-toc-number">2.4.2.1.</span> <span class="post-toc-text">特点</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列应用场景"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">消息队列应用场景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#异步处理"><span class="post-toc-number">2.5.1.</span> <span class="post-toc-text">异步处理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#应用案例"><span class="post-toc-number">2.5.1.1.</span> <span class="post-toc-text">应用案例</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#系统解耦"><span class="post-toc-number">2.5.2.</span> <span class="post-toc-text">系统解耦</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最终一致性"><span class="post-toc-number">2.5.3.</span> <span class="post-toc-text">最终一致性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#广播"><span class="post-toc-number">2.5.4.</span> <span class="post-toc-text">广播</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#流量削峰和流控"><span class="post-toc-number">2.5.5.</span> <span class="post-toc-text">流量削峰和流控</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#应用案例-1"><span class="post-toc-number">2.5.5.1.</span> <span class="post-toc-text">应用案例</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#日志处理"><span class="post-toc-number">2.5.6.</span> <span class="post-toc-text">日志处理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#应用案例-2"><span class="post-toc-number">2.5.6.1.</span> <span class="post-toc-text">应用案例</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#消息通讯"><span class="post-toc-number">2.5.7.</span> <span class="post-toc-text">消息通讯</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列的推拉模型"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">消息队列的推拉模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Push-推消息模型"><span class="post-toc-number">2.6.1.</span> <span class="post-toc-text">Push 推消息模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Pull-拉消息模型"><span class="post-toc-number">2.6.2.</span> <span class="post-toc-text">Pull 拉消息模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#两种类型的区别"><span class="post-toc-number">2.6.3.</span> <span class="post-toc-text">两种类型的区别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息队列技术对比"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">消息队列技术对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ActiveMQ"><span class="post-toc-number">2.7.1.</span> <span class="post-toc-text">ActiveMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#主要特性"><span class="post-toc-number">2.7.1.1.</span> <span class="post-toc-text">主要特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#部署环境"><span class="post-toc-number">2.7.1.2.</span> <span class="post-toc-text">部署环境</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点"><span class="post-toc-number">2.7.1.3.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点"><span class="post-toc-number">2.7.1.4.</span> <span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#RabbitMQ"><span class="post-toc-number">2.7.2.</span> <span class="post-toc-text">RabbitMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#主要特性-1"><span class="post-toc-number">2.7.2.1.</span> <span class="post-toc-text">主要特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#部署环境-1"><span class="post-toc-number">2.7.2.2.</span> <span class="post-toc-text">部署环境</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点-1"><span class="post-toc-number">2.7.2.3.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点-1"><span class="post-toc-number">2.7.2.4.</span> <span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#RocketMQ"><span class="post-toc-number">2.7.3.</span> <span class="post-toc-text">RocketMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#主要特性-2"><span class="post-toc-number">2.7.3.1.</span> <span class="post-toc-text">主要特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#部署环境-2"><span class="post-toc-number">2.7.3.2.</span> <span class="post-toc-text">部署环境</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点-2"><span class="post-toc-number">2.7.3.3.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点-2"><span class="post-toc-number">2.7.3.4.</span> <span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Kafka"><span class="post-toc-number">2.7.4.</span> <span class="post-toc-text">Kafka</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#主要特性-3"><span class="post-toc-number">2.7.4.1.</span> <span class="post-toc-text">主要特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#部署环境-3"><span class="post-toc-number">2.7.4.2.</span> <span class="post-toc-text">部署环境</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点-3"><span class="post-toc-number">2.7.4.3.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点-3"><span class="post-toc-number">2.7.4.4.</span> <span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#几种消息队列对比"><span class="post-toc-number">2.7.5.</span> <span class="post-toc-text">几种消息队列对比</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#小结"><span class="post-toc-number">3.</span> <span class="post-toc-text">小结</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/30/WhatIsMessageQueuing/&title=《浅谈消息队列及常见的消息中间件》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/30/WhatIsMessageQueuing/&title=《浅谈消息队列及常见的消息中间件》 — Blog&source=
+https://juejin.im/post/5b41fe36e51d45191252e79e  
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACP0lEQVR42u3ayW7jMBAFQP//TztATgECWe81ncGYLJ0EWYuLB6K3xyM+nt/Hz/OfV67u//1Ucv76zUsHBgbGxzKeL4/fH7t6agbIr1x9EQMD4xxGu8m+/li7Hybsm/+MgYGBMdsEy/uTjR4DAwOjTVxXwr48YcbAwMDIw7X3bq+zoPMNuTgGBsYHMmaNgX9z/uf9DQwMjP+e8SyPNkyctSrrf4WBgbE143V7MkodR8Fl8mxbgMPAwNiVsbItzrbI2VjYzRUMDIzDGMkQWBsItgW7PJ3GwMA4gZGUt1YKYW3RP3/qctvFwMA4gJGMba0EhXnQmbc8MTAwTmCsjFzUn4nvHzY7MTAwNmXk29+s85C3BPJQ9bKFiYGBsR0jL6u1iW47WjFrpmJgYJzAyItobYCYNwNyxs3SYGBgbMpIHltvXkbxadkKfeSzGBgYGB/OmJXJZuloDhgOh2FgYGzKaJsBbfCX/Joszc12jIGBcQwjL4TN0tf2zUWjFAMDY2tGG+q9YaajjFjzMBEDA2NXxmzwqw372iS5TaExMDBOYLRJY576tudJAHqZxGJgYGzKyBPUlaZjPsAxa0hgYGDszXiWx7tGvtpmQxHhYmBgbMdYSR3bkHFWSpu1DTAwMPZjtElpvv3NVm643hgYGAcwkiSzHd6aJbdvyMUxMDAOZrSpZlHWD5bgZlEwMDAw/qwlmfNulgkDA+MARpLEJqX8tm2Zl/5vklsMDIytGbPBiLYYlw+Q5W9e6m9gYGB8BuMLH3tBzy/f92MAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>

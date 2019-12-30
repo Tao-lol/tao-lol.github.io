@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>如何把单体式应用拆解成微服务？ | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="程序设计">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>如何把单体式应用拆解成微服务？</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">如何把单体式应用拆解成微服务？</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-28T09:47:20.000Z" itemprop="datePublished" class="page-time">
+  2019-12-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-HowToChangeSingleAppIntoMicroServices"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">如何把单体式应用拆解成微服务？</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-28 17:47:20" datetime="2019-12-28T09:47:20.000Z"  itemprop="datePublished">2019-12-28</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p>上：<a href="https://www.cnblogs.com/itlaobingge/p/12095774.html" target="_blank" rel="noopener">https://www.cnblogs.com/itlaobingge/p/12095774.html</a><br>下：<a href="https://www.cnblogs.com/itlaobingge/p/12100154.html" target="_blank" rel="noopener">https://www.cnblogs.com/itlaobingge/p/12100154.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;微服务是当下最流行的应用架构技术了，它跟容器服务、DevOps 合称云时代的三剑客，可以帮我们化解业务发展过快导致的产品迭代压力，让我们可以自由选择最适合团队的技术栈，让系统能够承载互联网海量用户的访问，让我们可以更加轻松地运维大型的互联网系统。近些年在厂商、社区和用户等各方努力推动下，微服务相关的理论和产品都日趋成熟，不同语言的微服务开发及治理套件（例如：Spring Cloud / Dubbo 等）让我们从零开始搭建微服务变得非常简单快捷，那我们是否就此可以全面进入微服务时代呢？<br>&emsp;&emsp;微服务的演进成熟需要时间，我们熟悉掌握这套新技术也需要时间，除此之外机房里面还跑着大量的单体式应用，它们需要继续维护和升级，任何时候我们都不可能抛开历史轻松上阵。这些单体式应用还担负着公司的核心业务，全部推倒重来、休克式重构是不可取的，投入大周期长，风险完全不可控。我们必须学会边行车边换胎的技能，在不影响现网业务的前提下推动微服务改造，让老系统焕发新的生命力，继续支持业务下一个十年的发展。本文将跟你一起探讨微服务改造相关的经验方法，让你更加从容地拥抱微服务！</p>
+<h1 id="边行车边换胎三步走演进策略"><a href="#边行车边换胎三步走演进策略" class="headerlink" title="边行车边换胎三步走演进策略"></a>边行车边换胎三步走演进策略</h1><p>&emsp;&emsp;如何从单体式应用演进至微服务呢？这些单体式应用都存在很长时间了，经过这么长时间的修修补补，体量规模都比较大，尤其是经过几波人交接维护，业务逻辑也变得异常复杂。同时，它们都在线对外提供服务，全部推倒重建的可能性微乎其微，休克式重构投入大周期长，风险也不好控制，还会影响业务对外服务的连续性。从现实情况出发，最可行的架构优化方案就是渐进式的微服务改造，按照业界的最佳实践和个人经验，该演进策略主要包括三个关键步骤：</p>
+<ul>
+<li>将所有新特性都构建成微服务，遏制单体式应用的生长；</li>
+<li>在微服务和单体式应用之间构建反腐层，防止老系统腐化新系统；</li>
+<li>按照特定的优先顺序由外而内逐步瓦解单体式应用。</li>
+</ul>
+<h2 id="新建微服务"><a href="#新建微服务" class="headerlink" title="新建微服务"></a>新建微服务</h2><p>&emsp;&emsp;通常单体式应用所采用的技术相对较老旧，维护这些系统的同事缺少机会学习实践当前主流的技术，久而久之就跟不上主流技术的发展，在晋升、加薪和跳槽时都缺乏竞争力，这会影响到个人的价值。随着系统规模越来越庞大，更新升级和运营维护的难度越来越大，每次发版都要加班加点和心惊胆战，逐渐满足不了业务快速发展的需要。在单体式架构之下，团队无法利用不同技术栈的优势解决不同场景下的问题，即使解决了问题也是事倍功半。<br>&emsp;&emsp;当意识到有必要将单体式应用改造成微服务时，我们通常会认为改造就是将单体式应用一块一块地敲下来改成微服务，这种想法是最直接的，但难度和风险也是最大的。改造初始我们对微服务相关技术也比较生疏，再加上拆解单体式应用本身的难度，双重困难叠加往往会导致改造失败或延期。<br>&emsp;&emsp;最靠谱的策略是先停止往单体式应用里面添加新的特性，所有新特性都构建成微服务，从而遏制单体式应用继续生长。新特性通常不会太复杂，新建微服务也要比从单体式应用上剥离微服务容易一些，借助这个过程让团队逐渐熟悉掌握微服务技术栈，从小规模练兵再到全面铺开。常见的微服务架构如下图所示，主要包含以下几大必备组件：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-01.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-01.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<ul>
+<li><strong>注册中心</strong>，提供微服务的注册、发现和状态监测等功能；</li>
+<li><strong>配置中心</strong>，解耦代码与配置，通过统一的远程配置中心管理每个微服务的配置数据，支持动态修改和立即生效等；</li>
+<li><strong>治理中心</strong>，依赖注册中心和配置中心，提供服务降级、服务熔断、流量控制、灰度管理等功能；</li>
+<li><strong>API 网关</strong>，将每个微服务汇聚一起对外提供服务，网关本身会提供安全鉴权、服务路由、流量控制、计量计费等横切面功能。</li>
+</ul>
+<h2 id="构建反腐层"><a href="#构建反腐层" class="headerlink" title="构建反腐层"></a>构建反腐层</h2><p>&emsp;&emsp;新特性全部构建成了微服务，但老特性还依旧在单体式应用当中，许多业务还需要新旧系统彼此协作才能完成，那么微服务和单体式应用之间还存在彼此交互。但新旧系统对外服务时所采用的协议可能不同，例如：采用 Spring Cloud 框架开发的微服务主要以 RESTful HTTP API 对外服务，采用 Dubbo 框架开发的微服务以 Dubbo 协议对外服务，而单体式应用可能以 Web Service、EJB T3、不规范 HTTP API 等形式对外服务。除了协议不同之外，新旧系统对领域模型的定义也可能不同，包括名称和属性等，如何调和微服务和单体式应用的不同呢？<br>&emsp;&emsp;在微服务和单体式应用之间构建一道反腐层，这或许是最切实可行的办法。通过反腐层完成新旧系统的对接集成，又可以避免旧系统领域模型对新系统的干扰，让彼此保持松耦合状态，阻止旧系统的腐烂蔓延至新系统。反腐层还可以对单体式应用进行服务化封装，让其像微服务一样以 RESTful HTTP API 的方式对外服务。反腐层支持双向通讯，重点解决新旧系统对接集成、协议适配和模型转换等问题，按照此功能定位我们可以将反腐层划分成三个模块：</p>
+<ul>
+<li><strong>外观（Facade）</strong>，经典设计模式，作为旧系统所有服务接口的门面，简化新旧系统对接的复杂度；</li>
+<li><strong>适配器（Adapter）</strong>，经典设计模式，向新系统提供所需的服务实体，负责请求和应答的协议适配；</li>
+<li><strong>转换器（Translator）</strong>，负责请求和应答中新旧系统领域模型的转换。</li>
+</ul>
+<p>&emsp;&emsp;由于单体式应用的架构较为简单，因此在设计之初它们很少考虑系统集成相关的设计，通常一个应用下的不同服务拥有各自的入口，外观（Facade）就是解决此问题的，统一单体式应用对外服务的格式，像微服务一样以 RESTful HTTP API 的方式对外服务，规范接口的协议类型、URL 命名和报文格式等。如果旧系统不属于我们维护，那反腐层就需要包含 Facade 模块，微服务通过它对接旧系统。如果旧系统也是由我们自己维护，那建议将 Facade 模块构建在单体式应用内部，微服务通过 Adapter 模块对接旧系统。</p>
+<h2 id="围剿单体式应用"><a href="#围剿单体式应用" class="headerlink" title="围剿单体式应用"></a>围剿单体式应用</h2><p>&emsp;&emsp;在旧系统周边构建微服务，遏制旧系统的不断生长，然后再从旧系统逐步剥离出微服务，最后完成对单体式应用的绞杀。优良的微服务设计同样遵循高内聚、低耦合原则，将关联紧密的行为封装进一个微服务当中，从而可以减少需求变更所影响的范围。只要服务契约不发生改变，那对单个微服务的升级改造都不会影响到其他服务，因此可以发布更少的服务来快速地满足业务需求，并降低同时部署多个微服务时带来的风险。在从单体式应用剥离微服务之前，我们先看看功能模块之间的边界有哪些类型：</p>
+<ul>
+<li><strong>技术边界</strong>：将系统按照技术栈的不同划分，形成两个部件的边界。它们所采用的技术大相径庭，对开发人员的技能要求不同。业界将此种架构叫做洋葱架构，拥有许多水平分层，不利于改造成微服务。</li>
+<li><strong>地域边界</strong>：按照组织分布的地域划分，相对较容易改造成微服务。</li>
+<li><strong>业务边界</strong>：按照业务类型划分，最适合作为微服务的边界类型。</li>
+</ul>
+<p>&emsp;&emsp;领域驱动设计（DDD）理论提出了有界上下文（Bounded Context）概念，这是我们理清服务边界的有效工具，我们可以借助它从单体式应用上剥离微服务。因此，单体式应用的微服务化改造，亦或新建微服务，我们都离不开业务专家的支持，通过他们确定有界上下文的划分，从而设计出好的微服务。</p>
+<h1 id="隔离网关接管新旧系统间交互"><a href="#隔离网关接管新旧系统间交互" class="headerlink" title="隔离网关接管新旧系统间交互"></a>隔离网关接管新旧系统间交互</h1><p>&emsp;&emsp;在前面章节中我们已经知道在微服务改造过程中需要构建反腐层，那在实际项目当中反腐层会以什么样的形态存在呢？通常我们会将反腐层设计成隔离网关，以单独的进程运行，在隔离网关内部实现 Facade、Adapter 和 Translator 等功能模块。隔离网关不需要从零开始建设，我们可以在 Nginx、Kong、Zuul 等开源中间件基础上扩展，它们都支持插件化或过滤器等扩展定制模式，我们很容易实现反腐层需要的功能。</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-02.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-02.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;通过反腐层（隔离网关）微服务可以与单体式应用进行正常通信，同时彼此之间保持松耦合，单体式应用可以不用做伤筋动骨的改动，微服务可以采用最新的技术独立演进，但这种方案下这些遗留的单体式应用是无法享受到云原生带来的好处。有没有一种方案可以让这些遗留系统也享受到服务发现、流量控制、服务熔断、服务降级等新特性呢？<br>&emsp;&emsp;Service Mesh，下一代微服务架构，可以给我们带来更加完善的解决方案，它将原先通过微服务开发框架（例如：Spring Boot 等）侵入到应用内部的服务治理等功能模块封装进了 Sidecar，与应用结对部署，作为独立的进程存在，这样可以做到与应用松耦合，架构上更加灵活，可以支持微服务治理相关基础设施的独立升级部署，还可以支持多语言。如果在 Sidecar 基础上再扩展隔离网关的功能，那遗留的单体式应用也可以更加融入微服务架构了。</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-03.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-03.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="单体式应用拆解微服务的方法"><a href="#单体式应用拆解微服务的方法" class="headerlink" title="单体式应用拆解微服务的方法"></a>单体式应用拆解微服务的方法</h1><p>&emsp;&emsp;本章节我们将梳理从单体式应用剥离微服务的一些常见场景和方案。在谈具体案例之前，我们有必要先了解一下业界最佳实践的经验总结，它主要包含以下几个基本步骤：</p>
+<ul>
+<li><strong>识别出某个业务板块的上下文边界，这是拆解单体式应用的关键步骤。</strong>微服务是按照业务来划分和组织的，在动手拆解之前先要理清当前一个单体式应用提供了哪些业务功能，例如：用户管理、商品展示、订单管理、支付管理和物流管理等，按照垂直方向划分出来的功能板块都可以改造成微服务。具体操作时大部分编程语言都提供了命名空间（NameSpace）特性，我们在重构过程中可以借助它将同一个上下文相关的代码归集在一起，然后从整个工程中将其拆解出来形成微服务。</li>
+<li><strong>理清业务功能模块之间的依赖，尽量减少依赖关系，从变化频繁、投入产出比高的模块开始剥离，这样可以逐步缓解日常开发的进度压力。</strong>经过依赖关系的梳理，冗余的依赖将会被消除，剩下的依赖将会从进程内部的函数调用改造成进程之间的 RESTful HTTP API 调用。 </li>
+<li><strong>拆解数据，包括数据访问层和数据库表等。</strong>除了代码，数据也要被拆解，数据访问层要被打散到不同的命名空间当中，数据库表之间的外键依赖需要被清理消除等。</li>
+</ul>
+<p>&emsp;&emsp;从业务开始，再到代码，最后才是数据，这就是上述三个步骤的关键。业务是所有代码和数据的源头，面向对象设计（OOD）和领域驱动设计（DDD）是做好微服务设计的专业技能，而用好这两项技能的前提就是对业务有深刻的洞悉。</p>
+<h1 id="拆解场景"><a href="#拆解场景" class="headerlink" title="拆解场景"></a>拆解场景</h1><h2 id="场景-1：数据库表外键引用关系"><a href="#场景-1：数据库表外键引用关系" class="headerlink" title="场景 1：数据库表外键引用关系"></a>场景 1：数据库表外键引用关系</h2><p>&emsp;&emsp;如果单体式应用中两个功能模块存在数据引用关系，那我们在拆解微服务时如何消除这种外键引用关系呢？首先，停⽌外键引⽤；然后，改成通过 RESTful HTTP API ⽅式获取原先外键关联的信息。如下图，改造前 Payment 数据库表中的记录通过外键引用 Order，代码层面通常会借助对象关系映射（ORM）框架建立数据对象的关联，改造后代码层面就不能通过 ORM 框架做关联了。在 Payment 数据库表的记录中会保存 Order 的主键值，除此之外还会保存 Order 的关键属性信息，这样可以避免频繁的跨进程调用，从而可以提高系统的整体效率表现。  </p>
+<p>下图是改造前的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-04.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-04.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>下图是改造后的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-05.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-05.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="场景-2：共享静态数据关系"><a href="#场景-2：共享静态数据关系" class="headerlink" title="场景 2：共享静态数据关系"></a>场景 2：共享静态数据关系</h2><p>&emsp;&emsp;如果单体式应用中两个功能模块彼此共享静态数据，那我们在拆解微服务时如何消除这种共享关系呢？静态数据通常存储在数据库当中，例如：商品类目代号。如果这些静态数据需要更新，那我们就需要频繁地发布系统，这样会导致多个服务的中断。<br>&emsp;&emsp;为了避免这个问题，我们也可以将这些静态数据拷贝多份，分别⽤于每个服务，但维护多份数据拷⻉的一致性是个问题。另外，我们也可以将这些静态数据存⼊每个服务的配置文件，降低更新数据的难度。统一配置中心，微服务架构中的必选组件，我们可以通过它来管理这些静态数据，这样在维护更新上会带来极大的便利。</p>
+<h2 id="场景-3：共享基础数据关系"><a href="#场景-3：共享基础数据关系" class="headerlink" title="场景 3：共享基础数据关系"></a>场景 3：共享基础数据关系</h2><p>&emsp;&emsp;如果单体式应用中两个功能模块共享某类基础数据，那我们在拆解微服务时如何消除这种共享关系呢？多个服务共享某类基础数据，例如：用户数据、物流公司数据等等，那我们要为这类数据提炼出专门的领域模型，将它封装成微服务，然后通过该服务来访问这些共享的基础数据。服务化带来的好处就是彼此之间仅仅依赖服务契约，双方具体采用什么技术和方案都是自由的。只要服务契约没有改变，那彼此的升级改造就不会影响。  </p>
+<p>下图是改造前的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-06.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-06.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+
+<p>下图是改造后的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-07.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-07.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="场景-4：共享数据库表格"><a href="#场景-4：共享数据库表格" class="headerlink" title="场景 4：共享数据库表格"></a>场景 4：共享数据库表格</h2><p>&emsp;&emsp;如果单体式应用中两个功能模块共享一张数据表格，那我们在拆解微服务时如何消除这种共享关系呢？多个服务各自引⽤的数据被合并存储在一张数据库表当中，代码层面借助 ORM 框架实现多态，这种情况我们需要将每个服务所关注的数据剥离出来，分别存到不同的表格当中。  </p>
+<p>下图是改造前的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-08.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-08.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>下图是改造后的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-09.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-09.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="场景-5：共享数据库"><a href="#场景-5：共享数据库" class="headerlink" title="场景 5：共享数据库"></a>场景 5：共享数据库</h2><p>&emsp;&emsp;在拆解微服务过程中，我们该如何拆分数据库呢？最稳妥的方案就是分阶段重构数据库，数据是最宝贵的资源，我们不要贪图一步到位。  </p>
+<p>下图是改造前的情况：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-10.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-10.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>第一步，按照业务上下文先将一个数据库拆解成两个数据库，但应用仍然是单体式应用，通过多数据源相关技术应用可以同时访问两个数据库，如下图所示：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-11.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-11.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>第二步，将单体式应用拆解成微服务，每个微服务都有各自独立的数据库，如下图所示：</p>
+<figure class="image-box">
+                <a rel=如何把单体式应用拆解成微服务？ href="microservice-refactoring-12.jpg" title="" data-fancybox="images"><img src="microservice-refactoring-12.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="旧模块微服务改造优先级原则"><a href="#旧模块微服务改造优先级原则" class="headerlink" title="旧模块微服务改造优先级原则"></a>旧模块微服务改造优先级原则</h1><p>&emsp;&emsp;从单体式应用中划分出有界的上下文，作为剥离微服务的候选，然后开始依次重构每个功能模块。那如何判断哪些模块应该优先被剥离成微服务呢？从模块剥离难度看，我们可以遵循先易后难的原则，逐步积累重构经验，这适用于在微服务构建方面经验不太丰富的团队；从需求变化频率看，优先剥离那些变更频繁的模块，整体收益会更大一些，这对于人力资源较为紧张的团队不失为一个好的判断准则；从资源消耗类型看，那些计算或内存密集的模块适合优先剥离，这样有利于弹性伸缩时提升资源利用效率，这对系统规模较大的场景效果最明显；从服务边界粒度看，粒度越粗越好剥离。具体按哪个规则来安排微服务的改造顺序，这就要根据每个团队的具体情况来具体分析了。<br>&emsp;&emsp;我们在支持不同系统实施微服务改造的过程中，上述优先级原则都被采用过，优先级存在的原因就是资源不够。微服务改造不是一蹴而就的事情，这个过程会持续很长时间，可能跨度几年，在不同阶段需要考虑的问题也就不同，最核心的原则就是按照适合自己的节奏有条不紊地开展工作，在确保线上业务稳定的前提下适当地追求速度。</p>
+<h1 id="微服务改造是否结束判断标准"><a href="#微服务改造是否结束判断标准" class="headerlink" title="微服务改造是否结束判断标准"></a>微服务改造是否结束判断标准</h1><p>&emsp;&emsp;那什么时候才算完成微服务改造呢？判断标准就是旧系统中全部有界上下文都被剥离成微服务，此时反腐层就可以被废除了；或者遗留的单体式应用相对较稳定，不再发生变化，重构的投入产出比不再划算；或者遗留的单体式应用关联业务已经退出市场了，系统下线了。</p>
+<h1 id="微服务架构新挑战与解决方案"><a href="#微服务架构新挑战与解决方案" class="headerlink" title="微服务架构新挑战与解决方案"></a>微服务架构新挑战与解决方案</h1><p>&emsp;&emsp;当单体式应用被拆解成多个微服务之后，原先在一个事务边界内的操作现在要跨多个事务边界了，我们如何保证事务的一致性呢？下面是一些分布式事务机制：</p>
+<ul>
+<li>再次尝试，最终一致：将每个操作步骤放⼊队列排队，后续再次尝试，确保最后执行成功，状态达成⼀致。</li>
+<li>撤销全部操作：补偿事务机制，原事务操作失败之后，启动一个新的事务去撤销之前的操作。如果补偿事务也失败了，那系统需要提供手动或自动再次运⾏补偿事务的功能。</li>
+<li>分布式事务：通过一个全局事务管理器来协调各个事务得以成功执行。对于短期事务，通常采用两阶段提交（Two-Phase Commit），第一阶段是投票阶段，分布式事务的参与者告诉事务管理器，判断本地事务是否可以顺利执行。如果事务管理器收集到所有投票结果都是 YES，那就开始提交事务执行。</li>
+</ul>
+<p>&emsp;&emsp;分布式事务机制本身不算太复杂，我们借鉴业界的一些开源产品自研了一套分布式事务框架，跟微服务框架结合起来，应用开发者只需要按照框架的约定实现特定的接口，通过一些注解就可以发起分布式事务，相关细节可以参考阿里的全局事务服务 GTS。  </p>
+<p>&emsp;&emsp;当单体式应用被拆解成多个微服务之后，原先集中存储的数据也被分开存储了，报表生成将会遇到新的挑战。在单体式应⽤情况下，通常有一个用于生成报表的从库，从主库同步数据，仅⽤于查询等读操作，避免⽣成报表过程影响主库的读写效率。在微服务情况下，我们将要通过服务调用来获取数据，设计适合报表统计的批量接口，以及增加缓存用于提升数据获取效率。</p>
+<ul>
+<li>数据抽取：通过服务调⽤来获取报表所需数据，这会造成非常⼤的负载，以及专⻔为报表设计的 API。为了弥补上述不足，我们可以将数据抽取程序独立出来，专门从业务数据库中抽取数据到报表数据库。</li>
+<li>事件驱动数据抽取：基于事件驱动的微服务架构，我们可以开发特定事件的订阅者，负责将数据同步到报表数据库，这样可以解耦底层数据库系统。</li>
+</ul>
+<p>&emsp;&emsp;微服务改造是一个长期过程，这个过程会遇到各式各样的问题，方法论可以帮助我们更好地解决这些问题，并且降低风险。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-12-29T03:42:20.376Z" itemprop="dateUpdated">2019-12-29 11:42:20</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2019/12/28/HowToChangeSingleAppIntoMicroServices/" target="_blank" rel="external">https://tao-lol.top/2019/12/28/HowToChangeSingleAppIntoMicroServices/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/程序设计/">程序设计</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/28/HowToChangeSingleAppIntoMicroServices/&title=《如何把单体式应用拆解成微服务？》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/28/HowToChangeSingleAppIntoMicroServices/&title=《如何把单体式应用拆解成微服务？》 — Blog&source=
+上：https://www.cnblogs.com/itlaobingge/p/12095774.html下：https://www.cnblogs.c..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2019/12/28/UnderstandSnowFlake/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">理解分布式 ID 生成算法 SnowFlake</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2019/12/28/HowToDesignGoodWebApi/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何设计出优美的 Web API？</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#边行车边换胎三步走演进策略"><span class="post-toc-number">1.</span> <span class="post-toc-text">边行车边换胎三步走演进策略</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#新建微服务"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">新建微服务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#构建反腐层"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">构建反腐层</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#围剿单体式应用"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">围剿单体式应用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#隔离网关接管新旧系统间交互"><span class="post-toc-number">2.</span> <span class="post-toc-text">隔离网关接管新旧系统间交互</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#单体式应用拆解微服务的方法"><span class="post-toc-number">3.</span> <span class="post-toc-text">单体式应用拆解微服务的方法</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#拆解场景"><span class="post-toc-number">4.</span> <span class="post-toc-text">拆解场景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景-1：数据库表外键引用关系"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">场景 1：数据库表外键引用关系</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景-2：共享静态数据关系"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">场景 2：共享静态数据关系</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景-3：共享基础数据关系"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">场景 3：共享基础数据关系</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景-4：共享数据库表格"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">场景 4：共享数据库表格</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景-5：共享数据库"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">场景 5：共享数据库</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#旧模块微服务改造优先级原则"><span class="post-toc-number">5.</span> <span class="post-toc-text">旧模块微服务改造优先级原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#微服务改造是否结束判断标准"><span class="post-toc-number">6.</span> <span class="post-toc-text">微服务改造是否结束判断标准</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#微服务架构新挑战与解决方案"><span class="post-toc-number">7.</span> <span class="post-toc-text">微服务架构新挑战与解决方案</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2019
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2019/12/28/HowToChangeSingleAppIntoMicroServices/&title=《如何把单体式应用拆解成微服务？》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2019/12/28/HowToChangeSingleAppIntoMicroServices/&title=《如何把单体式应用拆解成微服务？》 — Blog&source=
+上：https://www.cnblogs.com/itlaobingge/p/12095774.html下：https://www.cnblogs.c..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACvElEQVR42u3aQW4jMQwEwPz/01lgT7uI7XRTYuJDzcmA5RmVDIgakh8f8fX59/r6+fW3n/9c7X2S8dcuPDw8vNHUn13JrZ+Rvt5nNqv8KQ+ehYeHh7fGayf9bBLJ+NdjToIEHh4e3rvxki072eITXh4k8PDw8N6ZN9vE8+nm4QcPDw/vHXizBySbe771nxzHL+Ra8PDw8GLeSQHstz7/UH0PDw8Pr6yq55t+GwyS9EQbDB7MFg8PD2+B16YS8gnliYx2UepUMh4eHt5VXlKUmgWM5J751p8v7n8j8fDw8BZ4+Ut+u2W3O3PesJUvEB4eHt4GL0kWzDbxjf+hDhV4eHh4C7w2MGy0VeULdKF2h4eHh3eV1z6+Tf7O0goX/iQ8PDy8BV6UsYiTC3dLWfnh+xsqHh4e3iXea8AsiTBrxsqnXqSY8fDw8NZ4eQCYBYmThEW7rHh4eHjbvNmG24aTWfDIFwIPDw/vJ3lt2T7/Nk9A5OEkCRV4eHh427y2RWD2+KTk9pqdkKJ54uHh4V3ltQX+W0GlbQIYJkHw8PDwrvLyybWH5vbgno8vwgYeHh7eVV6eVmibq9oD8WzT/yapgYeHh7fAywtgCWB2TM+X6VrTAB4eHt4Br02MnoxvK1Oz5MWDdwU8PDy8Bd6stD/LFueH77b8NuyMwMPDwzvgbb/8n7cR1KdlPDw8vAVeuzXn37bH8fbgXiwxHh4e3lXeyYNnLVZ5I8LJi8GD+h4eHh7eMu8kadsmgtulKZYMDw8Pb4F3nhE9b0SYpXFXuiTw8PDwYt6tLTu5W/urWcL3m/4IPDw8vEu8/CW/Ta22x+JZTHv6Kzw8PLxf5W2nCdpgEDV74eHh4b0ZL0ngnjzlfCHw8PDw9nj5UXg26VnYSH71ejweHh7eBu/oVX+UYkgCTJ4CvlDlw8PDw0t5fwAhHwMnzR9+sAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
