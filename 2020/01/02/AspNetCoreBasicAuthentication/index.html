@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>ASP.NET Core 实现基本认证 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,Web,dotNET,ASPNETCore">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>ASP.NET Core 实现基本认证</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">ASP.NET Core 实现基本认证</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-02T12:47:07.000Z" itemprop="datePublished" class="page-time">
+  2020-01-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-AspNetCoreBasicAuthentication"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">ASP.NET Core 实现基本认证</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-02 20:47:07" datetime="2020-01-02T12:47:07.000Z"  itemprop="datePublished">2020-01-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/JulianHuang/p/10345365.html" target="_blank" rel="noopener">https://www.cnblogs.com/JulianHuang/p/10345365.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="HTTP-基本认证"><a href="#HTTP-基本认证" class="headerlink" title="HTTP 基本认证"></a>HTTP 基本认证</h1><p>&emsp;&emsp;在 HTTP 中，<a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="_blank" rel="noopener">HTTP 基本认证</a>（Basic Authentication）是一种允许网页浏览器或其他客户端程序以<code>用户名:口令</code>请求资源的身份验证方式，不要求 Cookie、Session Identifier、Login Page 等标记或载体。  </p>
+<ul>
+<li>所有浏览器都支持 HTTP 基本认证方式；</li>
+<li>基本认证原理<strong>不保证传输凭证的安全性</strong>，仅被<code>Base64</code>编码，并没有 Encrypted 或者 Hashed，一般部署在<strong>客户端和服务端互信</strong>的网络，在<strong>公网</strong>中应用 BA 认证通常与 <strong>HTTPS</strong> 结合。</li>
+</ul>
+<h1 id="BA-标准协议"><a href="#BA-标准协议" class="headerlink" title="BA 标准协议"></a>BA 标准协议</h1><p>BA 认证协议的实施主要依靠约定的 <strong>请求头 / 响应头</strong>， 典型的浏览器和服务器的 BA 认证流程：</p>
+<ol>
+<li><p>浏览器请求应用了 BA 协议的网站，服务端响应一个 401 认证失败响应码，并写入<code>WWW-Authenticate</code>响应头，指示服务端支持 BA 协议。<br>或客户端在第一次请求时发送正确<code>Authorization</code>标头，从而避免被质询。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 401 Unauthorized</span><br><span class="line"></span><br><span class="line">WWW-Authenticate: Basic realm=<span class="string">"our site"</span></span><br><span class="line"><span class="comment"># WWW-Authenticate 响应头包含一个 realm 域属性，指明 HTTP 基本认证的是这个资源集</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端以 <code>Base64</code> 编码<code>用户名:口令</code>，作为<code>Authorization</code>标头值重新发送请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Basic userid:password</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <a rel=ASP.NET Core 实现基本认证 href="587720-20191106153345436-984330407.png" title="" data-fancybox="images"><img src="587720-20191106153345436-984330407.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>所以在 HTTP 基本认证中认证范围与<code>realm</code>有关（具体由服务端定义）。</p>
+<blockquote>
+<p>一般浏览器客户端对于<code>www-Authenticate</code>质询结果，会弹出口令输入窗。</p>
+</blockquote>
+<h1 id="BA-编程实践"><a href="#BA-编程实践" class="headerlink" title="BA 编程实践"></a>BA 编程实践</h1><blockquote>
+<p>&emsp;&emsp;ASP.NET Core 网站利用 FileServerMiddleware 将路径映射到某文件资源， 现对该文件资源访问路径应用 Http BA 协议。  </p>
+</blockquote>
+<p>ASP.NET Core 服务端实现 BA 认证：</p>
+<ol>
+<li>实现服务端基本认证的认证过程、质询逻辑；</li>
+<li>实现基本身份认证交互中间件<code>BasicAuthenticationMiddleware</code>，要求对<code>HttpContext</code>使用<code>BA.Scheme</code>；</li>
+<li>ASP.NET Core 添加认证计划，为文件资源访问路径启用 BA 中间件，注意使用<code>UseWhen</code>插入中间件（适用于 ASP.NET Core 2.X）。</li>
+</ol>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Net.Http.Headers;</span><br><span class="line"><span class="keyword">using</span> System.Security.Claims;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"><span class="keyword">using</span> System.Text.Encodings.Web;</span><br><span class="line"><span class="keyword">using</span> System.Threading.Tasks;</span><br><span class="line"><span class="keyword">using</span> Microsoft.AspNetCore.Authentication;</span><br><span class="line"><span class="keyword">using</span> Microsoft.Extensions.Logging;</span><br><span class="line"><span class="keyword">using</span> Microsoft.Extensions.Options;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EqidManager.Services</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">BasicAuthenticationScheme</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">string</span> DefaultScheme = <span class="string">"Basic"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BasicAuthenticationOption</span>:<span class="title">AuthenticationSchemeOptions</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Realm &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> UserName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> UserPwd &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public class BasicAuthenticationHandler : AuthenticationHandler&lt;BasicAuthenticationOption&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> BasicAuthenticationOption authOptions;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">BasicAuthenticationHandler</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">            IOptionsMonitor&lt;BasicAuthenticationOption&gt; options,</span></span></span><br><span class="line"><span class="function"><span class="params">            ILoggerFactory logger,</span></span></span><br><span class="line"><span class="function"><span class="params">            UrlEncoder encoder,</span></span></span><br><span class="line"><span class="function"><span class="params">            ISystemClock clock</span>)</span></span><br><span class="line"><span class="function">            : <span class="title">base</span>(<span class="params">options, logger, encoder, clock</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            authOptions = options.CurrentValue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> 认证</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">async</span> Task&lt;AuthenticateResult&gt; <span class="title">HandleAuthenticateAsync</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (!Request.Headers.ContainsKey(<span class="string">"Authorization"</span>))</span><br><span class="line">                <span class="keyword">return</span> AuthenticateResult.Fail(<span class="string">"Missing Authorization Header"</span>);</span><br><span class="line">            <span class="keyword">string</span> username, password;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> authHeader = AuthenticationHeaderValue.Parse(Request.Headers[<span class="string">"Authorization"</span>]);</span><br><span class="line">                <span class="keyword">var</span> credentialBytes = Convert.FromBase64String(authHeader.Parameter);</span><br><span class="line">                <span class="keyword">var</span> credentials = Encoding.UTF8.GetString(credentialBytes).Split(<span class="string">':'</span>);</span><br><span class="line">                username = credentials[<span class="number">0</span>];</span><br><span class="line">                password = credentials[<span class="number">1</span>];</span><br><span class="line">                <span class="keyword">var</span> isValidUser= IsAuthorized(username,password);</span><br><span class="line">                <span class="keyword">if</span>(isValidUser== <span class="literal">false</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">return</span> AuthenticateResult.Fail(<span class="string">"Invalid username or password"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> AuthenticateResult.Fail(<span class="string">"Invalid Authorization Header"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> claims = <span class="keyword">new</span>[] &#123;</span><br><span class="line">                <span class="keyword">new</span> Claim(ClaimTypes.NameIdentifier, username),</span><br><span class="line">                <span class="keyword">new</span> Claim(ClaimTypes.Name, username),</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="keyword">var</span> identity = <span class="keyword">new</span> ClaimsIdentity(claims, Scheme.Name);</span><br><span class="line">            <span class="keyword">var</span> principal = <span class="keyword">new</span> ClaimsPrincipal(identity);</span><br><span class="line">            <span class="keyword">var</span> ticket = <span class="keyword">new</span> AuthenticationTicket(principal, Scheme.Name);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">await</span> Task.FromResult(AuthenticateResult.Success(ticket));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> 质询</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="properties"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">async</span> Task <span class="title">HandleChallengeAsync</span>(<span class="params">AuthenticationProperties properties</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Response.Headers[<span class="string">"WWW-Authenticate"</span>] = <span class="string">$"Basic realm=\"<span class="subst">&#123;Options.Realm&#125;</span>\""</span>;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">base</span>.HandleChallengeAsync(properties);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> 认证失败</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="properties"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">async</span> Task <span class="title">HandleForbiddenAsync</span>(<span class="params">AuthenticationProperties properties</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">await</span> <span class="keyword">base</span>.HandleForbiddenAsync(properties); </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">bool</span> <span class="title">IsAuthorized</span>(<span class="params"><span class="keyword">string</span> username, <span class="keyword">string</span> password</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">return</span> username.Equals(authOptions.UserName, StringComparison.InvariantCultureIgnoreCase)</span><br><span class="line">                   &amp;&amp; password.Equals(authOptions.UserPwd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTTP 基本认证 Middleware</span></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">BasicAuthentication</span></span><br><span class="line"> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">UseBasicAuthentication</span>(<span class="params"><span class="keyword">this</span> IApplicationBuilder app</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        app.UseMiddleware&lt;BasicAuthenticationMiddleware&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BasicAuthenticationMiddleware</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger _logger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BasicAuthenticationMiddleware</span>(<span class="params">RequestDelegate next, ILoggerFactory LoggerFactory</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">        _logger = LoggerFactory.CreateLogger&lt;BasicAuthenticationMiddleware&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext httpContext, IAuthenticationService authenticationService</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> authenticated = <span class="keyword">await</span> authenticationService.AuthenticateAsync(httpContext, BasicAuthenticationScheme.DefaultScheme);</span><br><span class="line">        _logger.LogInformation(<span class="string">"Access Status："</span> + authenticated.Succeeded);</span><br><span class="line">        <span class="keyword">if</span> (!authenticated.Succeeded)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> authenticationService.ChallengeAsync(httpContext, BasicAuthenticationScheme.DefaultScheme, <span class="keyword">new</span> AuthenticationProperties &#123; &#125;);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">await</span> _next(httpContext);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Startup.cs</code>文件添加并启用 HTTP 基本认证。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">services.AddAuthentication(BasicAuthenticationScheme.DefaultScheme)</span><br><span class="line">        .AddScheme&lt;BasicAuthenticationOption, BasicAuthenticationHandler&gt;(BasicAuthenticationScheme.DefaultScheme, <span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// _protectedResourceOption.Path 是需要设置 BA 认证的路径 </span></span><br><span class="line">app.UseWhen(</span><br><span class="line">    predicate:x =&gt; x.Request.Path.StartsWithSegments(<span class="keyword">new</span> PathString(_protectedResourceOption.Path)),</span><br><span class="line">    configuration:appBuilder =&gt; &#123; appBuilder.UseBasicAuthentication(); &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>以上 BA 认证的服务端已经完成，现在可以在浏览器测试：</p>
+<figure class="image-box">
+                <a rel=ASP.NET Core 实现基本认证 href="587720-20191106165026365-1039334527.gif" title="" data-fancybox="images"><img src="587720-20191106165026365-1039334527.gif" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="编程实现-BA-客户端"><a href="#编程实现-BA-客户端" class="headerlink" title="编程实现 BA 客户端"></a>编程实现 BA 客户端</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> BA 认证请求 Handler</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BasicAuthenticationClientHandler</span> : <span class="title">HttpClientHandler</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> BAHeaderNames = <span class="string">"authorization"</span>;</span><br><span class="line">    <span class="keyword">private</span> RemoteBasicAuth _remoteAccount;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BasicAuthenticationClientHandler</span>(<span class="params">RemoteBasicAuth remoteAccount</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _remoteAccount = remoteAccount;</span><br><span class="line">        AllowAutoRedirect = <span class="literal">false</span>;</span><br><span class="line">        UseCookies = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> Task&lt;HttpResponseMessage&gt; <span class="title">SendAsync</span>(<span class="params">HttpRequestMessage request, CancellationToken cancellationToken</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> authorization = <span class="string">$"<span class="subst">&#123;_remoteAccount.UserName&#125;</span>:<span class="subst">&#123;_remoteAccount.Password&#125;</span>"</span>;</span><br><span class="line">        <span class="keyword">var</span> authorizationBase64 = <span class="string">"Basic "</span> + Convert.ToBase64String(<span class="keyword">new</span> ASCIIEncoding().GetBytes(authorization));</span><br><span class="line">        request.Headers.Remove(BAHeaderNames);</span><br><span class="line">        request.Headers.Add(BAHeaderNames, authorizationBase64);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">base</span>.SendAsync(request, cancellationToken);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 Basic Authentication 请求</span></span><br><span class="line">services.AddHttpClient(<span class="string">"eqid-ba-request"</span>, x =&gt;</span><br><span class="line">            x.BaseAddress = <span class="keyword">new</span> Uri(_proxyOption.Scheme + <span class="string">"://"</span> + _proxyOption.Host + <span class="string">":"</span> + _proxyOption.Port))</span><br><span class="line">        .ConfigurePrimaryHttpMessageHandler(y =&gt; <span class="keyword">new</span> BasicAuthenticationClientHandler(_remoteAccount)&#123;&#125;)</span><br><span class="line">        .SetHandlerLifetime(TimeSpan.FromMinutes(<span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-02T14:01:23.911Z" itemprop="dateUpdated">2020-01-02 22:01:23</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/01/02/AspNetCoreBasicAuthentication/" target="_blank" rel="external">https://tao-lol.top/2020/01/02/AspNetCoreBasicAuthentication/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ASPNETCore/">ASPNETCore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/02/AspNetCoreBasicAuthentication/&title=《ASP.NET Core 实现基本认证》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/02/AspNetCoreBasicAuthentication/&title=《ASP.NET Core 实现基本认证》 — Blog&source=
+https://www.cnblogs.com/JulianHuang/p/10345365.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/01/LearningRegex/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">正则表达式教程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#HTTP-基本认证"><span class="post-toc-number">1.</span> <span class="post-toc-text">HTTP 基本认证</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#BA-标准协议"><span class="post-toc-number">2.</span> <span class="post-toc-text">BA 标准协议</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#BA-编程实践"><span class="post-toc-number">3.</span> <span class="post-toc-text">BA 编程实践</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#编程实现-BA-客户端"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">编程实现 BA 客户端</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/02/AspNetCoreBasicAuthentication/&title=《ASP.NET Core 实现基本认证》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/02/AspNetCoreBasicAuthentication/&title=《ASP.NET Core 实现基本认证》 — Blog&source=
+https://www.cnblogs.com/JulianHuang/p/10345365.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3a0W7DIAwF0Pz/T3fSniatSa9NMi3O4alqE+AwycOYbYvb67v9/Py7/X5+75nk++2KhoGBcVvG67AljOPekuVIvjnuGQMD4wmM9SBbfTdfsuP+MTAwMPKAm4fp3rgYGBgYedDceyvZCFZ7xsDAwKgmsdW2HogvycUxMDBuyOgVBv7m8+X1DQwMjH/P6AXQJGj2NprNsI6BgTGakaejKwXIY+rKtnLLc2gMDIzbMqrH/b1prRy9RZtFDAyM0Yy94fNfz+VVgz4GBsYTGPlWrJpw9g7981Lom/QVAwNjKOO4u2rAPfcKRTKT3b8JBgbGOMZZyedKETQJstG4GBgY4xi9461zN3y9J3crsRgYGI9kXIHMj/mitzAwMEYz8uRwfbCzlqyZxGJgYNyckRzurw/cW6ylUIuBgTGO0Tssy0sLvYJovkAYGBizGcmQyfB5SM1LBdE1CwwMjNGM3lWJJBxXn8+T3jf9YGBgjGb0ppgH6PwSWLJxXEpiMTAwbsuoXraoTujCUmXyEAYGxiBGNYBWywN57M/D9Js7IxgYGEMZ5wbHc+uJ+b8HDAyM2YxXsVUP2pJjtV6gjy6EYWBgjGBUy5m9YaoTOqtsgIGBMYmRBNneVbDeyjXXGwMD4wGMlSCbL8dK+1B+wMDAwFi+olotGJQTYAwMDIx4sKvxH84OMTAwRjOSJLZXHki2j3lZtFnIxMDAuDlj5SwrvxhRLW3my4GBgTGa8QWzyRkGQ011+QAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
