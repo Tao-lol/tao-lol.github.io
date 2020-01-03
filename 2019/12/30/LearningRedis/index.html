@@ -221,15 +221,15 @@
 <blockquote>
 <p>参考：<em>《Redis 开发与运维》</em></p>
 </blockquote>
-<h1 id="入门简介与主从搭建"><a href="#入门简介与主从搭建" class="headerlink" title="入门简介与主从搭建"></a>入门简介与主从搭建</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Redis 是一种基于 键值对 的 NoSQL 数据库。与很多键值对数据库不同，Redis 提供了丰富的 值数据存储结构，包括 string(字符串)、hash(哈希)、list(列表)、set(集合)、zset(有序集合)、bitmap(位图)等等。</p>
+<h1 id="入门简介与主从搭建"><a href="#入门简介与主从搭建" class="headerlink" title="入门简介与主从搭建"></a>入门简介与主从搭建</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Redis 是一种基于 键值对 的 NoSQL 数据库。与很多键值对数据库不同，Redis 提供了丰富的 值数据存储结构，包括 string（字符串）、hash（哈希）、list（列表）、set（集合）、zset（有序集合）、bitmap（位图）等等。</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>Redis 是一个使用 ANSI C 编写的开源、支持 网络、基于 内存、单线程模型、可选持久性 的 键值对存储数据库。</p>
 <h3 id="Redis-的特性"><a href="#Redis-的特性" class="headerlink" title="Redis 的特性"></a>Redis 的特性</h3><ol>
 <li>速度快，最快可达到 10w QPS（基于 内存，C 语言，单线程 架构）；</li>
-<li>基于 键值对 (key/value) 的数据结构服务器。全称 Remote Dictionary Server。包括 string(字符串)、hash(哈希)、list(列表)、set(集合)、zset(有序集合)、bitmap(位图)。同时在 字符串 的基础上演变出 位图（BitMaps）和 HyperLogLog 两种数据结构。3.2 版本中加入 GEO（地理信息位置）。</li>
+<li>基于 键值对 (key/value) 的数据结构服务器。全称 Remote Dictionary Server。包括 <code>string</code>（字符串）、<code>hash</code>（哈希）、<code>list</code>（列表）、<code>set</code>（集合）、<code>zset</code>（有序集合）、<code>bitmap</code>（位图）。同时在 字符串 的基础上演变出 位图（BitMaps）和 <code>HyperLogLog</code> 两种数据结构。3.2 版本中加入 <code>GEO</code>（地理信息位置）。</li>
 <li>丰富的功能。例如：键过期（缓存），发布订阅（消息队列）， Lua 脚本（自己实现 Redis 命令），事务，流水线（Pipeline，用于减少网络开销）。</li>
 <li>简单稳定。无外部库依赖，单线程模型。</li>
 <li>客户端语言多。</li>
-<li>持久化（支持两种 持久化 方式 RDB 和 AOF）。</li>
+<li>持久化（支持两种 持久化 方式 <strong>RDB</strong> 和 <strong>AOF</strong>）。</li>
 <li>主从复制（分布式的基础）。</li>
 <li>高可用（Redis Sentinel），分布式（Redis Cluster）和 水平扩容。</li>
 </ol>
@@ -289,23 +289,23 @@
 <p>复制 Redis 相关命令到 /usr/local/bin 目录下，这样就可以直接执行这些命令，不用写全路径。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/redis/bin/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo sudo cp redis-cli redis-server redis-sentinel /usr/<span class="built_in">local</span>/bin</span></span><br></pre></td></tr></table></figure>
 
-<h5 id="修改-Redis-配置文件"><a href="#修改-Redis-配置文件" class="headerlink" title="修改 Redis 配置文件"></a>修改 Redis 配置文件</h5><p>安装完成之后将 Redis 配置文件拷贝到 /usr/local 下，redis.conf 是 Redis 的配置文件，redis.conf 在 Redis 源码目录，port 默认是 6379。</p>
+<h5 id="修改-Redis-配置文件"><a href="#修改-Redis-配置文件" class="headerlink" title="修改 Redis 配置文件"></a>修改 Redis 配置文件</h5><p>安装完成之后将 Redis 配置文件拷贝到 /usr/local 下，<code>redis.conf</code> 是 Redis 的配置文件，<code>redis.conf</code> 在 Redis 源码目录，port 默认是 6379。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cp /usr/<span class="built_in">local</span>/redis-4.0.11/redis.conf /usr/<span class="built_in">local</span>/</span></span><br></pre></td></tr></table></figure>
 
 <p>Redis 配置文件主要参数解析参考：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"># redis进程是否以守护进程的方式运行，yes为是，no为否(不以守护进程的方式运行会占用一个终端)。</span><br><span class="line">daemonize no</span><br><span class="line"># 指定redis进程的PID文件存放位置</span><br><span class="line">pidfile /var/run/redis.pid</span><br><span class="line"># redis进程的端口号</span><br><span class="line">port 6379</span><br><span class="line"># 绑定的主机地址</span><br><span class="line">bind 127.0.0.1</span><br><span class="line"># 客户端闲置多长时间后关闭连接，默认此参数为0即关闭此功能</span><br><span class="line">timeout 300</span><br><span class="line"># redis日志级别，可用的级别有debug.verbose.notice.warning</span><br><span class="line">loglevel verbose</span><br><span class="line"># log文件输出位置，如果进程以守护进程的方式运行，此处又将输出文件设置为stdout的话，就会将日志信息输出到/dev/null里面去了</span><br><span class="line">logfile stdout</span><br><span class="line"># 设置数据库的数量，默认为0可以使用select &lt;dbid&gt;命令在连接上指定数据库id</span><br><span class="line">databases 16</span><br><span class="line"># 指定在多少时间内刷新次数达到多少的时候会将数据同步到数据文件</span><br><span class="line">save &lt;seconds&gt; &lt;changes&gt;</span><br><span class="line"># 指定存储至本地数据库时是否压缩文件，默认为yes即启用存储</span><br><span class="line">rdbcompression yes</span><br><span class="line"># 指定本地数据库文件名</span><br><span class="line">dbfilename dump.db</span><br><span class="line"># 指定本地数据问就按存放位置</span><br><span class="line">dir ./</span><br><span class="line"># 指定当本机为slave服务时，设置master服务的IP地址及端口，在redis启动的时候他会自动跟master进行数据同步</span><br><span class="line">slaveof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"># 当master设置了密码保护时，slave服务连接master的密码</span><br><span class="line">masterauth &lt;master-password&gt;</span><br><span class="line"># 设置redis连接密码，如果配置了连接密码，客户端在连接redis是需要通过AUTH&lt;password&gt;命令提供密码，默认关闭</span><br><span class="line">requirepass footbared</span><br><span class="line"># 设置同一时间最大客户连接数，默认无限制。redis可以同时连接的客户端数为redis程序可以打开的最大文件描述符，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回 max number of clients reached 错误信息</span><br><span class="line">maxclients 128</span><br><span class="line"># 指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key。当此方法处理后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区</span><br><span class="line">maxmemory&lt;bytes&gt;</span><br><span class="line"># 指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no。</span><br><span class="line">appendonly no</span><br><span class="line"># 指定跟新日志文件名默认为appendonly.aof</span><br><span class="line">appendfilename appendonly.aof</span><br><span class="line"># 指定更新日志的条件，有三个可选参数 - no：表示等操作系统进行数据缓存同步到磁盘(快)，always：表示每次更新操作后手动调用fsync()将数据写到磁盘(慢，安全)， everysec：表示每秒同步一次(折衷，默认值)；</span><br><span class="line">appendfsync everysec</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis 进程是否以守护进程的方式运行，yes 为是，no 为否(不以守护进程的方式运行会占用一个终端)。</span></span><br><span class="line">daemonize no</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 redis 进程的 PID 文件存放位置</span></span><br><span class="line">pidfile /var/run/redis.pid</span><br><span class="line"></span><br><span class="line"><span class="comment"># redis 进程的端口号</span></span><br><span class="line">port 6379</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绑定的主机地址</span></span><br><span class="line"><span class="built_in">bind</span> 127.0.0.1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端闲置多长时间后关闭连接，默认此参数为 0 即关闭此功能</span></span><br><span class="line">timeout 300</span><br><span class="line"></span><br><span class="line"><span class="comment"># redis 日志级别，可用的级别有 debug, verbose, notice, warning</span></span><br><span class="line">loglevel verbose</span><br><span class="line"></span><br><span class="line"><span class="comment"># log 文件输出位置，如果进程以守护进程的方式运行，此处又将输出文件设置为 stdout 的话，就会将日志信息输出到 /dev/null 里面去了</span></span><br><span class="line">logfile stdout</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置数据库的数量，默认为0可以使用 select &lt;dbid&gt; 命令在连接上指定数据库 id</span></span><br><span class="line">databases 16</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定在多少时间内刷新次数达到多少的时候会将数据同步到数据文件</span></span><br><span class="line">save &lt;seconds&gt; &lt;changes&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定存储至本地数据库时是否压缩文件，默认为 yes 即启用存储</span></span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定本地数据库文件名</span></span><br><span class="line">dbfilename dump.db</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定本地数据问就按存放位置</span></span><br><span class="line">dir ./</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定当本机为 slave 服务时，设置 master 服务的 IP 地址及端口，在 redis 启动的时候他会自动跟 master 进行数据同步</span></span><br><span class="line">slaveof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当 master 设置了密码保护时，slave 服务连接 master 的密码</span></span><br><span class="line">masterauth &lt;master-password&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置 redis 连接密码，如果配置了连接密码，客户端在连接 redis 是需要通过 AUTH&lt;password&gt; 命令提供密码，默认关闭</span></span><br><span class="line">requirepass footbared</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置同一时间最大客户连接数，默认无限制。redis 可以同时连接的客户端数为 redis 程序可以打开的最大文件描述符，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis 会关闭新的连接并向客户端返回 max number of clients reached 错误信息</span></span><br><span class="line">maxclients 128</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 Redis 最大内存限制，Redis 在启动时会把数据加载到内存中，达到最大内存后，Redis 会先尝试清除已到期或即将到期的 Key。当此方法处理后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis 新的 vm 机制，会把 Key 存放内存，Value 会存放在 swap 区</span></span><br><span class="line">maxmemory&lt;bytes&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定是否在每次更新操作后进行日志记录，Redis 在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis 本身同步数据文件是按上面 save 条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为 no。</span></span><br><span class="line">appendonly no</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定跟新日志文件名默认为 appendonly.aof</span></span><br><span class="line">appendfilename appendonly.aof</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定更新日志的条件，有三个可选参数 - no：表示等操作系统进行数据缓存同步到磁盘(快)；always：表示每次更新操作后手动调用 fsync() 将数据写到磁盘(慢，安全)；everysec：表示每秒同步一次(折衷，默认值)。</span></span><br><span class="line">appendfsync everysec</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>设置后台启动<br>由于 Redis 默认是 前台启动，不建议使用。修改 Redis 配置文件，把 daemonize no 改为 daemonize yes。</p>
+<li><p>设置后台启动<br>由于 Redis 默认是 前台启动，不建议使用。修改 Redis 配置文件，把 <code>daemonize no</code> 改为 <code>daemonize yes</code>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>设置远程访问<br>Redis 默认只允许 本机访问，把 bind 修改为 bind 0.0.0.0 此设置会变成 允许所有远程访问。如果想指定限制访问，可设置对应的 IP。</p>
+<li><p>设置远程访问<br>Redis 默认只允许 本机访问，把 <code>bind</code> 修改为 <code>bind 0.0.0.0</code> 此设置会变成 允许所有远程访问。如果想指定限制访问，可设置对应的 IP。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind 0.0.0.0</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置 Redis 日志记录<br>找到 logfile 配置，默认是：logfile “”，改为自定义日志文件路径。</p>
+<li><p>配置 Redis 日志记录<br>找到 <code>logfile</code> 配置，默认是：<code>logfile &quot;&quot;</code>，改为自定义日志文件路径。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logfile /var/log/redis_6379.log</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>设置 Redis 请求密码<br>把 requirepass 修改为 123456，修改之后重启下服务</p>
+<li><p>设置 Redis 请求密码<br>把 <code>requirepass</code> 修改为 123456，修改之后重启下服务</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass &quot;123456&quot;</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -332,14 +332,14 @@
 </li>
 </ul>
 <blockquote>
-<p>注意：不建议使用 kill -9，这种方式不但不会做持久化操作，还会造成缓冲区等资源不能优雅关闭。极端情况下造成 AOF 和 复制丢失数据 的情况。shutdown 还有一个参数，代表是否在关闭 redis 前，生成 持久化文件，命令为 redis-cli shutdown nosave|save。</p>
+<p>注意：不建议使用 <code>kill -9</code> ，这种方式不但不会做持久化操作，还会造成缓冲区等资源不能优雅关闭。极端情况下造成 AOF 和 复制丢失数据 的情况。<code>shutdown</code> 还有一个参数，代表是否在关闭 redis 前，生成 持久化文件，命令为 <code>redis-cli shutdown nosave|save</code>。</p>
 </blockquote>
 <ul>
 <li><p>设置为开机自动启动</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"redis-server /usr/local/redis.conf"</span> &gt;&gt; /etc/rc.local</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>开放防火墙端口</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加规则</span></span><br><span class="line">iptables -I INPUT -p tcp -m tcp --dport 6379 -j ACCEPT</span><br><span class="line"><span class="comment"># 保存规则</span></span><br><span class="line">service iptables save</span><br><span class="line"><span class="comment"># 重启iptables</span></span><br><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加规则</span></span><br><span class="line">iptables -I INPUT -p tcp -m tcp --dport 6379 -j ACCEPT</span><br><span class="line"><span class="comment"># 保存规则</span></span><br><span class="line">service iptables save</span><br><span class="line"><span class="comment"># 重启 iptables</span></span><br><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -375,16 +375,16 @@
 </tr>
 </tbody></table>
 <h5 id="Redis-主从架构配置"><a href="#Redis-主从架构配置" class="headerlink" title="Redis 主从架构配置"></a>Redis 主从架构配置</h5><ul>
-<li><p>编辑 从机 的 Redis 配置文件，找到 210 行（大概）- #slaveof <masterip> <masterport> 。去掉该注释，填写 主服务器 的 IP 和 端口。</masterport></masterip></p>
+<li><p>编辑 从机 的 Redis 配置文件，找到 210 行（大概）- <code>#slaveof &lt;masterip&gt; &lt;masterport&gt;</code> 。去掉该注释，填写 主服务器 的 IP 和 端口。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof 10.206.20.231 16379</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>如果 主服务器 设置了密码，还需要找到 masterauth <master-password> 这一行，去掉注释，改为 masterauth 的主机密码。</master-password></p>
+<li><p>如果 主服务器 设置了密码，还需要找到 <code>masterauth &lt;master-password&gt;</code> 这一行，去掉注释，改为 <code>masterauth</code> 的主机密码。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">masterauth 123456</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置完成后重启 从服务器 的 Redis 服务。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> service redis restart</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>重启完成之后，进入 主服务器 的 redis-cli 模式下，命令为 redis-cli -h 127.0.0.1 -p 16379 -a 123456。输入 INFO replication 查询到 当前主机 的 Redis 的状态，连接上 主服务器 的 从服务器。</p>
+<li><p>重启完成之后，进入 主服务器 的 redis-cli 模式下，命令为 <code>redis-cli -h 127.0.0.1 -p 16379 -a 123456</code> 。输入 <code>INFO replication</code> 查询到 当前主机 的 Redis 的状态，连接上 主服务器 的 从服务器。</p>
 </li>
 </ul>
 <p>Redis 主服务器 的配置文件：</p>
@@ -407,7 +407,7 @@
 
 <h5 id="Redis-主从配置验证"><a href="#Redis-主从配置验证" class="headerlink" title="Redis 主从配置验证"></a>Redis 主从配置验证</h5><p>上面完成了基本的 主从配置，可以简单的测试一下效果：</p>
 <ul>
-<li><p>进入 主服务器 的 redis-cli 模式，然后 set 一个值，比如：</p>
+<li><p>进入 主服务器 的 redis-cli 模式，然后 <code>set</code> 一个值，比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> master_port <span class="string">"16379"</span></span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>切换进入 从服务器 的 redis-cli 的模式，查询刚刚设置的值看是否存在：</p>
@@ -438,34 +438,34 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Redis数据节点</td>
+<td>Redis 数据节点</td>
 <td>主节点和从节点</td>
 <td>主节点和从节点的进程</td>
 </tr>
 <tr>
-<td>主节点(master)</td>
-<td>Redis主数据库</td>
-<td>一个独立的Redis进程</td>
+<td>主节点（master）</td>
+<td>Redis 主数据库</td>
+<td>一个独立的 Redis 进程</td>
 </tr>
 <tr>
-<td>从节点(slave)</td>
-<td>Redis从数据库</td>
-<td>一个独立的Redis进程</td>
+<td>从节点（slave）</td>
+<td>Redis 从数据库</td>
+<td>一个独立的 Redis 进程</td>
 </tr>
 <tr>
-<td>Sentinel节点</td>
-<td>监控Redis数据节点</td>
-<td>一个独立的Sentinel进程</td>
+<td>Sentinel 节点</td>
+<td>监控 Redis 数据节点</td>
+<td>一个独立的 Sentinel 进程</td>
 </tr>
 <tr>
-<td>Sentinel节点集合</td>
-<td>若干Sentinel节点的抽象组合</td>
-<td>若干Sentinel节点进程</td>
+<td>Sentinel 节点集合</td>
+<td>若干 Sentinel 节点的抽象组合</td>
+<td>若干 Sentinel 节点进程</td>
 </tr>
 <tr>
 <td>Redis Sentinel</td>
-<td>Redis高可用实现方案</td>
-<td>Sentinel节点集合和Redis数据节点进程</td>
+<td>Redis 高可用实现方案</td>
+<td>Sentinel 节点集合和 Redis 数据节点进程</td>
 </tr>
 <tr>
 <td>应用客户端</td>
@@ -494,7 +494,7 @@
 <li>一旦 主节点宕机，从节点 晋升成 主节点，同时需要修改 应用方 的 主节点地址，还需要命令所有 从节点 去 复制 新的主节点，整个过程需要 人工干预。</li>
 <li>主节点 的 写能力 受到 单机的限制。</li>
 <li>主节点 的 存储能力 受到 单机的限制。</li>
-<li>原生复制 的弊端在早期的版本中也会比较突出，比如：Redis 复制中断 后，从节点 会发起 psync。此时如果 同步不成功，则会进行 全量同步，主库 执行 全量备份 的同时，可能会造成毫秒或秒级的 卡顿。</li>
+<li>原生复制 的弊端在早期的版本中也会比较突出，比如：Redis 复制中断 后，从节点 会发起 <code>psync</code>。此时如果 同步不成功，则会进行 全量同步，主库 执行 全量备份 的同时，可能会造成毫秒或秒级的 卡顿。</li>
 </ol>
 <h3 id="Redis-Sentinel-深入探究"><a href="#Redis-Sentinel-深入探究" class="headerlink" title="Redis Sentinel 深入探究"></a>Redis Sentinel 深入探究</h3><h4 id="Redis-Sentinel-的架构"><a href="#Redis-Sentinel-的架构" class="headerlink" title="Redis Sentinel 的架构"></a>Redis Sentinel 的架构</h4><figure class="image-box">
                 <a rel=深入剖析 Redis href="16560ce61dbc4eeb.png" title="" data-fancybox="images"><img src="16560ce61dbc4eeb.png" alt title class></a>
@@ -509,12 +509,12 @@
 <li>自动故障转移<br>当 主节点 不能正常工作时，Sentinel 会开始一次 自动的 故障转移操作，它会将与 失效主节点 是 主从关系 的其中一个 从节点 升级为新的 主节点，并且将其他的 从节点 指向 新的主节点。</li>
 <li>配置提供者<br>在 Redis Sentinel 模式下，客户端应用 在初始化时连接的是 Sentinel 节点集合，从中获取 主节点 的信息。</li>
 </ul>
-<h4 id="主观下线和客观下线"><a href="#主观下线和客观下线" class="headerlink" title="主观下线和客观下线"></a>主观下线和客观下线</h4><p>默认情况下，每个 Sentinel 节点会以 每秒一次 的频率对 Redis 节点和 其它 的 Sentinel 节点发送 PING 命令，并通过节点的 回复 来判断节点是否在线。</p>
+<h4 id="主观下线和客观下线"><a href="#主观下线和客观下线" class="headerlink" title="主观下线和客观下线"></a>主观下线和客观下线</h4><p>默认情况下，每个 Sentinel 节点会以 每秒一次 的频率对 Redis 节点和 其它 的 Sentinel 节点发送 <code>PING</code> 命令，并通过节点的 回复 来判断节点是否在线。</p>
 <ul>
-<li>主观下线<br>主观下线 适用于所有 主节点 和 从节点。如果在 down-after-milliseconds 毫秒内，Sentinel 没有收到 目标节点 的有效回复，则会判定 该节点 为 主观下线。</li>
-<li>客观下线<br>客观下线 只适用于 主节点。如果 主节点 出现故障，Sentinel 节点会通过 sentinel is-master-down-by-addr 命令，向其它 Sentinel 节点询问对该节点的 状态判断。如果超过 <quorum> 个数的节点判定 主节点 不可达，则该 Sentinel 节点会判断 主节点 为 客观下线。</quorum></li>
+<li>主观下线<br>主观下线 适用于所有 主节点 和 从节点。如果在 <code>down-after-milliseconds</code> 毫秒内，Sentinel 没有收到 目标节点 的有效回复，则会判定 该节点 为 主观下线。</li>
+<li>客观下线<br>客观下线 只适用于 主节点。如果 主节点 出现故障，Sentinel 节点会通过 <code>sentinel is-master-down-by-addr</code> 命令，向其它 Sentinel 节点询问对该节点的 状态判断。如果超过 <code>&lt;quorum&gt;</code> 个数的节点判定 主节点 不可达，则该 Sentinel 节点会判断 主节点 为 客观下线。</li>
 </ul>
-<h4 id="Sentinel-的通信命令"><a href="#Sentinel-的通信命令" class="headerlink" title="Sentinel 的通信命令"></a>Sentinel 的通信命令</h4><p>Sentinel 节点连接一个 Redis 实例的时候，会创建 cmd 和 pub/sub 两个 连接。Sentinel 通过 cmd 连接给 Redis 发送命令，通过 pub/sub 连接到 Redis 实例上的其他 Sentinel 实例。  </p>
+<h4 id="Sentinel-的通信命令"><a href="#Sentinel-的通信命令" class="headerlink" title="Sentinel 的通信命令"></a>Sentinel 的通信命令</h4><p>Sentinel 节点连接一个 Redis 实例的时候，会创建 <strong>cmd</strong> 和 <strong>pub/sub</strong> 两个 连接。Sentinel 通过 cmd 连接给 Redis 发送命令，通过 pub/sub 连接到 Redis 实例上的其他 Sentinel 实例。  </p>
 <p>Sentinel 与 Redis 主节点 和 从节点 交互的命令，主要包括：</p>
 <table>
 <thead>
@@ -524,20 +524,20 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>PING</td>
+<td><code>PING</code></td>
 <td>Sentinel 向 Redis 节点发送 PING 命令，检查节点的状态</td>
 </tr>
 <tr>
-<td>INFO</td>
+<td><code>INFO</code></td>
 <td>Sentinel 向 Redis 节点发送 INFO 命令，获取它的 从节点信息</td>
 </tr>
 <tr>
-<td>PUBLISH</td>
-<td>Sentinel 向其监控的 Redis 节点 <strong>sentinel</strong>:hello 这个 channel 发布 自己的信息 及 主节点 相关的配置</td>
+<td><code>PUBLISH</code></td>
+<td>Sentinel 向其监控的 Redis 节点 <code>__sentinel__:hello</code> 这个 channel 发布 自己的信息 及 主节点 相关的配置</td>
 </tr>
 <tr>
-<td>SUBSCRIBE</td>
-<td>Sentinel 通过订阅 Redis 主节点 和 从节点 的 <strong>sentinel</strong>:hello 这个 channnel，获取正在监控相同服务的其他 Sentinel 节点</td>
+<td><code>SUBSCRIBE</code></td>
+<td>Sentinel 通过订阅 Redis 主节点 和 从节点 的 <code>__sentinel__:hello</code> 这个 channnel，获取正在监控相同服务的其他 Sentinel 节点</td>
 </tr>
 </tbody></table>
 <p>Sentinel 与 Sentinel 交互的命令，主要包括：</p>
@@ -549,23 +549,23 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>PING</td>
+<td><code>PING</code></td>
 <td>Sentinel 向其他 Sentinel 节点发送 PING 命令，检查节点的状态</td>
 </tr>
 <tr>
-<td>SENTINEL:is-master-down-by-addr</td>
+<td><code>SENTINEL:is-master-down-by-addr</code></td>
 <td>和其他 Sentinel 协商 主节点 的状态，如果 主节点 处于 SDOWN 状态，则投票自动选出新的 主节点</td>
 </tr>
 </tbody></table>
 <h4 id="Redis-Sentinel-的工作原理"><a href="#Redis-Sentinel-的工作原理" class="headerlink" title="Redis Sentinel 的工作原理"></a>Redis Sentinel 的工作原理</h4><p>每个 Sentinel 节点都需要 定期执行 以下任务：</p>
 <ol>
-<li><p>每个 Sentinel 以 每秒钟 一次的频率，向它所知的 主服务器、从服务器 以及其他 Sentinel 实例 发送一个 PING 命令。</p>
+<li><p>每个 Sentinel 以 每秒钟 一次的频率，向它所知的 主服务器、从服务器 以及其他 Sentinel 实例 发送一个 <code>PING</code> 命令。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="16560ce61df44c4d.png" title="" data-fancybox="images"><img src="16560ce61df44c4d.png" alt title class></a>
                 <p></p>
             </figure>
 </li>
-<li><p>如果一个 实例（instance）距离 最后一次 有效回复 PING 命令的时间超过 down-after-milliseconds 所指定的值，那么这个实例会被 Sentinel 标记为 主观下线。</p>
+<li><p>如果一个 实例（instance）距离 最后一次 有效回复 <code>PING</code> 命令的时间超过 <code>down-after-milliseconds</code> 所指定的值，那么这个实例会被 Sentinel 标记为 主观下线。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="16560ce61dc739de.png" title="" data-fancybox="images"><img src="16560ce61dc739de.png" alt title class></a>
                 <p></p>
@@ -583,7 +583,7 @@
                 <p></p>
             </figure>
 </li>
-<li><p>在一般情况下， 每个 Sentinel 会以每 10 秒一次的频率，向它已知的所有 主服务器 和 从服务器 发送 INFO 命令。当一个 主服务器 被 Sentinel 标记为 客观下线 时，Sentinel 向 下线主服务器 的所有 从服务器 发送 INFO 命令的频率，会从 10 秒一次改为 每秒一次。</p>
+<li><p>在一般情况下， 每个 Sentinel 会以每 10 秒一次的频率，向它已知的所有 主服务器 和 从服务器 发送 INFO 命令。当一个 主服务器 被 Sentinel 标记为 客观下线 时，Sentinel 向 下线主服务器 的所有 从服务器 发送 <code>INFO</code> 命令的频率，会从 10 秒一次改为 每秒一次。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="16560ce6738a30db.png" title="" data-fancybox="images"><img src="16560ce6738a30db.png" alt title class></a>
                 <p></p>
@@ -595,7 +595,7 @@
                 <p></p>
             </figure>
 </li>
-<li><p>当没有足够数量的 Sentinel 同意 主服务器 下线时， 主服务器 的 客观下线状态 就会被移除。当 主服务器 重新向 Sentinel 的 PING 命令返回 有效回复 时，主服务器 的 主观下线状态 就会被移除。</p>
+<li><p>当没有足够数量的 Sentinel 同意 主服务器 下线时， 主服务器 的 客观下线状态 就会被移除。当 主服务器 重新向 Sentinel 的 <code>PING</code> 命令返回 有效回复 时，主服务器 的 主观下线状态 就会被移除。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="16560ce6759c1cb3.png" title="" data-fancybox="images"><img src="16560ce6759c1cb3.png" alt title class></a>
                 <p></p>
@@ -604,7 +604,7 @@
 </li>
 </ol>
 <blockquote>
-<p>注意：一个有效的 PING 回复可以是：+PONG、-LOADING 或者 -MASTERDOWN。如果 服务器 返回除以上三种回复之外的其他回复，又或者在 指定时间 内没有回复 PING 命令， 那么 Sentinel 认为服务器返回的回复 无效（non-valid）。</p>
+<p>注意：一个有效的 PING 回复可以是：<code>+PONG</code>、<code>-LOADING</code> 或者 <code>-MASTERDOWN</code>。如果 服务器 返回除以上三种回复之外的其他回复，又或者在 指定时间 内没有回复 <code>PING</code> 命令， 那么 Sentinel 认为服务器返回的回复 无效（non-valid）。</p>
 </blockquote>
 <h3 id="Redis-Sentinel-搭建"><a href="#Redis-Sentinel-搭建" class="headerlink" title="Redis Sentinel 搭建"></a>Redis Sentinel 搭建</h3><h4 id="Redis-Sentinel-的部署须知"><a href="#Redis-Sentinel-的部署须知" class="headerlink" title="Redis Sentinel 的部署须知"></a>Redis Sentinel 的部署须知</h4><ol>
 <li>一个稳健的 Redis Sentinel 集群，应该使用至少 三个 Sentinel 实例，并且保证讲这些实例放到 不同的机器 上，甚至不同的 物理区域。</li>
@@ -612,7 +612,7 @@
 <li>常见的 客户端应用库 都支持 Sentinel。</li>
 <li>Sentinel 需要通过不断的 测试 和 观察，才能保证高可用。</li>
 </ol>
-<h4 id="Redis-Sentinel-的配置文件"><a href="#Redis-Sentinel-的配置文件" class="headerlink" title="Redis Sentinel 的配置文件"></a>Redis Sentinel 的配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"># 哨兵sentinel实例运行的端口，默认26379  </span><br><span class="line">port 26379</span><br><span class="line"># 哨兵sentinel的工作目录</span><br><span class="line">dir ./</span><br><span class="line"></span><br><span class="line"># 哨兵sentinel监控的redis主节点的 </span><br><span class="line">## ip：主机ip地址</span><br><span class="line">## port：哨兵端口号</span><br><span class="line">## master-name：可以自己命名的主节点名字（只能由字母A-z、数字0-9 、这三个字符&quot;.-_&quot;组成。）</span><br><span class="line">## quorum：当这些quorum个数sentinel哨兵认为master主节点失联 那么这时 客观上认为主节点失联了  </span><br><span class="line"># sentinel monitor &lt;master-name&gt; &lt;ip&gt; &lt;redis-port&gt; &lt;quorum&gt;  </span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"># 当在Redis实例中开启了requirepass &lt;foobared&gt;，所有连接Redis实例的客户端都要提供密码。</span><br><span class="line"># sentinel auth-pass &lt;master-name&gt; &lt;password&gt;  </span><br><span class="line">sentinel auth-pass mymaster 123456  </span><br><span class="line"></span><br><span class="line"># 指定主节点应答哨兵sentinel的最大时间间隔，超过这个时间，哨兵主观上认为主节点下线，默认30秒  </span><br><span class="line"># sentinel down-after-milliseconds &lt;master-name&gt; &lt;milliseconds&gt;</span><br><span class="line">sentinel down-after-milliseconds mymaster 30000  </span><br><span class="line"></span><br><span class="line"># 指定了在发生failover主备切换时，最多可以有多少个slave同时对新的master进行同步。这个数字越小，完成failover所需的时间就越长；反之，但是如果这个数字越大，就意味着越多的slave因为replication而不可用。可以通过将这个值设为1，来保证每次只有一个slave，处于不能处理命令请求的状态。</span><br><span class="line"># sentinel parallel-syncs &lt;master-name&gt; &lt;numslaves&gt;</span><br><span class="line">sentinel parallel-syncs mymaster 1  </span><br><span class="line"></span><br><span class="line"># 故障转移的超时时间failover-timeout，默认三分钟，可以用在以下这些方面：</span><br><span class="line">## 1. 同一个sentinel对同一个master两次failover之间的间隔时间。  </span><br><span class="line">## 2. 当一个slave从一个错误的master那里同步数据时开始，直到slave被纠正为从正确的master那里同步数据时结束。  </span><br><span class="line">## 3. 当想要取消一个正在进行的failover时所需要的时间。</span><br><span class="line">## 4.当进行failover时，配置所有slaves指向新的master所需的最大时间。不过，即使过了这个超时，slaves依然会被正确配置为指向master，但是就不按parallel-syncs所配置的规则来同步数据了</span><br><span class="line"># sentinel failover-timeout &lt;master-name&gt; &lt;milliseconds&gt;  </span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br><span class="line"></span><br><span class="line"># 当sentinel有任何警告级别的事件发生时（比如说redis实例的主观失效和客观失效等等），将会去调用这个脚本。一个脚本的最大执行时间为60s，如果超过这个时间，脚本将会被一个SIGKILL信号终止，之后重新执行。</span><br><span class="line"># 对于脚本的运行结果有以下规则：  </span><br><span class="line">## 1. 若脚本执行后返回1，那么该脚本稍后将会被再次执行，重复次数目前默认为10。</span><br><span class="line">## 2. 若脚本执行后返回2，或者比2更高的一个返回值，脚本将不会重复执行。  </span><br><span class="line">## 3. 如果脚本在执行过程中由于收到系统中断信号被终止了，则同返回值为1时的行为相同。</span><br><span class="line"># sentinel notification-script &lt;master-name&gt; &lt;script-path&gt;  </span><br><span class="line">sentinel notification-script mymaster /var/redis/notify.sh</span><br><span class="line"></span><br><span class="line"># 这个脚本应该是通用的，能被多次调用，不是针对性的。</span><br><span class="line"># sentinel client-reconfig-script &lt;master-name&gt; &lt;script-path&gt;</span><br><span class="line">sentinel client-reconfig-script mymaster /var/redis/reconfig.sh</span><br></pre></td></tr></table></figure>
+<h4 id="Redis-Sentinel-的配置文件"><a href="#Redis-Sentinel-的配置文件" class="headerlink" title="Redis Sentinel 的配置文件"></a>Redis Sentinel 的配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 哨兵 sentinel 实例运行的端口，默认 26379  </span></span><br><span class="line">port 26379</span><br><span class="line"><span class="comment"># 哨兵 sentinel 的工作目录</span></span><br><span class="line">dir ./</span><br><span class="line"></span><br><span class="line"><span class="comment"># 哨兵 sentinel 监控的 redis 主节点的 </span></span><br><span class="line"><span class="comment">## ip：主机ip地址</span></span><br><span class="line"><span class="comment">## port：哨兵端口号</span></span><br><span class="line"><span class="comment">## master-name：可以自己命名的主节点名字（只能由字母 A-z、数字 0-9 、这三个字符 ".-_" 组成。）</span></span><br><span class="line"><span class="comment">## quorum：当这些 quorum 个数 sentinel 哨兵认为 master 主节点失联 那么这时 客观上认为主节点失联了  </span></span><br><span class="line"><span class="comment"># sentinel monitor &lt;master-name&gt; &lt;ip&gt; &lt;redis-port&gt; &lt;quorum&gt;  </span></span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当在 Redis 实例中开启了 requirepass &lt;foobared&gt; ，所有连接 Redis 实例的客户端都要提供密码。</span></span><br><span class="line"><span class="comment"># sentinel auth-pass &lt;master-name&gt; &lt;password&gt;  </span></span><br><span class="line">sentinel auth-pass mymaster 123456  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定主节点应答哨兵 sentinel 的最大时间间隔，超过这个时间，哨兵主观上认为主节点下线，默认 30 秒  </span></span><br><span class="line"><span class="comment"># sentinel down-after-milliseconds &lt;master-name&gt; &lt;milliseconds&gt;</span></span><br><span class="line">sentinel down-after-milliseconds mymaster 30000  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定了在发生 failover 主备切换时，最多可以有多少个 slave 同时对新的 master 进行同步。这个数字越小，完成 failover 所需的时间就越长；反之，但是如果这个数字越大，就意味着越多的 slave 因为 replication 而不可用。可以通过将这个值设为 1 ，来保证每次只有一个 slave，处于不能处理命令请求的状态。</span></span><br><span class="line"><span class="comment"># sentinel parallel-syncs &lt;master-name&gt; &lt;numslaves&gt;</span></span><br><span class="line">sentinel parallel-syncs mymaster 1  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 故障转移的超时时间 failover-timeout ，默认三分钟，可以用在以下这些方面：</span></span><br><span class="line"><span class="comment">## 1. 同一个 sentinel 对同一个 master 两次 failover 之间的间隔时间。  </span></span><br><span class="line"><span class="comment">## 2. 当一个 slave 从一个错误的 master 那里同步数据时开始，直到 slave 被纠正为从正确的 master 那里同步数据时结束。  </span></span><br><span class="line"><span class="comment">## 3. 当想要取消一个正在进行的 failover 时所需要的时间。</span></span><br><span class="line"><span class="comment">## 4.当进行 failover 时，配置所有 slaves 指向新的 master 所需的最大时间。不过，即使过了这个超时，slaves 依然会被正确配置为指向 master，但是就不按 parallel-syncs 所配置的规则来同步数据了</span></span><br><span class="line"><span class="comment"># sentinel failover-timeout &lt;master-name&gt; &lt;milliseconds&gt;  </span></span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当 sentinel 有任何警告级别的事件发生时（比如说 redis 实例的主观失效和客观失效等等），将会去调用这个脚本。一个脚本的最大执行时间为 60s ，如果超过这个时间，脚本将会被一个 SIGKILL 信号终止，之后重新执行。</span></span><br><span class="line"><span class="comment"># 对于脚本的运行结果有以下规则：  </span></span><br><span class="line"><span class="comment">## 1. 若脚本执行后返回 1，那么该脚本稍后将会被再次执行，重复次数目前默认为 10。</span></span><br><span class="line"><span class="comment">## 2. 若脚本执行后返回 2，或者比 2 更高的一个返回值，脚本将不会重复执行。  </span></span><br><span class="line"><span class="comment">## 3. 如果脚本在执行过程中由于收到系统中断信号被终止了，则同返回值为 1 时的行为相同。</span></span><br><span class="line"><span class="comment"># sentinel notification-script &lt;master-name&gt; &lt;script-path&gt;  </span></span><br><span class="line">sentinel notification-script mymaster /var/redis/notify.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个脚本应该是通用的，能被多次调用，不是针对性的。</span></span><br><span class="line"><span class="comment"># sentinel client-reconfig-script &lt;master-name&gt; &lt;script-path&gt;</span></span><br><span class="line">sentinel client-reconfig-script mymaster /var/redis/reconfig.sh</span><br></pre></td></tr></table></figure>
 
 <h4 id="Redis-Sentinel-的节点规划"><a href="#Redis-Sentinel-的节点规划" class="headerlink" title="Redis Sentinel 的节点规划"></a>Redis Sentinel 的节点规划</h4><table>
 <thead>
@@ -653,7 +653,7 @@
 <td>36380</td>
 </tr>
 </tbody></table>
-<h4 id="Redis-Sentinel-的配置搭建"><a href="#Redis-Sentinel-的配置搭建" class="headerlink" title="Redis Sentinel 的配置搭建"></a>Redis Sentinel 的配置搭建</h4><h5 id="Redis-Server-的配置管理"><a href="#Redis-Server-的配置管理" class="headerlink" title="Redis-Server 的配置管理"></a>Redis-Server 的配置管理</h5><p>分别拷贝三份 redis.conf 文件到 /usr/local/redis-sentinel 目录下面。三个配置文件分别对应 master、slave1 和 slave2 三个 Redis 节点的 启动配置。</p>
+<h4 id="Redis-Sentinel-的配置搭建"><a href="#Redis-Sentinel-的配置搭建" class="headerlink" title="Redis Sentinel 的配置搭建"></a>Redis Sentinel 的配置搭建</h4><h5 id="Redis-Server-的配置管理"><a href="#Redis-Server-的配置管理" class="headerlink" title="Redis-Server 的配置管理"></a>Redis-Server 的配置管理</h5><p>分别拷贝三份 <code>redis.conf</code> 文件到 /usr/local/redis-sentinel 目录下面。三个配置文件分别对应 master、slave1 和 slave2 三个 Redis 节点的 启动配置。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo cp /usr/<span class="built_in">local</span>/redis-4.0.11/redis.conf /usr/<span class="built_in">local</span>/redis-sentinel/redis-16379.conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo cp /usr/<span class="built_in">local</span>/redis-4.0.11/redis.conf /usr/<span class="built_in">local</span>/redis-sentinel/redis-26379.conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo cp /usr/<span class="built_in">local</span>/redis-4.0.11/redis.conf /usr/<span class="built_in">local</span>/redis-sentinel/redis-36379.conf</span></span><br></pre></td></tr></table></figure>
 
 <p>分别修改三份配置文件如下：</p>
@@ -670,7 +670,7 @@
 </li>
 </ul>
 <blockquote>
-<p>如果要做 自动故障转移，建议所有的 redis.conf 都设置 masterauth。因为 自动故障 只会重写 主从关系，即 slaveof，不会自动写入 masterauth。如果 Redis 原本没有设置密码，则可以忽略。</p>
+<p>如果要做 自动故障转移，建议所有的 <code>redis.conf</code> 都设置 <code>masterauth</code>。因为 自动故障 只会重写 主从关系，即 <code>slaveof</code>，不会自动写入 <code>masterauth</code>。如果 Redis 原本没有设置密码，则可以忽略。</p>
 </blockquote>
 <h5 id="Redis-Server-启动验证"><a href="#Redis-Server-启动验证" class="headerlink" title="Redis-Server 启动验证"></a>Redis-Server 启动验证</h5><p>按顺序分别启动 16379，26379 和 36379 三个 Redis 节点，启动命令和启动日志如下：  </p>
 <p>Redis 的启动命令：</p>
@@ -751,7 +751,7 @@
 
 <p>可以注意到，sentinel-36380.conf 刷新写入了 Redis 主节点关联的所有 从节点 redis-26379 和 redis-36379，同时写入了其余两个 Sentinel 节点 sentinel-16380 和 sentinel-26380 的 IP 地址，端口号 和 Sentinel ID。</p>
 <h4 id="Sentinel-时客户端命令"><a href="#Sentinel-时客户端命令" class="headerlink" title="Sentinel 时客户端命令"></a>Sentinel 时客户端命令</h4><ul>
-<li><p>检查其他 Sentinel 节点的状态，返回 PONG 为正常。</p>
+<li><p>检查其他 Sentinel 节点的状态，返回 <code>PONG</code> 为正常。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> PING sentinel</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>显示被监控的所有 主节点 以及它们的状态。</p>
@@ -763,13 +763,13 @@
 <li><p>显示指定 主节点 的所有 从节点 以及它们的状态。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> SENTINEL slaves &lt;master_name&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>返回指定 主节点 的 IP 地址和 端口。如果正在进行 failover 或者 failover 已经完成，将会显示被提升为 主节点 的 从节点 的 IP 地址和 端口。</p>
+<li><p>返回指定 主节点 的 IP 地址和 端口。如果正在进行 <code>failover</code> 或者 <code>failover</code> 已经完成，将会显示被提升为 主节点 的 从节点 的 IP 地址和 端口。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> SENTINEL get-master-addr-by-name &lt;master_name&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>重置名字匹配该 正则表达式 的所有的 主节点 的状态信息，清除它之前的 状态信息，以及 从节点 的信息。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> SENTINEL reset &lt;pattern&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>强制当前 Sentinel 节点执行 failover，并且不需要得到其他 Sentinel 节点的同意。但是 failover 后会将 最新的配置 发送给其他 Sentinel 节点。</p>
+<li><p>强制当前 Sentinel 节点执行 <code>failover</code>，并且不需要得到其他 Sentinel 节点的同意。但是 <code>failover</code> 后会将 最新的配置 发送给其他 Sentinel 节点。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SENTINEL failover &lt;master_name&gt;</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -823,18 +823,18 @@
 </li>
 </ul>
 <blockquote>
-<p>分析：redis-26379 节点 slaveof 配置被移除，晋升为 主节点。redis-16379 节点处于 宕机状态。redis-36379 的 slaveof 配置更新为 127.0.0.1 redis-26379，成为 redis-26379 的 从节点。</p>
+<p>分析：redis-26379 节点 <code>slaveof</code> 配置被移除，晋升为 主节点。redis-16379 节点处于 宕机状态。redis-36379 的 <code>slaveof</code> 配置更新为 127.0.0.1 redis-26379，成为 redis-26379 的 从节点。</p>
 </blockquote>
 <p>重启节点 redis-16379。待正常启动后，再次查看它的 redis.conf 文件，配置如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes</span><br><span class="line">pidfile &quot;/var/run/redis-16379.pid&quot;</span><br><span class="line">logfile &quot;/var/log/redis/redis-16379.log&quot;</span><br><span class="line">port 16379</span><br><span class="line">bind 0.0.0.0</span><br><span class="line">timeout 300</span><br><span class="line">databases 16</span><br><span class="line">dbfilename &quot;dump-16379.db&quot;</span><br><span class="line">dir &quot;/usr/local/redis-sentinel/redis-workdir&quot;</span><br><span class="line">masterauth &quot;123456&quot;</span><br><span class="line">requirepass &quot;123456&quot;</span><br><span class="line"># Generated by CONFIG REWRITE</span><br><span class="line">slaveof 127.0.0.1 26379</span><br></pre></td></tr></table></figure>
 
-<p>节点 redis-16379 的配置文件新增一行 slaveof 配置属性，指向 redis-26379，即成为 新的主节点 的 从节点。</p>
+<p>节点 redis-16379 的配置文件新增一行 <code>slaveof</code> 配置属性，指向 redis-26379，即成为 新的主节点 的 从节点。</p>
 <h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>本文首先对 Redis 实现高可用的几种模式做出了阐述，指出了 Redis 主从复制 的不足之处，进一步引入了 Redis Sentinel 哨兵模式 的相关概念，深入说明了 Redis Sentinel 的 具体功能，基本原理，高可用搭建 和 自动故障切换 验证等。<br>当然，Redis Sentinel 仅仅解决了 高可用 的问题，对于 主节点 单点写入和单节点无法扩容等问题，还需要引入 Redis Cluster 集群模式 予以解决。</p>
 <hr>
 <h1 id="集群模式搭建与原理详解"><a href="#集群模式搭建与原理详解" class="headerlink" title="集群模式搭建与原理详解"></a>集群模式搭建与原理详解</h1><h2 id="前言-2"><a href="#前言-2" class="headerlink" title="前言"></a>前言</h2><p>在 Redis 3.0 之前，使用 哨兵（sentinel）机制来监控各个节点之间的状态。Redis Cluster 是 Redis 的 分布式解决方案，在 3.0 版本正式推出，有效地解决了 Redis 在 分布式 方面的需求。当遇到 单机内存、并发、流量 等瓶颈时，可以采用 Cluster 架构方案达到 负载均衡 的目的。  </p>
 <p>本文将从 集群方案、数据分布、搭建集群、节点通信、集群伸缩、请求路由、故障转移、集群运维 等几个方面介绍 Redis Cluster。</p>
 <h2 id="正文-2"><a href="#正文-2" class="headerlink" title="正文"></a>正文</h2><h3 id="Redis-集群方案"><a href="#Redis-集群方案" class="headerlink" title="Redis 集群方案"></a>Redis 集群方案</h3><p>Redis Cluster 集群模式通常具有 高可用、可扩展性、分布式、容错 等特性。Redis 分布式方案一般有两种：</p>
-<h4 id="1、客户端分区方案"><a href="#1、客户端分区方案" class="headerlink" title="1、客户端分区方案"></a>1、客户端分区方案</h4><p>客户端 就已经决定数据会被 存储 到哪个 redis 节点或者从哪个 redis 节点 读取数据。其主要思想是采用 哈希算法 将 Redis 数据的 key 进行散列，通过 hash 函数，特定的 key会 映射 到特定的 Redis 节点上。</p>
+<h4 id="1、客户端分区方案"><a href="#1、客户端分区方案" class="headerlink" title="1、客户端分区方案"></a>1、客户端分区方案</h4><p>客户端 就已经决定数据会被 存储 到哪个 redis 节点或者从哪个 redis 节点 读取数据。其主要思想是采用 哈希算法 将 Redis 数据的 key 进行散列，通过 hash 函数，特定的 key 会 映射 到特定的 Redis 节点上。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="165a4f9e74a09b36.png" title="" data-fancybox="images"><img src="165a4f9e74a09b36.png" alt title class></a>
                 <p></p>
@@ -913,7 +913,7 @@
 </tr>
 </tbody></table>
 <p>由于 Redis Cluster 采用 哈希分区规则，这里重点讨论 哈希分区。常见的 哈希分区 规则有几种，下面分别介绍：</p>
-<h5 id="1、节点取余分区"><a href="#1、节点取余分区" class="headerlink" title="1、节点取余分区"></a>1、节点取余分区</h5><p>使用特定的数据，如 Redis 的 键 或 用户 ID，再根据 节点数量 N 使用公式：hash（key）% N 计算出 哈希值，用来决定数据 映射 到哪一个节点上。</p>
+<h5 id="1、节点取余分区"><a href="#1、节点取余分区" class="headerlink" title="1、节点取余分区"></a>1、节点取余分区</h5><p>使用特定的数据，如 Redis 的 键 或 用户 ID，再根据 节点数量 N 使用公式：<code>hash(key) % N</code> 计算出 哈希值，用来决定数据 映射 到哪一个节点上。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="165a4f9f1b14840d.png" title="" data-fancybox="images"><img src="165a4f9f1b14840d.png" alt title class></a>
                 <p></p>
@@ -954,7 +954,7 @@
 <blockquote>
 <p>由于从一个节点将 哈希槽 移动到另一个节点并不会 停止服务，所以无论 添加删除 或者 改变 某个节点的 哈希槽的数量 都不会造成 集群不可用 的状态。</p>
 </blockquote>
-<h4 id="Redis-的数据分区"><a href="#Redis-的数据分区" class="headerlink" title="Redis 的数据分区"></a>Redis 的数据分区</h4><p>Redis Cluster 采用 虚拟槽分区，所有的 键 根据 哈希函数 映射到 0~16383 整数槽内，计算公式：slot = CRC16（key）&amp; 16383。每个节点负责维护一部分槽以及槽所映射的 键值数据，如图所示：</p>
+<h4 id="Redis-的数据分区"><a href="#Redis-的数据分区" class="headerlink" title="Redis 的数据分区"></a>Redis 的数据分区</h4><p>Redis Cluster 采用 虚拟槽分区，所有的 键 根据 哈希函数 映射到 0~16383 整数槽内，计算公式：<code>slot = CRC16(key) &amp; 16383</code>。每个节点负责维护一部分槽以及槽所映射的 键值数据，如图所示：</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="165a4f9f56a93231.png" title="" data-fancybox="images"><img src="165a4f9f56a93231.png" alt title class></a>
                 <p></p>
@@ -967,14 +967,14 @@
 </ul>
 <h4 id="Redis-集群的功能限制"><a href="#Redis-集群的功能限制" class="headerlink" title="Redis 集群的功能限制"></a>Redis 集群的功能限制</h4><p>Redis 集群相对 单机 在功能上存在一些限制，需要 开发人员 提前了解，在使用时做好规避。</p>
 <ul>
-<li>key 批量操作 支持有限。<br>类似 mset、mget 操作，目前只支持对具有相同 slot 值的 key 执行 批量操作。对于 映射为不同 slot 值的 key 由于执行 mget、mget 等操作可能存在于多个节点上，因此不被支持。</li>
+<li>key 批量操作 支持有限。<br>类似 mset、mget 操作，目前只支持对具有相同 slot 值的 key 执行 批量操作。对于 映射为不同 slot 值的 key 由于执行 mset、mget 等操作可能存在于多个节点上，因此不被支持。</li>
 <li>key 事务操作 支持有限。<br>只支持 多 key 在 同一节点上 的 事务操作，当多个 key 分布在 不同 的节点上时 无法 使用事务功能。</li>
 <li>key 作为 数据分区 的最小粒度<br>不能将一个 大的键值 对象如 hash、list 等映射到 不同的节点。</li>
 <li>不支持 多数据库空间<br>单机 下的 Redis 可以支持 16 个数据库（db0 ~ db15），集群模式 下只能使用 一个 数据库空间，即 db0。</li>
 <li>复制结构 只支持一层<br>从节点 只能复制 主节点，不支持 嵌套树状复制 结构。</li>
 </ul>
 <h3 id="Redis-集群搭建"><a href="#Redis-集群搭建" class="headerlink" title="Redis 集群搭建"></a>Redis 集群搭建</h3><p>Redis-Cluster 是 Redis 官方的一个 高可用 解决方案，Cluster 中的 Redis 共有 2^14（16384） 个 slot 槽。创建 Cluster 后，槽 会 平均分配 到每个 Redis 节点上。<br>下面介绍一下本机启动 6 个 Redis 的 集群服务，并使用 redis-trib.rb 创建 3主3从 的 集群。搭建集群工作需要以下三个步骤：</p>
-<h4 id="1、准备节点"><a href="#1、准备节点" class="headerlink" title="1、准备节点"></a>1、准备节点</h4><p>Redis 集群一般由 多个节点 组成，节点数量至少为 6 个，才能保证组成 完整高可用 的集群。每个节点需要 开启配置 cluster-enabled yes，让 Redis 运行在 集群模式 下。  </p>
+<h4 id="1、准备节点"><a href="#1、准备节点" class="headerlink" title="1、准备节点"></a>1、准备节点</h4><p>Redis 集群一般由 多个节点 组成，节点数量至少为 6 个，才能保证组成 完整高可用 的集群。每个节点需要 开启配置 <code>cluster-enabled yes</code>，让 Redis 运行在 集群模式 下。  </p>
 <p>Redis 集群的节点规划如下：</p>
 <table>
 <thead>
@@ -1028,7 +1028,7 @@
 <h5 id="（1）创建-redis-各实例目录"><a href="#（1）创建-redis-各实例目录" class="headerlink" title="（1）创建 redis 各实例目录"></a>（1）创建 redis 各实例目录</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo mkdir -p /usr/<span class="built_in">local</span>/redis-cluster</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /usr/<span class="built_in">local</span>/redis-cluster</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo mkdir conf data <span class="built_in">log</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo mkdir -p data/redis-6379 data/redis-6389 data/redis-6380 data/redis-6390 data/redis-6381 data/redis-6391</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="（2）redis-配置文件管理"><a href="#（2）redis-配置文件管理" class="headerlink" title="（2）redis 配置文件管理"></a>（2）redis 配置文件管理</h5><p>根据以下 模板 配置各个实例的 redis.conf，以下只是搭建集群需要的 基本配置，可能需要根据实际情况做修改。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># redis后台运行</span><br><span class="line">daemonize yes</span><br><span class="line"># 绑定的主机端口</span><br><span class="line">bind 127.0.0.1</span><br><span class="line"># 数据存放目录</span><br><span class="line">dir /usr/local/redis-cluster/data/redis-6379</span><br><span class="line"># 进程文件</span><br><span class="line">pidfile /var/run/redis-cluster/$&#123;自定义&#125;.pid</span><br><span class="line"># 日志文件</span><br><span class="line">logfile /usr/local/redis-cluster/log/$&#123;自定义&#125;.log</span><br><span class="line"># 端口号</span><br><span class="line">port 6379</span><br><span class="line"># 开启集群模式，把注释#去掉</span><br><span class="line">cluster-enabled yes</span><br><span class="line"># 集群的配置，配置文件首次启动自动生成</span><br><span class="line">cluster-config-file /usr/local/redis-cluster/conf/$&#123;自定义&#125;.conf</span><br><span class="line"># 请求超时，设置10秒</span><br><span class="line">cluster-node-timeout 10000</span><br><span class="line"># aof日志开启，有需要就开启，它会每次写操作都记录一条日志</span><br><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis后台运行</span></span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绑定的主机端口</span></span><br><span class="line"><span class="built_in">bind</span> 127.0.0.1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据存放目录</span></span><br><span class="line">dir /usr/<span class="built_in">local</span>/redis-cluster/data/redis-6379</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进程文件</span></span><br><span class="line">pidfile /var/run/redis-cluster/<span class="variable">$&#123;自定义&#125;</span>.pid</span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志文件</span></span><br><span class="line">logfile /usr/<span class="built_in">local</span>/redis-cluster/<span class="built_in">log</span>/<span class="variable">$&#123;自定义&#125;</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 端口号</span></span><br><span class="line">port 6379</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启集群模式，把注释#去掉</span></span><br><span class="line">cluster-enabled yes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 集群的配置，配置文件首次启动自动生成</span></span><br><span class="line">cluster-config-file /usr/<span class="built_in">local</span>/redis-cluster/conf/<span class="variable">$&#123;自定义&#125;</span>.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 请求超时，设置10秒</span></span><br><span class="line">cluster-node-timeout 10000</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof日志开启，有需要就开启，它会每次写操作都记录一条日志</span></span><br><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><p>redis-6379.conf</p>
@@ -1070,48 +1070,48 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>create</td>
+<td><code>create</code></td>
 <td>创建集群</td>
 </tr>
 <tr>
-<td>check</td>
+<td><code>check</code></td>
 <td>检查集群</td>
 </tr>
 <tr>
-<td>info</td>
+<td><code>info</code></td>
 <td>查看集群信息</td>
 </tr>
 <tr>
-<td>fix</td>
+<td><code>fix</code></td>
 <td>修复集群</td>
 </tr>
 <tr>
-<td>reshard</td>
-<td>在线迁移slot</td>
+<td><code>reshard</code></td>
+<td>在线迁移 slot</td>
 </tr>
 <tr>
-<td>rebalance</td>
-<td>平衡集群节点slot数量</td>
+<td><code>rebalance</code></td>
+<td>平衡集群节点 slot 数量</td>
 </tr>
 <tr>
-<td>add-node</td>
+<td><code>add-node</code></td>
 <td>将新节点加入集群</td>
 </tr>
 <tr>
-<td>del-node</td>
+<td><code>del-node</code></td>
 <td>从集群中删除节点</td>
 </tr>
 <tr>
-<td>set-timeout</td>
+<td><code>set-timeout</code></td>
 <td>设置集群节点间心跳连接的超时时间</td>
 </tr>
 <tr>
-<td>call</td>
+<td><code>call</code></td>
 <td>在集群全部节点上执行命令</td>
 </tr>
 <tr>
-<td>import</td>
-<td>将外部redis数据导入集群</td>
+<td><code>import</code></td>
+<td>将外部 redis 数据导入集群</td>
 </tr>
 </tbody></table>
 <h4 id="3、安装集群"><a href="#3、安装集群" class="headerlink" title="3、安装集群"></a>3、安装集群</h4><h5 id="（1）启动-redis-服务节点"><a href="#（1）启动-redis-服务节点" class="headerlink" title="（1）启动 redis 服务节点"></a>（1）启动 redis 服务节点</h5><p>运行如下命令启动 6 台 redis 节点：</p>
@@ -1120,7 +1120,7 @@
 <p>启动完成后，redis 以集群模式启动，查看各个 redis 节点的进程状态：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ps -ef | grep redis-server</span></span><br><span class="line">    0  1908     1   0  4:59下午 ??         0:00.01 redis-server *:6379 [cluster] </span><br><span class="line">    0  1911     1   0  4:59下午 ??         0:00.01 redis-server *:6389 [cluster] </span><br><span class="line">    0  1914     1   0  4:59下午 ??         0:00.01 redis-server *:6380 [cluster] </span><br><span class="line">    0  1917     1   0  4:59下午 ??         0:00.01 redis-server *:6390 [cluster] </span><br><span class="line">    0  1920     1   0  4:59下午 ??         0:00.01 redis-server *:6381 [cluster] </span><br><span class="line">    0  1923     1   0  4:59下午 ??         0:00.01 redis-server *:6391 [cluster]</span><br></pre></td></tr></table></figure>
 
-<p>在每个 redis 节点的 redis.conf 文件中，我们都配置了 cluster-config-file 的文件路径，集群启动时，conf 目录会新生成 集群 节点配置文件。查看文件列表如下：</p>
+<p>在每个 redis 节点的 redis.conf 文件中，我们都配置了 <code>cluster-config-file</code> 的文件路径，集群启动时，conf 目录会新生成 集群 节点配置文件。查看文件列表如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> tree -L 3 .</span></span><br><span class="line">.</span><br><span class="line">├── appendonly.aof</span><br><span class="line">├── conf</span><br><span class="line">│   ├── node-6379.conf</span><br><span class="line">│   ├── node-6380.conf</span><br><span class="line">│   ├── node-6381.conf</span><br><span class="line">│   ├── node-6389.conf</span><br><span class="line">│   ├── node-6390.conf</span><br><span class="line">│   ├── node-6391.conf</span><br><span class="line">│   ├── redis-6379.conf</span><br><span class="line">│   ├── redis-6380.conf</span><br><span class="line">│   ├── redis-6381.conf</span><br><span class="line">│   ├── redis-6389.conf</span><br><span class="line">│   ├── redis-6390.conf</span><br><span class="line">│   └── redis-6391.conf</span><br><span class="line">├── data</span><br><span class="line">│   ├── redis-6379</span><br><span class="line">│   ├── redis-6380</span><br><span class="line">│   ├── redis-6381</span><br><span class="line">│   ├── redis-6389</span><br><span class="line">│   ├── redis-6390</span><br><span class="line">│   └── redis-6391</span><br><span class="line">├── log</span><br><span class="line">│   ├── redis-6379.log</span><br><span class="line">│   ├── redis-6380.log</span><br><span class="line">│   ├── redis-6381.log</span><br><span class="line">│   ├── redis-6389.log</span><br><span class="line">│   ├── redis-6390.log</span><br><span class="line">│   └── redis-6391.log</span><br><span class="line">└── redis-trib.rb</span><br><span class="line"></span><br><span class="line">9 directories, 20 files</span><br></pre></td></tr></table></figure>
 
 <h5 id="（2）redis-trib-关联集群节点"><a href="#（2）redis-trib-关联集群节点" class="headerlink" title="（2）redis-trib 关联集群节点"></a>（2）redis-trib 关联集群节点</h5><p>按照 从主到从 的方式 从左到右 依次排列 6 个 redis 节点。</p>
@@ -1129,20 +1129,20 @@
 <p>集群创建后，redis-trib 会先将 16384 个 哈希槽 分配到 3 个 主节点，即 redis-6379，redis-6380 和 redis-6381。然后将各个 从节点 指向 主节点，进行 数据同步。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Creating cluster</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Using 3 masters:</span><br><span class="line">127.0.0.1:6379</span><br><span class="line">127.0.0.1:6380</span><br><span class="line">127.0.0.1:6381</span><br><span class="line">Adding replica 127.0.0.1:6390 to 127.0.0.1:6379</span><br><span class="line">Adding replica 127.0.0.1:6391 to 127.0.0.1:6380</span><br><span class="line">Adding replica 127.0.0.1:6389 to 127.0.0.1:6381</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: ad4b9ffceba062492ed67ab336657426f55874b7 127.0.0.1:6379</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">M: df23c6cad0654ba83f0422e352a81ecee822702e 127.0.0.1:6380</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">M: ab9da92d37125f24fe60f1f33688b4f8644612ee 127.0.0.1:6381</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">S: 25cfa11a2b4666021da5380ff332b80dbda97208 127.0.0.1:6389</span><br><span class="line">   replicates ad4b9ffceba062492ed67ab336657426f55874b7</span><br><span class="line">S: 48e0a4b539867e01c66172415d94d748933be173 127.0.0.1:6390</span><br><span class="line">   replicates df23c6cad0654ba83f0422e352a81ecee822702e</span><br><span class="line">S: d881142a8307f89ba51835734b27cb309a0fe855 127.0.0.1:6391</span><br><span class="line">   replicates ab9da92d37125f24fe60f1f33688b4f8644612ee</span><br></pre></td></tr></table></figure>
 
-<p>然后输入 yes，redis-trib.rb 开始执行 节点握手 和 槽分配 操作，输出如下：</p>
+<p>然后输入 <code>yes</code> ，<code>redis-trib.rb</code> 开始执行 节点握手 和 槽分配 操作，输出如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">Can I set the above configuration? (type &apos;yes&apos; to accept): yes</span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join....</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6379)</span><br><span class="line">M: ad4b9ffceba062492ed67ab336657426f55874b7 127.0.0.1:6379</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: ab9da92d37125f24fe60f1f33688b4f8644612ee 127.0.0.1:6381</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 48e0a4b539867e01c66172415d94d748933be173 127.0.0.1:6390</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates df23c6cad0654ba83f0422e352a81ecee822702e</span><br><span class="line">S: d881142a8307f89ba51835734b27cb309a0fe855 127.0.0.1:6391</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ab9da92d37125f24fe60f1f33688b4f8644612ee</span><br><span class="line">M: df23c6cad0654ba83f0422e352a81ecee822702e 127.0.0.1:6380</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 25cfa11a2b4666021da5380ff332b80dbda97208 127.0.0.1:6389</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates ad4b9ffceba062492ed67ab336657426f55874b7</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
 
 <p>执行 集群检查，检查各个 redis 节点占用的 哈希槽（slot）的个数以及 slot 覆盖率。16384 个槽位中，主节点 redis-6379、redis-6380 和 redis-6381 分别占用了 5461、5461 和 5462 个槽位。</p>
-<h5 id="（3）redis-主节点的日志"><a href="#（3）redis-主节点的日志" class="headerlink" title="（3）redis 主节点的日志"></a>（3）redis 主节点的日志</h5><p>可以发现，通过 BGSAVE 命令，从节点 redis-6389 在 后台 异步地从 主节点 redis-6379 同步数据。</p>
+<h5 id="（3）redis-主节点的日志"><a href="#（3）redis-主节点的日志" class="headerlink" title="（3）redis 主节点的日志"></a>（3）redis 主节点的日志</h5><p>可以发现，通过 <code>BGSAVE</code> 命令，从节点 redis-6389 在 后台 异步地从 主节点 redis-6379 同步数据。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat <span class="built_in">log</span>/redis-6379.log </span></span><br><span class="line">1907:C 05 Sep 16:59:52.960 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo</span><br><span class="line">1907:C 05 Sep 16:59:52.961 # Redis version=4.0.11, bits=64, commit=00000000, modified=0, pid=1907, just started</span><br><span class="line">1907:C 05 Sep 16:59:52.961 # Configuration loaded</span><br><span class="line">1908:M 05 Sep 16:59:52.964 * Increased maximum number of open files to 10032 (it was originally set to 256).</span><br><span class="line">1908:M 05 Sep 16:59:52.965 * No cluster configuration found, I'm ad4b9ffceba062492ed67ab336657426f55874b7</span><br><span class="line">1908:M 05 Sep 16:59:52.967 * Running mode=cluster, port=6379.</span><br><span class="line">1908:M 05 Sep 16:59:52.967 # Server initialized</span><br><span class="line">1908:M 05 Sep 16:59:52.967 * Ready to accept connections</span><br><span class="line">1908:M 05 Sep 17:01:17.782 # configEpoch set to 1 via CLUSTER SET-CONFIG-EPOCH</span><br><span class="line">1908:M 05 Sep 17:01:17.812 # IP address for this node updated to 127.0.0.1</span><br><span class="line">1908:M 05 Sep 17:01:22.740 # Cluster state changed: ok</span><br><span class="line">1908:M 05 Sep 17:01:23.681 * Slave 127.0.0.1:6389 asks for synchronization</span><br><span class="line">1908:M 05 Sep 17:01:23.681 * Partial resynchronization not accepted: Replication ID mismatch (Slave asked for '4c5afe96cac51cde56039f96383ea7217ef2af41', my replication IDs are '037b661bf48c80c577d1fa937ba55367a3692921' and '0000000000000000000000000000000000000000')</span><br><span class="line">1908:M 05 Sep 17:01:23.681 * Starting BGSAVE for SYNC with target: disk</span><br><span class="line">1908:M 05 Sep 17:01:23.682 * Background saving started by pid 1952</span><br><span class="line">1952:C 05 Sep 17:01:23.683 * DB saved on disk</span><br><span class="line">1908:M 05 Sep 17:01:23.749 * Background saving terminated with success</span><br><span class="line">1908:M 05 Sep 17:01:23.752 * Synchronization with slave 127.0.0.1:6389 succeeded</span><br></pre></td></tr></table></figure>
 
-<h5 id="（4）redis-集群完整性检测"><a href="#（4）redis-集群完整性检测" class="headerlink" title="（4）redis 集群完整性检测"></a>（4）redis 集群完整性检测</h5><p>使用 redis-trib.rb check 命令检测之前创建的 两个集群 是否成功，check 命令只需要给出集群中 任意一个节点地址 就可以完成 整个集群 的 检查工作，命令如下：</p>
+<h5 id="（4）redis-集群完整性检测"><a href="#（4）redis-集群完整性检测" class="headerlink" title="（4）redis 集群完整性检测"></a>（4）redis 集群完整性检测</h5><p>使用 <code>redis-trib.rb check</code> 命令检测之前创建的 两个集群 是否成功，<code>check</code> 命令只需要给出集群中 任意一个节点地址 就可以完成 整个集群 的 检查工作，命令如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./redis-trib.rb check 127.0.0.1:6379</span></span><br></pre></td></tr></table></figure>
 
 <p>当最后输出如下信息，提示集群 所有的槽 都已分配到节点：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
 
-<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p>本文介绍了 Redis 集群解决方案，数据分布 和 集群搭建。集群方案包括 客户端分区 方案，代理分区 方案 和 查询路由 方案。数据分布 部分简单地对 节点取余 分区，一致性哈希 分区以及 虚拟槽 分区进行了阐述和对比。最后对使用 Redis-trib 搭建了一个 三主三从 的 虚拟槽 集群示例。</p>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p>本文介绍了 Redis 集群解决方案，数据分布 和 集群搭建。集群方案包括 客户端分区 方案，代理分区 方案 和 查询路由 方案。数据分布 部分简单地对 节点取余 分区，一致性哈希 分区以及 虚拟槽 分区进行了阐述和对比。最后对使用 <code>Redis-trib</code> 搭建了一个 三主三从 的 虚拟槽 集群示例。</p>
 <hr>
 <h1 id="数据结构与全局命令概述"><a href="#数据结构与全局命令概述" class="headerlink" title="数据结构与全局命令概述"></a>数据结构与全局命令概述</h1><h2 id="前言-3"><a href="#前言-3" class="headerlink" title="前言"></a>前言</h2><p>Redis 提供了 5 种数据结构。理解每种数据结构的特点，对于 Redis 的 开发运维 非常重要，同时掌握 Redis 的 单线程命令处理 机制，会使 数据结构 和 命令 的选择事半功倍。  </p>
 <p>接下来的几篇文章，将从如下几个方面介绍 Redis 的几种数据结构，命令使用及其应用场景。</p>
@@ -1172,10 +1172,10 @@
 <p>下面插入一个 列表类型 的 键值对（值是 多个元素 组成）：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush mylist a b c d e f g</span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br></pre></td></tr></table></figure>
 
-<p>dbsize 命令会返回当前数据库中 键的总数。</p>
+<p><code>dbsize</code> 命令会返回当前数据库中 键的总数。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; dbsize</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br></pre></td></tr></table></figure>
 
-<p>dbsize 命令在 计算键总数 时 不会遍历 所有键，而是直接获取 Redis 内置的键总数变量，所以 dbsize 命令的 时间复杂度 是 O（1）。而 keys 命令会 遍历 所有键，所以它的 时间复杂度 是 O（n），当 Redis 保存了 大量键 时，线上环境 禁止 使用。</p>
+<p><code>dbsize</code> 命令在 计算键总数 时 不会遍历 所有键，而是直接获取 Redis 内置的键总数变量，所以 <code>dbsize</code> 命令的 时间复杂度 是 O（1）。而 <code>keys</code> 命令会 遍历 所有键，所以它的 时间复杂度 是 O（n），当 Redis 保存了 大量键 时，线上环境 禁止 使用。</p>
 <h4 id="检查键是否存在"><a href="#检查键是否存在" class="headerlink" title="检查键是否存在"></a>检查键是否存在</h4><blockquote>
 <p><code>exists key</code></p>
 </blockquote>
@@ -1185,7 +1185,7 @@
 <h4 id="删除键"><a href="#删除键" class="headerlink" title="删除键"></a>删除键</h4><blockquote>
 <p><code>del key</code></p>
 </blockquote>
-<p>del 是一个 通用命令，无论值是什么 数据结构 类型，del 命令都可以将其 删除。</p>
+<p><code>del</code> 是一个 通用命令，无论值是什么 数据结构 类型，<code>del</code> 命令都可以将其 删除。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; del java</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; exists java</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379&gt; del not_exist_key</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379&gt; exists not_exist_key</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br></pre></td></tr></table></figure>
 
 <p>返回结果为 成功删除 的 键的个数，假设删除一个 不存在 的键，就会返回 0。</p>
@@ -1195,13 +1195,13 @@
 <p>Redis 支持对 键 添加 过期时间，当超过过期时间后，会 自动删除键，例如为键 hello 设置 10 秒过期时间：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> hello world</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; expire hello 10 </span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br></pre></td></tr></table></figure>
 
-<p>ttl 命令会返回键的 剩余过期时间，它有 3 种返回值：</p>
+<p><code>ttl</code> 命令会返回键的 剩余过期时间，它有 3 种返回值：</p>
 <ul>
-<li>大于等于 0 的整数：表示键 剩余 的 过期时间。</li>
-<li>返回 -1：键 没设置 过期时间。</li>
-<li>返回 -2：键 不存在。</li>
+<li><strong>大于等于 0 的整数</strong>：表示键 剩余 的 过期时间。</li>
+<li>返回 <strong>-1</strong>：键 没设置 过期时间。</li>
+<li>返回 <strong>-2</strong>：键 不存在。</li>
 </ul>
-<p>可以通过 ttl 命令观察 键 hello 的 剩余过期时间：</p>
+<p>可以通过 <code>ttl</code> 命令观察 键 hello 的 剩余过期时间：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 还剩7秒</span></span><br><span class="line">127.0.0.1:6379&gt; ttl hello(<span class="built_in">integer</span>) </span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br><span class="line">...</span><br><span class="line"><span class="comment"># 还剩1秒</span></span><br><span class="line">127.0.0.1:6379&gt; ttl hello(<span class="built_in">integer</span>) </span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line"><span class="comment"># 返回结果为-2，说明键hello已经被删除</span></span><br><span class="line">127.0.0.1:6379&gt; ttl hello(<span class="built_in">integer</span>) </span><br><span class="line">(<span class="built_in">integer</span>) -2</span><br><span class="line">127.0.0.1:6379&gt; get hello</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
 
 <h4 id="键的数据结构类型"><a href="#键的数据结构类型" class="headerlink" title="键的数据结构类型"></a>键的数据结构类型</h4><blockquote>
@@ -1210,7 +1210,7 @@
 <p>例如键 hello 是的值 字符串类型，返回结果为 string。键 mylist 的值是 列表类型，返回结果为 list。如果键不存在，则返回 none。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> a b</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">type</span> a</span><br><span class="line">string</span><br><span class="line">127.0.0.1:6379&gt; rpush mylist a b c d e f g</span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">type</span> mylist</span><br><span class="line">list</span><br></pre></td></tr></table></figure>
 
-<h3 id="数据结构和内部编码"><a href="#数据结构和内部编码" class="headerlink" title="数据结构和内部编码"></a>数据结构和内部编码</h3><p>type 命令实际返回的就是当前 键 的 数据结构类型，它们分别是：string（字符串）、hash（哈希）、list（列表）、set（集合）、zset（有序集合），但这些只是 Redis 对外的 数据结构。如图所示：</p>
+<h3 id="数据结构和内部编码"><a href="#数据结构和内部编码" class="headerlink" title="数据结构和内部编码"></a>数据结构和内部编码</h3><p><code>type</code> 命令实际返回的就是当前 键 的 数据结构类型，它们分别是：string（字符串）、hash（哈希）、list（列表）、set（集合）、zset（有序集合），但这些只是 Redis 对外的 数据结构。如图所示：</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="165f79470dff7693.png" title="" data-fancybox="images"><img src="165f79470dff7693.png" alt title class></a>
                 <p></p>
@@ -1222,7 +1222,7 @@
                 <p></p>
             </figure>
 
-<p>可以看到，每种 数据结构 都有 两种以上 的 内部编码实现。例如 list 数据结构 包含了 linkedlist 和 ziplist 两种 内部编码。同时有些 内部编码，例如 ziplist，可以作为 多种外部数据结构 的内部实现，可以通过 object encoding 命令查询 内部编码：</p>
+<p>可以看到，每种 数据结构 都有 两种以上 的 内部编码实现。例如 list 数据结构 包含了 linkedlist 和 ziplist 两种 内部编码。同时有些 内部编码，例如 ziplist，可以作为 多种外部数据结构 的内部实现，可以通过 <code>object encoding</code> 命令查询 内部编码：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; object encoding hello</span><br><span class="line"><span class="string">"embstr"</span></span><br><span class="line">127.0.0.1:6379&gt; object encoding mylist</span><br><span class="line"><span class="string">"quicklist"</span></span><br></pre></td></tr></table></figure>
 
 <p>可以看到键 hello 对应值的 内部编码 是 embstr，键 mylist 对应值的 内部编码 是 ziplist。  </p>
@@ -1233,7 +1233,7 @@
 </ul>
 <h3 id="单线程架构"><a href="#单线程架构" class="headerlink" title="单线程架构"></a>单线程架构</h3><p>Redis 使用了 单线程架构 和 I/O 多路复用模型 来实现 高性能 的 内存数据库服务。那为什么 单线程 还能这么快，下面分析原因：</p>
 <h4 id="1、纯内存访问"><a href="#1、纯内存访问" class="headerlink" title="1、纯内存访问"></a>1、纯内存访问</h4><p>Redis 将所有数据放在 内存 中，内存的 响应时长 大约为 100 纳秒，这是 Redis 达到 每秒万级别 访问的重要基础。</p>
-<h4 id="2、非阻塞-I-O"><a href="#2、非阻塞-I-O" class="headerlink" title="2、非阻塞 I/O"></a>2、非阻塞 I/O</h4><p>Redis 使用 epoll 作为 I/O 多路复用技术 的实现，再加上 Redis 自身的 事件处理模型 将 epoll 中的 连接、读写、关闭 都转换为 事件，从而不用不在 网络 I/O 上浪费过多的时间，如图所示：</p>
+<h4 id="2、非阻塞-I-O"><a href="#2、非阻塞-I-O" class="headerlink" title="2、非阻塞 I/O"></a>2、非阻塞 I/O</h4><p>Redis 使用 <strong>epoll</strong> 作为 I/O 多路复用技术 的实现，再加上 Redis 自身的 事件处理模型 将 epoll 中的 连接、读写、关闭 都转换为 事件，从而不用不在 网络 I/O 上浪费过多的时间，如图所示：</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="1660be813703e6b6.png" title="" data-fancybox="images"><img src="1660be813703e6b6.png" alt title class></a>
                 <p></p>
@@ -1249,26 +1249,26 @@
 </blockquote>
 <h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p>本文堆 Redis 的几种 数据结构 进行了概述，介绍了几个简单的 全局命令，数据结构 和 内部编码 以及 单线程命令 处理机制分析。</p>
 <hr>
-<h1 id="数据结构之字符串"><a href="#数据结构之字符串" class="headerlink" title="数据结构之字符串"></a>数据结构之字符串</h1><h2 id="前言-4"><a href="#前言-4" class="headerlink" title="前言"></a>前言</h2><p>字符串类型 是 Redis 最基础的数据结构。字符串类型 的值实际可以是 字符串（简单 和 复杂 的字符串，例如 JSON、XML）、数字（整数、浮点数），甚至是 二进制（图片、音频、视频），但是值最大不能超过 512MB。</p>
+<h1 id="数据结构之字符串"><a href="#数据结构之字符串" class="headerlink" title="数据结构之字符串"></a>数据结构之字符串</h1><h2 id="前言-4"><a href="#前言-4" class="headerlink" title="前言"></a>前言</h2><p>字符串类型 是 Redis 最基础的数据结构。字符串类型 的值实际可以是 字符串（简单 和 复杂 的字符串，例如 JSON、XML）、数字（整数、浮点数），甚至是 二进制（图片、音频、视频），但是值最大不能超过 <strong>512MB</strong> 。</p>
 <h2 id="正文-4"><a href="#正文-4" class="headerlink" title="正文"></a>正文</h2><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><h4 id="常见命令"><a href="#常见命令" class="headerlink" title="常见命令"></a>常见命令</h4><h5 id="设置值"><a href="#设置值" class="headerlink" title="设置值"></a>设置值</h5><blockquote>
 <p><code>set key value [ex seconds] [px milliseconds] [nx|xx]</code></p>
 </blockquote>
-<p>set 命令有几个选项：</p>
+<p><code>set</code> 命令有几个选项：</p>
 <ol>
-<li>ex seconds：为 键 设置 秒级过期时间。</li>
-<li>px milliseconds：为 键 设置 毫秒级过期时间。</li>
-<li>nx：键必须 不存在，才可以设置成功，用于 添加。</li>
-<li>xx：与 nx 相反，键必须 存在，才可以设置成功，用于 更新。</li>
+<li><code>ex seconds</code>：为 键 设置 秒级过期时间。</li>
+<li><code>px milliseconds</code>：为 键 设置 毫秒级过期时间。</li>
+<li><code>nx</code>：键必须 不存在，才可以设置成功，用于 添加。</li>
+<li><code>xx</code>：与 nx 相反，键必须 存在，才可以设置成功，用于 更新。</li>
 </ol>
-<p>除了 set 选项，Redis 还提供了 setex 和 setnx 两个命令：</p>
+<p>除了 set 选项，Redis 还提供了 <code>setex</code> 和 <code>setnx</code> 两个命令：</p>
 <blockquote>
 <p><code>setex key seconds value</code><br><code>setnx key value</code></p>
 </blockquote>
 <ul>
-<li><p>setex：设定键的值，并指定此键值对应的 有效时间。</p>
+<li><p><code>setex</code>：设定键的值，并指定此键值对应的 有效时间。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setex key1 5 value1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line"><span class="string">"value1"</span></span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>setnx：键必须 不存在，才可以设置成功。如果键已经存在，返回 0。</p>
+<li><p><code>setnx</code>：键必须 不存在，才可以设置成功。如果键已经存在，返回 0。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key2 value1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; setnx key2 value2</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; get key2</span><br><span class="line"><span class="string">"value1"</span></span><br></pre></td></tr></table></figure>
 
 </li>
@@ -1276,13 +1276,13 @@
 <h5 id="获取值"><a href="#获取值" class="headerlink" title="获取值"></a>获取值</h5><blockquote>
 <p><code>get key</code></p>
 </blockquote>
-<p>如果要获取的 键不存在，则返回 nil（空）。</p>
+<p>如果要获取的 键不存在，则返回 <strong>nil</strong>（空）。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get not_exist_key</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
 
 <h5 id="批量设置值"><a href="#批量设置值" class="headerlink" title="批量设置值"></a>批量设置值</h5><blockquote>
 <p><code>mset key value [key value ...]</code></p>
 </blockquote>
-<p>下面操作通过 mset 命令一次性设置 4 个 键值对：</p>
+<p>下面操作通过 <code>mset</code> 命令一次性设置 4 个 键值对：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; mset a 1 b 2 c 3 d 4</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 
 <h5 id="批量获取值"><a href="#批量获取值" class="headerlink" title="批量获取值"></a>批量获取值</h5><blockquote>
@@ -1291,18 +1291,18 @@
 <p>通过下面操作 批量获取 键 a、b、c、d 的值：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; mget a b c d</span><br><span class="line">1) <span class="string">"1"</span></span><br><span class="line">2) <span class="string">"2"</span></span><br><span class="line">3) <span class="string">"3"</span></span><br><span class="line">4) <span class="string">"4"</span></span><br></pre></td></tr></table></figure>
 
-<p>批量操作 命令，可以有效提高 开发效率，假如没有 mget 这样的命令，要执行 n 次 get 命令的过程和 耗时 如下：</p>
+<p>批量操作 命令，可以有效提高 开发效率，假如没有 <code>mget</code> 这样的命令，要执行 n 次 get 命令的过程和 耗时 如下：</p>
 <blockquote>
-<p>n次get时间 = n次网络时间 + n次命令时间</p>
+<p>n 次 get 时间 = n 次网络时间 + n 次命令时间</p>
 </blockquote>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="1660be8136f2af81.png" title="" data-fancybox="images"><img src="1660be8136f2af81.png" alt title class></a>
                 <p></p>
             </figure>
 
-<p>使用 mget 命令后，执行 n 次 get 命令的过程和 耗时 如下：</p>
+<p>使用 <code>mget</code> 命令后，执行 n 次 get 命令的过程和 耗时 如下：</p>
 <blockquote>
-<p>n次get时间 = 1次网络时间 + n次命令时间</p>
+<p>n 次 get 时间 = 1 次网络时间 + n 次命令时间</p>
 </blockquote>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="1660be81370d0cc2.png" title="" data-fancybox="images"><img src="1660be81370d0cc2.png" alt title class></a>
@@ -1319,26 +1319,26 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>1000次get操作</td>
+<td>1000 次 get 操作</td>
 <td>1000 * 1 + 1000 * 0.1 = 1100ms = 1.1s</td>
 </tr>
 <tr>
-<td>1次mget操作</td>
+<td>1 次 mget 操作</td>
 <td>1 * 1 + 1000 * 0.1 = 101ms = 0.101s</td>
 </tr>
 </tbody></table>
 <h5 id="计数"><a href="#计数" class="headerlink" title="计数"></a>计数</h5><blockquote>
 <p><code>incr key</code></p>
 </blockquote>
-<p>incr 命令用于对值做 自增操作，返回结果分为三种情况：</p>
+<p><code>incr</code> 命令用于对值做 自增操作，返回结果分为三种情况：</p>
 <ul>
-<li>值不是 整数，返回 错误。</li>
-<li>值是 整数，返回 自增 后的结果。</li>
-<li>键不存在，按照值为 0 自增，返回结果为 1。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; exists key</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379&gt; incr key</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
+<li>值<strong>不是 整数</strong>，返回 <strong>错误</strong>。</li>
+<li>值<strong>是 整数</strong>，返回 <strong>自增</strong> 后的结果。</li>
+<li>键<strong>不存在</strong>，按照值为 0 自增，返回结果为 <strong>1</strong>。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; exists key</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379&gt; incr key</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<p>除了 incr 命令，Redis 还提供了 decr（自减）、incrby（自增指定数字）、decrby（自减指定数字）、incrbyfloat（自增浮点数）等命令操作：</p>
+<p>除了 <code>incr</code> 命令，Redis 还提供了 <code>decr</code>（自减）、<code>incrby</code>（自增指定数字）、<code>decrby</code>（自减指定数字）、<code>incrbyfloat</code>（自增浮点数）等命令操作：</p>
 <blockquote>
 <p><code>decr key</code><br><code>incrby key increment</code><br><code>decrby key decrement</code><br><code>incrbyfloat key increment</code></p>
 </blockquote>
@@ -1346,7 +1346,7 @@
 <h4 id="不常用命令"><a href="#不常用命令" class="headerlink" title="不常用命令"></a>不常用命令</h4><h5 id="追加值"><a href="#追加值" class="headerlink" title="追加值"></a>追加值</h5><blockquote>
 <p><code>append key value</code></p>
 </blockquote>
-<p>append 可以向 字符串尾部 追加值。</p>
+<p><code>append</code> 可以向 字符串尾部 追加值。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; get key</span><br><span class="line"><span class="string">"redis"</span></span><br><span class="line">127.0.0.1:6379&gt; append key world</span><br><span class="line">(<span class="built_in">integer</span>) 10</span><br><span class="line">127.0.0.1:6379&gt; get key</span><br><span class="line"><span class="string">"redisworld"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="字符串长度"><a href="#字符串长度" class="headerlink" title="字符串长度"></a>字符串长度</h5><blockquote>
@@ -1358,7 +1358,7 @@
 <h5 id="设置并返回原值"><a href="#设置并返回原值" class="headerlink" title="设置并返回原值"></a>设置并返回原值</h5><blockquote>
 <p><code>getset key value</code></p>
 </blockquote>
-<p>getset 和 set 一样会 设置值，但是不同的是，它同时会返回 键原来的值，例如：</p>
+<p><code>getset</code> 和 <code>set</code> 一样会 设置值，但是不同的是，它同时会返回 键原来的值，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; getset hello world</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; getset hello redis</span><br><span class="line"><span class="string">"world"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="设置指定位置的字符"><a href="#设置指定位置的字符" class="headerlink" title="设置指定位置的字符"></a>设置指定位置的字符</h5><blockquote>
@@ -1370,7 +1370,7 @@
 <h5 id="获取部分字符串"><a href="#获取部分字符串" class="headerlink" title="获取部分字符串"></a>获取部分字符串</h5><blockquote>
 <p><code>getrange key start end</code></p>
 </blockquote>
-<p>start 和 end 分别是 开始 和 结束 的 偏移量，偏移量 从 0 开始计算，例如获取值 best 的 前两个字符 的命令如下：</p>
+<p><code>start</code> 和 <code>end</code> 分别是 开始 和 结束 的 偏移量，偏移量 从 0 开始计算，例如获取值 best 的 前两个字符 的命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; getrange redis 0 1</span><br><span class="line"><span class="string">"be"</span></span><br></pre></td></tr></table></figure>
 
 <p>最后给出 字符串 类型命令的 时间复杂度 说明：</p>
@@ -1381,9 +1381,9 @@
 
 <h3 id="内部编码"><a href="#内部编码" class="headerlink" title="内部编码"></a>内部编码</h3><p>字符串 类型的 内部编码 有 3 种：</p>
 <ul>
-<li>int：8 个字节的 长整型。</li>
-<li>embstr：小于等于 39 个字节的字符串。</li>
-<li>raw：大于 39 个字节的字符串。</li>
+<li><code>int</code>：<strong>8 个字节</strong>的 <strong>长整型</strong>。</li>
+<li><code>embstr</code>：<strong>小于等于 39 个字节</strong>的字符串。</li>
+<li><code>raw</code>：<strong>大于 39 个字节</strong>的字符串。</li>
 </ul>
 <p>Redis 会根据当前值的 类型 和 长度 决定使用哪种 内部编码实现。</p>
 <ul>
@@ -1391,10 +1391,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key 8653</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding key</span><br><span class="line"><span class="string">"int"</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>短字符串</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#小于等于39个字节的字符串：embstr</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key <span class="string">"hello,world"</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding key</span><br><span class="line"><span class="string">"embstr"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#小于等于 39 个字节的字符串：embstr</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key <span class="string">"hello,world"</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding key</span><br><span class="line"><span class="string">"embstr"</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>长字符串</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#大于39个字节的字符串：raw</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key <span class="string">"one string greater than 39 byte........."</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding key</span><br><span class="line"><span class="string">"raw"</span></span><br><span class="line">127.0.0.1:6379&gt; strlen key</span><br><span class="line">(<span class="built_in">integer</span>) 40</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#大于 39 个字节的字符串：raw</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key <span class="string">"one string greater than 39 byte........."</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding key</span><br><span class="line"><span class="string">"raw"</span></span><br><span class="line">127.0.0.1:6379&gt; strlen key</span><br><span class="line">(<span class="built_in">integer</span>) 40</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -1433,14 +1433,14 @@
 <h2 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h2><p>本文简单的介绍了 Redis 的 字符串数据结构 的 基本命令，内部编码 和 相关应用场景。</p>
 <hr>
 <h1 id="数据结构之哈希"><a href="#数据结构之哈希" class="headerlink" title="数据结构之哈希"></a>数据结构之哈希</h1><h2 id="前言-5"><a href="#前言-5" class="headerlink" title="前言"></a>前言</h2><p>大部分编程语言都提供了 哈希（hash）类型，它们的叫法可能是 哈希、字典、关联数组。在 Redis 中，哈希类型 是指键值本身又是一个 键值对结构。  </p>
-<p>哈希 形如 value={ {field1，value1}，…{fieldN，valueN} }，Redis 键值对 和 哈希类型 二者的关系如图所示：</p>
+<p>哈希 形如 <code>value = { {field1, value1}, ...{fieldN, valueN} }</code>，Redis 键值对 和 哈希类型 二者的关系如图所示：</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="1663a75da4aca1ed.png" title="" data-fancybox="images"><img src="1663a75da4aca1ed.png" alt title class></a>
                 <p></p>
             </figure>
 
 <blockquote>
-<p>哈希类型中的 映射关系 叫作 field-value，这里的 value 是指 field 对应的 值，不是 键 对应的值。</p>
+<p>哈希类型中的 映射关系 叫作 <strong>field-value</strong>，这里的 value 是指 field 对应的 值，不是 键 对应的值。</p>
 </blockquote>
 <h2 id="正文-5"><a href="#正文-5" class="headerlink" title="正文"></a>正文</h2><h3 id="相关命令-1"><a href="#相关命令-1" class="headerlink" title="相关命令"></a>相关命令</h3><h4 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h4><h5 id="设置值-1"><a href="#设置值-1" class="headerlink" title="设置值"></a>设置值</h5><blockquote>
 <p><code>hset key field value</code></p>
@@ -1448,7 +1448,7 @@
 <p>下面为 user：1 添加一对 field-value，如果设置成功会返回 1，反之会返回 0。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hset user:1 name tom</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
 
-<p>此外 Redis 提供了 hsetnx 命令，它们的关系就像 set 和 setnx 命令一样，只不过 作用域 由 键 变为 field。</p>
+<p>此外 Redis 提供了 <code>hsetnx</code> 命令，它们的关系就像 <code>set</code> 和 <code>setnx</code> 命令一样，只不过 作用域 由 键 变为 field。</p>
 <h5 id="获取值-1"><a href="#获取值-1" class="headerlink" title="获取值"></a>获取值</h5><blockquote>
 <p><code>hget key field</code></p>
 </blockquote>
@@ -1461,7 +1461,7 @@
 <h5 id="删除-field"><a href="#删除-field" class="headerlink" title="删除 field"></a>删除 field</h5><blockquote>
 <p><code>hdel key field [field ...]</code></p>
 </blockquote>
-<p>hdel 会删除 一个或多个 field，返回结果为 成功删除 field 的个数，例如：</p>
+<p><code>hdel</code> 会删除 一个或多个 field，返回结果为 成功删除 field 的个数，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hdel user:1 name</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; hdel user:1 age</span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br></pre></td></tr></table></figure>
 
 <h5 id="计算-field-个数"><a href="#计算-field-个数" class="headerlink" title="计算 field 个数"></a>计算 field 个数</h5><blockquote>
@@ -1473,7 +1473,7 @@
 <h5 id="批量设置或获取-field-value"><a href="#批量设置或获取-field-value" class="headerlink" title="批量设置或获取 field-value"></a>批量设置或获取 field-value</h5><blockquote>
 <p><code>hmget key field [field ...]</code><br><code>hmset key field value [field value ...]</code></p>
 </blockquote>
-<p>hmset 和 hmget 分别是 批量设置 和 获取 field-value，hmset 需要的参数是 key 和 多对 field-value，hmget 需要的参数是 key 和 多个 field。例如：</p>
+<p><code>hmset</code> 和 <code>hmget</code> 分别是 批量设置 和 获取 field-value，<code>hmset</code> 需要的参数是 key 和 多对 field-value，<code>hmget</code> 需要的参数是 key 和 多个 field。例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset user:1 name tom age 12 city chengdu</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hmget user:1 name city</span><br><span class="line">1) <span class="string">"tom"</span></span><br><span class="line">2) <span class="string">"chengdu"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="判断-field-是否存在"><a href="#判断-field-是否存在" class="headerlink" title="判断 field 是否存在"></a>判断 field 是否存在</h5><blockquote>
@@ -1485,7 +1485,7 @@
 <h5 id="获取所有-field"><a href="#获取所有-field" class="headerlink" title="获取所有 field"></a>获取所有 field</h5><blockquote>
 <p><code>hkeys key</code></p>
 </blockquote>
-<p>hkeys 命令应该叫 hfields 更为恰当，它返回指定 哈希键 所有的 field，例如：</p>
+<p><code>hkeys</code> 命令应该叫 hfields 更为恰当，它返回指定 哈希键 所有的 field，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hkeys user:1</span><br><span class="line">1) <span class="string">"name"</span></span><br><span class="line">2) <span class="string">"age"</span></span><br><span class="line">3) <span class="string">"city"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="获取所有-value"><a href="#获取所有-value" class="headerlink" title="获取所有 value"></a>获取所有 value</h5><blockquote>
@@ -1501,16 +1501,16 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hgetall user:1</span><br><span class="line">1) <span class="string">"name"</span></span><br><span class="line">2) <span class="string">"tom"</span></span><br><span class="line">3) <span class="string">"age"</span></span><br><span class="line">4) <span class="string">"12"</span></span><br><span class="line">5) <span class="string">"city"</span></span><br><span class="line">6) <span class="string">"chengdu"</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>在使用 hgetall 时，如果 哈希元素 个数比较多，会存在 阻塞 Redis 的可能。如果开发人员只需要获取 部分 field，可以使用 hmget，如果一定要获取 全部 field-value，可以使用 hscan 命令，该命令会 渐进式遍历 哈希类型。</p>
+<p>在使用 <code>hgetall</code> 时，如果 哈希元素 个数比较多，会存在 阻塞 Redis 的可能。如果开发人员只需要获取 部分 field，可以使用 <code>hmget</code> ，如果一定要获取 全部 field-value，可以使用 <code>hscan</code> 命令，该命令会 渐进式遍历 哈希类型。</p>
 </blockquote>
 <h4 id="不常用命令-1"><a href="#不常用命令-1" class="headerlink" title="不常用命令"></a>不常用命令</h4><h5 id="键值自增"><a href="#键值自增" class="headerlink" title="键值自增"></a>键值自增</h5><blockquote>
 <p><code>hincrby key field</code><br><code>hincrbyfloat key field</code></p>
 </blockquote>
-<p>hincrby 和 hincrbyfloat，就像 incrby 和 incrbyfloat 命令一样，但是它们的 作用域 是 field。</p>
+<p><code>hincrby</code> 和 <code>hincrbyfloat</code> ，就像 <code>incrby</code> 和 <code>incrbyfloat</code> 命令一样，但是它们的 作用域 是 field。</p>
 <h5 id="计算-value-的字符串长度"><a href="#计算-value-的字符串长度" class="headerlink" title="计算 value 的字符串长度"></a>计算 value 的字符串长度</h5><blockquote>
 <p><code>hstrlen key field</code></p>
 </blockquote>
-<p>例如 hget user:1 name 的 value 是 tom，那么 hstrlen 的返回结果是 3。</p>
+<p>例如 <code>hget user:1 name</code> 的 value 是 tom，那么 <code>hstrlen</code> 的返回结果是 3。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hstrlen user:1 name</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br></pre></td></tr></table></figure>
 
 <p>下面是 哈希类型命令 的 时间复杂度，开发人员可以参考此表选择适合的命令。</p>
@@ -1524,17 +1524,17 @@
             </figure>
 
 <h3 id="内部编码-1"><a href="#内部编码-1" class="headerlink" title="内部编码"></a>内部编码</h3><p>哈希类型 的 内部编码 有两种：</p>
-<h4 id="1、ziplist（压缩列表）"><a href="#1、ziplist（压缩列表）" class="headerlink" title="1、ziplist（压缩列表）"></a>1、ziplist（压缩列表）</h4><p>当 哈希类型 元素个数 小于 hash-max-ziplist-entries 配置（默认 512 个）、同时 所有值 都 小于 hash-max-ziplist-value 配置（默认 64 字节）时，Redis 会使用 ziplist 作为 哈希 的 内部实现，ziplist 使用更加 紧凑的结构 实现多个元素的 连续存储，所以在 节省内存 方面比 hashtable 更加优秀。</p>
-<h4 id="2、hashtable（哈希表）"><a href="#2、hashtable（哈希表）" class="headerlink" title="2、hashtable（哈希表）"></a>2、hashtable（哈希表）</h4><p>当 哈希类型 无法满足 ziplist 的条件时，Redis 会使用 hashtable 作为 哈希 的 内部实现，因为此时 ziplist 的 读写效率 会下降，而 hashtable 的读写 时间复杂度 为 O（1）。  </p>
+<h4 id="1、ziplist（压缩列表）"><a href="#1、ziplist（压缩列表）" class="headerlink" title="1、ziplist（压缩列表）"></a>1、ziplist（压缩列表）</h4><p>当 哈希类型 元素个数 小于 <code>hash-max-ziplist-entries</code> 配置（默认 512 个）、同时 所有值 都 小于 <code>hash-max-ziplist-value</code> 配置（默认 64 字节）时，Redis 会使用 <strong>ziplist</strong> 作为 哈希 的 内部实现，ziplist 使用更加 紧凑的结构 实现多个元素的 连续存储，所以在 节省内存 方面比 hashtable 更加优秀。</p>
+<h4 id="2、hashtable（哈希表）"><a href="#2、hashtable（哈希表）" class="headerlink" title="2、hashtable（哈希表）"></a>2、hashtable（哈希表）</h4><p>当 哈希类型 无法满足 ziplist 的条件时，Redis 会使用 <strong>hashtable</strong> 作为 哈希 的 内部实现，因为此时 ziplist 的 读写效率 会下降，而 hashtable 的读写 时间复杂度 为 O（1）。  </p>
 <h4 id="编码转换"><a href="#编码转换" class="headerlink" title="编码转换"></a>编码转换</h4><p>下面的示例演示了 哈希类型 的 内部编码，以及相应的变化。</p>
 <ul>
-<li><p>当 field 个数 比较少，且没有大的 value 时，内部编码 为 ziplist：</p>
+<li><p>当 <strong>field 个数 比较少，且没有大的 value</strong> 时，内部编码 为 <strong>ziplist</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset hashkey f1 v1 f2 v2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding hashkey</span><br><span class="line"><span class="string">"ziplist"</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当有 value 大于 64 字节时，内部编码 会由 ziplist 变为 hashtable：</p>
+<li><p>当<strong>有 value 大于 64 字节</strong>时，内部编码 会由 ziplist 变为 <strong>hashtable</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hset hashkey f3 <span class="string">"one string is bigger than 64 byte...忽略..."</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding hashkey</span><br><span class="line"><span class="string">"hashtable"</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当 field 个数 超过 512，内部编码 也会由 ziplist 变为 hashtable：</p>
+<li><p>当 <strong>field 个数 超过 512</strong>，内部编码 也会由 ziplist 变为 <strong>hashtable</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset hashkey f1 v1 f2 v2 f3 v3 ... f513 v513</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; object encoding hashkey</span><br><span class="line"><span class="string">"hashtable"</span></span><br></pre></td></tr></table></figure>
 
 </li>
@@ -1591,7 +1591,7 @@
 <hr>
 <h1 id="数据结构之列表"><a href="#数据结构之列表" class="headerlink" title="数据结构之列表"></a>数据结构之列表</h1><h2 id="前言-6"><a href="#前言-6" class="headerlink" title="前言"></a>前言</h2><p>列表（list）类型是用来存储多个 有序 的 字符串。在 Redis 中，可以对列表的 两端 进行 插入（push）和 弹出（pop）操作，还可以获取 指定范围 的 元素列表、获取 指定索引下标 的 元素 等。  </p>
 <p>列表 是一种比较 灵活 的 数据结构，它可以充当 栈 和 队列 的角色，在实际开发上有很多应用场景。  </p>
-<p>如图所示，a、b、c、d、e 五个元素 从左到右 组成了一个 有序的列表，列表中的每个字符串称为 元素（element），一个列表最多可以存储 2 ^ 32 - 1 个元素。</p>
+<p>如图所示，a、b、c、d、e 五个元素 从左到右 组成了一个 有序的列表，列表中的每个字符串称为 元素（element），一个列表最多可以存储 <code>2 ^ 32 - 1</code> 个元素。</p>
 <ul>
 <li><p>列表的 插入 和 弹出 操作</p>
 <figure class="image-box">
@@ -1619,17 +1619,17 @@
 <p>下面代码 从右向左 插入元素 c、b、a：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush listkey c b a</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br></pre></td></tr></table></figure>
 
-<p>lrange 0 -1 命令可以 从左到右 获取列表的 所有元素：</p>
+<p><code>lrange 0 -1</code> 命令可以 从左到右 获取列表的 所有元素：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lrange listkey 0 -1</span><br><span class="line">1) <span class="string">"c"</span></span><br><span class="line">2) <span class="string">"b"</span></span><br><span class="line">3) <span class="string">"a"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="从左边插入元素"><a href="#从左边插入元素" class="headerlink" title="从左边插入元素"></a>从左边插入元素</h5><blockquote>
 <p><code>lpush key value [value ...]</code></p>
 </blockquote>
-<p>使用方法和 rpush 相同，只不过从 左侧插入，这里不再赘述。</p>
+<p>使用方法和 <code>rpush</code> 相同，只不过从 左侧插入，这里不再赘述。</p>
 <h5 id="向某个元素前或者后插入元素"><a href="#向某个元素前或者后插入元素" class="headerlink" title="向某个元素前或者后插入元素"></a>向某个元素前或者后插入元素</h5><blockquote>
 <p><code>linsert key before|after pivot value</code></p>
 </blockquote>
-<p>linsert 命令会从 列表 中找到 第一个 等于 pivot 的元素，在其 前（before）或者 后（after）插入一个新的元素 value，例如下面操作会在列表的 元素 b 前插入 redis：</p>
+<p><code>linsert</code> 命令会从 列表 中找到 第一个 等于 pivot 的元素，在其 前（before）或者 后（after）插入一个新的元素 value，例如下面操作会在列表的 元素 b 前插入 redis：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; linsert listkey before b redis</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br></pre></td></tr></table></figure>
 
 <p>返回结果为 4，代表当前 列表 的 长度，当前列表变为：</p>
@@ -1638,11 +1638,11 @@
 <h4 id="查询命令"><a href="#查询命令" class="headerlink" title="查询命令"></a>查询命令</h4><h5 id="获取指定范围内的元素列表"><a href="#获取指定范围内的元素列表" class="headerlink" title="获取指定范围内的元素列表"></a>获取指定范围内的元素列表</h5><blockquote>
 <p><code>lrange key start stop</code></p>
 </blockquote>
-<p>lrange 操作会获取列表 指定索引 范围所有的元素。  </p>
+<p><code>lrange</code> 操作会获取列表 指定索引 范围所有的元素。  </p>
 <p>索引下标 有两个特点：</p>
 <ul>
-<li>其一，索引下标 从左到右 分别是 0 到 N-1，但是 从右到左 分别是 -1 到 -N。</li>
-<li>其二，lrange 中的 end 选项包含了 自身，这个和很多编程语言不包含 end 不太相同。</li>
+<li>其一，索引下标 <strong>从左到右</strong> 分别是 <strong>0</strong> 到 <strong>N-1</strong>，但是 <strong>从右到左</strong> 分别是 <strong>-1</strong> 到 <strong>-N</strong> 。</li>
+<li>其二，<code>lrange</code> 中的 <code>end</code> 选项包含了 <strong>自身</strong>，这个和很多编程语言不包含 end 不太相同。</li>
 </ul>
 <p>从左到右 获取列表的第 2 到第 4 个元素，可以执行如下操作：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lrange listkey 1 3</span><br><span class="line">1) <span class="string">"redis"</span></span><br><span class="line">2) <span class="string">"b"</span></span><br><span class="line">3) <span class="string">"a"</span></span><br></pre></td></tr></table></figure>
@@ -1671,17 +1671,17 @@
 <h5 id="从列表右侧弹出元素"><a href="#从列表右侧弹出元素" class="headerlink" title="从列表右侧弹出元素"></a>从列表右侧弹出元素</h5><blockquote>
 <p><code>rpop key</code></p>
 </blockquote>
-<p>它的使用方法和 lpop 是一样的，只不过从列表 右侧 弹出元元素。</p>
+<p>它的使用方法和 <code>lpop</code> 是一样的，只不过从列表 右侧 弹出元元素。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpop listkey</span><br><span class="line"><span class="string">"a"</span></span><br><span class="line">127.0.0.1:6379&gt; lrange listkey 0 -1</span><br><span class="line">1) <span class="string">"c"</span></span><br><span class="line">2) <span class="string">"redis"</span></span><br><span class="line">3) <span class="string">"b"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="删除指定元素"><a href="#删除指定元素" class="headerlink" title="删除指定元素"></a>删除指定元素</h5><blockquote>
 <p><code>lrem key count value</code></p>
 </blockquote>
-<p>lrem 命令会从 列表 中找到 等于 value 的元素进行 删除，根据 count 的不同分为三种情况：</p>
+<p><code>lrem</code> 命令会从 列表 中找到 等于 value 的元素进行 删除，根据 count 的不同分为三种情况：</p>
 <ul>
-<li>count &gt; 0：从左到右，删除最多 count 个元素。</li>
-<li>count &lt; 0：从右到左，删除最多 count 绝对值 个元素。</li>
-<li>count = 0，删除所有。</li>
+<li><code>count &gt; 0</code>：从左到右，删除最多 count 个元素。</li>
+<li><code>count &lt; 0</code>：从右到左，删除最多 count 绝对值 个元素。</li>
+<li><code>count = 0</code>：删除所有。</li>
 </ul>
 <p>例如向列表 从左向右 插入 5 个 a，那么当前 列表 变为 “a a a a a redis b a”，下面操作将从列表 左边 开始删除 4 个为 a 的元素：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lrem listkey 4 a</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; lrange listkey 0 -1</span><br><span class="line">1) <span class="string">"a"</span></span><br><span class="line">2) <span class="string">"redis"</span></span><br><span class="line">3) <span class="string">"b"</span></span><br><span class="line">4) <span class="string">"a"</span></span><br></pre></td></tr></table></figure>
@@ -1699,14 +1699,14 @@
 <blockquote>
 <p><code>blpop key [key ...] timeout</code><br><code>brpop key [key ...] timeout</code></p>
 </blockquote>
-<p>blpop 和 brpop 是 lpop 和 rpop 的 阻塞版本，它们除了 弹出方向 不同，使用方法 基本相同，所以下面以 brpop 命令进行说明， brpop 命令包含两个参数：</p>
+<p><code>blpop</code> 和 <code>brpop</code> 是 <code>lpop</code> 和 <code>rpop</code> 的 阻塞版本，它们除了 弹出方向 不同，使用方法 基本相同，所以下面以 <code>brpop</code> 命令进行说明， <code>brpop</code> 命令包含两个参数：</p>
 <ul>
-<li>key[key…]：一个列表的 多个键。</li>
-<li>timeout：阻塞 时间（单位：秒）。</li>
+<li><code>key[key...]</code>：一个列表的 多个键。</li>
+<li><code>timeout</code>：阻塞 时间（单位：秒）。</li>
 </ul>
-<p>对于 timeout 参数，要氛围 列表为空 和 不为空 两种情况：</p>
+<p>对于 <code>timeout</code> 参数，要氛围 列表为空 和 不为空 两种情况：</p>
 <ul>
-<li>列表为空<br>如果 timeout = 3，那么 客户端 要等到 3 秒后返回，如果 timeout = 0，那么 客户端 一直 阻塞 等下去：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; brpop list:<span class="built_in">test</span> 3</span><br><span class="line">(nil)</span><br><span class="line">(3.10s)</span><br><span class="line">127.0.0.1:6379&gt; brpop list:<span class="built_in">test</span> 0</span><br><span class="line">...阻塞...</span><br></pre></td></tr></table></figure>
+<li>列表为空<br>如果 <code>timeout = 3</code>，那么 客户端 要等到 3 秒后返回，如果 <code>timeout = 0</code>，那么 客户端 一直 <strong>阻塞</strong> 等下去：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; brpop list:<span class="built_in">test</span> 3</span><br><span class="line">(nil)</span><br><span class="line">(3.10s)</span><br><span class="line">127.0.0.1:6379&gt; brpop list:<span class="built_in">test</span> 0</span><br><span class="line">...阻塞...</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -1718,9 +1718,9 @@
 
 </li>
 </ul>
-<p>在使用 brpop 时，有以下两点需要注意：</p>
+<p>在使用 <code>brpop</code> 时，有以下两点需要注意：</p>
 <ul>
-<li>其一，如果是 多个键，那么 brpop 会 从左至右 遍历键，一旦有 一个键 能 弹出元素，客户端 立即返回：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; brpop list:1 list:2 list:3 0</span><br><span class="line">..阻塞..</span><br></pre></td></tr></table></figure>
+<li>其一，如果是 多个键，那么 <code>brpop</code> 会 从左至右 遍历键，一旦有 一个键 能 弹出元素，客户端 立即返回：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; brpop list:1 list:2 list:3 0</span><br><span class="line">..阻塞..</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -1731,7 +1731,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; brpop list:1 list:2 list:3 0</span><br><span class="line">1) <span class="string">"list:2"</span></span><br><span class="line">2) <span class="string">"element2"</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>其二，如果 多个客户端 对 同一个键 执行 brpop，那么 最先执行 brpop 命令的 客户端 可以 获取 到弹出的值。<br>按先后顺序在 3 个客户端执行 brpop 命令：</p>
+<li><p>其二，如果 多个客户端 对 <strong>同一个键</strong> 执行 <code>brpop</code>，那么 <strong>最先</strong>执行 <code>brpop</code> 命令的 客户端 可以 获取 到弹出的值。<br>按先后顺序在 3 个客户端执行 <code>brpop</code> 命令：</p>
 <ul>
 <li><p>客户端1：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">client-1&gt; brpop list:<span class="built_in">test</span> 0</span><br><span class="line">...阻塞...</span><br></pre></td></tr></table></figure>
@@ -1746,10 +1746,10 @@
 </ul>
 </li>
 </ul>
-<p>此时另一个 客户端 lpush 一个元素到 list:test 列表中：</p>
+<p>此时另一个 客户端 <code>lpush</code> 一个元素到 list:test 列表中：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">client-lpush&gt; lpush list:<span class="built_in">test</span> element</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
 
-<p>那么 客户端 1 会获取到元素，因为 客户端 1 最先执行 brpop 命令，而 客户端 2 和 客户端 3 会继续 阻塞。</p>
+<p>那么 客户端 1 会获取到元素，因为 客户端 1 最先执行 <code>brpop</code> 命令，而 客户端 2 和 客户端 3 会继续 阻塞。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">client&gt; brpop list:<span class="built_in">test</span> 0</span><br><span class="line">1) <span class="string">"list:test"</span></span><br><span class="line">2) <span class="string">"element"</span></span><br></pre></td></tr></table></figure>
 
 <p>有关 列表 的 基础命令 已经介绍完了，下表是相关命令的 时间复杂度：</p>
@@ -1759,29 +1759,29 @@
             </figure>
 
 <h3 id="内部编码-2"><a href="#内部编码-2" class="headerlink" title="内部编码"></a>内部编码</h3><p>列表类型的 内部编码 有两种：</p>
-<h4 id="1、ziplist（压缩列表）-1"><a href="#1、ziplist（压缩列表）-1" class="headerlink" title="1、ziplist（压缩列表）"></a>1、ziplist（压缩列表）</h4><p>当列表的元素个数 小于 list-max-ziplist-entries 配置（默认 512 个），同时列表中 每个元素 的值都 小于  list-max-ziplist-value 配置时（默认 64 字节），Redis 会选用 ziplist 来作为 列表 的 内部实现 来减少内存的使用。</p>
-<h4 id="2、linkedlist（链表）"><a href="#2、linkedlist（链表）" class="headerlink" title="2、linkedlist（链表）"></a>2、linkedlist（链表）</h4><p>当 列表类型 无法满足 ziplist 的条件时， Redis 会使用 linkedlist 作为 列表 的 内部实现。</p>
+<h4 id="1、ziplist（压缩列表）-1"><a href="#1、ziplist（压缩列表）-1" class="headerlink" title="1、ziplist（压缩列表）"></a>1、ziplist（压缩列表）</h4><p>当列表的元素个数 小于 <code>list-max-ziplist-entries</code> 配置（默认 512 个），同时列表中 每个元素 的值都 小于 <code>list-max-ziplist-value</code> 配置时（默认 64 字节），Redis 会选用 <strong>ziplist</strong> 来作为 列表 的 内部实现 来减少内存的使用。</p>
+<h4 id="2、linkedlist（链表）"><a href="#2、linkedlist（链表）" class="headerlink" title="2、linkedlist（链表）"></a>2、linkedlist（链表）</h4><p>当 列表类型 无法满足 ziplist 的条件时， Redis 会使用 <strong>linkedlist</strong> 作为 列表 的 内部实现。</p>
 <h4 id="编码转换-1"><a href="#编码转换-1" class="headerlink" title="编码转换"></a>编码转换</h4><p>下面的示例演示了 列表类型 的 内部编码，以及相应的变化。</p>
 <ul>
-<li><p>当元素 个数较少 且 没有大元素 时，内部编码 为 ziplist：</p>
+<li><p>当<strong>元素 个数较少 且 没有大元素</strong> 时，内部编码 为 <strong>ziplist</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush listkey e1 e2 e3</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; object encoding listkey</span><br><span class="line"><span class="string">"ziplist"</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当元素个数超过 512 个，内部编码 变为 linkedlist：</p>
+<li><p>当<strong>元素个数超过 512 个</strong>，内部编码 变为 <strong>linkedlist</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush listkey e4 e5 ... e512 e513</span><br><span class="line">(<span class="built_in">integer</span>) 513</span><br><span class="line">127.0.0.1:6379&gt; object encoding listkey</span><br><span class="line"><span class="string">"linkedlist"</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当某个元素超过 64 字节，内部编码 也会变为 linkedlist：</p>
+<li><p>当<strong>某个元素超过 64 字节</strong>，内部编码 也会变为 <strong>linkedlist</strong>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush listkey <span class="string">"one string is bigger than 64 byte..."</span></span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; object encoding listkey</span><br><span class="line"><span class="string">"linkedlist"</span></span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<p>Redis3.2 版本提供了 quicklist 内部编码，简单地说它是以一个 ziplist 为 节点 的 linkedlist，它结合了 ziplist 和 linkedlist 两者的优势，为 列表类型 提供了一种更为优秀的 内部编码 实现，它的设计原理可以参考 Redis 的另一个作者 Matt Stancliff 的博客 <a href="https://matt.sh/redis-quicklist" target="_blank" rel="noopener">redis-quicklist</a>。</p>
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><h4 id="消息队列-1"><a href="#消息队列-1" class="headerlink" title="消息队列"></a>消息队列</h4><p>通过 Redis 的 lpush + brpop 命令组合，即可实现 阻塞队列。如图所示：</p>
+<p>Redis3.2 版本提供了 <strong>quicklist</strong> 内部编码，简单地说它是以一个 ziplist 为 节点 的 linkedlist，它结合了 ziplist 和 linkedlist 两者的优势，为 列表类型 提供了一种更为优秀的 内部编码 实现，它的设计原理可以参考 Redis 的另一个作者 Matt Stancliff 的博客 <a href="https://matt.sh/redis-quicklist" target="_blank" rel="noopener">redis-quicklist</a>。</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><h4 id="消息队列-1"><a href="#消息队列-1" class="headerlink" title="消息队列"></a>消息队列</h4><p>通过 Redis 的 <code>lpush + brpop</code> 命令组合，即可实现 阻塞队列。如图所示：</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="16691de835fd4261.png" title="" data-fancybox="images"><img src="16691de835fd4261.png" alt title class></a>
                 <p></p>
             </figure>
 
-<p>生产者客户端 使用 lrpush 从列表 左侧插入元素，多个消费者客户端 使用 brpop 命令 阻塞式 的 “抢” 列表 尾部 的元素，多个客户端 保证了消费的 负载均衡 和 高可用性。</p>
+<p>生产者客户端 使用 <code>lrpush</code> 从列表 左侧插入元素，多个消费者客户端 使用 <code>brpop</code> 命令 阻塞式 的 “抢” 列表 尾部 的元素，多个客户端 保证了消费的 负载均衡 和 高可用性。</p>
 <h4 id="文章列表"><a href="#文章列表" class="headerlink" title="文章列表"></a>文章列表</h4><p>每个 用户 有属于自己的 文章列表，现需要 分页 展示文章列表。此时可以考虑使用 列表，因为列表不但是 有序的，同时支持 按照索引范围 获取元素。</p>
 <ul>
 <li><p>每篇文章使用 哈希结构 存储，例如每篇文章有 3 个属性 title、timestamp、content：</p>
@@ -1797,8 +1797,8 @@
 </ul>
 <p>使用 列表 类型 保存 和 获取 文章列表会存在两个问题：</p>
 <ul>
-<li>第一：如果每次 分页 获取的 文章个数较多，需要执行多次 hgetall 操作，此时可以考虑使用 Pipeline 进行 批量获取，或者考虑将文章数据 序列化为字符串 类型，使用 mget 批量获取。</li>
-<li>第二：分页 获取 文章列表 时， lrange 命令在列表 两端性能较好，但是如果 列表较大，获取列表 中间范围 的元素 性能会变差。此时可以考虑将列表做 二级拆分，或者使用 Redis 3.2 的 quicklist 内部编码实现，它结合 ziplist 和 linkedlist 的特点，获取列表 中间范围 的元素时也可以 高效完成。</li>
+<li>第一：如果每次 分页 获取的 文章个数较多，需要执行多次 <code>hgetall</code> 操作，此时可以考虑使用 <code>Pipeline</code> 进行 批量获取，或者考虑将文章数据 序列化为字符串 类型，使用 <code>mget</code> 批量获取。</li>
+<li>第二：分页 获取 文章列表 时， <code>lrange</code> 命令在列表 两端性能较好，但是如果 列表较大，获取列表 中间范围 的元素 性能会变差。此时可以考虑将列表做 二级拆分，或者使用 Redis 3.2 的 quicklist 内部编码实现，它结合 ziplist 和 linkedlist 的特点，获取列表 中间范围 的元素时也可以 高效完成。</li>
 </ul>
 <h4 id="其他场景"><a href="#其他场景" class="headerlink" title="其他场景"></a>其他场景</h4><p>实际上列表的使用场景很多，具体可以参考如下：</p>
 <table>
@@ -1809,30 +1809,27 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>lpush + lpop</td>
+<td><code>lpush + lpop</code></td>
 <td>Stack（栈）</td>
 </tr>
 <tr>
-<td>lpush + rpop</td>
+<td><code>lpush + rpop</code></td>
 <td>Queue（队列）</td>
 </tr>
 <tr>
-<td>lpush + ltrim</td>
-<td></td>
-</tr>
-<tr>
+<td><code>lpush + ltrim</code></td>
 <td>Capped Collection（有限集合）</td>
-<td></td>
 </tr>
 <tr>
-<td>lpush + brpop</td>
+<td><code>lpush + brpop</code></td>
 <td>Message Queue（消息队列）</td>
 </tr>
 </tbody></table>
 <h2 id="小结-6"><a href="#小结-6" class="headerlink" title="小结"></a>小结</h2><p>本文介绍了 Redis 中的 列表 的 一些 基本命令、内部编码 和 适用场景。通过组合不同 命令，可以把 列表 转换为不同的 数据结构 使用。</p>
 <hr>
 <h1 id="数据结构之集合"><a href="#数据结构之集合" class="headerlink" title="数据结构之集合"></a>数据结构之集合</h1><h2 id="前言-7"><a href="#前言-7" class="headerlink" title="前言"></a>前言</h2><p>集合（set）类型也是用来保存多个 字符串元素，但和 列表类型 不一样的是，集合中 不允许有重复元素，并且集合中的元素是 无序的，不能通过 索引下标 获取元素。  </p>
-<p>如图所示，集合 user:1:follow 包含着 “it”、”music”、”his”、”sports” 四个元素，一个 集合 最多可以存储 2 ^ 32 - 1 个元素。Redis 除了支持 集合内 的 增删改查，同时还支持 多个集合 取 交集、并集、差集。合理地使用好集合类型，能在实际开发中解决很多实际问题。</p>
+<p>一个 集合 最多可以存储 <code>2 ^ 32 - 1</code> 个元素。Redis 除了支持 集合内 的 增删改查，同时还支持 多个集合 取 交集、并集、差集。合理地使用好集合类型，能在实际开发中解决很多实际问题。  </p>
+<p>如图所示，集合 user:1:follow 包含着 “it”、”music”、”his”、”sports” 四个元素。</p>
 <figure class="image-box">
                 <a rel=深入剖析 Redis href="166f3ef48a69ee12.png" title="" data-fancybox="images"><img src="166f3ef48a69ee12.png" alt title class></a>
                 <p></p>
@@ -1853,7 +1850,7 @@
 <h5 id="计算元素个数"><a href="#计算元素个数" class="headerlink" title="计算元素个数"></a>计算元素个数</h5><blockquote>
 <p><code>scard key</code></p>
 </blockquote>
-<p>scard 的 时间复杂度 为 O（1），它 不会遍历 集合所有元素，而是直接用 Redis 的 内部 的变量，例如：</p>
+<p><code>scard</code> 的 时间复杂度 为 O（1），它 不会遍历 集合所有元素，而是直接用 Redis 的 内部 的变量，例如：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; scard myset</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br></pre></td></tr></table></figure>
 
 <h5 id="判断元素是否在集合中"><a href="#判断元素是否在集合中" class="headerlink" title="判断元素是否在集合中"></a>判断元素是否在集合中</h5><blockquote>
@@ -1865,26 +1862,26 @@
 <h5 id="随机从集合返回指定个数元素"><a href="#随机从集合返回指定个数元素" class="headerlink" title="随机从集合返回指定个数元素"></a>随机从集合返回指定个数元素</h5><blockquote>
 <p><code>srandmember key [count]</code></p>
 </blockquote>
-<p>[count] 是 可选参数，如果不写默认为 1。</p>
+<p><code>[count]</code> 是 可选参数，如果不写默认为 1。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; srandmember myset 2</span><br><span class="line">1) <span class="string">"a"</span></span><br><span class="line">2) <span class="string">"c"</span></span><br><span class="line">127.0.0.1:6379&gt; srandmember myset</span><br><span class="line"><span class="string">"d"</span></span><br></pre></td></tr></table></figure>
 
 <h5 id="从集合随机弹出元素"><a href="#从集合随机弹出元素" class="headerlink" title="从集合随机弹出元素"></a>从集合随机弹出元素</h5><blockquote>
 <p><code>spop key</code></p>
 </blockquote>
-<p>spop 操作可以从 集合 中 随机弹出 一个元素，例如下面代码是一次 spop 后，集合元素 变为 “d b a”。</p>
+<p><code>spop</code> 操作可以从 集合 中 随机弹出 一个元素，例如下面代码是一次 <code>spop</code> 后，集合元素 变为 “d b a”。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; spop myset</span><br><span class="line"><span class="string">"c"</span></span><br><span class="line">127.0.0.1:6379&gt; smembers myset</span><br><span class="line">1) <span class="string">"d"</span></span><br><span class="line">2) <span class="string">"b"</span></span><br><span class="line">3) <span class="string">"a"</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>注意：Redis 从 3.2 版本开始， spop 也支持 [count] 参数。</p>
 </blockquote>
-<p>srandmember 和 spop 都是 随机 从集合选出元素，两者不同的是 spop 命令执行后，元素 会从集合中 删除，而 srandmember 不会删除元素。</p>
+<p><code>srandmember</code> 和 <code>spop</code> 都是 随机 从集合选出元素，两者不同的是 <code>spop</code> 命令执行后，元素 会从集合中 删除，而 <code>srandmember</code> 不会删除元素。</p>
 <h5 id="获取所有元素"><a href="#获取所有元素" class="headerlink" title="获取所有元素"></a>获取所有元素</h5><blockquote>
 <p><code>smembers key</code></p>
 </blockquote>
 <p>下面代码获取集合 myset 的 所有元素，并且 返回结果 是 无序的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; smembers myset</span><br><span class="line">1) <span class="string">"d"</span></span><br><span class="line">2) <span class="string">"b"</span></span><br><span class="line">3) <span class="string">"a"</span></span><br></pre></td></tr></table></figure>
 
-<p>smembers 和 lrange、hgetall 都属于 比较重 的命令，如果 元素过多 存在 阻塞 Redis 的可能性，这时候可以使用 sscan 命令来完成。</p>
+<p><code>smembers</code> 和 <code>lrange</code>、<code>hgetall</code> 都属于 比较重 的命令，如果 元素过多 存在 阻塞 Redis 的可能性，这时候可以使用 <code>sscan</code> 命令来完成。</p>
 <h4 id="集合间的操作命令"><a href="#集合间的操作命令" class="headerlink" title="集合间的操作命令"></a>集合间的操作命令</h4><p>现在有 两个集合，它们分别是 user:1:follow 和 user:2:follow。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd user:1:follow it music his sports</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; sadd user:2:follow it news ent sports</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br></pre></td></tr></table></figure>
 
@@ -1903,7 +1900,7 @@
 <h5 id="求多个集合的差集"><a href="#求多个集合的差集" class="headerlink" title="求多个集合的差集"></a>求多个集合的差集</h5><blockquote>
 <p><code>sdiff key [key ...]</code></p>
 </blockquote>
-<p>下面的代码是求 user:1:follow 和 user:2:follow 两个集合的 差集，返回结果是 music和 his。</p>
+<p>下面的代码是求 user:1:follow 和 user:2:follow 两个集合的 差集，返回结果是 music 和 his。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sdiff user:1:follow user:2:follow</span><br><span class="line">1) <span class="string">"music"</span></span><br><span class="line">2) <span class="string">"his"</span></span><br></pre></td></tr></table></figure>
 
 <p>前面三个求 交集、并集 和 差集 的操作得到的结果，如图所示：</p>
@@ -1926,16 +1923,18 @@
             </figure>
 
 <h3 id="内部编码-3"><a href="#内部编码-3" class="headerlink" title="内部编码"></a>内部编码</h3><p>集合类型 的 内部编码 有两种：</p>
-<h4 id="1、intset（整数集合）"><a href="#1、intset（整数集合）" class="headerlink" title="1、intset（整数集合）"></a>1、intset（整数集合）</h4><p>当集合中的元素都是 整数 且 元素个数 小于 set-max-intset-entries 配置（默认 512 个）时，Redis 会选用 intset 来作为 集合 的 内部实现，从而 减少内存 的使用。</p>
-<h4 id="2、hashtable（哈希表）-1"><a href="#2、hashtable（哈希表）-1" class="headerlink" title="2、hashtable（哈希表）"></a>2、hashtable（哈希表）</h4><p>当集合类型 无法满足 intset 的条件时，Redis 会使用 hashtable 作为集合的 内部实现。</p>
-<h4 id="具体示例"><a href="#具体示例" class="headerlink" title="具体示例"></a>具体示例</h4><h5 id="内部编码为整数集合"><a href="#内部编码为整数集合" class="headerlink" title="内部编码为整数集合"></a>内部编码为整数集合</h5><p>当元素个数 较少 且都为 整数 时，内部编码 为 intset。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd setkey 1 2 3 4</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; object encoding setkey</span><br><span class="line"><span class="string">"intset"</span></span><br></pre></td></tr></table></figure>
+<h4 id="1、intset（整数集合）"><a href="#1、intset（整数集合）" class="headerlink" title="1、intset（整数集合）"></a>1、intset（整数集合）</h4><p>当集合中的元素都是 整数 且 元素个数 小于 <code>set-max-intset-entries</code> 配置（默认 512 个）时，Redis 会选用 <strong>intset</strong> 来作为 集合 的 内部实现，从而 减少内存 的使用。</p>
+<h4 id="2、hashtable（哈希表）-1"><a href="#2、hashtable（哈希表）-1" class="headerlink" title="2、hashtable（哈希表）"></a>2、hashtable（哈希表）</h4><p>当集合类型 无法满足 intset 的条件时，Redis 会使用 <strong>hashtable</strong> 作为集合的 内部实现。</p>
+<h4 id="具体示例"><a href="#具体示例" class="headerlink" title="具体示例"></a>具体示例</h4><h5 id="内部编码为整数集合"><a href="#内部编码为整数集合" class="headerlink" title="内部编码为整数集合"></a>内部编码为整数集合</h5><ul>
+<li>当<strong>元素个数 较少 且都为 整数</strong> 时，内部编码 为 <strong>intset</strong>。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd setkey 1 2 3 4</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; object encoding setkey</span><br><span class="line"><span class="string">"intset"</span></span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
 <h5 id="内部编码为哈希"><a href="#内部编码为哈希" class="headerlink" title="内部编码为哈希"></a>内部编码为哈希</h5><ul>
-<li><p>当 元素个数 超过 512 个，内部编码 变为 hashtable。</p>
+<li><p>当 <strong>元素个数 超过 512 个</strong>，内部编码 变为 <strong>hashtable</strong>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd setkey 1 2 3 4 5 6 ... 512 513</span><br><span class="line">(<span class="built_in">integer</span>) 513</span><br><span class="line">127.0.0.1:6379&gt; scard setkey</span><br><span class="line">(<span class="built_in">integer</span>) 513</span><br><span class="line">127.0.0.1:6379&gt; object encoding listkey</span><br><span class="line"><span class="string">"hashtable"</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当某个元素 不为整数 时，内部编码 也会变为 hashtable。</p>
+<li><p>当<strong>某个元素 不为整数</strong> 时，内部编码 也会变为 <strong>hashtable</strong>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd setkey a</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; object encoding setkey</span><br><span class="line"><span class="string">"hashtable"</span></span><br></pre></td></tr></table></figure>
 
 </li>
@@ -1968,7 +1967,7 @@
 <li><p>删除标签下的用户</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">srem tag1:users user:1</span><br><span class="line">srem tag5:users user:1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>计算用户共同感兴趣的标签<br>可以使用 sinter 命令，来计算 用户共同感兴趣 的 标签。</p>
+<li><p>计算用户共同感兴趣的标签<br>可以使用 <code>sinter</code> 命令，来计算 用户共同感兴趣 的 标签。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sinter user:1:tags user:2:tags</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -1982,15 +1981,15 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>sadd</td>
+<td><code>sadd</code></td>
 <td>Tagging（标签）</td>
 </tr>
 <tr>
-<td>spop/srandmember</td>
+<td><code>spop/srandmember</code></td>
 <td>Random item（生成随机数，比如抽奖）</td>
 </tr>
 <tr>
-<td>sadd + sinter</td>
+<td><code>sadd + sinter</code></td>
 <td>Social Graph（社交需求）</td>
 </tr>
 </tbody></table>
@@ -2288,7 +2287,7 @@
 <li>手动触发：直接调用 <code>bgrewriteaof</code> 命令，该命令的执行与 bgsave 有些类似，都是 fork 子进程进行具体的工作，且都只有在 fork 时会阻塞</li>
 <li>自动触发：根据 <code>auto-aof-rewrite-min-size</code> 和 <code>auto-aof-rewrite-percentage</code> 配置项，以及 <code>aof_current_size</code> 和 <code>aof_base_size</code> 的状态确定触发时机<ul>
 <li><code>auto-aof-rewrite-min-size</code>：执行 AOF 重写时，文件的最小体积，默认值为 64MB</li>
-<li><code>auto-aof-rewrite-percentage</code>：执行 AOF 重写时，当前 AOF 大小（aof_current_size）和上一次重写时 AOF 大小（aof_base_size）的比值</li>
+<li><code>auto-aof-rewrite-percentage</code>：执行 AOF 重写时，当前 AOF 大小（<code>aof_current_size</code>）和上一次重写时 AOF 大小（<code>aof_base_size</code>）的比值</li>
 </ul>
 </li>
 </ul>
@@ -2448,7 +2447,7 @@
 </ul>
 <h5 id="异地备灾"><a href="#异地备灾" class="headerlink" title="异地备灾"></a>异地备灾</h5><p>&emsp;&emsp;前面的几种持久化策略，针对的都是一般的系统故障，如进程异常退出、宕机、断电等，这些故障不会损坏硬盘。但是对于一些可能导致硬盘损坏的灾难情况，如火灾地震，就需要进行异地灾备。</p>
 <ul>
-<li>单机环境：可以定时将 RDB 文件或重写后的 AOF 文件，通过 scp 命令拷贝到远程机器，如阿里云、AWS 等</li>
+<li>单机环境：可以定时将 RDB 文件或重写后的 AOF 文件，通过 <code>scp</code> 命令拷贝到远程机器，如阿里云、AWS 等</li>
 <li>主从部署，可以定时在 master 节点上执行 BGSAVE 操作，然后将 RDB 文件拷贝到远程机器，或者在 slave 节点上执行 <code>bgrewriteaof</code> 命令重写 AOF 文件后，将 AOF 文件拷贝到远程机器上。</li>
 </ul>
 <p>&emsp;&emsp;由于 RDB 文件文件小、恢复速度快，灾难恢复一般采用 RDB 方式；异地备份的频率根据数据安全性的需要及其它条件来确定，但最好不要低于一天一次。</p>
@@ -2563,7 +2562,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-01-02T17:14:21.408Z" itemprop="dateUpdated">2020-01-03 01:14:21</time>
+    最后更新时间：<time datetime="2020-01-03T09:53:18.506Z" itemprop="dateUpdated">2020-01-03 17:53:18</time>
 </span><br>
 
 

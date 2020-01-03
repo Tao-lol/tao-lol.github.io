@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>.NET 单元测试的艺术 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,dotNET,UnitTest">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>.NET 单元测试的艺术</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">.NET 单元测试的艺术</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-03T02:27:50.000Z" itemprop="datePublished" class="page-time">
+  2020-01-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-ArtOfUnitTest"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">.NET 单元测试的艺术</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-03 10:27:50" datetime="2020-01-03T02:27:50.000Z"  itemprop="datePublished">2020-01-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p>入门：<a href="https://www.cnblogs.com/edisonchou/p/5437205.html" target="_blank" rel="noopener">https://www.cnblogs.com/edisonchou/p/5437205.html</a><br>核心技术：<a href="https://www.cnblogs.com/edisonchou/p/5447812.html" target="_blank" rel="noopener">https://www.cnblogs.com/edisonchou/p/5447812.html</a><br>测试代码：<a href="https://www.cnblogs.com/edisonchou/p/5467573.html" target="_blank" rel="noopener">https://www.cnblogs.com/edisonchou/p/5467573.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h1><p>&emsp;&emsp;本篇作为入门，介绍了单元测试的基础知识，例如：如何使用一个测试框架，基本的自动化测试属性等等，还有对应的三种测试类型。</p>
+<h2 id="单元测试基础"><a href="#单元测试基础" class="headerlink" title="单元测试基础"></a>单元测试基础</h2><h3 id="什么是单元测试"><a href="#什么是单元测试" class="headerlink" title="什么是单元测试"></a>什么是单元测试</h3><p>&emsp;&emsp;一个单元测试是一段<strong>自动化的代码</strong>，这段代码<strong>调用被测试的工作单元</strong>，之后对这个单元的单个最终结果的某些假设进行检验。<br>&emsp;&emsp;单元测试几乎都是用单元测试框架编写的。单元测试容易编写，能够快速运行。单元测试可靠、可读，并且可维护。<br>&emsp;&emsp;只要产品代码不发生变化，单元测试的结果是稳定的。</p>
+<h3 id="与集成测试的区别"><a href="#与集成测试的区别" class="headerlink" title="与集成测试的区别"></a>与集成测试的区别</h3><figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160427000815048-1809458915.jpg" title="" data-fancybox="images"><img src="381412-20160427000815048-1809458915.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>&emsp;&emsp;集成测试是对一个工作单元进行的测试，这个测试对被测试的工作单元没有完全的控制，并使用该单元的一个或多个真实依赖物，例如时间、网络、数据库、线程或随机数产生器等。</p>
+</blockquote>
+<p>&emsp;&emsp;总的来说，<strong>集成测试会使用真实依赖物，而单元测试则把被测试单元和其依赖物隔离开，以保证单元测试结果高度稳定</strong>，还可以轻易控制和模拟被测试单元行为的任何方面。</p>
+<h2 id="测试驱动开发基础"><a href="#测试驱动开发基础" class="headerlink" title="测试驱动开发基础"></a>测试驱动开发基础</h2><h3 id="传统的单元测试流程"><a href="#传统的单元测试流程" class="headerlink" title="传统的单元测试流程"></a>传统的单元测试流程</h3><figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160427001938142-1688215773.png" title="" data-fancybox="images"><img src="381412-20160427001938142-1688215773.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="测试驱动开发的概要流程"><a href="#测试驱动开发的概要流程" class="headerlink" title="测试驱动开发的概要流程"></a>测试驱动开发的概要流程</h3><figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="123.png" title="" data-fancybox="images"><img src="123.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;如上图所示，TDD 和传统开发方式不同，我们首先会编写一个会失败的测试，然后创建产品代码，并确保这个测试通过，接下来就是重构代码或者创建另一个会失败的测试。</p>
+<h2 id="第一个单元测试"><a href="#第一个单元测试" class="headerlink" title="第一个单元测试"></a>第一个单元测试</h2><h3 id="NUnit-单元测试框架"><a href="#NUnit-单元测试框架" class="headerlink" title="NUnit 单元测试框架"></a>NUnit 单元测试框架</h3><p>&emsp;&emsp;NUnit 是从流行的 Java 单元测试框架 JUnit 直接移植过来的，之后 NUnit 在设计和可用性上做了极大地改进，和 JUnit 有了很大的区别，给日新月异的测试框架生态系统注入了新的活力。  </p>
+<p>&emsp;&emsp;作为一名 .NET 程序员，如何在 VS 中安装 NUnit 并能够在 VS 中直接运行测试呢？  </p>
+<p>&emsp;&emsp;<strong><em>Step1.</em></strong> 在 NuGet 中找到 NUnit 并安装</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428001258283-1124221592.jpg" title="" data-fancybox="images"><img src="381412-20160428001258283-1124221592.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;<strong><em>Step2.</em></strong> 在 NuGet 中找到 NUnit Test Adapter 并安装</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428001345095-1453299421.jpg" title="" data-fancybox="images"><img src="381412-20160428001345095-1453299421.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="LogAn-项目介绍"><a href="#LogAn-项目介绍" class="headerlink" title="LogAn 项目介绍"></a>LogAn 项目介绍</h3><p>LogAn（Log And Notificaition）<br>&emsp;&emsp;场景：公司有很多内部产品，用于在客户场地监控公司的应用程序。所有这些监控产品都会写日志文件，日志文件存放在一个特定的目录中。日志文件的格式是你们公司自己制定的，无法用现有的第三方软件进行解析。你的任务是：实现一个产品，对这些日志文件进行分析，在其中搜索特定的情况和事件，这个产品就是 LogAn。找到特定的情况和事件后，这个产品应该通知相关的人员。  </p>
+<p>&emsp;&emsp;在本次的单元测试实践中，我们会一步一步编写测试来验证 LogAn 的解析、事件识别以及通知功能。首先，我们需要了解使用 NUnit 来编写单元测试。</p>
+<h3 id="编写第一个测试"><a href="#编写第一个测试" class="headerlink" title="编写第一个测试"></a>编写第一个测试</h3><p>（1）我们的测试从以下这个 LogAnalyzer 类开始，这个类暂时只有一个方法 IsValidLogFileName：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (fileName.EndsWith(<span class="string">".SLF"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这个方法检查文件扩展名，据此判断一个文件是不是有效的日志文件。<br>&emsp;&emsp;这里在 if 中故意去掉了一个<code>!</code>运算符，因此这个方法就包含了一个 Bug —— 当文件名以 .SLF 结尾时会返回 false，而不是返回 true。这样，我们就能看到测试失败时在测试运行期中显示什么内容。  </p>
+<p>（2）新建一个类库项目，命名为 Manulife.LogAn.UnitTests（被测试项目项目名为 Manulife.LogAn.Lib）。添加一个类，取名为 LogAnalyzerTests.cs。  </p>
+<p>（3）在 LogAnalyzerTests 类中新增一个测试方法，取名为 IsValidFileName_BadExtension_ReturnsFalse()。  </p>
+<p>&emsp;&emsp;首先，我们要明确如何编写测试代码，一般来说，一个单元测试通常包含三个行为：</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428003304814-1962400302.png" title="" data-fancybox="images"><img src="381412-20160428003304814-1962400302.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;因此，根据以上三个行为，我们可以编写出以下的测试方法：（其中断言部分使用了 NUnit 框架提供的<code>Assert</code>类）</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_BadExtension_ReturnsFalse</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">        <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"filewithbadextension.foo"</span>);</span><br><span class="line">        Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中，属性<code>[TestFixture]</code>和<code>[Test]</code>是 NUnit 的特有属性，NUnit 用属性机制来识别和加载测试。这些属性就像一本书里的书签，帮助测试框架识别记载程序集里面的重要部分，以及哪些部分是需要调用的测试。</p>
+<blockquote>
+<ol>
+<li><code>[TestFixture]</code>加载一个类上，标识这个类是一个包含自动化 NUnit 测试的类；</li>
+<li><code>[Test]</code>加在一个方法上，标识这个方法是一个需要调用的自动化测试；</li>
+</ol>
+</blockquote>
+<p>&emsp;&emsp;另外，再说一下测试方法名称的规范，一般包含三个部分：<code>[UnitOfWorkName]_[ScenarioUnderTest]_[ExpectedBehavior]</code></p>
+<blockquote>
+<ol>
+<li><code>UnitOfWorkName</code>：被测试的方法、一组方法或者一组类</li>
+<li><code>Scenario</code>：测试进行的假设条件，例如“登入失败”，“无效用户”或“密码正确”等</li>
+<li><code>ExpectedBehavior</code>：在测试场景指定的条件下，你对被测试方法行为的预期</li>
+</ol>
+</blockquote>
+<h3 id="运行第一个测试"><a href="#运行第一个测试" class="headerlink" title="运行第一个测试"></a>运行第一个测试</h3><p>（1）编写好测试代码之后，点击 “测试” -&gt; “运行” -&gt; “所有测试”<br>（2）然后，点击 “测试” -&gt; “窗口” -&gt; “测试窗口管理器”，你会看到以下场景</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428003820908-1009770008.jpg" title="" data-fancybox="images"><img src="381412-20160428003820908-1009770008.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;从上图可以看出，我们得测试方法并没有通过，我们期望（Expected）的结果是 False，而实际（Actual）的结果却是 True。</p>
+<h3 id="继续添加测试方法"><a href="#继续添加测试方法" class="headerlink" title="继续添加测试方法"></a>继续添加测试方法</h3><p>（1）通常在进行单元测试时我们会考虑到代码覆盖率，点击 “测试” -&gt; “分析代码覆盖率” -&gt; “所有测试”，你可以看到以下结果：80%</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428004400830-1366190143.jpg" title="" data-fancybox="images"><img src="381412-20160428004400830-1366190143.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>（2）这时，我们需要想出完善的测试策略来覆盖所有的情况，因此我们添加一些测试方法来提高我们的代码覆盖率。这里我们添加两个方法，一个测试大写文件扩展名，一个测试小写文件扩展名：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_GoodExtensionLowercase_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"filewithgoodextension.slf"</span>);</span><br><span class="line">    Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_GoodExtensionUppercase_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"filewithgoodextension.SLF"</span>);</span><br><span class="line">    Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这时测试结果如下图所示：</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428004725486-1296481096.jpg" title="" data-fancybox="images"><img src="381412-20160428004725486-1296481096.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;这时再来看看代码覆盖率：<strong>100%</strong></p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428004830064-1790451133.jpg" title="" data-fancybox="images"><img src="381412-20160428004830064-1790451133.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>（3）为了让所有的测试都能通过，这时我们需要修改源代码，改用大小写不敏感的字符串匹配：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!fileName.EndsWith(<span class="string">".SLF"</span>, StringComparison.CurrentCultureIgnoreCase))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这时，我们再来运行一下所有的测试（也可以选择 运行未通过的测试）来看下由红到绿的快感。单元测试的理念很简单：只有所有的测试都通过，继续前行的绿灯才会亮起。哪怕只有一个测试失败了，进度条上都会亮起红灯，显示你的系统（或者测试）出现了问题。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428005457064-818833458.jpg" title="" data-fancybox="images"><img src="381412-20160428005457064-818833458.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="更多的-NUnit"><a href="#更多的-NUnit" class="headerlink" title="更多的 NUnit"></a>更多的 NUnit</h2><h3 id="参数化重构单元测试"><a href="#参数化重构单元测试" class="headerlink" title="参数化重构单元测试"></a>参数化重构单元测试</h3><p>&emsp;&emsp;NUnit中有个叫做 参数化测试（Parameterized Tests）的功能，我们可以借助<code>[TestCase]</code>标签特性来重构我们的单元测试：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestCase(<span class="meta-string">"filewithgoodextension.slf"</span>)</span>]</span><br><span class="line">[<span class="meta">TestCase(<span class="meta-string">"filewithgoodextension.SLF"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_ValidExtensions_ReturnsTrue</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(fileName);</span><br><span class="line">    Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到，借助 TestCase 特性，测试数目没有改变，但是测试代码却变得更易维护，更加易读。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428221241595-961890312.jpg" title="" data-fancybox="images"><img src="381412-20160428221241595-961890312.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="SetUp-和-TearDown"><a href="#SetUp-和-TearDown" class="headerlink" title="SetUp 和 TearDown"></a>SetUp 和 TearDown</h3><p>&emsp;&emsp;NUnit 还有一些特别的标签特性，可以很方便地控制测试前后的设置和清理状态工作，他们就是<code>[SetUp]</code>和<code>[TearDown]</code>。</p>
+<blockquote>
+<ol>
+<li><code>[SetUp]</code> 这个标签加在一个方法上，NUnit 每次在运行测试类里的任何一个测试时都会先运行这个 setup 方法；</li>
+<li><code>[TearDown]</code> 这个标签标识一个方法应该在测试类里的每个测试运行完成之后执行。</li>
+</ol>
+</blockquote>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerTests</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> LogAnalyzer analyzer = <span class="literal">null</span>;</span><br><span class="line">    [<span class="meta">SetUp</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Setup</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_ValidFileLowerCased_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"whatever.slf"</span>);</span><br><span class="line">        Assert.IsTrue(result, <span class="string">"filename should be valid!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_ValidFileUpperCased_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"whatever.SLF"</span>);</span><br><span class="line">        Assert.IsTrue(result, <span class="string">"filename should be valid!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TearDown</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TearDown</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        analyzer = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们可以把 setup 和 teardown 方法想象成测试类中测试的构造函数和析构函数，在每个测试类中只能有一个 setup 和 teardown 方法，这两个方法对测试类中的每个方法只执行一次。  </p>
+<p>&emsp;&emsp;不过，使用<code>[Setup]</code>越多，测试代码可读性就越差。原书作者推荐采用工厂方法（Factory Method）初始化被测试的实例。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 工厂方法初始化 LogAnalyzer </span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 既节省编写代码的时间，又使每个测试内的代码更简洁易读</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 同时保证 LogAnalyzer 总是用同样的方式初始化</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> LogAnalyzer <span class="title">MakeAnalyzer</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在测试方法中可以直接使用：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_BadExtension_ReturnsFalse</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = MakeAnalyzer();</span><br><span class="line">    <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"filewithbadextension.foo"</span>);</span><br><span class="line">    Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="检验预期的异常"><a href="#检验预期的异常" class="headerlink" title="检验预期的异常"></a>检验预期的异常</h3><p>&emsp;&emsp;很多时候，我们的方法中会抛出一些异常，这时如果我们的测试也应该做一些修改。在 NUnit 中，提供了一个 API：<code>Assert.Catch&lt;T&gt;(delegate)</code>。  </p>
+<p>&emsp;&emsp;首先，我们修改一下被测试的方法，增加一行判断文件名是否为空的代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">string</span>.IsNullOrEmpty(fileName))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentException(<span class="string">"filename has to be provided"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!fileName.EndsWith(<span class="string">".SLF"</span>, StringComparison.CurrentCultureIgnoreCase))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，我们新增一个测试方法，使用<code>Assert.Catch</code>来检测异常是否一致：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_EmptyName_Throws</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="comment">// 使用 Assert.Catch</span></span><br><span class="line">    <span class="keyword">var</span> ex = Assert.Catch&lt;Exception&gt;(() =&gt; analyzer.IsValidLogFileName(<span class="keyword">string</span>.Empty));</span><br><span class="line">    <span class="comment">// 使用 Assert.Catch 返回的 Exception 对象</span></span><br><span class="line">    StringAssert.Contains(<span class="string">"filename has to be provided"</span>, ex.Message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428231628877-1355320652.jpg" title="" data-fancybox="images"><img src="381412-20160428231628877-1355320652.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="忽略测试"><a href="#忽略测试" class="headerlink" title="忽略测试"></a>忽略测试</h3><p>&emsp;&emsp;有时候测试代码有问题，但是我们又需要把代码签入到主代码树中。在这种罕见的情况下（虽然确实非常少），可以给那些测试代码自身有问题的测试加一个<code>[Ignore]</code>标签特性。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line">[<span class="meta">Ignore(<span class="meta-string">"there is a problem with this test!"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_ValidFile_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428232214080-254840853.jpg" title="" data-fancybox="images"><img src="381412-20160428232214080-254840853.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="设置测试的类别"><a href="#设置测试的类别" class="headerlink" title="设置测试的类别"></a>设置测试的类别</h3><p>&emsp;&emsp;我们可以把测试按照指定的测试类别运行，使用<code>[Category]</code>标签特性就可以实现这个功能：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line">[<span class="meta">Category(<span class="meta-string">"Fast Tests"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_BadExtension_ReturnsFalse</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"filewithbadextension.foo"</span>);</span><br><span class="line">    Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试系统状态的改变"><a href="#测试系统状态的改变" class="headerlink" title="测试系统状态的改变"></a>测试系统状态的改变</h3><p>&emsp;&emsp;此前我们得测试都有返回值，而很多要测试的方法都没有返回值，而只是改变对象中的某些状态，我们又该如何测试呢？  </p>
+<p>&emsp;&emsp;首先，我们修改 IsValidLogFileName 方法，增加一个状态属性：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">bool</span> WasLastFileNameValid &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// 改变系统状态</span></span><br><span class="line">        WasLastFileNameValid = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">string</span>.IsNullOrEmpty(fileName))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentException(<span class="string">"filename has to be provided"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!fileName.EndsWith(<span class="string">".SLF"</span>, StringComparison.CurrentCultureIgnoreCase))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 改变系统状态</span></span><br><span class="line">        WasLastFileNameValid = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其次，我们编写一个测试，对系统状态进行断言：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestCase(<span class="meta-string">"badfile.foo"</span>, false)</span>]</span><br><span class="line">[<span class="meta">TestCase(<span class="meta-string">"goodfile.slf"</span>, true)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_WhenCalled_ChangesWasLastFileNameValid</span>(<span class="params"><span class="keyword">string</span> fileName, <span class="keyword">bool</span> expected</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    analyzer.IsValidLogFileName(fileName);</span><br><span class="line">    Assert.AreEqual(expected, analyzer.WasLastFileNameValid);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160428233954377-2028928149.jpg" title="" data-fancybox="images"><img src="381412-20160428233954377-2028928149.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>&emsp;&emsp;这一篇作为入门，带领大家领略了一下单元测试的概念，如何编写单元测试，如何在 VS 中应用 NUnit 进行单元测试。相信大家以前都用过 MSTest，而我们这里却使用了 NUnit。所以，下面我们来总结一下 MSTest 与 NUnit 在特性标签上的一些区别：</p>
+<table>
+<thead>
+<tr>
+<th>MS Test Attribute</th>
+<th>NUnit Attribute</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[TestClass]</code></td>
+<td><code>[TestFixture]</code></td>
+<td>定义一个测试类，里面可以包含很多测试函数和初始化、销毁函数（以下所有标签和其他断言）。</td>
+</tr>
+<tr>
+<td><code>[TestMethod]</code></td>
+<td><code>[Test]</code></td>
+<td>定义一个独立的测试函数。</td>
+</tr>
+<tr>
+<td><code>[ClassInitialize]</code></td>
+<td><code>[TestFixtureSetUp]</code></td>
+<td>定义一个测试类初始化函数，每当运行测试类中的一个或多个测试函数时，这个函数将会在测试函数被调用前被调用一次（在第一个测试函数运行前会被调用）。</td>
+</tr>
+<tr>
+<td><code>[ClassCleanup]</code></td>
+<td><code>[TestFixtureTearDown]</code></td>
+<td>定义一个测试类销毁函数，每当测试类中的选中的测试函数全部运行结束后运行（在最后一个测试函数运行结束后运行）。</td>
+</tr>
+<tr>
+<td><code>[TestInitialize]</code></td>
+<td><code>[SetUp]</code></td>
+<td>定义测试函数初始化函数，每个测试函数运行前都会被调用一次。</td>
+</tr>
+<tr>
+<td><code>[TestCleanup]</code></td>
+<td><code>[TearDown]</code></td>
+<td>定义测试函数销毁函数，每个测试函数执行完后都会被调用一次。</td>
+</tr>
+<tr>
+<td><code>[AssemblyInitialize]</code></td>
+<td>–</td>
+<td>定义测试 Assembly 初始化函数，每当这个 Assembly 中的有测试函数被运行前，会被调用一次（在 Assembly 中第一个测试函数运行前会被调用）。</td>
+</tr>
+<tr>
+<td><code>[AssemblyCleanup]</code></td>
+<td>–</td>
+<td>定义测试 Assembly 销毁函数，当 Assembly 中所有测试函数运行结束后，运行一次。（在 Assembly 中所有测试函数运行结束后被调用）</td>
+</tr>
+<tr>
+<td><code>[DescriptionAttribute]</code></td>
+<td><code>[Category]</code></td>
+<td>定义标识分组。</td>
+</tr>
+</tbody></table>
+<p>&emsp;&emsp;目前为止，我们的单元测试都还很简单也还比较顺利。但是，如果我们要测试的方法依赖于一个外部资源，如文件系统、数据库、Web 服务或者其他难以控制的东西，那又该如何编写测试呢？为了解决这些问题，我们需要创建测试<strong>存根</strong>、<strong>伪对象</strong>及<strong>模拟对象</strong>，下一篇核心技术将会介绍这些内容，让我们跟随 Roy Osherove 的《单元测试的艺术》一起去探寻吧。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>（1）Roy Osherove 著，金迎 译，《单元测试的艺术（第2版）》<br>（2）Aileer，《对比 MS Test 与 NUnit Test 框架》</p>
+<hr>
+<h1 id="核心技术"><a href="#核心技术" class="headerlink" title="核心技术"></a>核心技术</h1><p>&emsp;&emsp;上一篇我们学习基本的单元测试基础知识和入门实例。但是，如果我们要测试的方法依赖于一个外部资源，如文件系统、数据库、Web 服务或者其他难以控制的东西，那又该如何编写测试呢？为了解决这些问题，我们需要创建测试<strong>存根</strong>、<strong>伪对象</strong>及<strong>模拟对象</strong>。这一篇中我们会开始接触这些核心技术，借助存根破除依赖，使用模拟对象进行交互测试，使用隔离框架支持适应未来和可用性的功能。</p>
+<h2 id="破除依赖-存根"><a href="#破除依赖-存根" class="headerlink" title="破除依赖-存根"></a>破除依赖-存根</h2><h3 id="为何使用存根？"><a href="#为何使用存根？" class="headerlink" title="为何使用存根？"></a>为何使用存根？</h3><p>&emsp;&emsp;当我们要测试的对象依赖另一个你无法控制（或者还未实现）的对象，这个对象可能是 Web 服务、系统时间、线程调度或者很多其他东西。<br>&emsp;&emsp;那么重要的问题来了：你的测试代码不能控制这个依赖的对象向你的代码返回什么值，也不能控制它的行为（例如你想摸你一个异常）。<br>&emsp;&emsp;因此，这种情况下你可以使用<strong>存根</strong>。</p>
+<h3 id="存根简介"><a href="#存根简介" class="headerlink" title="存根简介"></a>存根简介</h3><p>（1）外部依赖项</p>
+<blockquote>
+<p>&emsp;&emsp;一个外部依赖项是系统中的一个对象，被测试代码与这个对象发生交互，但你不能控制这个对象。（常见的外部依赖项包括：文件系统、线程、内存以及时间等）</p>
+</blockquote>
+<p>（2）存根</p>
+<blockquote>
+<p>&emsp;&emsp;一个存根（<strong>Stub</strong>）是对系统中存在的一个依赖项（或者协作者）的可控制的替代物。通过使用存根，你在测试代码时无需直接处理这个依赖项。</p>
+</blockquote>
+<h3 id="发现项目中的外部依赖"><a href="#发现项目中的外部依赖" class="headerlink" title="发现项目中的外部依赖"></a>发现项目中的外部依赖</h3><p>&emsp;&emsp;继续上一篇中的 LogAn 案例，假设我们的 IsValidLogFilename 方法会首先读取配置文件，如果配置文件说支持这个扩展名，就返回 true：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 读取配置文件</span></span><br><span class="line">    <span class="comment">// 如果配置文件说支持这个扩展名，则返回 true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;那么问题来了：一旦测试依赖于文件系统，我们进行的就是集成测试，会带来所有与集成测试相关的问题—运行速度较慢，需要配置，一次测试多个内容等。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160429232540878-1553563714.png" title="" data-fancybox="images"><img src="381412-20160429232540878-1553563714.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;换句话说，尽管代码本身的逻辑是完全正确的，但是这种依赖可能导致测试失败。</p>
+<h3 id="避免项目中的直接依赖"><a href="#避免项目中的直接依赖" class="headerlink" title="避免项目中的直接依赖"></a>避免项目中的直接依赖</h3><p>想要破除直接依赖，可以参考以下两个步骤：<br>（1）找到被测试对象使用的<strong>外部接口</strong>或者 API；<br>（2）把这个接口的<strong>底层实现</strong>替换成你能控制的东西；  </p>
+<p>&emsp;&emsp;对于我们的 LogAn 项目，我们要做到替代实例不会访问文件系统，这样便破除了文件系统的依赖性。因此，我们可以引入一个间接层来避免对文件系统的直接依赖。访问文件系统的代码被隔离在一个 FileExtensionManager 类中，这个类之后将会被一个存根类替代，如下图所示：</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160429234428644-542417512.png" title="" data-fancybox="images"><img src="381412-20160429234428644-542417512.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;在上图中，我们引入了存根 ExtensionManagerStub 破除依赖，现在我们得代码不应该知道也不会关心它使用的扩展管理器的内部实现。</p>
+<h3 id="重构代码提高可测试性"><a href="#重构代码提高可测试性" class="headerlink" title="重构代码提高可测试性"></a>重构代码提高可测试性</h3><p>有两类打破依赖的重构方法，<strong>二者相互依赖</strong>，他们被称为 A 型和 B 型重构。  </p>
+<p>（1）A 型 把具体类抽象成接口或委托；<br>&emsp;&emsp;下面我们实践抽取接口将底层实现变为可替换的，继续上述的 IsValidLogFileName 方法。  </p>
+<p>&emsp;&emsp;<strong><em>Step1.</em></strong> 我们将和文件系统打交道的代码分离到一个单独的类中，以便将来在代码中替换带对这个类的调用。<br>&emsp;&emsp;① 使用抽取出的类</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FileExtensionManager manager = <span class="keyword">new</span> FileExtensionManager();</span><br><span class="line">    <span class="keyword">return</span> manager.IsValid(fileName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;② 定义抽取出的类</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FileExtensionManager</span> : <span class="title">IExtensionManager</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">        <span class="comment">// 读取文件</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step2.</em></strong> 然后我们从一个已知的类 FileExtensionManager 抽取出一个接口 IExtensionManager 。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IExtensionManager</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step3.</em></strong> 创建一个实现 IExtensionManager 接口的简单存根代码作为可替换的底层实现。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AlwaysValidFakeExtensionManager</span> : <span class="title">IExtensionManager</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;于是，IsValidLogFileName 方法就可以进行重构了：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IExtensionManager manager = <span class="keyword">new</span> FileExtensionManager();</span><br><span class="line">    <span class="keyword">return</span> manager.IsValid(fileName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;但是，这里被测试方法还是对具体类进行<strong>直接调用</strong>，我们必须想办法让测试方法调用伪对象而不是 IExtensionManager 的原本实现，于是我们想到了 <strong>DI</strong>（依赖注入），这时就需要 B 型重构。  </p>
+<p>（2）<strong>B 型</strong> 重构代码，从而能够对其注入这种委托和接口的伪实现。<br>&emsp;&emsp;刚刚我们想到了依赖注入，依赖注入的主要表现形式就是构造函数注入与属性注入，于是这里我们主要来看看构造函数层次与属性层次如何注入一个伪对象。  </p>
+<p>&emsp;&emsp;① 通过构造函数注入伪对象</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160502161436669-241453209.png" title="" data-fancybox="images"><img src="381412-20160502161436669-241453209.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;根据上图所示的流程，我们可以重构LogAnalyzer代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IExtensionManager manager;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogAnalyzer</span>(<span class="params">IExtensionManager manager</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.manager = manager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> manager.IsValid(fileName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其次，再添加新的测试代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_NameSupportExtension_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// 准备一个返回 true 的存根</span></span><br><span class="line">        FakeExtensionManager myFakeManager = <span class="keyword">new</span> FakeExtensionManager();</span><br><span class="line">        myFakeManager.WillBeValid = <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// 通过构造器注入传入存根</span></span><br><span class="line">        LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer(myFakeManager);</span><br><span class="line">        <span class="keyword">bool</span> result = analyzer.IsValidLogFileName(<span class="string">"short.ext"</span>);</span><br><span class="line"></span><br><span class="line">        Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定义一个最简单的存根</span></span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">FakeExtensionManager</span> : <span class="title">IExtensionManager</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">bool</span> WillBeValid = <span class="literal">false</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">return</span> WillBeValid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Note：</strong>这里将伪存根类和测试代码放在一个文件里，因为目前这个伪对象只在这个测试类内部使用。它比起手工实现的伪对象和测试代码放在不同文件中，将它们放在一个文件里的话，定位、阅读以及维护代码都要容易的多。　</p>
+</blockquote>
+<p>&emsp;&emsp;② 通过属性设置注入伪对象<br>&emsp;&emsp;构造函数注入只是方法之一，属性也经常用来实现依赖注入。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160502162935810-956832803.png" title="" data-fancybox="images"><img src="381412-20160502162935810-956832803.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;根据上图所示的流程，我们可以重构LogAnalyzer类：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IExtensionManager manager;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 允许通过属性设置依赖项</span></span><br><span class="line">    <span class="keyword">public</span> IExtensionManager ExtensionManager</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> manager;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">set</span></span><br><span class="line">        &#123;</span><br><span class="line">            manager = <span class="keyword">value</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogAnalyzer</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.manager = <span class="keyword">new</span> FileExtensionManager();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> manager.IsValid(fileName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其次，新增一个测试方法，改为属性注入方式：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">IsValidFileName_SupportExtension_ReturnsTrue</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 设置要使用的存根，确保其返回 true</span></span><br><span class="line">    FakeExtensionManager myFakeManager = <span class="keyword">new</span> FakeExtensionManager();</span><br><span class="line">    myFakeManager.WillBeValid = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 创建 analyzer，注入存根</span></span><br><span class="line">    LogAnalyzer log = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    log.ExtensionManager = myFakeManager;</span><br><span class="line">    <span class="keyword">bool</span> result = log.IsValidLogFileName(<span class="string">"short.ext"</span>);</span><br><span class="line"></span><br><span class="line">    Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160502234739591-126395981.jpg" title="" data-fancybox="images"><img src="381412-20160502234739591-126395981.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p><strong>Note：</strong>如果你想表明被测试类的某个依赖项是可选的，或者测试可以放心使用默认创建的这个依赖项实例，这时你就可以使用属性注入。</p>
+</blockquote>
+<h3 id="抽取和重写"><a href="#抽取和重写" class="headerlink" title="抽取和重写"></a>抽取和重写</h3><p>&emsp;&emsp;抽取和重写是一项强大的技术，可直接替换依赖项，实现起来快速干净，可以让我们编写更少的接口、更多的虚函数。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="456.png" title="" data-fancybox="images"><img src="456.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;还是继续上面的例子，首先改造被测试类（位于 Manulife.LogAn），添加一个返回真实实例的虚工厂方法，正常在代码中使用工厂方法：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerUsingFactoryMethod</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValidLogFileName</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// use virtual method</span></span><br><span class="line">        <span class="keyword">return</span> GetManager().IsValid(fileName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">virtual</span> IExtensionManager <span class="title">GetManager</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// hard code</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> FileExtensionManager();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其次，在改造测试项目（位于 Manulife.LogAn.UnitTests），创建一个新类，声明这个新类继承自被测试类，创建一个我们要替换的接口（IExtensionManager）类型的公共字段（不需要属性 get 和 set 方法）：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TestableLogAnalyzer</span> : <span class="title">LogAnalyzerUsingFactoryMethod</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> IExtensionManager manager;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestableLogAnalyzer</span>(<span class="params">IExtensionManager manager</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.manager = manager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回你指定的值</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> IExtensionManager <span class="title">GetManager</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.manager;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;最后，改造测试代码，这里我们创建的是新派生类而非被测试类的实例，配置这个新实例的公共字段，设置成我们在测试中创建的存根实例 FakeExtensionManager：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OverrideTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FakeExtensionManager stub = <span class="keyword">new</span> FakeExtensionManager();</span><br><span class="line">    stub.WillBeValid = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">// 创建被测试类的派生类的实例</span></span><br><span class="line">    TestableLogAnalyzer logan = <span class="keyword">new</span> TestableLogAnalyzer(stub);</span><br><span class="line">    <span class="keyword">bool</span> result = logan.IsValidLogFileName(<span class="string">"stubfile.ext"</span>);</span><br><span class="line"></span><br><span class="line">    Assert.AreEqual(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160504000524169-26495821.jpg" title="" data-fancybox="images"><img src="381412-20160504000524169-26495821.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="交互测试-模拟对象"><a href="#交互测试-模拟对象" class="headerlink" title="交互测试-模拟对象"></a>交互测试-模拟对象</h2><p>&emsp;&emsp;工作单元可能有三种最终结果，目前为止，我们编写过的测试只针对前两种：返回值和改变系统状态。现在，我们来了解如何测试第三种最终结果 —— 调用第三方对象。</p>
+<h3 id="模拟对象与存根的区别"><a href="#模拟对象与存根的区别" class="headerlink" title="模拟对象与存根的区别"></a>模拟对象与存根的区别</h3><p>&emsp;&emsp;模拟对象和存根之间的区别很小，但二者之间的区别非常微妙，但又很重要。二者最根本的区别在于：</p>
+<blockquote>
+<p>&emsp;&emsp;<strong>存根不会导致测试失败，而模拟对象可以。</strong></p>
+</blockquote>
+<p>&emsp;&emsp;下图展示了存根和模拟对象之间的区别，可以看到测试会使用模拟对象验证测试是否失败。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160505000230294-365957941.png" title="" data-fancybox="images"><img src="381412-20160505000230294-365957941.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="第一个手工模拟对象"><a href="#第一个手工模拟对象" class="headerlink" title="第一个手工模拟对象"></a>第一个手工模拟对象</h3><p>&emsp;&emsp;创建和使用模拟对象的方法与使用存根类似，只是模拟对象比存根多做一件事：它保存通讯的历史记录，这些记录之后用于预期（Expection）验证。  </p>
+<p>&emsp;&emsp;假设我们的被测试项目 LogAnalyzer 需要和一个外部的 Web Service 交互，每次 LogAnalyzer 遇到一个过短的文件名，这个 Web Service 就会收到一个错误消息。遗憾的是，要测试的这个 Web Service 还没有完全实现。就算实现了，使用这个 Web Service 也会导致测试时间过长。<br>&emsp;&emsp;因此，我们需要重构设计，创建一个新的接口，之后用于这个接口创建模拟对象。这个接口只包括我们需要调用的 Web Service 方法。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="789.png" title="" data-fancybox="images"><img src="789.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;<strong><em>Step1.</em></strong> 抽取接口，被测试代码可以使用这个接口而不是直接调用 Web Service。然后创建实现接口的模拟对象，它看起来十分像存根，但是它还存储了一些状态信息，然后测试可以对这些信息进行断言，验证模拟对象是否正确调用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IWebService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LogError</span>(<span class="params"><span class="keyword">string</span> message</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FakeWebService</span> : <span class="title">IWebService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> LastError;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">LogError</span>(<span class="params"><span class="keyword">string</span> message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.LastError = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step2.</em></strong> 在被测试类中使用依赖注入（这里是构造函数注入）消费 Web Service：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IWebService service;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogAnalyzer</span>(<span class="params">IWebService service</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.service = service;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (fileName.Length &lt; <span class="number">8</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 在产品代码中写错误日志</span></span><br><span class="line">            service.LogError(<span class="keyword">string</span>.Format(<span class="string">"Filename too short : &#123;0&#125;"</span>,fileName));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step3.</em></strong> 使用模拟对象测试 LogAnalyzer：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_TooShortFileName_CallsWebService</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FakeWebService mockService = <span class="keyword">new</span> FakeWebService();</span><br><span class="line">    LogAnalyzer log = <span class="keyword">new</span> LogAnalyzer(mockService);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">string</span> tooShortFileName = <span class="string">"abc.ext"</span>;</span><br><span class="line">    log.Analyze(tooShortFileName);</span><br><span class="line">    <span class="comment">// 使用模拟对象进行断言</span></span><br><span class="line">    StringAssert.Contains(<span class="string">"Filename too short : abc.ext"</span>, mockService.LastError);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看出，这里的测试代码中我们是对模拟对象进行断言，而非 LogAnalyzer 类，因为我们测试的是 LogAnalyzer 和 Web Service 之间的<strong>交互</strong>。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160505003746560-1222346715.jpg" title="" data-fancybox="images"><img src="381412-20160505003746560-1222346715.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="同时使用模拟对象和存根"><a href="#同时使用模拟对象和存根" class="headerlink" title="同时使用模拟对象和存根"></a>同时使用模拟对象和存根</h3><p>&emsp;&emsp;假设我们得 LogAnalyzer 不仅需要调用 Web Service，而且如果 Web Service 抛出一个错误，LogAnalyzer 还需要把这个错误记录在另一个外部依赖项里，即把错误用电子邮件发送给 Web Service 管理员，如下代码所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (fileName.Length &lt; <span class="number">8</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在产品代码中写错误日志</span></span><br><span class="line">        service.LogError(<span class="keyword">string</span>.Format(<span class="string">"Filename too short : &#123;0&#125;"</span>, fileName));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        email.SendEmail(<span class="string">"a"</span>, <span class="string">"subject"</span>, ex.Message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看出，这里 LogAnalyzer 有两个外部依赖项：Web Service 和电子邮件服务。我们看到这段代码只包含调用外部对象的逻辑，没有返回值，也没有系统状态的改变，那么我们如何测试当 Web Service 抛出异常时 LogAnalyzer 正确地调用了电子邮件服务呢？<br>&emsp;&emsp;我们可以在测试代码中使用存根替换 Web Service 来模拟异常，然后模拟邮件服务来检查调用。测试的内容是 LogAnalyzer 与其他对象的交互。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="000.png" title="" data-fancybox="images"><img src="000.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;<strong><em>Step1.</em></strong> 抽取 Email 接口，封装 Email 类</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IEmailService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SendEmail</span>(<span class="params">EmailInfo emailInfo</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EmailInfo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Body;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> To;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Subject;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EmailInfo</span>(<span class="params"><span class="keyword">string</span> to, <span class="keyword">string</span> subject, <span class="keyword">string</span> body</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.To = to;</span><br><span class="line">        <span class="keyword">this</span>.Subject = subject;</span><br><span class="line">        <span class="keyword">this</span>.Body = body;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> obj</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        EmailInfo compared = obj <span class="keyword">as</span> EmailInfo;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> To == compared.To &amp;&amp; Subject == compared.Subject </span><br><span class="line">            &amp;&amp; Body == compared.Body;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step2.</em></strong> 封装 EmailInfo 类，重写<code>Equals</code>方法</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EmailInfo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Body;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> To;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Subject;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EmailInfo</span>(<span class="params"><span class="keyword">string</span> to, <span class="keyword">string</span> subject, <span class="keyword">string</span> body</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.To = to;</span><br><span class="line">        <span class="keyword">this</span>.Subject = subject;</span><br><span class="line">        <span class="keyword">this</span>.Body = body;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">bool</span> <span class="title">Equals</span>(<span class="params"><span class="keyword">object</span> obj</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        EmailInfo compared = obj <span class="keyword">as</span> EmailInfo;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> To == compared.To &amp;&amp; Subject == compared.Subject </span><br><span class="line">            &amp;&amp; Body == compared.Body;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step3.</em></strong> 创建 FakeEmailService 模拟对象，改造 FakeWebService 为存根</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FakeEmailService</span> : <span class="title">IEmailService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> EmailInfo email = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendEmail</span>(<span class="params">EmailInfo emailInfo</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.email = emailInfo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FakeWebService</span> : <span class="title">IWebService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Exception ToThrow;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">LogError</span>(<span class="params"><span class="keyword">string</span> message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (ToThrow != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> ToThrow;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step4.</em></strong> 改造 LogAnalyzer 类适配两个 Service</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IWebService webService;</span><br><span class="line">    <span class="keyword">private</span> IEmailService emailService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogAnalyzer</span>(<span class="params">IWebService webService, IEmailService emailService</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.webService = webService;</span><br><span class="line">        <span class="keyword">this</span>.emailService = emailService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (fileName.Length &lt; <span class="number">8</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                webService.LogError(<span class="keyword">string</span>.Format(<span class="string">"Filename too short : &#123;0&#125;"</span>, fileName));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">            &#123;</span><br><span class="line">                emailService.SendEmail(<span class="keyword">new</span> EmailInfo(<span class="string">"someone@qq.com"</span>, <span class="string">"can't log"</span>, ex.Message));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<strong><em>Step5.</em></strong> 编写测试代码，创建预期对象，并使用预期对象断言所有的属性</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_WebServiceThrows_SendsEmail</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    FakeWebService stubService = <span class="keyword">new</span> FakeWebService();</span><br><span class="line">    stubService.ToThrow = <span class="keyword">new</span> Exception(<span class="string">"fake exception"</span>);</span><br><span class="line">    FakeEmailService mockEmail = <span class="keyword">new</span> FakeEmailService();</span><br><span class="line"></span><br><span class="line">    LogAnalyzer log = <span class="keyword">new</span> LogAnalyzer(stubService, mockEmail);</span><br><span class="line">    <span class="keyword">string</span> tooShortFileName = <span class="string">"abc.ext"</span>;</span><br><span class="line">    log.Analyze(tooShortFileName);</span><br><span class="line">    <span class="comment">// 创建预期对象</span></span><br><span class="line">    EmailInfo expectedEmail = <span class="keyword">new</span> EmailInfo(<span class="string">"someone@qq.com"</span>, <span class="string">"can't log"</span>, <span class="string">"fake exception"</span>);</span><br><span class="line">    <span class="comment">// 用预期对象同时断言所有属性</span></span><br><span class="line">    Assert.AreEqual(expectedEmail, mockEmail.email);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160505012257294-1492790520.jpg" title="" data-fancybox="images"><img src="381412-20160505012257294-1492790520.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>&emsp;&emsp;总结：每个测试应该只测试一件事情，<strong>测试中应该也最多只有一个模拟对象</strong>。一个测试只能指定工作单元三种最终结果中的一个，不然的话天下大乱。</p>
+</blockquote>
+<h2 id="隔离（模拟）框架"><a href="#隔离（模拟）框架" class="headerlink" title="隔离（模拟）框架"></a>隔离（模拟）框架</h2><h3 id="为何使用隔离框架"><a href="#为何使用隔离框架" class="headerlink" title="为何使用隔离框架"></a>为何使用隔离框架</h3><p>&emsp;&emsp;对于复杂的交互场景，可能手工编写模拟对象和存根就会变得很不方便，因此，我们可以借助隔离框架来帮我们在运行时自动生成存根和模拟对象。</p>
+<blockquote>
+<p>&emsp;&emsp;一个隔离框架是一套<strong>可编程的 API</strong>，使用这套 API 创建伪对象比手工编写容易得多，快得多，而且简洁得多。</p>
+</blockquote>
+<p>&emsp;&emsp;隔离框架的主要功能就在于帮我们生成<strong>动态伪对象</strong>，动态伪对象是运行时创建的任何存根或者模拟对象，它的创建不需要手工编写代码（硬编码）。</p>
+<h3 id="关于-NSubstitute-隔离框架"><a href="#关于-NSubstitute-隔离框架" class="headerlink" title="关于 NSubstitute 隔离框架"></a>关于 NSubstitute 隔离框架</h3><p>&emsp;&emsp;Nsubstitute 是一个开源的框架，源码是 C# 实现的。你可以在这里获得它的源码：<a href="https://github.com/nsubstitute/NSubstitute" target="_blank" rel="noopener">https://github.com/nsubstitute/NSubstitute</a><br>&emsp;&emsp;NSubstitute 更注重替代（Substitute）概念。它的设计目标是提供一个优秀的测试替代的 .NET 模拟框架。它是一个模拟测试框架，用最简洁的语法，使得我们能够把更多的注意力放在测试工作，减轻我们的测试配置工作，以满足我们的测试需求，帮助完成测试工作。它提供最经常需要使用的测试功能，且易于使用，语句更符合自然语言，可读性更高。对于单元测试的新手或只专注于测试的开发人员，它具有简单、友好的语法，使用更少的 Lambda 表达式来编写完美的测试程序。<br>&emsp;&emsp;NSubstitute 采用的是 <strong>Arrange-Act-Assert</strong> 测试模式，你只需要告诉它应该如何工作，然后断言你所期望接收到的请求，就大功告成了。因为你有更重要的代码要编写，而不是去考虑是需要一个 Mock 还是一个 Stub。  </p>
+<p>&emsp;&emsp;在 .NET 项目中，我们仍然可以通过 NuGet 来安装 NSubsititute：</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160505231122451-1879638477.png" title="" data-fancybox="images"><img src="381412-20160505231122451-1879638477.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="使用-NSubstitute-模拟对象"><a href="#使用-NSubstitute-模拟对象" class="headerlink" title="使用 NSubstitute 模拟对象"></a>使用 NSubstitute 模拟对象</h3><p>&emsp;&emsp;NSub 是一个受限框架，它最适合为接口创建伪对象。我们继续以前的例子，来看下面一段代码，它是一个手写的伪对象 FakeLogger，它会检查日志调用是否正确执行。此处我们没有使用隔离框架。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ILogger</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LogError</span>(<span class="params"><span class="keyword">string</span> message</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FakeLogger</span> : <span class="title">ILogger</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> LastError;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">LogError</span>(<span class="params"><span class="keyword">string</span> message</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        LastError = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_TooShortFileName_CallLogger</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 创建伪对象</span></span><br><span class="line">    FakeLogger logger = <span class="keyword">new</span> FakeLogger();</span><br><span class="line">    MyLogAnalyzer analyzer = <span class="keyword">new</span> Chapter5.MyLogAnalyzer(logger);</span><br><span class="line">    analyzer.MinNameLength = <span class="number">6</span>;</span><br><span class="line">    analyzer.Analyze(<span class="string">"a.txt"</span>);</span><br><span class="line"></span><br><span class="line">    StringAssert.Contains(<span class="string">"too short"</span>, logger.LastError);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们看看如何使用 NSub 伪造一个对象，换句话说，之前我们手动写的 FakeLogger 在这里就不用再手动写了：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_TooShortFileName_CallLogger</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 创建模拟对象，用于测试结尾的断言</span></span><br><span class="line">    ILogger logger = Substitute.For&lt;ILogger&gt;();</span><br><span class="line">    MyLogAnalyzer analyzer = <span class="keyword">new</span> MyLogAnalyzer(logger);</span><br><span class="line">    analyzer.MinNameLength = <span class="number">6</span>;</span><br><span class="line">    analyzer.Analyze(<span class="string">"a.txt"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 NSub API 设置预期字符串</span></span><br><span class="line">    logger.Received().LogError(<span class="string">"Filename too short : a.txt"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是：<br>（1）<code>ILogger</code>接口自身并没有这个 Received 方法；<br>（2）NSub 命名空间提供了一个扩展方法 <code>Received</code>，这个方法可以断言在测试中调用了伪对象的某个方法；<br>（3）通过在 LogError() 前调用 Received()，其实是 NSub 在询问伪对象的这个方法是否调用过。</p>
+<h3 id="使用-NSubstitute-模拟值"><a href="#使用-NSubstitute-模拟值" class="headerlink" title="使用 NSubstitute 模拟值"></a>使用 NSubstitute 模拟值</h3><p>&emsp;&emsp;如果接口的方法返回不为空，如何从实现接口的动态伪对象返回一个值呢？我们可以借助 NSub 强制方法返回一个值：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Returns_ByDefault_WorksForHardCodeArgument</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IFileNameRules fakeRules = Substitute.For&lt;IFileNameRules&gt;();</span><br><span class="line">    <span class="comment">// 强制方法返回假值</span></span><br><span class="line">    fakeRules.IsValidLogFileName(<span class="string">"strict.txt"</span>).Returns(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    Assert.IsTrue(fakeRules.IsValidLogFileName(<span class="string">"strict.txt"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;如果我们不想关心方法的参数，即无论参数是什么，方法应该总是返回一个价值，这样的话测试会更容易维护，因此我们可以借助 NSub 的参数匹配器：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Returns_ByDefault_WorksForAnyArgument</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IFileNameRules fakeRules = Substitute.For&lt;IFileNameRules&gt;();</span><br><span class="line">    <span class="comment">// 强制方法返回假值</span></span><br><span class="line">    fakeRules.IsValidLogFileName(Arg.Any&lt;<span class="keyword">string</span>&gt;()).Returns(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    Assert.IsTrue(fakeRules.IsValidLogFileName(<span class="string">"anything.txt"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;<code>Arg.Any&lt;Type&gt;</code>称为参数匹配器，在隔离框架中被广泛使用，控制参数处理。  </p>
+<p>&emsp;&emsp;如果我们需要模拟一个异常，也可以借助 NSub 来解决：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Returns_ArgAny_Throws</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    IFileNameRules fakeRules = Substitute.For&lt;IFileNameRules&gt;();</span><br><span class="line"></span><br><span class="line">    fakeRules.When(x =&gt; x.IsValidLogFileName(Arg.Any&lt;<span class="keyword">string</span>&gt;())).</span><br><span class="line">        Do(context =&gt; &#123; <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"fake exception"</span>); &#125;);</span><br><span class="line"></span><br><span class="line">    Assert.Throws&lt;Exception&gt;(() =&gt; fakeRules.IsValidLogFileName(<span class="string">"anything"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里，使用了<code>Assert.Throws</code>验证被测试方法确实抛出了一个异常。<code>When</code>和<code>Do</code>两个方法顾名思义代表了什么时候发生了什么事，发生了事之后要触发其他什么事。需要注意的是，这里<code>When</code>方法必须使用 Lambda 表达式。</p>
+<h3 id="同时使用模拟对象和存根-1"><a href="#同时使用模拟对象和存根-1" class="headerlink" title="同时使用模拟对象和存根"></a>同时使用模拟对象和存根</h3><p>&emsp;&emsp;这里我们在一个场景中结合使用两种类型的伪对象：一个用作存根，另一个用作模拟对象。  </p>
+<p>&emsp;&emsp;继续前面的一个例子，LogAnalyzer 要使用一个 MailServer 类和一个 WebService 类，这次需求有变化：如果日志对象抛出异常，LogAnalyzer 需要通知 Web 服务，如下图所示：</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160506010210216-737165389.png" title="" data-fancybox="images"><img src="381412-20160506010210216-737165389.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;我们需要确保的是：如果日志对象抛出异常，LogAnalyzer 会把这个问题通知 WebService。下面是被测试类的代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IWebService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Write</span>(<span class="params"><span class="keyword">string</span> message</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerNew</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> ILogger _logger;</span><br><span class="line">    <span class="keyword">private</span> IWebService _webService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogAnalyzerNew</span>(<span class="params">ILogger logger, IWebService webService</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">        _webService = webService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> MinNameLength</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span>; <span class="keyword">set</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze</span>(<span class="params"><span class="keyword">string</span> fileName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (fileName.Length &lt; MinNameLength)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                _logger.LogError(<span class="keyword">string</span>.Format(<span class="string">"Filename too short : &#123;0&#125;"</span>, fileName));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">            &#123;</span><br><span class="line">                _webService.Write(<span class="string">"Error From Logger : "</span> + ex.Message);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们借助 NSubstitute 进行测试：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_LoggerThrows_CallsWebService</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> mockWebService = Substitute.For&lt;IWebService&gt;();</span><br><span class="line">    <span class="keyword">var</span> stubLogger = Substitute.For&lt;ILogger&gt;();</span><br><span class="line">    <span class="comment">// 无论输入什么都抛出异常</span></span><br><span class="line">    stubLogger.When(logger =&gt; logger.LogError(Arg.Any&lt;<span class="keyword">string</span>&gt;()))</span><br><span class="line">        .Do(info =&gt; &#123; <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"fake exception"</span>); &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> analyzer = <span class="keyword">new</span> LogAnalyzerNew(stubLogger, mockWebService);</span><br><span class="line">    analyzer.MinNameLength = <span class="number">10</span>;</span><br><span class="line">    analyzer.Analyze(<span class="string">"short.txt"</span>);</span><br><span class="line">    <span class="comment">//验证在测试中调用了 Web Service 的模拟对象，调用参数字符串包含 "fake exception"</span></span><br><span class="line">    mockWebService.Received().Write(Arg.Is&lt;<span class="keyword">string</span>&gt;(s =&gt; s.Contains(<span class="string">"fake exception"</span>)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里我们不需要手工实现伪对象，但是代码的可读性已经变差了，因为有一堆 Lambda 表达式，不过它也帮我们避免了在测试中使用方法名字符串。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160506010715826-1926304121.jpg" title="" data-fancybox="images"><img src="381412-20160506010715826-1926304121.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>&emsp;&emsp;本篇我们学习了单元测试的核心技术：存根、模拟对象以及隔离框架。使用存根可以帮助我们破除依赖，模拟对象与存根的区别主要在于存根不会导致测试失败，而模拟对象则可以。要辨别你是否使用了存根，最简单的方法是：存根永远不会导致测试失败，测试总是对被测试类进行断言。使用隔离框架，测试代码会更加易读、易维护，重点是可以帮助我们节省不少时间编写模拟对象和存根。</p>
+<h2 id="参考资料-1"><a href="#参考资料-1" class="headerlink" title="参考资料"></a>参考资料</h2><p>（1）Roy Osherove 著，金迎 译，《单元测试的艺术（第2版）》<br>（2）匠心十年，《<a href="http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_manual.html" target="_blank" rel="noopener">NSubsititue 完全手册</a>》<br>（3）张善友，《<a href="http://www.cnblogs.com/shanyou/p/3366428.html" target="_blank" rel="noopener">单元测试模拟框架：NSubstitute</a>》</p>
+<hr>
+<h1 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h1><p>&emsp;&emsp;上一篇我们学习单元测试和核心技术：存根、模拟对象和隔离框架，它们是我们进行高质量单元测试的技术基础。本篇会集中在管理和组织单元测试的技术，以及如何确保在真实项目中进行高质量的单元测试。</p>
+<h2 id="测试层次和组织"><a href="#测试层次和组织" class="headerlink" title="测试层次和组织"></a>测试层次和组织</h2><h3 id="测试项目的两种目录结构"><a href="#测试项目的两种目录结构" class="headerlink" title="测试项目的两种目录结构"></a>测试项目的两种目录结构</h3><p>（1）集成测试和单元测试在同一个项目里，但放在不同的目录和命名空间里。基础类放在单独的文件夹里。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160507001732263-138691920.jpg" title="" data-fancybox="images"><img src="381412-20160507001732263-138691920.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>（2）集成测试和单元测试位于不同的项目中，有不同的命名空间。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160507001923732-1743773550.jpg" title="" data-fancybox="images"><img src="381412-20160507001923732-1743773550.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>&emsp;&emsp;实践中推荐使用第二种目录结构，因为如果我们不把这两种测试分开，人们可能就不会经常地运行这些测试。既然测试都写好了，为什么人们不愿意按照需要运行它们呢？一个原因是：开发人员有可能懒得运行测试，或者没有实践运行测试。</p>
+</blockquote>
+<h3 id="构建绿色安全区"><a href="#构建绿色安全区" class="headerlink" title="构建绿色安全区"></a>构建绿色安全区</h3><p>&emsp;&emsp;将集成测试和单元测试分开放置，其实就给团队的开发人员构建了绿色安全区，这个区只包含单元测试。<br>&emsp;&emsp;因为集成测试的本质决定了它运行时间较长，开发人员很有可能每天运行多次单元测试，较少运行集成测试。</p>
+<figure class="image-box">
+                <a rel=.NET 单元测试的艺术 href="381412-20160507002810044-1117288723.jpg" title="" data-fancybox="images"><img src="381412-20160507002810044-1117288723.jpg" alt title class></a>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>&emsp;&emsp;单元测试全部通过至少可以使开发人员对代码质量比较有信心，专注于提高编码效率。而且我们应该将测试自动化，编写每日构建脚本，并借助持续集成工具帮助我们自动执行这些脚本。</p>
+</blockquote>
+<h3 id="将测试类映射到被测试代码"><a href="#将测试类映射到被测试代码" class="headerlink" title="将测试类映射到被测试代码"></a>将测试类映射到被测试代码</h3><p>（1）将测试映射到项目<br>&emsp;&emsp;创建一个测试项目，用被测试项目的名字加上后缀 .UnitTests 来命名。<br>&emsp;&emsp;例如：Manulife.MyLibrary → Manulife.MyLibrary.UnitTests 和 Manulife.MyLibrary.IntegrationTests，这种方法看起来简单直观，开发人员能够从项目名称找到对应的所有测试。  </p>
+<p>（2）将测试映射到类<br>&emsp;&emsp;① 每个被测试类或者被测试工作单元对应一个测试类：LogAnalyzer → LogAnalyzer.UnitTests<br>&emsp;&emsp;② 每个功能对应一个测试类：有一个 LoginManager 类，测试方法为 ChangePassword（这个方法测试用例特别多，需要单独放在一个测试类里边） → 创建两个类 LoginManagerTests 和 LoginManagerTests-ChangePassword，前者只包含对 ChangePassword 方法的测试，后者包含该类其他所有测试。  </p>
+<p>（3）将测试映射到具体的工作单元入口<br>&emsp;&emsp;测试方法的命名应该有意义，这样人们可以很容易地找到所有相关的测试方法。<br>&emsp;&emsp;这里，回归一下第一篇中提到的测试方法名称的规范，一般包含三个部分：<code>[UnitOfWorkName]_[ScenarioUnderTest]_[ExpectedBehavior]</code></p>
+<ul>
+<li><code>UnitOfWorkName</code>：被测试的方法、一组方法或者一组类</li>
+<li><code>Scenario</code>：测试进行的假设条件，例如“登入失败”，“无效用户”或“密码正确”等</li>
+<li><code>ExpectedBehavior</code>：在测试场景指定的条件下，你对被测试方法行为的预期　　</li>
+</ul>
+<p>&emsp;&emsp;示例：<em>IsValidFileName_BadExtension_ReturnsFalse<em>，</em>IsValidFileName_EmptyName_Throws</em> 等</p>
+<h3 id="注入横切关注点"><a href="#注入横切关注点" class="headerlink" title="注入横切关注点"></a>注入横切关注点</h3><p>&emsp;&emsp;当需要处理类似时间管理、异常或日志的横切关注点时，使用它们的地方会非常多，如果把它们实现成可注入的，产生的代码会很容易测试，但却很难阅读和理解。这里我们来看一个例子，假设应用程序使用当前时间进行写日志，相关代码如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">TimeLogger</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">CreateMessage</span>(<span class="params"><span class="keyword">string</span> info</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> DateTime.Now.ToShortDateString() + <span class="string">" "</span> + info;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;为了使这段代码容易测试，如果使用之前的依赖注入技术，那么我们需要创建一个 ITimeProvider 接口，还必须在每个用到<code>DateTime</code>的地方使用到这个接口。这样做非常耗时，实际上，还有更直接的方法解决这个问题。  </p>
+<p>&emsp;&emsp;<strong><em>Step1.</em></strong> 创建一个名为 SystemTime 的定制类，在所有的产品代码里边使用这个定制类，而非标准的内建类 DateTime。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SystemTime</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DateTime _date;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Set</span>(<span class="params">DateTime custom</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _date = custom;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Reset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _date = DateTime.MinValue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> DateTime Now</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 如果设置了时间，SystemTime 就返回假时间，否则返回真时间</span></span><br><span class="line">            <span class="keyword">if</span> (_date != DateTime.MinValue)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> _date;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> DateTime.Now;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;阅读这段代码，其中有一个小技巧：SystemTime 类提供一个特殊方法 Set，它会修改系统中的当前时间，也就是说，每个使用这个 SystemTime 类的人看到的都是你指定的日期和时间。有了这样的代码，每个使用这个 SystemTime 类的人看到的都会是你指定的日期和时间。  </p>
+<p>&emsp;&emsp;<strong><em>Step2.</em></strong> 在测试项目中使用 SystemTime 进行测试。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TimeLoggerTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SettingSystemTime_Always_ChangesTime</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        SystemTime.Set(<span class="keyword">new</span> DateTime(<span class="number">2000</span>, <span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">string</span> output = TimeLogger.CreateMessage(<span class="string">"a"</span>);</span><br><span class="line"></span><br><span class="line">        StringAssert.Contains(<span class="string">"2000/1/1"</span>, output);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 在每个测试结束时重置日期</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    [<span class="meta">TearDown</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AfterEachTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        SystemTime.Reset();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在测试中，我们首先假定设置一个日期，然后进行断言。并且<strong>借助<code>TearDown</code>方法，确保当前测试<code>不会改变</code>其他测试的值。</strong></p>
+<blockquote>
+<p><strong>Note：</strong>这样做的好处就在于不用注入一大堆接口，我们所付出的代价仅仅在于在测试类中加入一个简单的<code>[TearDown]</code>方法，确保当前测试不会改变其他测试的值。</p>
+</blockquote>
+<h3 id="使用继承使测试代码可重用"><a href="#使用继承使测试代码可重用" class="headerlink" title="使用继承使测试代码可重用"></a>使用继承使测试代码可重用</h3><p>&emsp;&emsp;推荐大家在测试代码中使用继承机制，通过实现基类，可以较好地展现面向对象的魔力。在实践中，一般有三种模式会被使用到：  </p>
+<p>（1）抽象测试基础结构类模式</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 测试类集成模式</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BaseTestsClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 重构为通用可读的工具方法，由派生类使用</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span>FakeLogger<span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ILogger <span class="title">FakeTheLogger</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        LoggingFacility.Logger = Substitute.For&lt;ILogger&gt;();</span><br><span class="line">        <span class="keyword">return</span> LoggingFacility.Logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">TearDown</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ClearLogger</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// 测试之间要重置静态资源</span></span><br><span class="line">        LoggingFacility.Logger = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogAnalyzerTests</span> : <span class="title">BaseTestsClass</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Analyze_EmptyFile_ThrowsException</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// 调用基类的辅助方法</span></span><br><span class="line">        FakeTheLogger();</span><br><span class="line"></span><br><span class="line">        LogAnalyzer analyzer = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">        analyzer.Analyze(<span class="string">"myemptyfile.txt"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 测试方法的其余部分</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;使用此模式要注意继承最好不要超过一层，如果继承层数过多，不仅可读性急剧下降，编译也很容易出错。  </p>
+<p>（2）测试类类模板模式</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 测试模板类模式</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">TemplateStringParserTests</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_SingleDigit_Found</span>(<span class="params"></span>)</span>;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithMinorVersion_Found</span>(<span class="params"></span>)</span>;</span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithRevision_Found</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="meta">TestFixture</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">XMLStrignParserTests</span> : <span class="title">TemplateStringParserTests</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> IStringParser <span class="title">GetParser</span>(<span class="params"><span class="keyword">string</span> input</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> XMLStringParser(input);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_SingleDigit_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        IStringParser parser = GetParser(<span class="string">"&lt;Header&gt;1&lt;/Header&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(<span class="string">"1"</span>, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithMinorVersion_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        IStringParser parser = GetParser(<span class="string">"&lt;Header&gt;1.1&lt;/Header&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(<span class="string">"1.1"</span>, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithRevision_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        IStringParser parser = GetParser(<span class="string">"&lt;Header&gt;1.1.1&lt;/Header&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(<span class="string">"1.1"</span>, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;使用此模式可以确保开发者不会遗忘重要的测试，基类包含了抽象的测试方法，派生类必须实现这些抽象方法。  </p>
+<p>（3）抽象测试驱动类模式</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 抽象“填空”测试驱动类模式</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">FillInTheBlankStringParserTests</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 返回接口的抽象方法</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> IStringParser <span class="title">GetParser</span>(<span class="params"><span class="keyword">string</span> input</span>)</span>;</span><br><span class="line">    <span class="comment">// 抽象输入方法（属性），为派生类提供特定格式的数据</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> HeaderVersion_SingleDigit &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> HeaderVersion_WithMinorVersion &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> HeaderVersion_WithRevision &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="comment">// 如果需要，预先为派生类定义预期的输出</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">string</span> EXPECTED_SINGLE_DIGIT = <span class="string">"1"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">string</span> EXPECTED_WITH_MINORVERSION = <span class="string">"1.1"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">string</span> EXPECTED_WITH_REVISION = <span class="string">"1.1.1"</span>;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_SingleDigit_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = HeaderVersion_SingleDigit;</span><br><span class="line">        IStringParser parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(EXPECTED_SINGLE_DIGIT, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithMinorVersion_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = HeaderVersion_WithMinorVersion;</span><br><span class="line">        IStringParser parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(EXPECTED_WITH_MINORVERSION, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithRevision_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = HeaderVersion_WithRevision;</span><br><span class="line">        IStringParser parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> versionFromHeader = parser.GetTextVersionFromHeader();</span><br><span class="line">        Assert.AreEqual(EXPECTED_WITH_REVISION, versionFromHeader);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class DBLogStringParserTests : GenericParserTests&lt;DBLogStringParser&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderSingleDigit</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithMinorVersion</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1.1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithRevision</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1.1.1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此模式在基类中实现测试方法，并提供派生类可以实现的抽象方法<strong>钩子</strong>。当然，只是大部分的测试代码在基类中，派生类也可以加入自己的特殊测试。  </p>
+<p>&emsp;&emsp;此模式的要点在于：你不是具体地测试一个类，而是测试产品代码中的一个接口或者基类。  </p>
+<p>&emsp;&emsp;当然，在 .NET 中我们也可以通过泛型来实现此模式，例如下面的代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">public abstract class GenericParserTests&lt;T&gt; where T : IStringParser // 01. 定义参数的泛型约束</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> <span class="title">GetInputHeaderSingleDigit</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithMinorVersion</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithRevision</span>(<span class="params"></span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 02. 返回泛型变量而非接口</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> T <span class="title">GetParser</span>(<span class="params"><span class="keyword">string</span> input</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// 03. 返回泛型</span></span><br><span class="line">        <span class="keyword">return</span> (T)Activator.CreateInstance(<span class="keyword">typeof</span>(T), input);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_SingleDigit_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = GetInputHeaderSingleDigit();</span><br><span class="line">        T parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> result = parser.HasCorrectHeader();</span><br><span class="line">        Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithMinorVersion_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = GetInputHeaderWithMinorVersion();</span><br><span class="line">        T parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> result = parser.HasCorrectHeader();</span><br><span class="line">        Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Test</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestGetStringVersionFromHeader_WithRevision_Found</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> input = GetInputHeaderWithRevision();</span><br><span class="line">        T parser = GetParser(input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> result = parser.HasCorrectHeader();</span><br><span class="line">        Assert.AreEqual(<span class="literal">false</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class DBLogStringParserTests : GenericParserTests&lt;DBLogStringParser&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderSingleDigit</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithMinorVersion</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1.1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">GetInputHeaderWithRevision</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Header;1.1.1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="优秀单元测试的支柱"><a href="#优秀单元测试的支柱" class="headerlink" title="优秀单元测试的支柱"></a>优秀单元测试的支柱</h2><p>要编写优秀的单元测试，它们应该同时具有 <strong>可靠性</strong>、<strong>可维护性</strong> 及 <strong>可读性</strong>。</p>
+<h3 id="编写可靠的测试"><a href="#编写可靠的测试" class="headerlink" title="编写可靠的测试"></a>编写可靠的测试</h3><p>一个可靠的测试能让你觉得自己对事态了如指掌，能够从容应对。以下是一些指导原则和技术：  </p>
+<p>（1）决定何时删除或修改测试<br>&emsp;&emsp;一旦测试写好并通过，通常我们不应该修改或删除这些测试，因为它们是我们得绿色保护网。但是，有时候我们还是需要修改或者删除测试，所以需要理解什么情况下修改或删除测试会带来问题，什么情况下又是合理的。一般来说，如果有<strong>产品缺陷、测试缺陷、语义或者API更改或者是由于冲突或无效测试</strong>，我们需要修改和删除测试代码。  </p>
+<p>（2）避免测试中的逻辑<br>&emsp;&emsp;随着测试中逻辑的增多，出现测试缺陷的几率就会呈现指数倍的增长。如果单元测试中包含了下列语句就是包含了不应该有的逻辑：</p>
+<ul>
+<li><code>switch</code>、<code>if</code>或<code>else</code>语句；</li>
+<li><code>foreach</code>、<code>for</code>或<code>while</code>循环；</li>
+</ul>
+<p>&emsp;&emsp;这种做法不值得推荐，因为这样的测试可读性较差，也比较脆弱。通常来说，<strong>一个单元测试应该是一系列方法的调用和断言，但是不包含控制流程语句，甚至不应该将断言语句放在<code>try-catch</code>中。</strong>  </p>
+<p>（3）只测试一个关注点<br>&emsp;&emsp;如果我们的单元测试对多个对象进行了断言，那么这个测试有可能测试了多个关注点。在一个单元测试中验证多个关注点会使得事情变得复杂，却没有什么价值。你应该在分开的、独立的单元测试中验证多余的关注点，这样才能发现真正失败的地方。  </p>
+<p>（4）把单元测试和集成测试分开<br>&emsp;&emsp;掐面讨论了测试的绿色安全区，我们需要的就是准备一个单独的单元测试项目，项目中仅包含那些在内存中运行，结果稳定，可重复执行的测试。  </p>
+<p>（5）用代码审查确保代码覆盖率<br>&emsp;&emsp;如果覆盖率低于20%，说明我们缺少很多测试，我们不会知道下一个开发人员将怎么修改我们得代码。如果没有回失败的测试，可能就不会发现这些错误。</p>
+<h3 id="编写可维护性的测试"><a href="#编写可维护性的测试" class="headerlink" title="编写可维护性的测试"></a>编写可维护性的测试</h3><p>可维护性是大多数开发者在编写单元测试时面对的核心问题之一。为此我们需要：<br>（1）只测试公共契约<br>（2）删除重复测试（去除重复代码）<br>（3）实施测试隔离  </p>
+<p>测试隔离的基本概念是：<strong>一个测试应该总是在它自己的小世界中运行，与其他类似或不同的工作的测试隔离，甚至不知道其他测试的存在。</strong></p>
+<h3 id="编写可读性的测试"><a href="#编写可读性的测试" class="headerlink" title="编写可读性的测试"></a>编写可读性的测试</h3><p>不可读的测试几乎没有任何意义，它是我们向项目的下一代开发者讲述的故事，帮助开发者理解一个应用程序的组成及其开端。<br>（1）单元测试命名<br>&emsp;&emsp;这个前面我们讨论过，应该包括三部分：被测试方法名_测试场景_预期行为，如果开发人员都是用这种规范，其他的开发人员就能很容易进入项目，理解测试。  </p>
+<p>（2）变量命名<br>&emsp;&emsp;通过合理命名变量，你可以确保阅读测试的人可以尽快地理解你要验证什么（相对于理解产品代码中你想要实现什么）。请看下面的一个例子：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">BadlyNameTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer log = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">int</span> result = log.GetLineCount(<span class="string">"abc.txt"</span>);</span><br><span class="line"></span><br><span class="line">    Assert.AreEqual(<span class="number">-100</span>, result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="meta">Test</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">GoodNameTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogAnalyzer log = <span class="keyword">new</span> LogAnalyzer();</span><br><span class="line">    <span class="keyword">int</span> result = log.GetLineCount(<span class="string">"abc.txt"</span>);</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> COULD_NOT_READ_FILE = <span class="number">-100</span>;</span><br><span class="line"></span><br><span class="line">    Assert.AreEqual(-COULD_NOT_READ_FILE, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;经过改进后，我们会很容易理解这个返回值的意义。  </p>
+<p>（3）有意义的断言<br>&emsp;&emsp;只有当测试确实需要，并且找不到别的办法使测试更清晰时，你才应该编写定制的断言信息。编写好的断言信息就像编写好的异常信息，一不小心就会犯错，使读者产生误解，浪费他们的时间。  </p>
+<p>（4）断言和操作分离<br>&emsp;&emsp;为了可读性，请不要把断言和方法调用写在同一行。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 断言和操作写在了同一行</span></span><br><span class="line">Assert.AreEqual(-COULD_NOT_READ_FILE, log.GetLineCount(<span class="string">"abc.txt"</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p>这一篇我们学习了：</p>
+<ul>
+<li>尽量将测试自动化，尽可能多次地运行测试，尽可能持续地进行产品交付；</li>
+<li>把集成测试和单元测试分开，为整个团队构建一个绿色安全区，该区域中所有的测试都必须通过；</li>
+<li>按照项目和类型组织测试，把测试分别放在不同的目录、文件夹或者命名空间中；</li>
+<li>使用测试类层次，对一个层次中相关的几个类进行同一组测试，或者对共享一个通用接口或者基类的类型进行同一组测试；</li>
+<li>优秀单元测试具有三大支柱：可读性、可维护性与可靠性，它们相辅相成。</li>
+<li>如果人们能读懂你的测试，就能理解和维护测试，如果测试能够通过，它们也会信任测试。一旦实现这个目标，你就能知道系统是否正常工作，具有了处理变更和在需要时修改代码的能力；</li>
+</ul>
+<p>本系列文章的示例代码：<a href="http://pan.baidu.com/s/1dF0vuwx" target="_blank" rel="noopener">点此下载</a></p>
+<h2 id="参考资料-2"><a href="#参考资料-2" class="headerlink" title="参考资料"></a>参考资料</h2><p>（1）Roy Osherove 著，金迎 译，《单元测试的艺术（第2版）》</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-03T08:48:51.310Z" itemprop="dateUpdated">2020-01-03 16:48:51</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/01/03/ArtOfUnitTest/" target="_blank" rel="external">https://tao-lol.top/2020/01/03/ArtOfUnitTest/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UnitTest/">UnitTest</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/03/ArtOfUnitTest/&title=《.NET 单元测试的艺术》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/03/ArtOfUnitTest/&title=《.NET 单元测试的艺术》 — Blog&source=
+入门：https://www.cnblogs.com/edisonchou/p/5437205.html核心技术：https://www.cnblogs..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/02/AspNetCoreBasicAuthentication/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ASP.NET Core 实现基本认证</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#入门"><span class="post-toc-number">1.</span> <span class="post-toc-text">入门</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#单元测试基础"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">单元测试基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#什么是单元测试"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">什么是单元测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#与集成测试的区别"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">与集成测试的区别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试驱动开发基础"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">测试驱动开发基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#传统的单元测试流程"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">传统的单元测试流程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#测试驱动开发的概要流程"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">测试驱动开发的概要流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第一个单元测试"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">第一个单元测试</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NUnit-单元测试框架"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">NUnit 单元测试框架</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#LogAn-项目介绍"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">LogAn 项目介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#编写第一个测试"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">编写第一个测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行第一个测试"><span class="post-toc-number">1.3.4.</span> <span class="post-toc-text">运行第一个测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#继续添加测试方法"><span class="post-toc-number">1.3.5.</span> <span class="post-toc-text">继续添加测试方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#更多的-NUnit"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">更多的 NUnit</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数化重构单元测试"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">参数化重构单元测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SetUp-和-TearDown"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">SetUp 和 TearDown</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#检验预期的异常"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">检验预期的异常</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#忽略测试"><span class="post-toc-number">1.4.4.</span> <span class="post-toc-text">忽略测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#设置测试的类别"><span class="post-toc-number">1.4.5.</span> <span class="post-toc-text">设置测试的类别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#测试系统状态的改变"><span class="post-toc-number">1.4.6.</span> <span class="post-toc-text">测试系统状态的改变</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">小结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参考资料"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">参考资料</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#核心技术"><span class="post-toc-number">2.</span> <span class="post-toc-text">核心技术</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#破除依赖-存根"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">破除依赖-存根</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为何使用存根？"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">为何使用存根？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#存根简介"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">存根简介</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#发现项目中的外部依赖"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">发现项目中的外部依赖</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#避免项目中的直接依赖"><span class="post-toc-number">2.1.4.</span> <span class="post-toc-text">避免项目中的直接依赖</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#重构代码提高可测试性"><span class="post-toc-number">2.1.5.</span> <span class="post-toc-text">重构代码提高可测试性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#抽取和重写"><span class="post-toc-number">2.1.6.</span> <span class="post-toc-text">抽取和重写</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#交互测试-模拟对象"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">交互测试-模拟对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#模拟对象与存根的区别"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">模拟对象与存根的区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#第一个手工模拟对象"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">第一个手工模拟对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#同时使用模拟对象和存根"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">同时使用模拟对象和存根</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#隔离（模拟）框架"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">隔离（模拟）框架</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为何使用隔离框架"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">为何使用隔离框架</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关于-NSubstitute-隔离框架"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">关于 NSubstitute 隔离框架</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-NSubstitute-模拟对象"><span class="post-toc-number">2.3.3.</span> <span class="post-toc-text">使用 NSubstitute 模拟对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-NSubstitute-模拟值"><span class="post-toc-number">2.3.4.</span> <span class="post-toc-text">使用 NSubstitute 模拟值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#同时使用模拟对象和存根-1"><span class="post-toc-number">2.3.5.</span> <span class="post-toc-text">同时使用模拟对象和存根</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-1"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">小结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参考资料-1"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">参考资料</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#测试代码"><span class="post-toc-number">3.</span> <span class="post-toc-text">测试代码</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试层次和组织"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">测试层次和组织</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#测试项目的两种目录结构"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">测试项目的两种目录结构</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#构建绿色安全区"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">构建绿色安全区</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#将测试类映射到被测试代码"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">将测试类映射到被测试代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#注入横切关注点"><span class="post-toc-number">3.1.4.</span> <span class="post-toc-text">注入横切关注点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用继承使测试代码可重用"><span class="post-toc-number">3.1.5.</span> <span class="post-toc-text">使用继承使测试代码可重用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优秀单元测试的支柱"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">优秀单元测试的支柱</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#编写可靠的测试"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">编写可靠的测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#编写可维护性的测试"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">编写可维护性的测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#编写可读性的测试"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">编写可读性的测试</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-2"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">小结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参考资料-2"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">参考资料</span></a></li></ol></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/03/ArtOfUnitTest/&title=《.NET 单元测试的艺术》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/03/ArtOfUnitTest/&title=《.NET 单元测试的艺术》 — Blog&source=
+入门：https://www.cnblogs.com/edisonchou/p/5437205.html核心技术：https://www.cnblogs..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACQklEQVR42u3azW4CMQxFYd7/padSV5Ug03NtUBvnZFVRCPlmYfyTxwOv63s9v/JzPb/zWqzVzqv3vG3JkCFjW8Z1u+4Pzffkj4k8iBd7ypAh4wAG2ZqE1zR8kxBMfgBkyJAhgyRw9+GVJIj3j0mGDBkyUgYpbu9f+RcBV4YMGVsxSBFLSlZC+uNaXIYMGRsyOmXnp//+4HxDhgwZmzCucPHStFOOxqeSIUPGaEat1ZUelCeRaXQNnqgMGTK2ZfBrW2mLLR0n8KHpi91kyJAxmtEpJknbi4wEUvzyhDJkyBjK6DS/eFlbSwfj8lWGDBlDGWQMQMrdTvuslobG0wwZMmRsy6g1/UmPiwdH8qmgFpchQ8Y4Rq2vzuvjfoIYpK0yZMgYzagVpbWLZUGjv1bKypAhYxyDDxR5g4yPDdIJxvI8MmTIOICRts/S4pP8Nw3xv9wZkSFDxiBGrTVWu9ORJpdxCJYhQ8YBDJ4gpoPP2oOIBwYyZMgYykg/QIaL6bUMHr6DyxYyZMgYxCBf3Blb8sORsjYYYcqQIWMQI22EpSPJtD3HBwYyZMg4k1ELf/0gW8vuZMiQcQ6jFiLTYrX2aIoX1GTIkDGOcYXrfjuezNUSxyVVhgwZoxl81S5Y1K5f1HaTIUPGbEYtyHYaZx1e8ddDhgwZIxgkyPKRAE8l39WMkyFDhoxOifuJ1tsyNZQhQ4YMfgEivTCBL3ks3ylDhowDGDyMxtNREGQ7QwsZMmScwKgNBkjh+mivfvooQ4aMzRlf81gd84Y7DHgAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
