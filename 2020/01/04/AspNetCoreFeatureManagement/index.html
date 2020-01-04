@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,dotNET,ASPNETCore">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-04T03:03:54.000Z" itemprop="datePublished" class="page-time">
+  2020-01-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-AspNetCoreFeatureManagement"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-04 11:03:54" datetime="2020-01-04T03:03:54.000Z"  itemprop="datePublished">2020-01-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/hippieZhou/p/12104710.html" target="_blank" rel="noopener">https://www.cnblogs.com/hippieZhou/p/12104710.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<figure class="image-box">
+                <a rel=给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀 href="749711-20191226221319349-410012928.png" title="" data-fancybox="images"><img src="749711-20191226221319349-410012928.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;我们知道，目前大多数应用程序在正式发布到生产环境之前都会经历多个不同的测试环境，通过让应用程序在多个不同的环境中运行来及时发现并解决问题，避免在线上发生不必要的损失。这是对于整个软件的发布流程来讲。但是如果想让我们的应用程序在线上环境中通过满足一些动态条件（比如电商平台在某一时间段的促销活动）从而能开启一些临时功能的话又该怎么办呢？如果你试图通过重新打包发布的方式来解决这个问题，可能有些过于大动干戈了。本文，笔者将介绍通过 <strong>Feature Flag</strong> 的方式来解决这个问题。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>&emsp;&emsp;<strong>Feature Flag</strong> 中文可译为 <strong>功能开关</strong>。通过使用这种方式，可以对我们的功能进行条件化配置，当程序在线上环境运行时，如果当前环境符合我们某一特性功能开启/关闭的条件时，应用程序会自动开启/关闭该功能。整个过程不需要人工参与，全部都是由系统本身来完成相应功能的开启和关闭。  </p>
+<p>那在 <code>.NET Core</code> 中，我们该如何实现该功能呢？<br>&emsp;&emsp;微软为我们很贴心地提供了两个开发包：<code>Microsoft.FeatureManagement</code> 和 <code>Microsoft.FeatureManagement.AspNetCore</code>，该实现是<strong>基于 .NET Core 的配置系统</strong>，所以任何 .NET Core 程序都可以轻易集成该功能。</p>
+<blockquote>
+<p>目前还处于预览版阶段，需要在 NuGet 上勾选 <code>use prerelease</code></p>
+</blockquote>
+<p>&emsp;&emsp;因此，我们只需将对应包安装到我们的应用程序中即可。  </p>
+<p>&emsp;&emsp;接下来，我们就一起看一下如何在 ASP.NET Core 中集成该功能。</p>
+<h2 id="使用入门"><a href="#使用入门" class="headerlink" title="使用入门"></a>使用入门</h2><p>&emsp;&emsp;创建一个 ASP.NET Core Web Application 后，安装如下包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.FeatureManagement.AspNetCore -Version 2.0.0-preview-010610001-1263</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接着在 <code>Startup</code> 中的 <code>ConfigureServices</code> 进行相应配置，示例如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddFeatureManagement();</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;至此，我们的程序已经支持 <strong>Feature Flag</strong> 功能了，使用方式就简单了，这里展示一个相对简单的方式。  </p>
+<p>&emsp;&emsp;首先，在 <code>appsettings.json</code> 进行配置，如下所示：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">"FeatureManagement": &#123;</span><br><span class="line">  "NewFeatureFlag": true,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，在 <code>Index.cshtml</code> 通过使用 <code>feature</code> 标签来进行相应配置，示例如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@using Microsoft.FeatureManagement</span><br><span class="line">@inject IFeatureManager FeatureManager</span><br><span class="line">@addTagHelper *,Microsoft.FeatureManagement.AspNetCore</span><br><span class="line">@&#123;</span><br><span class="line">    ViewData["Title"] = "Home Page";</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"text-center"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"display-4"</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">feature</span> <span class="attr">name</span>=<span class="string">"NewFeatureFlag"</span> <span class="attr">requirement</span>=<span class="string">"All"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">asp-action</span>=<span class="string">"NewFeature"</span>&gt;</span>Go to the new feature.<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">feature</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此时，我们运行起程序后就可以看到 <code>feature</code> 标签内的内容就可以渲染出来，如果我们在配置中将 <code>NewFeatureFlag</code> 值设置为 <code>False</code> 后，<code>feature</code> 标签内的内容就会消失，你可以通过查看网页源码的方式来查看具体细节。  </p>
+<p>接下来笔者介绍一下微软为我们内置的两个功能开关:</p>
+<ul>
+<li><a href="https://github.com/microsoft/FeatureManagement-Dotnet/blob/master/src/Microsoft.FeatureManagement/FeatureFilters/PercentageFilter.cs" target="_blank" rel="noopener">PercentageFilter</a></li>
+<li><a href="https://github.com/microsoft/FeatureManagement-Dotnet/blob/master/src/Microsoft.FeatureManagement/FeatureFilters/TimeWindowFilter.cs" target="_blank" rel="noopener">TimeWindowFilter</a></li>
+</ul>
+<h3 id="PercentageFilter"><a href="#PercentageFilter" class="headerlink" title="PercentageFilter"></a>PercentageFilter</h3><blockquote>
+<p>&emsp;&emsp;PercentageFilter 是支持百分比的随机开关，通过使用这种方式，可以让一个功能在每次请求中以一个百分比概率的形式来开启/关闭。</p>
+</blockquote>
+<ul>
+<li><p>注入功能开关 <code>Startup.cs</code></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddFeatureManagement()</span><br><span class="line">        .AddFeatureFilter&lt;PercentageFilter&gt;();</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置功能开关 <code>appsettings.json</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">"FeatureManagement": &#123;</span><br><span class="line">  "RandomFlag": &#123;</span><br><span class="line">    "EnabledFor": [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"Percentage"</span>,</span><br><span class="line">        <span class="attr">"Parameters"</span>: &#123;</span><br><span class="line">          <span class="attr">"Value"</span>: <span class="number">50</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>&emsp;&emsp;这里配置的是在每次请求时以 50% 的概率来开启该功能，其对应的配置类为：<code>PercentageFilterSettings</code></p>
+</blockquote>
+<ul>
+<li>使用功能开关 <code>Index.cshtml</code><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@using Microsoft.FeatureManagement</span><br><span class="line">@inject IFeatureManager FeatureManager</span><br><span class="line">@addTagHelper *,Microsoft.FeatureManagement.AspNetCore</span><br><span class="line">@&#123;</span><br><span class="line">    ViewData["Title"] = "Home Page";</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"text-center"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"display-4"</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">feature</span> <span class="attr">name</span>=<span class="string">"RandomFlag"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>I am a Random Flag!<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">feature</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Learn about <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://docs.microsoft.com/aspnet/core"</span>&gt;</span>building Web apps with ASP.NET Core<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>&emsp;&emsp;这时，当我们运行起程序后就会看到如下图所示的效果：</p>
+<figure class="image-box">
+                <a rel=给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀 href="749711-20191227115408005-1996055979.gif" title="" data-fancybox="images"><img src="749711-20191227115408005-1996055979.gif" alt title class></a>
+                <p></p>
+            </figure>
+
+<h3 id="TimeWindowFilter"><a href="#TimeWindowFilter" class="headerlink" title="TimeWindowFilter"></a>TimeWindowFilter</h3><blockquote>
+<p>&emsp;&emsp;TimeWindowFilter 是时间段的随机开关，通过使用这种方式，可以让一个功能在指定的时间段内来开启/关闭。</p>
+</blockquote>
+<ul>
+<li><p>注入功能开关 <code>Startup.cs</code></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddFeatureManagement()</span><br><span class="line">        .AddFeatureFilter&lt;TimeWindowFilter&gt;();</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置功能开关 <code>appsettings.json</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">"FeatureManagement": &#123;</span><br><span class="line">  "RandomFlag": &#123;</span><br><span class="line">    "EnabledFor": [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"Percentage"</span>,</span><br><span class="line">        <span class="attr">"Parameters"</span>: &#123;</span><br><span class="line">          <span class="attr">"Start"</span>: <span class="string">"2019/12/27 5:04:00 +00:00"</span>,</span><br><span class="line">          <span class="attr">"End"</span>: <span class="string">"2019/12/27 5:04:05 +00:00"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>&emsp;&emsp;这里需要注意的是，配置里面的 <code>Start</code> 和 <code>End</code> 是 <code>DateTimeOffset</code> 类型，并且需要配置为 UTC 的时间，所以在实际使用过程中需要考虑时区问题（你可以通过调用 <code>DateTimeOffset.UtcNow</code> 的方式来获取相应时间的格式）。其对应的配置类为：<code>TimeWindowFilterSettings</code></p>
+</blockquote>
+<ul>
+<li>使用功能开关 <code>Index.cshtml</code><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@using Microsoft.FeatureManagement</span><br><span class="line">@inject IFeatureManager FeatureManager</span><br><span class="line">@addTagHelper *,Microsoft.FeatureManagement.AspNetCore</span><br><span class="line">@&#123;</span><br><span class="line">    ViewData["Title"] = "Home Page";</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"text-center"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"display-4"</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">feature</span> <span class="attr">name</span>=<span class="string">"TimedFlag"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>I am a Timed Flag!<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">feature</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>@DateTimeOffset.UtcNow.ToString()<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Learn about <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://docs.microsoft.com/aspnet/core"</span>&gt;</span>building Web apps with ASP.NET Core<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>&emsp;&emsp;这时，当我们运行起程序后就会看到如下图所示的效果：</p>
+<figure class="image-box">
+                <a rel=给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀 href="749711-20191227130433893-1810361319.gif" title="" data-fancybox="images"><img src="749711-20191227130433893-1810361319.gif" alt title class></a>
+                <p></p>
+            </figure>
+
+<h2 id="自定义功能开关"><a href="#自定义功能开关" class="headerlink" title="自定义功能开关"></a>自定义功能开关</h2><p>&emsp;&emsp;最后要介绍的是如果创建和使用自定义的功能开关，笔者这里做一个这样的示例，当网站被 Microsoft Edge 浏览器访问时，显示功能，其余浏览器则隐藏功能。  </p>
+<p>&emsp;&emsp;这里，笔者创建一个配置的映射类 <code>BrowserFilterSettings</code> 和执行过滤的操作类 <code>BrowserFeatureFilter</code>，示例代码如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BrowserFilterSettings</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span>[] AllowedBrowsers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[<span class="meta">FilterAlias(<span class="meta-string">"BrowserFilter"</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BrowserFeatureFilter</span> : <span class="title">IFeatureFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHttpContextAccessor _httpContextAccessor;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BrowserFeatureFilter</span>(<span class="params">IHttpContextAccessor httpContextAccessor</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _httpContextAccessor = httpContextAccessor;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task&lt;<span class="keyword">bool</span>&gt; <span class="title">EvaluateAsync</span>(<span class="params">FeatureFilterEvaluationContext context</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> userAgent = _httpContextAccessor.HttpContext.Request.Headers[<span class="string">"User-Agent"</span>].ToString();</span><br><span class="line">        <span class="keyword">var</span> settings = context.Parameters.Get&lt;BrowserFilterSettings&gt;();</span><br><span class="line">        <span class="keyword">return</span> Task.FromResult(settings.AllowedBrowsers.Any(userAgent.Contains));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接着，进行功能开关的注入，示例代码如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHttpContextAccessor();</span><br><span class="line">    services.AddFeatureManagement()</span><br><span class="line">        .AddFeatureFilter&lt;BrowserFeatureFilter&gt;();</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后，进行功能开关的配置，示例配置如下所示：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">"FeatureManagement": &#123;</span><br><span class="line">  "BrowserFlag": &#123;</span><br><span class="line">    "EnabledFor": [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"BrowserFilter"</span>,</span><br><span class="line">        <span class="attr">"Parameters"</span>: &#123;</span><br><span class="line">          <span class="attr">"AllowedBrowsers"</span>: [</span><br><span class="line">            <span class="string">"Edge"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接着，使用方式如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@using Microsoft.FeatureManagement</span><br><span class="line">@inject IFeatureManager FeatureManager</span><br><span class="line">@addTagHelper *,Microsoft.FeatureManagement.AspNetCore</span><br><span class="line">@&#123;</span><br><span class="line">    ViewData["Title"] = "Home Page";</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"text-center"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"display-4"</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">feature</span> <span class="attr">name</span>=<span class="string">"BrowserFlag"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>I am a Browser Flag only on Edge!<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">feature</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Learn about <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://docs.microsoft.com/aspnet/core"</span>&gt;</span>building Web apps with ASP.NET Core<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这时，当我们分别用 Microsoft Edge 和 Google Chrome 访问站点时就会看到如下图所示的效果：</p>
+<figure class="image-box">
+                <a rel=给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀 href="749711-20191227133538599-1569883719.png" title="" data-fancybox="images"><img src="749711-20191227133538599-1569883719.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&emsp;&emsp;借助于 <code>Microsoft.FeatureManagement.AspNetCore</code> 扩展包，我们可以很容易实现 <strong>Feature Flag</strong> 效果。又由于这种实现是基于 <code>IConfiguration</code> 的，所以很具有通用性。这里列出官方给出的优点：</p>
+<ul>
+<li>A common convention for feature management</li>
+<li>Low barrier-to-entry <ul>
+<li>Built on IConfiguration</li>
+<li>Supports JSON file feature flag setup</li>
+</ul>
+</li>
+<li>Feature Flag lifetime management <ul>
+<li>Configuration values can change in real-time, feature flags can be consistent across the entire request</li>
+</ul>
+</li>
+<li>Simple to Complex Scenarios Covered <ul>
+<li>Toggle on/off features through declarative configuration file</li>
+<li>Dynamically evaluate state of feature based on call to server</li>
+<li>API extensions for ASP.NET Core and MVC framework</li>
+<li>Routing</li>
+<li>Filters</li>
+<li>Action Attributes</li>
+</ul>
+</li>
+</ul>
+<p>&emsp;&emsp;非常感谢你能阅读这篇文章，希望它能对你有所帮助。</p>
+<h1 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h1><ul>
+<li><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement-Dotnet</a></li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.featuremanagement?view=azure-dotnet-preview" target="_blank" rel="noopener">Microsoft.FeatureManagement</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/azure-app-configuration/use-feature-flags-dotnet-core" target="_blank" rel="noopener">Tutorial: Use feature flags in an ASP.NET Core app</a></li>
+<li><a href="https://www.youtube.com/watch?v=iTm5WVvNjWc" target="_blank" rel="noopener">Using custom Feature Flag filters in .NET Core</a></li>
+</ul>
+<blockquote>
+<p>&emsp;&emsp;示例代码仅供参考，如果在前后端分离的框架中使用，需要想一些额外的方法。<br>&emsp;&emsp;例如：微软文档中是这么说的：后台代码应预先做代码检测。<br>&emsp;&emsp;同理，前端也可以用。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (featureManager.IsEnabled(<span class="keyword">nameof</span>(MyFeatureFlags.FeatureA)))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Run the following code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></blockquote>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-04T03:37:57.699Z" itemprop="dateUpdated">2020-01-04 11:37:57</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/01/04/AspNetCoreFeatureManagement/" target="_blank" rel="external">https://tao-lol.top/2020/01/04/AspNetCoreFeatureManagement/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ASPNETCore/">ASPNETCore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/04/AspNetCoreFeatureManagement/&title=《给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/04/AspNetCoreFeatureManagement/&title=《给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀》 — Blog&source=
+https://www.cnblogs.com/hippieZhou/p/12104710.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/03/ArtOfUnitTest/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">.NET 单元测试的艺术</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#正文"><span class="post-toc-number">2.</span> <span class="post-toc-text">正文</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用入门"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用入门</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PercentageFilter"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">PercentageFilter</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TimeWindowFilter"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">TimeWindowFilter</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自定义功能开关"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">自定义功能开关</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#相关参考"><span class="post-toc-number">4.</span> <span class="post-toc-text">相关参考</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/04/AspNetCoreFeatureManagement/&title=《给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/04/AspNetCoreFeatureManagement/&title=《给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀》 — Blog&source=
+https://www.cnblogs.com/hippieZhou/p/12104710.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACOElEQVR42u3a0Y7CMAxE0f7/Txdpn5BKwsw4rBTn5gkVSHuCZGI71yWP+288r7yP5yfvwXi+O7qyeMCAAWNbxj0d2S3nvBFYX4gP94UBA8YBjHmQnTPcQDn/5Bw/vA4DBgwYQrgcYdwACgMGDBirGG5oXrWhhAEDxskMPQhm5bZK8W5xLg4DBowNGW7a+Z+vf9jfgAEDxiaM2xxKGNVDp5viDueHAQNGa4Z+Azf4Zkc33Oh6uXtVGDBgbMuoJ5z1EJw1G778JjBgwGjBcK31RqMbaqUGJwwYMA5gZJUrt8RfOSImdTZgwIDRlKGHQpfhHrPQD3nAgAHjNIabdrpLoDcV3G99SGJhwIDRmuEWufSiW7a5XJCLw4ABoxGjHhzdNkD9aFp42AIGDBjbMtzNXyWJVfBu+wEGDBhnMiqNgezdLJG2k1gYMGBsztDDpVv6zxqcdgiGAQPGkQz9USqJqLuhHD4bDBgwWjMqbcv6sQx3ti/zwIABozVDSTLdZFVPXFe9hgEDRleGG171opsbCfV5Sv0NGDBgtGDo20TjNkKhLQv0xn8FDBgwtmXo5TD3oNj8ZsohDLdhAAMGjK6M2xzuA7mJcViwgwEDRmtGVvpXliCbR29nhjAYMGBsy9APqv4iLFYaEpe7rjBgwNicoSelSkitB1a3OQEDBgwY+kZQR2YzDBcLBgwYMKKUNUtKlbYEDBgwzmRkSaySiLrh2G1awIAB4wSG2xjIjmK42z53gWDAgNGU8QLMJB3zKB2MqAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
