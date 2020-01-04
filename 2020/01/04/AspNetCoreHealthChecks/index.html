@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>.Net Core 实现健康检查 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,dotNET,ASPNETCore">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>.Net Core 实现健康检查</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">.Net Core 实现健康检查</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-04T13:59:23.000Z" itemprop="datePublished" class="page-time">
+  2020-01-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-AspNetCoreHealthChecks"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">.Net Core 实现健康检查</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-04 21:59:23" datetime="2020-01-04T13:59:23.000Z"  itemprop="datePublished">2020-01-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/yyfh/p/11787434.html" target="_blank" rel="noopener">https://www.cnblogs.com/yyfh/p/11787434.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;ASP.NET Core 提供运行状况检查中间件和库，以用于报告应用基础结构组件的运行状况。  </p>
+<p>&emsp;&emsp;运行状况检查由应用程序作为 HTTP 终结点公开。可以为各种实时监视方案配置运行状况检查终结点：</p>
+<ul>
+<li>运行状况探测可以由容器业务流程协调程和负载均衡器用于检查应用的状态。<br>&emsp;&emsp;例如，容器业务流程协调程序可以通过停止滚动部署或重新启动容器来响应失败的运行状况检查。  负载均衡器可以通过将流量从失败的实例路由到正常实例，来应对不正常的应用。</li>
+<li>可以监视内存、磁盘和其他物理服务器资源的使用情况来了解是否处于正常状态。</li>
+<li>运行状况检查可以测试应用的依赖项（如数据库和外部服务终结点）以确认是否可用和正常工作。</li>
+</ul>
+<p>&emsp;&emsp;这个示例展示数据库的运行状态，它在验证数据库连接并返回相应的结果：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"health"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Health</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            connection.Open();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (SqlException)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> StatusCodeResult(<span class="number">503</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> EmptyResult();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当我们请求该地址的时候时，如果连接到数据库时出现任何连接问题，它将显示一条包含 200 状态代码和 503 状态代码的空消息​​。</p>
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="1.png" title="" data-fancybox="images"><img src="1.png" alt title class></a>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="2.png" title="" data-fancybox="images"><img src="2.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;现在基于这些结果状态码,我们可以监视系统采取相关的操作。  </p>
+<p>&emsp;&emsp;从 .NET Core 2.2 开始，我们不需要为运行状态在去自定义检查控制器和接口，而是框架本身已经为我们提供了运行状况的检查服务。</p>
+<h1 id="安装和运行"><a href="#安装和运行" class="headerlink" title="安装和运行"></a>安装和运行</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Extensions.Diagnostics.HealthChecks</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;安装后，我们需要在<code>Startup.cs</code>文件的<code>ConfigureServices()</code>和<code>Configure()</code>方法中添加。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseHealthChecks(<span class="string">"/health"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们在<code>Configure()</code>方法中配置完端点后，我们就可以通过<code>/health</code>来请求查看我们的应用程序的健康程度。</p>
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="3.png" title="" data-fancybox="images"><img src="3.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;但是这样对于我们刚才的需求是满足不了的，那么我们如何自定义我们的健康度检查呢？<br>&emsp;&emsp;两种方式来处理：</p>
+<h2 id="Option-1"><a href="#Option-1" class="headerlink" title="Option 1"></a>Option 1</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks()</span><br><span class="line">            .AddCheck(<span class="string">"sql"</span>, () =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">try</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        connection.Open();</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">catch</span> (SqlException)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">return</span> HealthCheckResult.Unhealthy();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> HealthCheckResult.Healthy();</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在这里我们使用匿名方法<code>AddCheck()</code>来编写我们的自定义验证逻辑，结果是<code>HealthCheckResult</code>对象，该对象包含3个选项：</p>
+<ul>
+<li><code>Healthy</code>：健康</li>
+<li><code>Unhealthy</code>：不良</li>
+<li><code>Degraded</code>：降级</li>
+</ul>
+<h2 id="Option-2"><a href="#Option-2" class="headerlink" title="Option 2"></a>Option 2</h2><p>&emsp;&emsp;实现<code>IHealthCheck</code>接口并实现<code>CheckHealthAsync()</code>方法，如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DatabaseHealthCheck</span> : <span class="title">IHealthCheck</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task&lt;HealthCheckResult&gt; <span class="title">CheckHealthAsync</span>(<span class="params">HealthCheckContext context, CancellationToken cancellationToken = <span class="keyword">default</span></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                connection.Open();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (SqlException)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> Task.FromResult(HealthCheckResult.Unhealthy());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Task.FromResult(HealthCheckResult.Healthy());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;创建该类之后，我们需要使用一些有效的唯一名称。<code>AddCheck()</code>方法在<code>ConfigureServices()</code>方法中提及该类，如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks()  </span><br><span class="line">            .AddCheck&lt;DatabaseHealthCheck&gt;(<span class="string">"sql"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们的代码就写完了，我们可以像上面那样添加任意数量的 Health Task，它将按照我们在此处声明的顺序运行。</p>
+<h1 id="自定义状态码"><a href="#自定义状态码" class="headerlink" title="自定义状态码"></a>自定义状态码</h1><p>&emsp;&emsp;在之前我们也说过 200 为健康，503 为不健康。HealthCheck 服务通过以下方式使用其 options 对象提供自定义状态代码，为我们提供了更改此默认的状态码。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">config.MapHealthChecks(<span class="string">"/health"</span>, <span class="keyword">new</span> HealthCheckOptions</span><br><span class="line">&#123;</span><br><span class="line">    ResultStatusCodes = <span class="keyword">new</span> Dictionary&lt;HealthStatus, <span class="keyword">int</span>&gt; </span><br><span class="line">    &#123; </span><br><span class="line">        &#123; HealthStatus.Unhealthy, <span class="number">420</span> &#125;, </span><br><span class="line">        &#123; HealthStatus.Healthy, <span class="number">200</span> &#125;, </span><br><span class="line">        &#123; HealthStatus.Degraded, <span class="number">419</span> &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义输出"><a href="#自定义输出" class="headerlink" title="自定义输出"></a>自定义输出</h1><p>&emsp;&emsp;我们可以自定义输出，以获取有关每个运行状况检查任务的更清晰详细的信息。如果我们有多个运行状况检查任务来分析哪个任务使整个服务健康状态变为“不正常”，这将非常有用。<br>&emsp;&emsp;我们可以通过<code>HealthCheckOptions</code>的<code>ResponseWriter</code>属性来实现。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseRouting()</span><br><span class="line">        .UseEndpoints(config =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            config.MapHealthChecks(<span class="string">"/health"</span>, <span class="keyword">new</span> HealthCheckOptions</span><br><span class="line">            &#123;</span><br><span class="line">                ResponseWriter = CustomResponseWriter</span><br><span class="line">            &#125;); </span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Task <span class="title">CustomResponseWriter</span>(<span class="params">HttpContext context, HealthReport healthReport</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    context.Response.ContentType = <span class="string">"application/json"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> result = JsonConvert.SerializeObject(<span class="keyword">new</span></span><br><span class="line">    &#123;</span><br><span class="line">        status = healthReport.Status.ToString(),</span><br><span class="line">        errors = healthReport.Entries.Select(e =&gt; <span class="keyword">new</span></span><br><span class="line">        &#123;</span><br><span class="line">            key = e.Key,</span><br><span class="line">            <span class="keyword">value</span> = e.Value.Status.ToString()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> context.Response.WriteAsync(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="4.png" title="" data-fancybox="images"><img src="4.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;现在以 JSON 显示我们的详细信息，完成了健康状态的检查。</p>
+<h1 id="健康检查界面"><a href="#健康检查界面" class="headerlink" title="健康检查界面"></a>健康检查界面</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package AspNetCore.HealthChecks.UI</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;安装完成后，需要相应地在<code>ConfigureServices()</code>和<code>Configure()</code>方法中调用相应的服务方法。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    services.AddHealthChecksUI();  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    app.UseHealthChecksUI();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;配置完成后，您可以运行应用程序并指向<code>/healthchecks</code>UI 地址，该端点显示如下的 UI：</p>
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="5.png" title="" data-fancybox="images"><img src="5.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;但是界面上没有我们刚才自定义的信息，那我们再进行配置。<br>&emsp;&emsp;<code>appsetting.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"ApplicationInsights"</span>: &#123;</span><br><span class="line">    <span class="attr">"InstrumentationKey"</span>: <span class="string">"your-instrumentation-key"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"Logging"</span>: &#123;</span><br><span class="line">    <span class="attr">"LogLevel"</span>: &#123;</span><br><span class="line">      <span class="attr">"Default"</span>: <span class="string">"Warning"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"AllowedHosts"</span>: <span class="string">"*"</span>,</span><br><span class="line">  <span class="attr">"HealthChecksUI"</span>: &#123;</span><br><span class="line">    <span class="attr">"HealthChecks"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"Test Health"</span>,</span><br><span class="line">        <span class="attr">"Uri"</span>: <span class="string">"https://localhost:44342/health"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"EvaluationTimeinSeconds"</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="attr">"MinimumSecondsBetweenFailureNotifications"</span>: <span class="number">60</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=.Net Core 实现健康检查 href="6.png" title="" data-fancybox="images"><img src="6.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;这样就可以看到健康状态了。</p>
+<blockquote>
+<p><a href="https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks" target="_blank" rel="noopener">https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks</a>  </p>
+<p>HealthChecks packages include health checks for:</p>
+<ul>
+<li>Sql Server</li>
+<li>MySql</li>
+<li>Oracle</li>
+<li>Sqlite</li>
+<li>RavenDB</li>
+<li>Postgres</li>
+<li>EventStore</li>
+<li>RabbitMQ</li>
+<li>Elasticsearch</li>
+<li>Redis</li>
+<li>System: Disk Storage, Private Memory, Virtual Memory, Process, Windows Service</li>
+<li>Azure Service Bus: EventHub, Queue and Topics</li>
+<li>Azure Storage: Blob, Queue and Table</li>
+<li>Azure Key Vault</li>
+<li>Azure DocumentDb</li>
+<li>Azure IoT Hub</li>
+<li>Amazon DynamoDb</li>
+<li>Amazon S3</li>
+<li>Network: Ftp, SFtp, Dns, Tcp port, Smtp, Imap</li>
+<li>MongoDB</li>
+<li>Kafka</li>
+<li>Identity Server</li>
+<li>Uri: single uri and uri groups</li>
+<li>Consul</li>
+<li>Hangfire</li>
+<li>SignalR</li>
+<li>Kubernetes</li>
+</ul>
+</blockquote>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-04T14:35:09.066Z" itemprop="dateUpdated">2020-01-04 22:35:09</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/01/04/AspNetCoreHealthChecks/" target="_blank" rel="external">https://tao-lol.top/2020/01/04/AspNetCoreHealthChecks/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ASPNETCore/">ASPNETCore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dotNET/">dotNET</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/04/AspNetCoreHealthChecks/&title=《.Net Core 实现健康检查》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/04/AspNetCoreHealthChecks/&title=《.Net Core 实现健康检查》 — Blog&source=
+https://www.cnblogs.com/yyfh/p/11787434.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/04/AspNetCoreFeatureManagement/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#安装和运行"><span class="post-toc-number">1.</span> <span class="post-toc-text">安装和运行</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Option-1"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Option 1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Option-2"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Option 2</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#自定义状态码"><span class="post-toc-number">2.</span> <span class="post-toc-text">自定义状态码</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#自定义输出"><span class="post-toc-number">3.</span> <span class="post-toc-text">自定义输出</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#健康检查界面"><span class="post-toc-number">4.</span> <span class="post-toc-text">健康检查界面</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/04/AspNetCoreHealthChecks/&title=《.Net Core 实现健康检查》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/04/AspNetCoreHealthChecks/&title=《.Net Core 实现健康检查》 — Blog&source=
+https://www.cnblogs.com/yyfh/p/11787434.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACQklEQVR42u3a0W7DIAxG4bz/S2fStJupIzq/TbcBh6sobUM+LlzbcF143J/j9fr5+69j9Onr/esdQ4YMGcsy7scxYowmu8EYLQcBD2eXIUPGAQwSZEePqC3B83f4u8mQIUMGCY48pUtfUYYMGTJqAZd/ysPoH/xvyJAhY0HG3AYZD8dpKjmhFpchQ8aCjM7GwLuvf2l/Q4YMGf+YcYejFqBJOlh7n68nyJAhY2sGnyAtXGclkWQ5ZMiQsTejFgQ7DHLNl1WGDBknMDpt/Vpzn7fMgi0BGTJkHMBID4SlRyv67TayiDJkyNiVkYa8tPVGCtdawP2hayhDhoxNGbwRVjsYwRPHTqIpQ4aMExjpj2spY9rI68wlQ4aM/RgkResEUF6U1pZAhgwZezNmHeRKA2X6hKAWlyFDxgEM1NjCmwo8fKdLOfzHkCFDxtYMvpHJQzAvWdPQ/O2ODBkytmakByx4wCUv17nfOiciQ4aMBRk8wKXpHdkc7SxfsBMrQ4aMxRlpGcmb+7WSNb0jQ4aMvRmdNC5tz03bcZ2bjcqQIWMRRodXO35RO6KBWmwyZMjYjlFL/uKAiI9W8EbesBaXIUPGdow7HOmrpCE4TTGD/wcZMmQsy0iDXTrZ3KDc2ViVIUPG6ox+kOUT145rXLWfyZAhYztGWsSmmwfFZA4EfRkyZMhAjwCtMf5MEu7jXQ4ZMmQcyeBht1b08hJahgwZ5zDSY2G1Zn3tgAUqbmXIkLE1o9asT0NnmvbxbU4ZMmRszfgAZJEZBktch38AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
