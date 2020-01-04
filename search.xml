@@ -3,6 +3,149 @@
   
     
     <entry>
+      <title><![CDATA[.Net Core 实现健康检查]]></title>
+      <url>/2020/01/04/AspNetCoreHealthChecks/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.cnblogs.com/yyfh/p/11787434.html" target="_blank" rel="noopener">https://www.cnblogs.com/yyfh/p/11787434.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>&emsp;&emsp;ASP.NET Core 提供运行状况检查中间件和库，以用于报告应用基础结构组件的运行状况。  </p>
+<p>&emsp;&emsp;运行状况检查由应用程序作为 HTTP 终结点公开。可以为各种实时监视方案配置运行状况检查终结点：</p>
+<ul>
+<li>运行状况探测可以由容器业务流程协调程和负载均衡器用于检查应用的状态。<br>&emsp;&emsp;例如，容器业务流程协调程序可以通过停止滚动部署或重新启动容器来响应失败的运行状况检查。  负载均衡器可以通过将流量从失败的实例路由到正常实例，来应对不正常的应用。</li>
+<li>可以监视内存、磁盘和其他物理服务器资源的使用情况来了解是否处于正常状态。</li>
+<li>运行状况检查可以测试应用的依赖项（如数据库和外部服务终结点）以确认是否可用和正常工作。</li>
+</ul>
+<p>&emsp;&emsp;这个示例展示数据库的运行状态，它在验证数据库连接并返回相应的结果：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"health"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Health</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            connection.Open();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (SqlException)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> StatusCodeResult(<span class="number">503</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> EmptyResult();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;当我们请求该地址的时候时，如果连接到数据库时出现任何连接问题，它将显示一条包含 200 状态代码和 503 状态代码的空消息​​。</p>
+<figure class="image-box">
+                <img src="1.png" alt title class>
+                <p></p>
+            </figure>
+<figure class="image-box">
+                <img src="2.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;现在基于这些结果状态码,我们可以监视系统采取相关的操作。  </p>
+<p>&emsp;&emsp;从 .NET Core 2.2 开始，我们不需要为运行状态在去自定义检查控制器和接口，而是框架本身已经为我们提供了运行状况的检查服务。</p>
+<h1 id="安装和运行"><a href="#安装和运行" class="headerlink" title="安装和运行"></a>安装和运行</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.Extensions.Diagnostics.HealthChecks</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;安装后，我们需要在<code>Startup.cs</code>文件的<code>ConfigureServices()</code>和<code>Configure()</code>方法中添加。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseHealthChecks(<span class="string">"/health"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;我们在<code>Configure()</code>方法中配置完端点后，我们就可以通过<code>/health</code>来请求查看我们的应用程序的健康程度。</p>
+<figure class="image-box">
+                <img src="3.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;但是这样对于我们刚才的需求是满足不了的，那么我们如何自定义我们的健康度检查呢？<br>&emsp;&emsp;两种方式来处理：</p>
+<h2 id="Option-1"><a href="#Option-1" class="headerlink" title="Option 1"></a>Option 1</h2><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks()</span><br><span class="line">            .AddCheck(<span class="string">"sql"</span>, () =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">try</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        connection.Open();</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">catch</span> (SqlException)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">return</span> HealthCheckResult.Unhealthy();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> HealthCheckResult.Healthy();</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在这里我们使用匿名方法<code>AddCheck()</code>来编写我们的自定义验证逻辑，结果是<code>HealthCheckResult</code>对象，该对象包含3个选项：</p>
+<ul>
+<li><code>Healthy</code>：健康</li>
+<li><code>Unhealthy</code>：不良</li>
+<li><code>Degraded</code>：降级</li>
+</ul>
+<h2 id="Option-2"><a href="#Option-2" class="headerlink" title="Option 2"></a>Option 2</h2><p>&emsp;&emsp;实现<code>IHealthCheck</code>接口并实现<code>CheckHealthAsync()</code>方法，如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DatabaseHealthCheck</span> : <span class="title">IHealthCheck</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task&lt;HealthCheckResult&gt; <span class="title">CheckHealthAsync</span>(<span class="params">HealthCheckContext context, CancellationToken cancellationToken = <span class="keyword">default</span></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> connection = <span class="keyword">new</span> SqlConnection(<span class="string">"Server=.;Initial Catalog=master;Integrated Security=true"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                connection.Open();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (SqlException)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> Task.FromResult(HealthCheckResult.Unhealthy());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Task.FromResult(HealthCheckResult.Healthy());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;创建该类之后，我们需要使用一些有效的唯一名称。<code>AddCheck()</code>方法在<code>ConfigureServices()</code>方法中提及该类，如下所示：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddHealthChecks()  </span><br><span class="line">            .AddCheck&lt;DatabaseHealthCheck&gt;(<span class="string">"sql"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们的代码就写完了，我们可以像上面那样添加任意数量的 Health Task，它将按照我们在此处声明的顺序运行。</p>
+<h1 id="自定义状态码"><a href="#自定义状态码" class="headerlink" title="自定义状态码"></a>自定义状态码</h1><p>&emsp;&emsp;在之前我们也说过 200 为健康，503 为不健康。HealthCheck 服务通过以下方式使用其 options 对象提供自定义状态代码，为我们提供了更改此默认的状态码。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">config.MapHealthChecks(<span class="string">"/health"</span>, <span class="keyword">new</span> HealthCheckOptions</span><br><span class="line">&#123;</span><br><span class="line">    ResultStatusCodes = <span class="keyword">new</span> Dictionary&lt;HealthStatus, <span class="keyword">int</span>&gt; </span><br><span class="line">    &#123; </span><br><span class="line">        &#123; HealthStatus.Unhealthy, <span class="number">420</span> &#125;, </span><br><span class="line">        &#123; HealthStatus.Healthy, <span class="number">200</span> &#125;, </span><br><span class="line">        &#123; HealthStatus.Degraded, <span class="number">419</span> &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义输出"><a href="#自定义输出" class="headerlink" title="自定义输出"></a>自定义输出</h1><p>&emsp;&emsp;我们可以自定义输出，以获取有关每个运行状况检查任务的更清晰详细的信息。如果我们有多个运行状况检查任务来分析哪个任务使整个服务健康状态变为“不正常”，这将非常有用。<br>&emsp;&emsp;我们可以通过<code>HealthCheckOptions</code>的<code>ResponseWriter</code>属性来实现。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseRouting()</span><br><span class="line">        .UseEndpoints(config =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            config.MapHealthChecks(<span class="string">"/health"</span>, <span class="keyword">new</span> HealthCheckOptions</span><br><span class="line">            &#123;</span><br><span class="line">                ResponseWriter = CustomResponseWriter</span><br><span class="line">            &#125;); </span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Task <span class="title">CustomResponseWriter</span>(<span class="params">HttpContext context, HealthReport healthReport</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    context.Response.ContentType = <span class="string">"application/json"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> result = JsonConvert.SerializeObject(<span class="keyword">new</span></span><br><span class="line">    &#123;</span><br><span class="line">        status = healthReport.Status.ToString(),</span><br><span class="line">        errors = healthReport.Entries.Select(e =&gt; <span class="keyword">new</span></span><br><span class="line">        &#123;</span><br><span class="line">            key = e.Key,</span><br><span class="line">            <span class="keyword">value</span> = e.Value.Status.ToString()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> context.Response.WriteAsync(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="4.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;现在以 JSON 显示我们的详细信息，完成了健康状态的检查。</p>
+<h1 id="健康检查界面"><a href="#健康检查界面" class="headerlink" title="健康检查界面"></a>健康检查界面</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package AspNetCore.HealthChecks.UI</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;安装完成后，需要相应地在<code>ConfigureServices()</code>和<code>Configure()</code>方法中调用相应的服务方法。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    services.AddHealthChecksUI();  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    app.UseHealthChecksUI();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;配置完成后，您可以运行应用程序并指向<code>/healthchecks</code>UI 地址，该端点显示如下的 UI：</p>
+<figure class="image-box">
+                <img src="5.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;但是界面上没有我们刚才自定义的信息，那我们再进行配置。<br>&emsp;&emsp;<code>appsetting.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"ApplicationInsights"</span>: &#123;</span><br><span class="line">    <span class="attr">"InstrumentationKey"</span>: <span class="string">"your-instrumentation-key"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"Logging"</span>: &#123;</span><br><span class="line">    <span class="attr">"LogLevel"</span>: &#123;</span><br><span class="line">      <span class="attr">"Default"</span>: <span class="string">"Warning"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"AllowedHosts"</span>: <span class="string">"*"</span>,</span><br><span class="line">  <span class="attr">"HealthChecksUI"</span>: &#123;</span><br><span class="line">    <span class="attr">"HealthChecks"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">"Name"</span>: <span class="string">"Test Health"</span>,</span><br><span class="line">        <span class="attr">"Uri"</span>: <span class="string">"https://localhost:44342/health"</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"EvaluationTimeinSeconds"</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="attr">"MinimumSecondsBetweenFailureNotifications"</span>: <span class="number">60</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="6.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;这样就可以看到健康状态了。</p>
+<blockquote>
+<p><a href="https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks" target="_blank" rel="noopener">https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks</a>  </p>
+<p>HealthChecks packages include health checks for:</p>
+<ul>
+<li>Sql Server</li>
+<li>MySql</li>
+<li>Oracle</li>
+<li>Sqlite</li>
+<li>RavenDB</li>
+<li>Postgres</li>
+<li>EventStore</li>
+<li>RabbitMQ</li>
+<li>Elasticsearch</li>
+<li>Redis</li>
+<li>System: Disk Storage, Private Memory, Virtual Memory, Process, Windows Service</li>
+<li>Azure Service Bus: EventHub, Queue and Topics</li>
+<li>Azure Storage: Blob, Queue and Table</li>
+<li>Azure Key Vault</li>
+<li>Azure DocumentDb</li>
+<li>Azure IoT Hub</li>
+<li>Amazon DynamoDb</li>
+<li>Amazon S3</li>
+<li>Network: Ftp, SFtp, Dns, Tcp port, Smtp, Imap</li>
+<li>MongoDB</li>
+<li>Kafka</li>
+<li>Identity Server</li>
+<li>Uri: single uri and uri groups</li>
+<li>Consul</li>
+<li>Hangfire</li>
+<li>SignalR</li>
+<li>Kubernetes</li>
+</ul>
+</blockquote>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> dotNET </tag>
+            
+            <tag> ASPNETCore </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[给你的 ASP.NET Core 程序插上 Feature Flag 的翅膀]]></title>
       <url>/2020/01/04/AspNetCoreFeatureManagement/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -804,11 +947,11 @@
             
             <tag> CSharp </tag>
             
-            <tag> Web </tag>
-            
             <tag> dotNET </tag>
             
             <tag> ASPNETCore </tag>
+            
+            <tag> Web </tag>
             
         </tags>
         
@@ -5929,9 +6072,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> Web </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -8683,11 +8826,11 @@
             
             <tag> CSharp </tag>
             
-            <tag> Web </tag>
-            
             <tag> dotNET </tag>
             
             <tag> ASPNETCore </tag>
+            
+            <tag> Web </tag>
             
             <tag> IdentityServer4 </tag>
             
@@ -8927,9 +9070,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -9347,11 +9490,11 @@
             
             <tag> CSharp </tag>
             
-            <tag> Web </tag>
-            
             <tag> dotNET </tag>
             
             <tag> ASPNETCore </tag>
+            
+            <tag> Web </tag>
             
         </tags>
         
@@ -11364,7 +11507,17 @@
       <content type="html"><![CDATA[<p>&emsp;</p>
 <a id="more"></a>
 
-<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h4 id="自定义中间件"><a href="#自定义中间件" class="headerlink" title="自定义中间件"></a>自定义中间件</h4><blockquote>
+<h1 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h1><h4 id="NET-Core-依赖注入的三大生命周期"><a href="#NET-Core-依赖注入的三大生命周期" class="headerlink" title=".NET Core 依赖注入的三大生命周期"></a>.NET Core 依赖注入的三大生命周期</h4><blockquote>
+<p><a href="https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw</a></p>
+</blockquote>
+<p>三大生命周期：</p>
+<ol>
+<li>多例模式 Transient：每解析一次接口，就会实例化一个对象。每次对象都是唯一且不同的。每次解析请求，实例的都是一个全新的对象。</li>
+<li>Scoped 英文释为范围，区域：第一次请求，它会实例出一个对象 <code>IA a = new A();</code> 并缓存下来，接下来的每一次请求，会判断是否是同一个 HttpContext，如若是同一个，那么它仍然返回这个 <code>a</code> 对象。<br>这里解释下，什么叫一次请求。同一次请求，它的 HttpContext 肯定是同一个，所以返回的都是 a。这里 Scoped 其实就是一次 http 请求的作用域，同一次请求，可能多次请求其他的服务，也可能多次请求同一个控制器，只是这个人进了商场买东西，不管做什么，还是这个人。但是它一旦出了这个商场（结束了本次 http 请求）再次进入商场，就是新的请求了，就需要重新过安检（虽然还是那个人）。</li>
+<li>单例模式 Singleton：只要服务器不嗝屁，不管解析多少次接口，拿到的都是 a。换句话说就是，只要皇帝不死，太子一直是太子！从商场建成开业到商场倒闭关门，此次程序服务过程中，单例返回的始终是这个 a。</li>
+</ol>
+<hr>
+<h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h4 id="自定义中间件"><a href="#自定义中间件" class="headerlink" title="自定义中间件"></a>自定义中间件</h4><blockquote>
 <p><a href="https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw</a></p>
 </blockquote>
 <p>中间件是一种装配到应用程序管道以处理请求和响应的软件，每个组件可以：</p>
@@ -11386,15 +11539,59 @@
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// app.UseMiddleware&lt;CustomMiddleware&gt;();</span></span><br><span class="line">    app.UseCustom();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// app.UseXXX</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h4 id="NET-Core-依赖注入的三大生命周期"><a href="#NET-Core-依赖注入的三大生命周期" class="headerlink" title=".NET Core 依赖注入的三大生命周期"></a>.NET Core 依赖注入的三大生命周期</h4><blockquote>
-<p><a href="https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw</a></p>
+<h4 id="ASP-NET-Core-主机地址过滤-HostFiltering"><a href="#ASP-NET-Core-主机地址过滤-HostFiltering" class="headerlink" title="ASP.NET Core 主机地址过滤 HostFiltering"></a>ASP.NET Core 主机地址过滤 HostFiltering</h4><blockquote>
+<p><a href="https://www.cnblogs.com/yyfh/p/11855862.html" target="_blank" rel="noopener">https://www.cnblogs.com/yyfh/p/11855862.html</a></p>
 </blockquote>
-<p>三大生命周期：</p>
-<ol>
-<li>多例模式 Transient：每解析一次接口，就会实例化一个对象。每次对象都是唯一且不同的。每次解析请求，实例的都是一个全新的对象。</li>
-<li>Scoped 英文释为范围，区域：第一次请求，它会实例出一个对象 <code>IA a = new A();</code> 并缓存下来，接下来的每一次请求，会判断是否是同一个 HttpContext，如若是同一个，那么它仍然返回这个 <code>a</code> 对象。<br>这里解释下，什么叫一次请求。同一次请求，它的 HttpContext 肯定是同一个，所以返回的都是 a。这里 Scoped 其实就是一次 http 请求的作用域，同一次请求，可能多次请求其他的服务，也可能多次请求同一个控制器，只是这个人进了商场买东西，不管做什么，还是这个人。但是它一旦出了这个商场（结束了本次 http 请求）再次进入商场，就是新的请求了，就需要重新过安检（虽然还是那个人）。</li>
-<li>单例模式 Singleton：只要服务器不嗝屁，不管解析多少次接口，拿到的都是 a。换句话说就是，只要皇帝不死，太子一直是太子！从商场建成开业到商场倒闭关门，此次程序服务过程中，单例返回的始终是这个 a。</li>
+<p>&emsp;&emsp;<code>HostFilteringMiddleware</code>做的是对请求主机头的限制，也相当于一个请求主机头白名单，标识着某些主机头你可以访问，其余的你别访问了我这边未允许。  </p>
+<h5 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h5><ol>
+<li>配置<code>HostFilteringOptions</code><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">services.PostConfigure&lt;HostFilteringOptions&gt;(options =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (options.AllowedHosts == <span class="literal">null</span> || options.AllowedHosts.Count == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// "AllowedHosts": "localhost;127.0.0.1;[::1]"</span></span><br><span class="line">        <span class="keyword">var</span> hosts = Configuration[<span class="string">"AllowedHosts"</span>]?.Split(<span class="keyword">new</span>[] &#123; <span class="string">';'</span> &#125;, StringSplitOptions.RemoveEmptyEntries);</span><br><span class="line">        <span class="comment">// Fall back to "*" to disable.</span></span><br><span class="line">        options.AllowedHosts = (hosts?.Length &gt; <span class="number">0</span> ? hosts : <span class="keyword">new</span>[] &#123; <span class="string">"*"</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
 </ol>
+<blockquote>
+<p><code>HostFilteringOptions</code>：</p>
+<ul>
+<li><code>AllowedHosts</code>：允许访问的 Host 主机</li>
+<li><code>AllowEmptyHosts</code>：是否允许请求头 Host 的值为空访问，默认为 true</li>
+<li><code>IncludeFailureMessage</code>：返回错误信息，默认为 true</li>
+</ul>
+</blockquote>
+<ol start="2">
+<li><p>在 <code>Configure</code> 方法中添加 HostFiltering 中间件</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">Microsoft.AspNetCore.Builder.IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    app.UseHostFiltering();</span><br><span class="line">    app.Run(context =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> context.Response.WriteAsync(<span class="string">"Hello World! "</span> + context.Request.Host);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>appsettings.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"AllowedHosts"</span>: <span class="string">"127.0.0.1"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<figure class="image-box">
+                <img src="1098068-20191114112620796-67212582.gif" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;当我们请求带着 Host 头去访问的时候，通过该中间件判断该 Host 头是否在我们预先配置好的里面，如果在里面那么就继续请求下一个中间件，如果说不在则返回 400。</p>
+<hr>
+<h4 id="ASP-NET-Core-3-x-并发限制"><a href="#ASP-NET-Core-3-x-并发限制" class="headerlink" title="ASP.NET Core 3.x 并发限制"></a>ASP.NET Core 3.x 并发限制</h4><blockquote>
+<p><a href="https://www.cnblogs.com/yyfh/p/11843358.html" target="_blank" rel="noopener">https://www.cnblogs.com/yyfh/p/11843358.html</a></p>
+</blockquote>
+<p>&emsp;&emsp;<code>Microsoft.AspNetCore.ConcurrencyLimiter</code> ASP.NET Core 3.0 后增加的，用于传入的请求进行排队处理，避免线程池的不足。<br>&emsp;&emsp;我们日常开发中可能常做的给某 Web 服务器配置连接数以及，请求队列大小，那么今天我们看看如何在通过中间件形式实现一个并发量以及队列长度限制。</p>
+<h5 id="添加-Nuget"><a href="#添加-Nuget" class="headerlink" title="添加 Nuget"></a>添加 Nuget</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Install-Package Microsoft.AspNetCore.ConcurrencyLimiter</span><br></pre></td></tr></table></figure>
+
+<h5 id="Queue-策略"><a href="#Queue-策略" class="headerlink" title="Queue 策略"></a>Queue 策略</h5><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddQueuePolicy(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//最大并发请求数</span></span><br><span class="line">        options.MaxConcurrentRequests = <span class="number">2</span>;</span><br><span class="line">        <span class="comment">//请求队列长度限制</span></span><br><span class="line">        options.RequestQueueLimit = <span class="number">1</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    services.AddControllers();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//添加并发限制中间件</span></span><br><span class="line">    app.UseConcurrencyLimiter();</span><br><span class="line">    app.Run(<span class="keyword">async</span> context =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Task.Delay(<span class="number">100</span>).Wait(); <span class="comment">// 100ms sync-over-async</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">await</span> context.Response.WriteAsync(<span class="string">"Hello World!"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseDeveloperExceptionPage();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    app.UseHttpsRedirection();</span><br><span class="line"></span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseAuthorization();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapControllers();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Stack-策略"><a href="#Stack-策略" class="headerlink" title="Stack 策略"></a>Stack 策略</h5><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddStackPolicy(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//最大并发请求数</span></span><br><span class="line">        options.MaxConcurrentRequests = <span class="number">2</span>;</span><br><span class="line">        <span class="comment">//请求队列长度限制</span></span><br><span class="line">        options.RequestQueueLimit = <span class="number">1</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    services.AddControllers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>基于栈结构的特点，在实际应用中，通常只会对栈执行以下两种操作：</p>
+<ul>
+<li>向栈中添加元素，此过程被称为”进栈”（入栈或压栈）；</li>
+<li>从栈中提取出指定元素，此过程被称为”出栈”（或弹栈）。</li>
+</ul>
+<p>队列存储结构的实现有以下两种方式：</p>
+<ul>
+<li>顺序队列：在顺序表的基础上实现的队列结构；</li>
+<li>链队列：在链表的基础上实现的队列结构。</li>
+</ul>
 <hr>
 <h3 id="Web-API"><a href="#Web-API" class="headerlink" title="Web API"></a>Web API</h3><hr>
 <h3 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h3><hr>
@@ -12278,9 +12475,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -12305,9 +12502,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -12332,9 +12529,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -12636,7 +12833,7 @@
 <h4 id="有序"><a href="#有序" class="headerlink" title="有序"></a>有序</h4><p><a href="https://github.com/Coldairarrow/IdHelper" target="_blank" rel="noopener">IdHelper</a><br>⭐推荐：<a href="https://github.com/stulzq/snowflake-net" target="_blank" rel="noopener">SnowFlake-NET</a><br>⭐推荐：<a href="https://github.com/buvinghausen/SequentialGuid" target="_blank" rel="noopener">SequentialGuid</a>  </p>
 <h3 id="图像音频视频"><a href="#图像音频视频" class="headerlink" title="图像音频视频"></a>图像音频视频</h3><p><a href="https://trac.ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a><br><a href="https://github.com/dlemstra/Magick.NET" target="_blank" rel="noopener">Magick</a>  </p>
 <h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a><br><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a><br><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
-<h3 id="应用程序接口"><a href="#应用程序接口" class="headerlink" title="应用程序接口"></a>应用程序接口</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
+<h3 id="应用程序接口（API）"><a href="#应用程序接口（API）" class="headerlink" title="应用程序接口（API）"></a>应用程序接口（API）</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a><br><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement</a>  </p>
 <h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p><a href="http://unitycontainer.org/" target="_blank" rel="noopener">Unity</a><br><a href="https://autofac.readthedocs.io/" target="_blank" rel="noopener">Autofac</a><br><a href="https://github.com/jbogard/MediatR/wiki" target="_blank" rel="noopener">MediatR</a><br><a href="https://github.com/dotnet-state-machine/stateless" target="_blank" rel="noopener">Stateless</a>  </p>
 <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><a href="https://redis.io/documentation" target="_blank" rel="noopener">Redis</a><br><a href="https://docs.mongodb.com/" target="_blank" rel="noopener">mongoDB</a><br><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/" target="_blank" rel="noopener">SQL Server</a><br><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a><br><a href="https://www.sqlite.org/docs.html" target="_blank" rel="noopener">SQLite</a>  </p>
 <h3 id="对象关系映射（ORM）"><a href="#对象关系映射（ORM）" class="headerlink" title="对象关系映射（ORM）"></a>对象关系映射（ORM）</h3><p><a href="docs.automapper.org/">AutoMapper</a><br><a href="https://github.com/2881099/FreeSql/wiki" target="_blank" rel="noopener">FreeSql</a><br><a href="https://github.com/StackExchange/Dapper" target="_blank" rel="noopener">Dapper</a><br><a href="https://github.com/2881099/csredis" target="_blank" rel="noopener">CSRedis</a><br><a href="https://stackexchange.github.io/StackExchange.Redis/" target="_blank" rel="noopener">StackExchange.Redis</a><br><a href="https://docs.mongodb.com/ecosystem/drivers/csharp/" target="_blank" rel="noopener">MongoDB.Driver</a>  </p>
@@ -12646,7 +12843,7 @@
 <h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ</a><br><a href="https://github.com/EasyNetQ/EasyNetQ/wiki/Introduction" target="_blank" rel="noopener">EasyNetQ</a><br><a href="https://masstransit-project.com/MassTransit/" target="_blank" rel="noopener">MassTransit</a>  </p>
 <h3 id="服务管理"><a href="#服务管理" class="headerlink" title="服务管理"></a>服务管理</h3><p><a href="https://www.consul.io/docs/index.html" target="_blank" rel="noopener">Consul</a><br><a href="https://github.com/ctripcorp/apollo/wiki" target="_blank" rel="noopener">Apollo</a>  </p>
 <h3 id="日志记录"><a href="#日志记录" class="headerlink" title="日志记录"></a>日志记录</h3><p><a href="https://github.com/serilog/serilog/wiki" target="_blank" rel="noopener">Serilog</a><br><a href="https://github.com/NLog/NLog/wiki" target="_blank" rel="noopener">NLog</a>  </p>
-<h3 id="状态监控"><a href="#状态监控" class="headerlink" title="状态监控"></a>状态监控</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" target="_blank" rel="noopener">Elasticsearch</a><br><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank" rel="noopener">Kibana</a><br><a href="https://www.elastic.co/guide/en/logstash/current/index.html" target="_blank" rel="noopener">Logstash</a><br><a href="https://github.com/apache/skywalking/tree/master/docs" target="_blank" rel="noopener">SkyWalking</a><br><a href="https://www.app-metrics.io/" target="_blank" rel="noopener">AppMetrics</a><br><a href="https://docs.influxdata.com/influxdb/" target="_blank" rel="noopener">influxDB</a><br><a href="https://grafana.com/docs/grafana/" target="_blank" rel="noopener">Grafana</a><br><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank" rel="noopener">Exceptionless</a>  </p>
+<h3 id="状态监控"><a href="#状态监控" class="headerlink" title="状态监控"></a>状态监控</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" target="_blank" rel="noopener">Elasticsearch</a><br><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank" rel="noopener">Kibana</a><br><a href="https://www.elastic.co/guide/en/logstash/current/index.html" target="_blank" rel="noopener">Logstash</a><br><a href="https://github.com/apache/skywalking/tree/master/docs" target="_blank" rel="noopener">SkyWalking</a><br><a href="https://www.app-metrics.io/" target="_blank" rel="noopener">AppMetrics</a><br><a href="https://docs.influxdata.com/influxdb/" target="_blank" rel="noopener">influxDB</a><br><a href="https://grafana.com/docs/grafana/" target="_blank" rel="noopener">Grafana</a><br><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank" rel="noopener">Exceptionless</a><br><a href="https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks" target="_blank" rel="noopener">AspNetCore.Diagnostics.HealthChecks</a>  </p>
 <h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p><a href="https://github.com/nunit/docs/wiki" target="_blank" rel="noopener">NUnit</a><br><a href="https://xunit.net/#documentation" target="_blank" rel="noopener">xUnit</a><br><a href="https://github.com/moq/moq4/wiki" target="_blank" rel="noopener">Moq</a><br><a href="https://nsubstitute.github.io/help.html" target="_blank" rel="noopener">NSubstitute</a><br><a href="https://shouldly.readthedocs.io/" target="_blank" rel="noopener">Shouldly</a><br><a href="https://fluentassertions.com/introduction" target="_blank" rel="noopener">FluentAssertions</a>  </p>
 <h3 id="托管部署"><a href="#托管部署" class="headerlink" title="托管部署"></a>托管部署</h3><p><a href="https://github.com/madskristensen/BundlerMinifier" target="_blank" rel="noopener">BundlerMinifier</a><br><a href="https://git-scm.com/doc" target="_blank" rel="noopener">Git</a><br><a href="https://docs.docker.com/" target="_blank" rel="noopener">Docker</a><br><a href="https://github.com/jesseduffield/lazydocker" target="_blank" rel="noopener">LazyDocker</a><br><a href="https://helm.sh/" target="_blank" rel="noopener">Helm</a><br><a href="https://kubernetes.io/docs/concepts/" target="_blank" rel="noopener">Kubernetes</a><br><a href="https://github.com/rancher/k3s" target="_blank" rel="noopener">K3s</a><br><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a>  </p>
 <h3 id="集成架构"><a href="#集成架构" class="headerlink" title="集成架构"></a>集成架构</h3><p><a href="http://prismlibrary.github.io/docs/" target="_blank" rel="noopener">Prism</a><br><a href="https://docs.abp.io/zh-Hans/abp/master/" target="_blank" rel="noopener">ABP</a><br><a href="http://cap.dotnetcore.xyz/user-guide/zh/getting-started/quick-start/" target="_blank" rel="noopener">CAP</a><br><a href="https://github.com/dotnetcore/surging" target="_blank" rel="noopener">Surging</a><br><a href="http://dotnet.github.io/orleans/Documentation/" target="_blank" rel="noopener">Orleans</a><br><a href="https://github.com/dapr/dapr/wiki" target="_blank" rel="noopener">Dapr</a><br><a href="https://steeltoe.io/docs/" target="_blank" rel="noopener">Steeltoe</a>  </p>
