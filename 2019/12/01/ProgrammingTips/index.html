@@ -438,6 +438,181 @@
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">List&lt;<span class="keyword">int</span>&gt; numbers = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">int</span>? i = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">numbers ??= <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line">numbers.Add(i ??= <span class="number">66</span>);</span><br><span class="line">numbers.Add(i ??= <span class="number">99</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//等价于一下代码</span></span><br><span class="line"><span class="comment">//if (i==null)</span></span><br><span class="line"><span class="comment">//&#123;</span></span><br><span class="line"><span class="comment">//    i = 66;</span></span><br><span class="line"><span class="comment">//    numbers.Add(i.Value);</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//if (i == null)</span></span><br><span class="line"><span class="comment">//&#123;</span></span><br><span class="line"><span class="comment">//    i = 99;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br><span class="line"><span class="comment">//numbers.Add(i.Value);</span></span><br><span class="line"></span><br><span class="line">Console.WriteLine(<span class="keyword">string</span>.Join(<span class="string">" "</span>, numbers));  <span class="comment">// 输出: 66 66</span></span><br><span class="line">Console.WriteLine(i);  <span class="comment">// output: 66</span></span><br></pre></td></tr></table></figure>
 
 <hr>
+<h2 id="运算符提升（Operator-Lifting）"><a href="#运算符提升（Operator-Lifting）" class="headerlink" title="运算符提升（Operator Lifting）"></a>运算符提升（Operator Lifting）</h2><blockquote>
+<p><code>four</code>，<code>five</code>，<code>nullInt</code>的类型都是<code>Nullable&lt;int&gt;</code>。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Lifted operator</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-nullInt</td>
+<td>int? -(int? x)</td>
+<td>null</td>
+</tr>
+<tr>
+<td>-five</td>
+<td>int? -(int? x)</td>
+<td>-5</td>
+</tr>
+<tr>
+<td>five + nullInt</td>
+<td>int? +(int? x, int? y)</td>
+<td>null</td>
+</tr>
+<tr>
+<td>five + five</td>
+<td>int? +(int? x, int? y)</td>
+<td>10</td>
+</tr>
+<tr>
+<td>four &amp; nullInt</td>
+<td>int? &amp;(int? x, int? y)</td>
+<td>null</td>
+</tr>
+<tr>
+<td>four &amp; five</td>
+<td>int? &amp;(int? x, int? y)</td>
+<td>4</td>
+</tr>
+<tr>
+<td>nullInt == nullInt</td>
+<td>bool ==(int? x, int? y)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>five == five</td>
+<td>bool ==(int? x, int? y)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>five == nullInt</td>
+<td>bool ==(int? x, int? y)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>five == four</td>
+<td>bool ==(int? x, int? y)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>four &lt; five</td>
+<td>bool &lt;(int? x, int? y)</td>
+<td>true</td>
+</tr>
+<tr>
+<td>nullInt &lt; five</td>
+<td>bool &lt;(int? x, int? y)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>five &lt; nullInt</td>
+<td>bool &lt;(int? x, int? y)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nullInt &lt; nullInt</td>
+<td>bool &lt;(int? x, int? y)</td>
+<td>false</td>
+</tr>
+<tr>
+<td>nullInt &lt;= nullInt</td>
+<td>bool &lt;=(int? x, int? y)</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<h2 id="可空逻辑运算"><a href="#可空逻辑运算" class="headerlink" title="可空逻辑运算"></a>可空逻辑运算</h2><blockquote>
+<p>针对<code>Nullable&lt;bool&gt;</code>，没有条件逻辑运算符。例如<code>&amp;&amp;</code>，<code>||</code>。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+<th>x &amp; y</th>
+<th>x | y</th>
+<th>x ^ y</th>
+<th>!x</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>true</td>
+<td>null</td>
+<td>null</td>
+<td><strong>true</strong></td>
+<td>null</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false</td>
+<td>null</td>
+<td><strong>false</strong></td>
+<td>null</td>
+<td>null</td>
+<td>true</td>
+</tr>
+<tr>
+<td>null</td>
+<td>true</td>
+<td>null</td>
+<td><strong>true</strong></td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>null</td>
+<td>false</td>
+<td><strong>false</strong></td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+<td>null</td>
+</tr>
+</tbody></table>
+<hr>
 <h1 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h1><h2 id="9-个小技巧"><a href="#9-个小技巧" class="headerlink" title="9 个小技巧"></a>9 个小技巧</h2><blockquote>
 <p><a href="http://blog.yidengxuetang.com/post/201912/11/" target="_blank" rel="noopener">http://blog.yidengxuetang.com/post/201912/11/</a></p>
 </blockquote>
@@ -481,7 +656,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-01-04T13:57:48.184Z" itemprop="dateUpdated">2020-01-04 21:57:48</time>
+    最后更新时间：<time datetime="2020-01-05T13:06:37.702Z" itemprop="dateUpdated">2020-01-05 21:06:37</time>
 </span><br>
 
 
@@ -570,7 +745,7 @@
         <aside class="post-widget">
             <nav class="post-toc-wrap" id="post-toc">
                 <strong>目录</strong>
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#NET"><span class="post-toc-number">1.</span> <span class="post-toc-text">.NET</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#NET-Core-依赖注入的三大生命周期"><span class="post-toc-number">1.0.0.1.</span> <span class="post-toc-text">.NET Core 依赖注入的三大生命周期</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ASP-NET-Core"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ASP.NET Core</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#自定义中间件"><span class="post-toc-number">1.1.0.1.</span> <span class="post-toc-text">自定义中间件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ASP-NET-Core-主机地址过滤-HostFiltering"><span class="post-toc-number">1.1.0.2.</span> <span class="post-toc-text">ASP.NET Core 主机地址过滤 HostFiltering</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ASP-NET-Core-3-x-并发限制"><span class="post-toc-number">1.1.0.3.</span> <span class="post-toc-text">ASP.NET Core 3.x 并发限制</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Web-API"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">Web API</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#gRPC"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">gRPC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SignalR"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">SignalR</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MVC"><span class="post-toc-number">1.1.4.</span> <span class="post-toc-text">MVC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Razor-Pages"><span class="post-toc-number">1.1.5.</span> <span class="post-toc-text">Razor Pages</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Blazor"><span class="post-toc-number">1.1.6.</span> <span class="post-toc-text">Blazor</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Identity"><span class="post-toc-number">1.1.7.</span> <span class="post-toc-text">Identity</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#WPF"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">WPF</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为什么在-NET-Core-上使用-Windows-desktop"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">为什么在 .NET Core 上使用 Windows desktop</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-ReadyToRun-优化-NET-Core-应用"><span class="post-toc-number">1.2.1.1.</span> <span class="post-toc-text">使用 ReadyToRun 优化 .NET Core 应用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Assembly-linking"><span class="post-toc-number">1.2.1.2.</span> <span class="post-toc-text">Assembly linking</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#发布单文件可执行文件"><span class="post-toc-number">1.2.1.3.</span> <span class="post-toc-text">发布单文件可执行文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#综合使用"><span class="post-toc-number">1.2.1.4.</span> <span class="post-toc-text">综合使用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#MSIX"><span class="post-toc-number">1.2.1.5.</span> <span class="post-toc-text">MSIX</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ViewModel-实现-INotifyPropertyChanged-接口"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">ViewModel 实现 INotifyPropertyChanged 接口</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Xamarin"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Xamarin</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UnitTest"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">UnitTest</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#框架对比"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">框架对比</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#C-35"><span class="post-toc-number">2.</span> <span class="post-toc-text">C#</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#构建某个类型的某个实例时系统所执行的操作"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">构建某个类型的某个实例时系统所执行的操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类继承时基类与子类应该做到的几点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">类继承时基类与子类应该做到的几点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现-IDisposable-Dispose-方法时的注意点"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">实现 IDisposable.Dispose() 方法时的注意点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#C-35-决定两个对象是否“相等”的-4-个函数"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">C# 决定两个对象是否“相等”的 4 个函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重写-System-Object-GetHashCode-方法必须遵守的-3-条规则"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">重写 System.Object.GetHashCode() 方法必须遵守的 3 条规则</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Math-Round-默认四舍六入五成双"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">Math.Round 默认四舍六入五成双</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关于-null-的几个运算符"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">关于 null 的几个运算符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#和"><span class="post-toc-number">2.7.1.</span> <span class="post-toc-text">?. 和 ?[]</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.2.</span> <span class="post-toc-text">??</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#-1"><span class="post-toc-number">2.7.3.</span> <span class="post-toc-text">??=</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JavaScript"><span class="post-toc-number">3.</span> <span class="post-toc-text">JavaScript</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#9-个小技巧"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">9 个小技巧</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#全部替换"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">全部替换</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#提取唯一值"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">提取唯一值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#将数字转换为字符串"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">将数字转换为字符串</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#将字符串转换为数字"><span class="post-toc-number">3.1.4.</span> <span class="post-toc-text">将字符串转换为数字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#随机排列数组中的元素"><span class="post-toc-number">3.1.5.</span> <span class="post-toc-text">随机排列数组中的元素</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#展平多维数组"><span class="post-toc-number">3.1.6.</span> <span class="post-toc-text">展平多维数组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缩短条件语句"><span class="post-toc-number">3.1.7.</span> <span class="post-toc-text">缩短条件语句</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#动态属性名"><span class="post-toc-number">3.1.8.</span> <span class="post-toc-text">动态属性名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-length-调整-清空数组"><span class="post-toc-number">3.1.9.</span> <span class="post-toc-text">使用 length 调整/清空数组</span></a></li></ol></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#NET"><span class="post-toc-number">1.</span> <span class="post-toc-text">.NET</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#NET-Core-依赖注入的三大生命周期"><span class="post-toc-number">1.0.0.1.</span> <span class="post-toc-text">.NET Core 依赖注入的三大生命周期</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ASP-NET-Core"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ASP.NET Core</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#自定义中间件"><span class="post-toc-number">1.1.0.1.</span> <span class="post-toc-text">自定义中间件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ASP-NET-Core-主机地址过滤-HostFiltering"><span class="post-toc-number">1.1.0.2.</span> <span class="post-toc-text">ASP.NET Core 主机地址过滤 HostFiltering</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ASP-NET-Core-3-x-并发限制"><span class="post-toc-number">1.1.0.3.</span> <span class="post-toc-text">ASP.NET Core 3.x 并发限制</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Web-API"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">Web API</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#gRPC"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">gRPC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SignalR"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">SignalR</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MVC"><span class="post-toc-number">1.1.4.</span> <span class="post-toc-text">MVC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Razor-Pages"><span class="post-toc-number">1.1.5.</span> <span class="post-toc-text">Razor Pages</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Blazor"><span class="post-toc-number">1.1.6.</span> <span class="post-toc-text">Blazor</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Identity"><span class="post-toc-number">1.1.7.</span> <span class="post-toc-text">Identity</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#WPF"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">WPF</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为什么在-NET-Core-上使用-Windows-desktop"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">为什么在 .NET Core 上使用 Windows desktop</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-ReadyToRun-优化-NET-Core-应用"><span class="post-toc-number">1.2.1.1.</span> <span class="post-toc-text">使用 ReadyToRun 优化 .NET Core 应用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Assembly-linking"><span class="post-toc-number">1.2.1.2.</span> <span class="post-toc-text">Assembly linking</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#发布单文件可执行文件"><span class="post-toc-number">1.2.1.3.</span> <span class="post-toc-text">发布单文件可执行文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#综合使用"><span class="post-toc-number">1.2.1.4.</span> <span class="post-toc-text">综合使用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#MSIX"><span class="post-toc-number">1.2.1.5.</span> <span class="post-toc-text">MSIX</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ViewModel-实现-INotifyPropertyChanged-接口"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">ViewModel 实现 INotifyPropertyChanged 接口</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Xamarin"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Xamarin</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UnitTest"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">UnitTest</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#框架对比"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">框架对比</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#C-35"><span class="post-toc-number">2.</span> <span class="post-toc-text">C#</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#构建某个类型的某个实例时系统所执行的操作"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">构建某个类型的某个实例时系统所执行的操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类继承时基类与子类应该做到的几点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">类继承时基类与子类应该做到的几点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现-IDisposable-Dispose-方法时的注意点"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">实现 IDisposable.Dispose() 方法时的注意点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#C-35-决定两个对象是否“相等”的-4-个函数"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">C# 决定两个对象是否“相等”的 4 个函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重写-System-Object-GetHashCode-方法必须遵守的-3-条规则"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">重写 System.Object.GetHashCode() 方法必须遵守的 3 条规则</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Math-Round-默认四舍六入五成双"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">Math.Round 默认四舍六入五成双</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关于-null-的几个运算符"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">关于 null 的几个运算符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#和"><span class="post-toc-number">2.7.1.</span> <span class="post-toc-text">?. 和 ?[]</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#null"><span class="post-toc-number">2.7.2.</span> <span class="post-toc-text">??</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#-1"><span class="post-toc-number">2.7.3.</span> <span class="post-toc-text">??=</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#运算符提升（Operator-Lifting）"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">运算符提升（Operator Lifting）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可空逻辑运算"><span class="post-toc-number">2.9.</span> <span class="post-toc-text">可空逻辑运算</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JavaScript"><span class="post-toc-number">3.</span> <span class="post-toc-text">JavaScript</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#9-个小技巧"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">9 个小技巧</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#全部替换"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">全部替换</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#提取唯一值"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">提取唯一值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#将数字转换为字符串"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">将数字转换为字符串</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#将字符串转换为数字"><span class="post-toc-number">3.1.4.</span> <span class="post-toc-text">将字符串转换为数字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#随机排列数组中的元素"><span class="post-toc-number">3.1.5.</span> <span class="post-toc-text">随机排列数组中的元素</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#展平多维数组"><span class="post-toc-number">3.1.6.</span> <span class="post-toc-text">展平多维数组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缩短条件语句"><span class="post-toc-number">3.1.7.</span> <span class="post-toc-text">缩短条件语句</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#动态属性名"><span class="post-toc-number">3.1.8.</span> <span class="post-toc-text">动态属性名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-length-调整-清空数组"><span class="post-toc-number">3.1.9.</span> <span class="post-toc-text">使用 length 调整/清空数组</span></a></li></ol></li></ol></li></ol>
             </nav>
             <div class="toc-bar"><div>
         </aside>
