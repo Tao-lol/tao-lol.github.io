@@ -125,7 +125,7 @@
             </figure>
 
 <p>&emsp;&emsp;如图示：给定结点 2，删除它的后继结点 3， 把结点 2 的 next 指针指向 3 的后继结点 4 即可。  </p>
-<p>&emsp;&emsp;但给定结点 2，该怎么删除结点 2 本身呢，注意题目没有规定说不能改变结点中的值，所以有一种很巧妙的方法，狸猫换太子！我们先通过结点 2 找到结点 3，再把节点 3 的值赋给结点 2，此时结点 2 的值变成了 3，这时候问题就转化成了上图这种比较简单的需求，即根据结点 2 把结点 3 移除即可，看图：</p>
+<p>&emsp;&emsp;但给定结点 2，该怎么删除结点 2 本身呢？注意题目没有规定说不能改变结点中的值，所以有一种很巧妙的方法，狸猫换太子！我们先通过结点 2 找到结点 3，再把节点 3 的值赋给结点 2，此时结点 2 的值变成了 3，这时候问题就转化成了上图这种比较简单的需求，即根据结点 2 把结点 3 移除即可，看图：</p>
 <figure class="image-box">
                 <img src="13.webp" alt title class>
                 <p></p>
@@ -1397,9 +1397,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> Web </tag>
             
             <tag> dotNET </tag>
             
@@ -6524,9 +6524,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> 程序设计 </tag>
+            
+            <tag> Web </tag>
             
         </tags>
         
@@ -9276,9 +9276,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> Web </tag>
             
             <tag> dotNET </tag>
             
@@ -9940,9 +9940,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> Web </tag>
             
             <tag> dotNET </tag>
             
