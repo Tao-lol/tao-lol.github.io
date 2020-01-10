@@ -3,6 +3,455 @@
   
     
     <entry>
+      <title><![CDATA[一文学会链表解题]]></title>
+      <url>/2020/01/10/LearningLinkedList/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s/moQMi2Zd93EDr8NwdpPDnQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/moQMi2Zd93EDr8NwdpPDnQ</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;如果说数据结构是算法的基础，那么数组和链表就是数据结构的基础。因为像堆，栈，对，图等比较复杂的数组结基本上都可以由数组和链表来表示，所以掌握数组和链表的基本操作十分重要。  </p>
+<p>&emsp;&emsp;今天就来看看链表的基本操作及其在面试中的常见解题思路，本文将从以下几个点来讲解链表的核心知识：</p>
+<ol>
+<li>什么是链表，链表的优缺点</li>
+<li>链表的表示及基本操作</li>
+<li>链表常见解题思路 —— 翻转</li>
+<li>链表常见解题思路 —— 快慢指针</li>
+</ol>
+<h1 id="什么是链表"><a href="#什么是链表" class="headerlink" title="什么是链表"></a>什么是链表</h1><p>&emsp;&emsp;相信大家已经开始迫不及待地想用链表解题了，不过在开始之前我们还是要先来温习下链表的定义，以及它的优势与劣势，磨刀不误砍柴功！</p>
+<h2 id="链表的定义"><a href="#链表的定义" class="headerlink" title="链表的定义"></a>链表的定义</h2><p>&emsp;&emsp;链表是物理存储单元上<strong>非连续</strong>、<strong>非顺序</strong>的存储结构，它是由一个个结点，通过指针来联系起来的，其中每个结点包括数据和指针。</p>
+<figure class="image-box">
+                <img src="1.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;链表的<strong>非连续</strong>、<strong>非顺序</strong>，对应数组的<strong>连续</strong>、<strong>顺序</strong>，我们来看看整型数组 1，2，3，4 在内存中是如何表示的：</p>
+<figure class="image-box">
+                <img src="2.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;可以看到数组的每个元素都是连续紧邻分配的，这叫连续性，同时由于数组的元素占用的大小是一样的，在 Java 中 int 型大小固定为 4 个字节，所以如果数组的起始地址是 100， 由于这些元素在内存中都是连续紧邻分配的，大小也一样，可以很容易地找出数组中任意一个元素的位置，比如数组中的第三个元素起始地址为 <code>100 + 2 * 4 = 108</code>，这就叫顺序性。查找的时间复杂度是 <code>O(1)</code>，效率很高！  </p>
+<p>&emsp;&emsp;那链表在内存中是怎么表示的呢？</p>
+<figure class="image-box">
+                <img src="3.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;可以看到每个结点都分配在非连续的位置，结点与结点之间通过指针连在了一起，所以如果我们要找比如值为 3 的结点时，只能通过结点 1 从头到尾遍历寻找，如果元素少还好，如果元素太多（比如超过一万个），每个元素的查找都要从头开始查找，时间复杂度是 <code>O(n)</code>，比起数组的 <code>O(1)</code>，差距不小。  </p>
+<p>&emsp;&emsp;除了查找性能链表不如数组外，还有一个优势让数组的性能高于链表，这里引入<strong>程序局部性原理</strong>，啥叫程序局部性原理？<br>&emsp;&emsp;我们知道 CPU 运行速度是非常快的，如果 CPU 每次运算都要到内存里去取数据无疑是很耗时的，所以在 CPU 与内存之间往往集成了挺多层级的缓存，这些缓存越接近 CPU，速度越快，所以如果能提前把内存中的数据加载到如下图中的 L1，L2，L3 缓存中，那么下一次 CPU 取数的话直接从这些缓存里取即可，能让 CPU 执行速度加快，那什么情况下内存中的数据会被提前加载到 L1，L2，L3 缓存中呢，答案是当某个元素被用到的时候，那么这个元素地址附近的的元素会被提前加载到缓存中。</p>
+<figure class="image-box">
+                <img src="4.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;以上文整型数组 1，2，3，4 为例，当程序用到了数组中的第一个元素（即 1）时，由于 CPU 认为既然 1 被用到了，那么紧邻它的元素 2，3，4 被用到的概率会很大，所以会提前把 2，3，4 加到 L1，L2，L3 缓存中去，这样 CPU 再次执行的时候如果用到 2，3，4，直接从 L1，L2，L3 缓存里取就行了，能提升不少性能。</p>
+<blockquote>
+<p>画外音：如果把 CPU 的一个时种看成一秒，则从 L1 读取数据需要 3 秒，从 L2 读取需要 11 秒，L3 读取需要 25 秒，而从内存读取呢，需要 1 分 40 秒，所以程序局部性原理能对 CPU 执行性能有很大的提升。</p>
+</blockquote>
+<p>&emsp;&emsp;而链表呢，由于链表的每个结点在内存里都是随机分布的，只是通过指针联系在一起，所以这些结点的地址并不相邻，自然无法利用 <strong>程序局部性原理</strong> 来提前加载到 L1，L2，L3 缓存中来提升程序性能。</p>
+<blockquote>
+<p>画外音：程序局部性原理是计算机中非常重要的原理，这里不做展开，建议大家查阅相关资料详细了解一下。</p>
+</blockquote>
+<p>&emsp;&emsp;如上所述，相比数组，链表的<strong>非连续</strong>、<strong>非顺序</strong>确实让它在性能上处于劣势，那什么情况下该使用链表呢？考虑以下情况：</p>
+<ul>
+<li>大内存空间分配<br>&emsp;&emsp;由于数组空间的<strong>连续性</strong>，如果要为数组分配 500M 的空间，这 500M 的空间必须是<strong>连续的</strong>、未使用的，所以在内存空间的分配上数组的要求会比较严格，如果内存碎片太多，分配连续的大空间很可能导致失败。而链表由于是非连续的，所以这种情况下选择链表更合适。</li>
+<li>元素频繁删除和插入<br>&emsp;&emsp;如果涉及到元素的频繁删除和插入，用链表就会高效很多，对于数组来说，如果要在元素间插入一个元素，需要把其余元素一个个往后移（如图示），以为新元素腾空间（同理，如果是删除则需要把被删除元素之后的元素一个个往前移），效率上无疑是比较低的。</li>
+</ul>
+<figure class="image-box">
+                <img src="5.gif" alt="（在 1，2 间插入 5，需要把 2，3，4 同时往后移一位）" title class>
+                <p>（在 1，2 间插入 5，需要把 2，3，4 同时往后移一位）</p>
+            </figure>
+
+<p>&emsp;&emsp;而链表的插入删除相对来说就比较简单了，修改指针位置即可，其他元素无需做任何移动操作（如图示：以插入为例）。</p>
+<figure class="image-box">
+                <img src="6.gif" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;综上所述：如果数据以查为主，很少涉及到增和删，选择数组，如果数据涉及到频繁的插入和删除，或元素所需分配空间过大，倾向于选择链表。  </p>
+<p>&emsp;&emsp;说了这么多理论，相信读者对数组和链表的区别应该有了更深刻地认识了，尤其是 <strong>程序局部性原理</strong>，是不是开了不少眼界 ^_^，如果面试中问到数组和链表的区别能回答到程序局部性原理，会是一个<strong>非常大的亮点</strong>！<br>&emsp;&emsp;接下来我们来看看链表的表现形式和解题技巧。<br>&emsp;&emsp;需要说明的是有些代码像打印链表等限于篇幅的关系没有在文中展示，我把文中所有相关代码都放到 github 中了，大家如果需要，可以访问我的 GitHub 地址：<a href="https://github.com/allentofight/algorithm" target="_blank" rel="noopener">https://github.com/allentofight/algorithm</a> 下载运行（微信不支持外链，建议大家 copy 之后浏览器打开再下载运行），文中所有代码均已用 Java 实现并运行通过。</p>
+<h1 id="链表的表示"><a href="#链表的表示" class="headerlink" title="链表的表示"></a>链表的表示</h1><p>&emsp;&emsp;由于链表的特点（查询或删除元素都要从头结点开始），所以我们只要在链表中定义头结点即可，另外如果要频繁用到链表的长度，还可以额外定义一个变量来表示。<br>&emsp;&emsp;需要注意的是这个头结点的定义是有讲究的，一般来说头结点有两种定义形式，一种是直接以某个元素结点为头结点，如下：</p>
+<figure class="image-box">
+                <img src="7.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;一种是以一个虚拟的节点作为头结点，即我们常说的<strong>哨兵</strong>，如下：</p>
+<figure class="image-box">
+                <img src="8.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;定义这个哨兵有啥好处呢，假设我们不定义这个哨兵，来看看链表及添加元素的基本操作怎么定义的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 链表中的结点，data代表节点的值，next是指向下一个节点的引用</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> data;<span class="comment">// 结点的数组域，值</span></span><br><span class="line">    Node next = <span class="keyword">null</span>;<span class="comment">// 节点的引用，指向下一个节点</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length = <span class="number">0</span>; <span class="comment">// 链表长度，非必须，可不加</span></span><br><span class="line">    Node head = <span class="keyword">null</span>; <span class="comment">// 头结点</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addNode</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">            head = <span class="keyword">new</span> Node(val);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Node tmp = head;</span><br><span class="line">            <span class="keyword">while</span> (tmp.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                tmp = tmp.next;</span><br><span class="line">            &#125;</span><br><span class="line">            tmp.next = <span class="keyword">new</span> Node(val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;发现问题了吗，注意看下面代码：</p>
+<figure class="image-box">
+                <img src="9.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>有两个问题：</p>
+<ol>
+<li>每插入一个元素都要对头结点进行判空比较，如果一个链表有很多元素需要插入，就需要进行很多次的判空处理，不是那么高效</li>
+<li>头结点与其他结点插入逻辑不统一（一个需要判空后再插入，一个不需要判空直接插入），从程序逻辑性来说不是那么合理（因为结点与结点是平级，添加逻辑理应相同）</li>
+</ol>
+<p>&emsp;&emsp;如果定义了哨兵结点，以上两个问题都可解决，来看下使用哨兵结点的链表定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length = <span class="number">0</span>; <span class="comment">// 链表长度，非必须，可不加</span></span><br><span class="line">    Node head = <span class="keyword">new</span> Node(<span class="number">0</span>); <span class="comment">// 哨兵结点</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addNode</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        Node tmp = head;</span><br><span class="line">        <span class="keyword">while</span> (tmp.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            tmp = tmp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp.next = <span class="keyword">new</span> Node(val);</span><br><span class="line">        length++</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以看到，定义了哨兵结点的链表逻辑上清楚了很多，不用每次插入元素都对头结点进行判空，也统一了每一个结点的添加逻辑。<br>&emsp;&emsp;所以之后的习题讲解中我们使用的链表都是使用定义了哨兵结点的形式。  </p>
+<p>&emsp;&emsp;做了这么多前期的准备工作，终于要开始我们的正餐了：链表解题常用套路 —— 翻转！</p>
+<h1 id="链表常见解题套路-——-翻转"><a href="#链表常见解题套路-——-翻转" class="headerlink" title="链表常见解题套路 —— 翻转"></a>链表常见解题套路 —— 翻转</h1><h2 id="热身赛"><a href="#热身赛" class="headerlink" title="热身赛"></a>热身赛</h2><p>&emsp;&emsp;既然我们要用链表解题，那我们首先就构造一个链表吧 题目：给定数组 1，2，3，4 构造成如下链表 <code>head --&gt; 4 --&gt; 3 --&gt; 2 --&gt; 1</code>。<br>&emsp;&emsp;看清楚了，是逆序构造链表！顺序构造我们都知道怎么构造，对每个元素持续调用上文代码定义的 addNode 方法即可（即尾插法），与尾插法对应的，是<strong>头插法</strong>，即把每一个元素插到头节点后面即可，这样就能做到逆序构造链表，如图示（以插入 1，2 为例）：</p>
+<figure class="image-box">
+                <img src="10.gif" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;头插法比较简单，直接上代码，直接按以上动图的步骤来完成逻辑，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length = <span class="number">0</span>; <span class="comment">// 链表长度，非必须，可不加</span></span><br><span class="line">    Node head = <span class="keyword">new</span> Node(<span class="number">0</span>); <span class="comment">// 哨兵节点</span></span><br><span class="line">    </span><br><span class="line">     <span class="comment">// 头插法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">headInsert</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1.构造新结点</span></span><br><span class="line">        Node newNode = <span class="keyword">new</span> Node(val);</span><br><span class="line">        <span class="comment">// 2.新结点指向头结点之后的结点</span></span><br><span class="line">        newNode.next = head.next;</span><br><span class="line">        <span class="comment">// 3.头结点指向新结点</span></span><br><span class="line">        head.next = newNode;</span><br><span class="line">        length++</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        LinkedList linkedList = <span class="keyword">new</span> LinkedList();</span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line">        <span class="comment">// 头插法构造链表</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            linkedList.headInsert(arr[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 打印链表，将打印 4--&gt;3--&gt;2--&gt;1</span></span><br><span class="line">        linkedList.printList();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h2><p>&emsp;&emsp;现在我们加大一下难度，来看下曾经的 Google 面试题： 给定单向链表的头指针和一个节点指针，定义一个函数在 <code>O(1)</code> 内删除这个节点。</p>
+<figure class="image-box">
+                <img src="11.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;如图示：即给定值为 2 的结点，如何把 2 给删了。  </p>
+<p>&emsp;&emsp;我们知道，如果给定一个结点要删除它的后继结点是很简单的，只要把这个结点的指针指向后继结点的后继结点即可。</p>
+<figure class="image-box">
+                <img src="12.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;如图示：给定结点 2，删除它的后继结点 3， 把结点 2 的 next 指针指向 3 的后继结点 4 即可。  </p>
+<p>&emsp;&emsp;但给定结点 2，该怎么删除结点 2 本身呢，注意题目没有规定说不能改变结点中的值，所以有一种很巧妙的方法，狸猫换太子！我们先通过结点 2 找到结点 3，再把节点 3 的值赋给结点 2，此时结点 2 的值变成了 3，这时候问题就转化成了上图这种比较简单的需求，即根据结点 2 把结点 3 移除即可，看图：</p>
+<figure class="image-box">
+                <img src="13.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;不过需要注意的是这种解题技巧只适用于被删除的指定结点是中间结点的情况，如果指定结点是尾结点，还是要老老实实地找到尾结点的前继结点，再把尾结点删除，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除指定的结点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> deletedNode</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeSelectedNode</span><span class="params">(Node deletedNode)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果此结点是尾结点我们还是要从头遍历到尾结点的前继结点，再将尾结点删除</span></span><br><span class="line">    <span class="keyword">if</span> (deletedNode.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Node tmp = head;</span><br><span class="line">        <span class="keyword">while</span> (tmp.next != deletedNode) &#123;</span><br><span class="line">            tmp = tmp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 找到尾结点的前继结点，把尾结点删除</span></span><br><span class="line">        tmp.next = <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Node nextNode = deletedNode.next;</span><br><span class="line">        <span class="comment">// 将删除结点的后继结点的值赋给被删除结点</span></span><br><span class="line">        deletedNode.data = nextNode.data;</span><br><span class="line">        <span class="comment">// 将 nextNode 结点删除</span></span><br><span class="line">        deletedNode.next = nextNode.next;</span><br><span class="line">        nextNode.next = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="入门到进阶：链表翻转"><a href="#入门到进阶：链表翻转" class="headerlink" title="入门到进阶：链表翻转"></a>入门到进阶：链表翻转</h2><p>&emsp;&emsp;接下来我们会重点看一下链表的翻转，链表的翻转可以衍生出很多的变形，是面试中非常热门的考点，基本上考链表必考翻转！所以掌握链表的翻转是必修课！  </p>
+<p>&emsp;&emsp;什么是链表的翻转：给定链表 <code>head --&gt; 4 --&gt; 3 --&gt; 2 --&gt; 1</code>，将其翻转成 <code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4</code>，由于翻转链表是如此常见，如此重要，所以我们分别详细讲解下如何用递归和非递归这两种方式来解题。</p>
+<h3 id="递归翻转"><a href="#递归翻转" class="headerlink" title="递归翻转"></a>递归翻转</h3><p>&emsp;&emsp;关于递归的文章之前写了三篇，如果之前没读过的，强烈建议点击<a href="https://mp.weixin.qq.com/s?__biz=MzI5MTU1MzM3MQ==&mid=2247483879&idx=1&sn=4071749be94e561c7f323907396e6829&scene=21#wechat_redirect" target="_blank" rel="noopener">这里</a>查看，总结了递归的常见解题套路，给出了递归解题的常见四步曲，如果看完对以下递归的解题套路会更加深刻，这里不做赘述了，我们直接套递归的解题思路：<br>&emsp;&emsp;首先我们要查看翻转链表是否符合递归规律：问题可以分解成<strong>具有相同解决思路</strong>的子问题，子子问题…… 直到最终的子问题再也无法分解。<br>&emsp;&emsp;要翻转 <code>head --&gt; 4 --&gt; 3 --&gt; 2 --&gt; 1</code> 链表，不考虑 head 结点，分析 <code>4 --&gt; 3 --&gt; 2 --&gt; 1</code>，仔细观察我们发现只要先把 <code>3 --&gt; 2 --&gt; 1</code> 翻转成 <code>3 &lt;-- 2 &lt;-- 1</code>，之后再把 3 指向 4 即可（如下图示）。</p>
+<figure class="image-box">
+                <img src="14.webp" alt="图：翻转链表主要三步骤" title class>
+                <p>图：翻转链表主要三步骤</p>
+            </figure>
+
+<p>&emsp;&emsp;只要按以上步骤定义好这个翻转函数的功能即可， 这样由于子问题与最初的问题<strong>具有相同的解决思路</strong>，拆分后的子问题持续调用这个翻转函数即可达到目的。  </p>
+<p>&emsp;&emsp;注意看上面的步骤 1，问题的规模是不是缩小了（如下图），从翻转整个链表变成了只翻转部分链表！问题与子问题都是从某个结点开始翻转，<strong>具有相同的解决思路</strong>，另外当缩小到只翻转一个结点时，显然是终止条件，符合递归的条件！之后的翻转 <code>3 --&gt; 2 --&gt; 1</code>，<code>2 --&gt; 1</code> 持续调用这个定义好的递归函数即可！</p>
+<figure class="image-box">
+                <img src="15.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;既然符合递归的条件，那我们就可以套用<a href="https://mp.weixin.qq.com/s?__biz=MzI5MTU1MzM3MQ==&mid=2247483813&idx=1&sn=423c8804cd708b8892763a41cfcc8886&scene=21#wechat_redirect" target="_blank" rel="noopener">递归四步曲</a>来解题了（注意翻转之后 head 的后继节点变了，需要重新设置！别忘了这一步）。</p>
+<ol>
+<li><p>定义递归函数，明确函数的功能 根据以上分析，这个递归函数的功能显然是翻转某个节点开始的链表，然后返回新的头结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 翻转结点 node 开始的链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">invertLinkedList</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>寻找递推公式 上文中已经详细画出了翻转链表的步骤，简单总结一下递推步骤如下：</p>
+<ul>
+<li>针对结点 node（值为 4），先翻转 node 之后的结点 <code>invert(node-&gt;next)</code>，翻转之后 <code>4 --&gt; 3 --&gt; 2 --&gt; 1</code> 变成了 <code>4 --&gt; 3 &lt;-- 2 &lt;-- 1</code>；</li>
+<li>再把 node 节点的下个节点（3）指向 node，node 的后继节点设置为空（避免形成环），此时变成了 <code>4 &lt;-- 3 &lt;-- 2 &lt;-- 1</code>；</li>
+<li>返回新的头结点，因为此时新的头节点从原来的 4 变成了 1，需要重新设置一下 head。</li>
+</ul>
+</li>
+<li><p>将递推公式代入第一步定义好的函数中，如下 <code>invertLinkedList</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 递归翻转结点 node 开始的链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">invertLinkedList</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node.next == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤 1：先翻转 node 之后的链表</span></span><br><span class="line">    Node newHead = invertLinkedList(node.next);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤 2：再把原 node 节点后继结点的后继结点指向 node (4)，node 的后继节点设置为空(防止形成环)</span></span><br><span class="line">    node.next.next = node;</span><br><span class="line">    node.next = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤 3：返回翻转后的头结点</span></span><br><span class="line">    <span class="keyword">return</span> newHead;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    LinkedList linkedList = <span class="keyword">new</span> LinkedList();</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">        linkedList.addNode(arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    Node newHead = linkedList.invertLinkedList(linkedList.head.next);</span><br><span class="line">    <span class="comment">// 翻转后别忘了设置头结点的后继结点！</span></span><br><span class="line">    linkedList.head.next = newHead;</span><br><span class="line">    linkedList.printList();      <span class="comment">// 打印 1，2，3，4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<blockquote>
+<p>画外音：翻转后由于 head 的后继结点变了，别忘了重新设置哦！</p>
+</blockquote>
+<ol start="4">
+<li>计算时间/空间复杂度 由于递归调用了 n 次 invertLinkedList 函数，所以时间复杂度显然是 <code>O(n)</code>，空间复杂度呢，没有用到额外的空间，但是由于递归调用了 n 次 invertLinkedList 函数，压了 n 次栈，所以空间复杂度也是 <code>O(n)</code>。  </li>
+</ol>
+<p>&emsp;&emsp;递归一定要从函数的功能去理解，从函数的功能看，定义的递归函数清晰易懂，定义好了之后，由于问题与被拆分的子问题具有相同的解决思路，所以子问题只要持续调用定义好的功能函数即可，切勿层层展开子问题，此乃递归常见的陷阱！仔细看函数的功能，其实就是按照下图实现的。（对照着代码看，是不是清晰易懂 ^_^）</p>
+<figure class="image-box">
+                <img src="16.webp" alt title class>
+                <p></p>
+            </figure>
+
+<h3 id="非递归翻转链表（迭代解法）"><a href="#非递归翻转链表（迭代解法）" class="headerlink" title="非递归翻转链表（迭代解法）"></a>非递归翻转链表（迭代解法）</h3><p>&emsp;&emsp;我们知道递归比较容易造成栈溢出，所以如果有其他时间/空间复杂度相近或更好的算法，应该优先选择非递归的解法，那我们看看如何用迭代来翻转链表，主要思路如下：</p>
+<figure class="image-box">
+                <img src="17.webp" alt title class>
+                <p></p>
+            </figure>
+
+<ol>
+<li><p>定义两个节点：pre，cur，其中 cur 是 pre 的后继结点，如果是首次定义，需要把 pre 指向 cur 的指针去掉，否则由于之后链表翻转，cur 会指向 pre，就进行了一个环（如下），这一点需要注意。</p>
+<figure class="image-box">
+                <img src="18.webp" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>知道了 cur 和 pre，翻转就容易了，把 cur 指向 pre 即可，之后把 cur 设置为 pre，cur 的后继结点设置为 cur 一直往前重复此步骤即可，完整动图如下：</p>
+<figure class="image-box">
+                <img src="19.gif" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ol>
+<p>&emsp;&emsp;注意：同递归翻转一样，迭代翻转完了之后 head 的后继结点从 4 变成了 1，记得重新设置一下。  </p>
+<p>&emsp;&emsp;知道了解题思路，实现代码就容易多了，直接上代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 迭代翻转</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">iterationInvertLinkedList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 步骤 1</span></span><br><span class="line">    Node pre = head.next;</span><br><span class="line">    Node cur = pre.next;</span><br><span class="line">    pre.next = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 务必注意：在 cur 指向 pre 之前一定要先保留 cur 的后继结点，不然 cur 指向 pre 后就再也找不到后继结点了</span></span><br><span class="line"><span class="comment">         * 也就无法对 cur 后继之后的结点进行翻转了</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Node next = cur.next;</span><br><span class="line">        cur.next = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 此时 pre 为头结点的后继结点</span></span><br><span class="line">    head.next = pre;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;用迭代的思路来做由于循环了 n 次，显然时间复杂度为 <code>O(n)</code>，另外由于没有额外的空间使用，也未像递归那样调用递归函数不断压栈，所以空间复杂度是 <code>O(1)</code>，对比递归，显然应该使用迭代的方式来处理！  </p>
+<p>&emsp;&emsp;花了这么大的精力我们总算把翻转链表给搞懂了，如果大家看了之后几道翻转链表的变形，会发现我们花了这么大篇幅讲解翻转链表是值得的。</p>
+<hr>
+<p>&emsp;&emsp;接下来我们来看看链表翻转的变形。  </p>
+<blockquote>
+<p>&emsp;&emsp;变形题 1：给定一个链表的头结点 head，以及两个整数 from 和 to，在链表上把第 from 个节点和第 to 个节点这一部分进行翻转。 例如：给定如下链表：from = 2，to = 4 <code>head --&gt; 5 --&gt; 4 --&gt; 3 --&gt; 2 --&gt; 1</code>，将其翻转后，链表变成 <code>head --&gt; 5 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 1</code>。</p>
+</blockquote>
+<p>&emsp;&emsp;有了之前翻转整个链表的解题思路，现在要翻转部分链表就相对简单多了，主要步骤如下：</p>
+<ol>
+<li>根据 from 和 to 找到 from - 1，from，to，to + 1 四个结点（注意<strong>临界条件</strong>，如果 from 从头结点开始，则 from - 1 结点为空，翻转后需要把 to 设置为头结点的后继结点， from 和 to 结点也可能超过尾结点，这两种情况不符合条件不翻转）；</li>
+<li>对 from 到 to 的结点进行翻转；</li>
+<li>将 from - 1 节点指向 to 结点，将 from 结点指向 to + 1 结点。</li>
+</ol>
+<figure class="image-box">
+                <img src="20.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;知道了以上的思路，代码就简单了，按上面的步骤 1，2，3 实现，注释也写得很详细，看以下代码（对 from 到 to 结点的翻转我们使用迭代翻转，当然使用递归也是可以的，限于篇幅关系不展开，大家可以尝试一下）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 迭代翻转 from 到 to 的结点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">iterationInvertLinkedList</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    Node fromPre = <span class="keyword">null</span>;            <span class="comment">// from-1结点</span></span><br><span class="line">    Node from = <span class="keyword">null</span>;               <span class="comment">// from 结点</span></span><br><span class="line">    Node to = <span class="keyword">null</span>;                 <span class="comment">// to 结点</span></span><br><span class="line">    Node toNext = <span class="keyword">null</span>;             <span class="comment">// to+1 结点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤 1：找到 from-1，from，to，to+1 这四个结点</span></span><br><span class="line">    Node tmp = head.next;</span><br><span class="line">    <span class="keyword">int</span> curIndex = <span class="number">1</span>;      <span class="comment">// 头结点的index为1</span></span><br><span class="line">    <span class="keyword">while</span> (tmp != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (curIndex == fromIndex-<span class="number">1</span>) &#123;</span><br><span class="line">            fromPre = tmp;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (curIndex == fromIndex) &#123;</span><br><span class="line">            from = tmp;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (curIndex == toIndex) &#123;</span><br><span class="line">            to = tmp;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (curIndex == toIndex+<span class="number">1</span>) &#123;</span><br><span class="line">            toNext = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp = tmp.next;</span><br><span class="line">        curIndex++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (from == <span class="keyword">null</span> || to == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// from 或 to 都超过尾结点不翻转</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"不符合条件"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 步骤2：以下使用循环迭代法翻转从 from 到 to 的结点</span></span><br><span class="line">    Node pre = from;</span><br><span class="line">    Node cur = pre.next;</span><br><span class="line">    <span class="keyword">while</span> (cur != toNext) &#123;</span><br><span class="line">        Node next = cur.next;</span><br><span class="line">        cur.next = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 步骤3：将 from-1 节点指向 to 结点（如果从 head 的后继结点开始翻转，则需要重新设置 head 的后继结点），将 from 结点指向 to + 1 结点</span></span><br><span class="line">    <span class="keyword">if</span> (fromPre != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fromPre.next = to;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        head.next = to;</span><br><span class="line">    &#125;</span><br><span class="line">    from.next = toNext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>&emsp;&emsp;变形题 2：给出一个链表，每 k 个节点一组进行翻转，并返回翻转后的链表。k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么将最后剩余节点保持原有顺序。</p>
+</blockquote>
+<p>&emsp;&emsp;示例：给定这个链表：<code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5</code>，当 k = 2 时，应当返回：<code>head --&gt; 2 --&gt; 1 --&gt; 4 --&gt; 3 --&gt; 5</code>；当 k = 3 时，应当返回：<code>head --&gt; 3 --&gt; 2 --&gt; 1 --&gt; 4 --&gt; 5</code>。说明：</p>
+<ul>
+<li>你的算法只能使用常数的额外空间；</li>
+<li>你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。</li>
+</ul>
+<p>&emsp;&emsp;这道题是 LeetCode 的原题，属于 hard 级别，如果这一题你懂了，那对链表的翻转应该基本没问题了，有了之前的翻转链表基础，相信这题不难。  </p>
+<p>&emsp;&emsp;只要我们能找到翻一组 k 个结点的方法，问题就解决了（之后只要重复对 k 个结点一组的链表进行翻转即可）。  </p>
+<p>&emsp;&emsp;接下来，我们以以下链表为例：</p>
+<figure class="image-box">
+                <img src="21.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>来看看怎么翻转 3 个一组的链表（此例中 k = 3）：</p>
+<ol>
+<li><p>首先，我们要记录 3 个一组这一段链表的前继结点，定义为 startKPre，然后再定义一个 step，从这一段的头结点(1）开始遍历 2 次，找出这段链表的起始和终止结点，如下图示：</p>
+<figure class="image-box">
+                <img src="22.gif" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>找到 startK 和 endK 之后，根据之前的迭代翻转法对 startK 和 endK 的这段链表进行翻转。</p>
+<figure class="image-box">
+                <img src="23.webp" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>然后将 startKPre 指向 endK，将 startK 指向 endKNext，即完成了对 k 个一组结点的翻转。</p>
+<figure class="image-box">
+                <img src="24.webp" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ol>
+<p>&emsp;&emsp;知道了一组 k 个怎么翻转，之后只要重复对 k 个结点一组的链表进行翻转即可，对照图示看如下代码应该还是比较容易理解的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 每 k 个一组翻转链表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">iterationInvertLinkedListEveryK</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    Node tmp = head.next;</span><br><span class="line">    <span class="keyword">int</span> step = <span class="number">0</span>;               <span class="comment">// 计数，用来找出首结点和尾结点</span></span><br><span class="line"></span><br><span class="line">    Node startK = <span class="keyword">null</span>;         <span class="comment">// k个一组链表中的头结点</span></span><br><span class="line">    Node startKPre = head;      <span class="comment">// k个一组链表头结点的前置结点</span></span><br><span class="line">    Node endK;                  <span class="comment">// k个一组链表中的尾结点</span></span><br><span class="line">    <span class="keyword">while</span> (tmp != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// tmp 的下一个节点，因为由于翻转，tmp 的后继结点会变，要提前保存</span></span><br><span class="line">        Node tmpNext = tmp.next;</span><br><span class="line">        <span class="keyword">if</span> (step == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// k 个一组链表区间的头结点</span></span><br><span class="line">            startK = tmp;</span><br><span class="line">            step++;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (step == k-<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 此时找到了 k 个一组链表区间的尾结点（endK），对这段链表用迭代进行翻转</span></span><br><span class="line">            endK = tmp;</span><br><span class="line">            Node pre = startK;</span><br><span class="line">            Node cur = startK.next;</span><br><span class="line">            <span class="keyword">if</span> (cur == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            Node endKNext = endK.next;</span><br><span class="line">            <span class="keyword">while</span> (cur != endKNext) &#123;</span><br><span class="line">                Node next = cur.next;</span><br><span class="line">                cur.next = pre;</span><br><span class="line">                pre = cur;</span><br><span class="line">                cur = next;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 翻转后此时 endK 和 startK 分别是是 k 个一组链表中的首尾结点</span></span><br><span class="line">            startKPre.next = endK;</span><br><span class="line">            startK.next = endKNext;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 当前的 k 个一组翻转完了，开始下一个 k 个一组的翻转</span></span><br><span class="line">            startKPre = startK;</span><br><span class="line">            step = <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            step++;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp = tmpNext;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;时间复杂度是多少呢，对链表从头到尾循环了 n 次，同时每 k 个结点翻转一次，可以认为总共翻转了 n 次，所以时间复杂度是 <code>O(2n)</code>，去掉常数项，即为 <code>O(n)</code>。 注：这题时间复杂度比较误认为是 <code>O(k * n)</code>，实际上并不是每一次链表的循环都会翻转链表，只是在循环链表元素每 k 个结点的时候才会翻转。</p>
+<hr>
+<blockquote>
+<p>&emsp;&emsp;变形 3：变形 2 针对的是顺序的 k 个一组翻转，那如何逆序 k 个一组进行翻转呢？</p>
+</blockquote>
+<p>&emsp;&emsp;例如：给定如下链表，<code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5</code>，逆序 k 个一组翻转后，链表变成（k = 2 时）<code>head --&gt; 1 --&gt; 3 --&gt; 2 --&gt; 5 --&gt; 4</code>。  </p>
+<p>&emsp;&emsp;这道题是字节跳动的面试题，确实够变态的，顺序 k 个一组翻转都已经属于 hard 级别了，逆序 k 个一组翻转更是属于 super hard 级别了，不过其实有了之前知识的铺垫，应该不难，只是稍微变形了一下，只要对链表做如下变形即可：</p>
+<figure class="image-box">
+                <img src="25.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;代码的每一步其实都是用了我们之前实现好的函数，所以我们之前做的每一步都是有伏笔的哦！就是为了解决字节跳动这道终极面试题！</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 逆序每 k 个一组翻转链表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reverseIterationInvertLinkedListEveryK</span><span class="params">(<span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 先翻转链表</span></span><br><span class="line">    iterationInvertLinkedList();</span><br><span class="line">    <span class="comment">// k 个一组翻转链表</span></span><br><span class="line">    iterationInvertLinkedListEveryK(k);</span><br><span class="line">    <span class="comment">// 再次翻转链表</span></span><br><span class="line">    iterationInvertLinkedList();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;由此可见，掌握基本的链表翻转非常重要！难题多是在此基础了做了相应的变形而已。</p>
+<h1 id="链表解题利器-——-快慢指针"><a href="#链表解题利器-——-快慢指针" class="headerlink" title="链表解题利器 —— 快慢指针"></a>链表解题利器 —— 快慢指针</h1><p>&emsp;&emsp;快慢指针在面试中出现的概率也很大，也是务必要掌握的一个要点，本文总结了市面上常见的快慢指针解题技巧，相信看完后此类问题能手到擒来。本文将详细讲述如何用快慢指针解决以下两大类问题：</p>
+<ol>
+<li>寻找/删除第 K 个结点；</li>
+<li>有关链表环问题的相关解法。</li>
+</ol>
+<h2 id="寻找-删除第-K-个结点"><a href="#寻找-删除第-K-个结点" class="headerlink" title="寻找/删除第 K 个结点"></a>寻找/删除第 K 个结点</h2><h3 id="小试牛刀之一"><a href="#小试牛刀之一" class="headerlink" title="小试牛刀之一"></a>小试牛刀之一</h3><blockquote>
+<p>&emsp;&emsp;LeetCode 876：给定一个带有头结点 head 的非空单链表，返回链表的中间结点。如果有两个中间结点，则返回第二个中间结点。</p>
+</blockquote>
+<h4 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h4><p>&emsp;&emsp;要知道链表的中间结点，首先我们需要知道链表的长度，说到链表长度大家想到了啥，还记得我们在<a href="https://mp.weixin.qq.com/s?__biz=MzI5MTU1MzM3MQ==&mid=2247483885&idx=1&sn=512617e34872e7e9ca90556d54af0f1d&scene=21#wechat_redirect" target="_blank" rel="noopener">上文</a>中说过哨兵结点可以保存链表的长度吗，这样直接 <strong>从 head 的后继结点</strong> 开始遍历 <strong>链表长度 / 2</strong> 次即可找到中间结点。为啥中间结点是 链表长度 / 2 ，我们仔细分析一下：</p>
+<ol>
+<li>假如链表长度是奇数：<code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5</code>，从 1 开始遍历 5 / 2 = 2（取整）次，到达 3，3 确实是中间结点；</li>
+<li>假如链表长度是偶数：<code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5 --&gt; 6</code>，从 1 开始遍历 6 / 2 = 3 次，到达 4，4 确实是中间结点的第二个结点。</li>
+</ol>
+<blockquote>
+<p>画外音：多画画图，举举例，能看清事情的本质！</p>
+</blockquote>
+<p>&emsp;&emsp;哨后结点的长度派上用场了，这种方式最简单，直接上代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findMiddleNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node tmp = head.next;</span><br><span class="line">    <span class="keyword">int</span> middleLength = length / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">while</span> (middleLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        tmp = tmp.next;</span><br><span class="line">        middleLength--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h4><p>&emsp;&emsp;如果哨兵结点里没有定义长度呢，那就要遍历一遍链表拿到链表长度（定义为 length）了，然后再从头结点开始遍历 <code>length / 2</code> 次即为中间结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findMiddleNodeWithoutHead</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node tmp = head.next;</span><br><span class="line">    <span class="keyword">int</span> length = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 选遍历一遍拿到链表长度</span></span><br><span class="line">    <span class="keyword">while</span> (tmp.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        tmp = tmp.next;</span><br><span class="line">        length++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再遍历一遍拿到链表中间结点</span></span><br><span class="line">    tmp = head.next;</span><br><span class="line">    <span class="keyword">int</span> middleLength = length / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">while</span> (middleLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        tmp = tmp.next;</span><br><span class="line">        middleLength--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h4><p>&emsp;&emsp;解法二由于要遍历两次链表，显得不是那么高效，那能否只遍历一次链表就能拿到中间结点呢。  </p>
+<p>&emsp;&emsp;这里就引入我们的快慢指针了，主要有三步 1、快慢指针同时指向 head 的后继结点；2、慢指针走一步，快指针走两步；3、不断地重复步骤 2，什么时候停下来呢，这取决于链表的长度是奇数还是偶数。</p>
+<ul>
+<li><p>如果链表长度为奇数，当 <code>fast.next = null</code> 时，slow 为中间结点。</p>
+<figure class="image-box">
+                <img src="26.gif" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>如果链表长度为偶数，当 <code>fast = null</code> 时，slow 为中间结点。</p>
+<figure class="image-box">
+                <img src="27.gif" alt title class>
+                <p></p>
+            </figure>
+
+</li>
+</ul>
+<p>&emsp;&emsp;由以上分析可知：当 <code>fast = null</code> 或者 <code>fast.next = null</code> 时，此时的 slow 结点即为我们要求的中间结点，否则不断地重复步骤 2。知道了思路，代码实现就简单了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 使用快慢指针查找找到中间结点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findMiddleNodeWithSlowFastPointer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node slow = head.next;</span><br><span class="line">    Node fast = head.next;</span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 快指针走两步</span></span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">        <span class="comment">// 慢指针走一步</span></span><br><span class="line">        slow = slow.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 此时的 slow 结点即为哨兵结点</span></span><br><span class="line">    <span class="keyword">return</span> slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;有了上面的基础，我们现在再大一下难度，看下下面这道题：</p>
+<blockquote>
+<p>&emsp;&emsp;输入一个链表，输出该链表中的倒数第 k 个结点。比如链表为 <code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5</code>。求倒数第三个结点（即值为 3 的节点）</p>
+</blockquote>
+<p>&emsp;&emsp;分析：我们知道如果要求顺序的第 k 个结点还是比较简单的，从 head 开始遍历 k 次即可，如果要求逆序的第 k 个结点，常规的做法是先顺序遍历一遍链表，拿到链表长度，然后再遍历 链表长度 - k 次即可，这样要遍历两次链表，不是那么高效，如何只遍历一次呢，还是用我们的说的快慢指针解法：</p>
+<ol>
+<li>首先让快慢指针同时指向 head 的后继结点；</li>
+<li>快指针往前走 k - 1 步，先走到第 k 个结点；</li>
+<li>快慢指针同时往后走一步，不断重复此步骤，直到快指针走到尾结点，此时的 slow 结点即为我们要找的倒序第 k 个结点。</li>
+</ol>
+<figure class="image-box">
+                <img src="28.gif" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;注：需要注意临界情况：k 大于链表的长度，这种异常情况应该<strong>抛异常</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">findKthToTail</span><span class="params">(<span class="keyword">int</span> k)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Node slow = head.next;</span><br><span class="line">    Node fast = head.next;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 快指针先移到第k个结点</span></span><br><span class="line">    <span class="keyword">int</span> tmpK = k - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (tmpK &gt; <span class="number">0</span> &amp;&amp; fast != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fast = fast.next;</span><br><span class="line">        tmpK--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 临界条件：k大于链表长度</span></span><br><span class="line">    <span class="keyword">if</span> (fast == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"K结点不存在异常"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// slow 和 fast 同时往后移，直到 fast 走到尾结点</span></span><br><span class="line">    <span class="keyword">while</span> (fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        fast = fast.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;知道了如何求倒序第 k 个结点，再来看看下面这道题：</p>
+<blockquote>
+<p>&emsp;&emsp;给定一个单链表，设计一个算法实现链表向右旋转 K 个位置。举例： 给定 <code>head --&gt; 1 --&gt; 2 --&gt; 3 --&gt; 4 --&gt; 5 --&gt; NULL</code>，K = 3，右旋后即为 <code>head --&gt; 3 --&gt; 4 --&gt; 5 --&gt; 1 --&gt; 2 --&gt; NULL</code>。</p>
+</blockquote>
+<p>&emsp;&emsp;分析：这道题其实是对求倒序第 K 个位置的的一个变形，主要思路如下：</p>
+<ol>
+<li>先找到倒数第 K + 1 个结点，此结点的后继结点即为倒数第 K 个结点；</li>
+<li>将倒数第 K + 1 结点的的后继结点设置为 null；</li>
+<li>将 head 的后继结点设置为以上所得的倒数第 K 个结点，将原尾结点的后继结点设置为原 head 的后继结点。</li>
+</ol>
+<figure class="image-box">
+                <img src="29.gif" alt title class>
+                <p></p>
+            </figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reversedKthToTail</span><span class="params">(<span class="keyword">int</span> k)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 直接调已实现的 寻找倒序k个结点的方法，这里是 k+1</span></span><br><span class="line">    Node KPreNode = findKthToTail(k+<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 倒数第 K 个结点</span></span><br><span class="line">    Node kNode = KPreNode.next;</span><br><span class="line">    Node headNext = head.next;</span><br><span class="line"></span><br><span class="line">    KPreNode.next = <span class="keyword">null</span>;</span><br><span class="line">    head.next = kNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 寻找尾结点</span></span><br><span class="line">    Node tmp = kNode;</span><br><span class="line">    <span class="keyword">while</span> (tmp.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        tmp = tmp.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 尾结点的后继结点设置为原 head 的后继结点</span></span><br><span class="line">    tmp.next = headNext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;有了上面两道题的铺垫，相信下面这道题不是什么难事，限于篇幅关系，这里不展开，大家可以自己试试。</p>
+<blockquote>
+<p>&emsp;&emsp;输入一个链表，删除该链表中的倒数第 k 个结点。</p>
+</blockquote>
+<h3 id="小试牛刀之二"><a href="#小试牛刀之二" class="headerlink" title="小试牛刀之二"></a>小试牛刀之二</h3><blockquote>
+<p>&emsp;&emsp;判断两个单链表是否相交及找到第一个交点，要求空间复杂度 <code>O(1)</code>。 如图示：如果两个链表相交，5 为这两个链表相交的第一个交点。</p>
+</blockquote>
+<figure class="image-box">
+                <img src="30.webp" alt title class>
+                <p></p>
+            </figure>
+
+<blockquote>
+<p>画外音：如果没有空间复杂度 <code>O(1)</code> 的限制，其实有多种解法，一种是遍历链表 1，将链表 1 的所有的结点都放到一个 set 中，再次遍历链表 2，每遍历一个结点，就判断这个结点是否在 set，如果发现结点在这个 set 中，则这个结点就是链表第一个相交的结点。</p>
+</blockquote>
+<p>&emsp;&emsp;分析：首先我们要明白，由于链表本身的性质，如果有一个结点相交，那么相交结点之后的所有结点都是这两个链表共用的，也就是说两个链表的长度主要相差在相交结点之前的结点长度，于是我们有以下思路：</p>
+<ol>
+<li><p>如果链表没有定义长度，则我们先遍历这两个链表拿到两个链表长度，假设分别为 L1，L2（L1 &gt;= L2），定义 p1，p2 指针分别指向各自链表 head 结点，然后 p1 先往前走 <code>L1 - L2</code> 步。这一步保证了 p1，p2 指向的指针与相交结点（如果有的话）一样近。</p>
+<figure class="image-box">
+                <img src="31.gif" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>然后 p1，p2 不断往后遍历，每次走一步，边遍历边判断相应结点是否相等，如果相等即为这两个链表的相交结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Node <span class="title">detectCommonNode</span><span class="params">(LinkedList list1, LinkedList list2)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length1 = <span class="number">0</span>;        <span class="comment">// 链表 list1 的长度</span></span><br><span class="line">    <span class="keyword">int</span> length2 = <span class="number">0</span>;        <span class="comment">// 链表 list2 的长度</span></span><br><span class="line"></span><br><span class="line">    Node p1 = list1.head;</span><br><span class="line">    Node p2 = list2.head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (p1.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        length1++;</span><br><span class="line">        p1 = p1.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (p2.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        length2++;</span><br><span class="line">        p2 = p2.next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    p1 = list1.head;</span><br><span class="line">    p2 = list2.head;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// p1 或 p2 前进 |length1-length2| 步</span></span><br><span class="line">    <span class="keyword">if</span> (length1 &gt;= length2) &#123;</span><br><span class="line">        <span class="keyword">int</span> diffLength = length1-length2;</span><br><span class="line">        <span class="keyword">while</span> (diffLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            p1 = p1.next;</span><br><span class="line">            diffLength--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> diffLength = length2-length1;</span><br><span class="line">        <span class="keyword">while</span> (diffLength &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            p2 = p2.next;</span><br><span class="line">            diffLength--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// p1，p2分别往后遍历，边遍历边比较，如果相等，即为第一个相交结点</span></span><br><span class="line">    <span class="keyword">while</span> (p1 != <span class="keyword">null</span> &amp;&amp; p2.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        p1 = p1.next;</span><br><span class="line">        p2 = p2.next;</span><br><span class="line">        <span class="keyword">if</span> (p1.data == p2.data) &#123;</span><br><span class="line">            <span class="comment">// p1，p2 都为相交结点，返回 p1 或 p2</span></span><br><span class="line">            <span class="keyword">return</span> p1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 没有相交结点，返回空指针</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h3><p>&emsp;&emsp;接下来我们来看如何用快慢指针来判断链表是否有环，这是快慢指针最常见的用法。</p>
+<blockquote>
+<p>&emsp;&emsp;判断链表是否有环，如果有，找到环的入口位置（下图中的 2），要求空间复杂度为 <code>O(1)</code>。</p>
+</blockquote>
+<figure class="image-box">
+                <img src="32.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;首先我们要看如果链表有环有什么规律，如果从 head 结点开始遍历，则这个遍历指针一定会在以上的环中绕圈子，所以我们可以分别定义快慢指针，慢指针走一步，快指针走两步， 由于最后快慢指针在遍历过程中一直会在圈中里绕，且快慢指针每次的遍历步长不一样，所以它们在里面不断绕圈子的过程一定会相遇，就像 5000 米长跑，一人跑的快，一人快的慢，跑得快的人一定会追上跑得慢的（即套圈）。  </p>
+<p>还不明白？那我们简单证明一下：</p>
+<ol>
+<li><p>假如快指针离慢指针相差一个结点，则再一次遍历，慢指针走一步，快指针走两步，相遇。</p>
+<figure class="image-box">
+                <img src="33.webp" alt title class>
+                <p></p>
+            </figure>
+</li>
+<li><p>假如快指针离慢指针相差两个结点，则再一次遍历，慢指针走一步，快指针走两步，相差一个结点，转成上述 1 的情况。</p>
+</li>
+<li><p>假如快指针离慢指针相差 N 个结点（N 大于 2），则下一次遍历由于慢指针走一步，快指针走两步，所以相差 <code>N + 1 - 2 = N - 1</code> 个结点，发现了吗，相差的结点从 N 变成了 N - 1 ，缩小了！不断地遍历，相差的结点会不断地缩小，当 N 缩小为 2 时，即转为上述步骤 2 的情况，由此得证，如果有环，快慢指针一定会相遇！</p>
+</li>
+</ol>
+<blockquote>
+<p>画外音：如果慢指针走一步，快指针走的不是两步，而是大于两步，会有什么问题，大家可以考虑一下。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断是否有环，返回快慢指针相遇结点，否则返回空指针</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">detectCrossNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node slow = head;</span><br><span class="line">    Node fast = head;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fast = fast.next.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (fast == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (slow.data == fast.data) &#123;</span><br><span class="line">            <span class="keyword">return</span> slow;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>  <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;判断有环为啥要返回相遇的结点，而不是返回 true 或 false 呢。 因为题目中还有一个要求，判断环的入口位置，就是为了这个做铺垫的，一起来看看怎么找环的入口，需要一些分析的技巧。</p>
+<figure class="image-box">
+                <img src="34.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;假设上图中的 7 为快慢指针相遇的结点，不难看出慢指针走了 <code>L + S</code> 步，快指针走得比慢指针更快，它除了走了 <code>L + S</code> 步外，还额外在环里绕了 n 圈，所以快指针走了 <code>L + S + nR</code> 步（R为图中环的长度），另外我们知道每遍历一次，慢指针走了一步，快指针走了两步，所以快指针走的路程是慢指针的两倍，即 <code>2 (L + S) = L + S + nR</code>，即 <code>L + S = nR</code>。</p>
+<ul>
+<li>当 n = 1 时，则 <code>L + S = R</code> 时，则从相遇点 7 开始遍历走到环入口点 2 的距离为 <code>R - S = L</code>，刚好是环的入口结点，而 head 与环入口点 2 的距离恰好也为 L，所以只要在头结点定义一个指针，在相遇点（7）定义另外一个指针，两个指针同时遍历，每次走一步，必然在环的入口位置 2 相遇。</li>
+<li>当 n &gt; 1 时，<code>L + S = nR</code>，即 <code>L = nR - S</code>。<code>nR - S</code> 怎么理解？可以看作是指针从结点 7 出发，走了 n 圈后，回退 S 步，此时刚好指向环入口位置，也就是说如果设置一个指针指向 head（定义为 p1），另设一个指针指向 7（定义为 p2），不断遍历，p2 走了 <code>nR - S</code> 时（即环的入口位置），p1 也刚好走到这里（此时 p1 走了 <code>nR - S = L</code> 步，刚好是环入口位置），即两者相遇！</li>
+</ul>
+<p>&emsp;&emsp;综上所述，要找到入口结点，只需定义两个指针，一个指针指向 head，一个指针指向快慢指向的相遇点，然后这两个指针不断遍历（同时走一步），当它们指向同一个结点时即是环的入口结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Node <span class="title">getRingEntryNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取快慢指针相遇结点</span></span><br><span class="line">    Node crossNode = detectCrossNode();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果没有相遇点，则没有环</span></span><br><span class="line">    <span class="keyword">if</span> (crossNode == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分别定义两个指针，一个指向头结点，一个指向相交结点</span></span><br><span class="line">    Node tmp1 = head;</span><br><span class="line">    Node tmp2 = crossNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 两者相遇点即为环的入口结点</span></span><br><span class="line">    <span class="keyword">while</span> (tmp1.data != tmp2.data) &#123;</span><br><span class="line">        tmp1 = tmp1.next;</span><br><span class="line">        tmp2 = tmp2.next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;思考题：知道了环的入口结点，怎么求环的长度？</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&emsp;&emsp;本文详细讲解了链表与数组的本质区别，相信大家对两者的区别应该有了比较深刻的认识，尤其是程序局部性原理，相信大家看了应该会眼前一亮，之后通过对链表的翻转由浅入深地介绍，相信之后的链表翻转对大家应该不是什么难事了，之后再介绍了链表的另一个重要的解题技巧：快慢指针，这两大类是面试的高频题，大家一定要掌握！建议大家亲自实现一遍文中的代码哦，这样印象会更深刻一些！有一些看起来思路是这么一回事，但真正操作起来还是会有不少坑，纸上得来终觉浅，绝知此事要躬行！  </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.Net Core 实现健康检查]]></title>
       <url>/2020/01/04/AspNetCoreHealthChecks/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -948,9 +1397,9 @@
         
         <tags>
             
-            <tag> CSharp </tag>
-            
             <tag> Web </tag>
+            
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -6075,9 +6524,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> Web </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -8827,9 +9276,9 @@
         
         <tags>
             
-            <tag> CSharp </tag>
-            
             <tag> Web </tag>
+            
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -9491,9 +9940,9 @@
         
         <tags>
             
-            <tag> CSharp </tag>
-            
             <tag> Web </tag>
+            
+            <tag> CSharp </tag>
             
             <tag> dotNET </tag>
             
@@ -13010,8 +13459,9 @@
 <h3 id="ID生成"><a href="#ID生成" class="headerlink" title="ID生成"></a>ID生成</h3><h4 id="无序"><a href="#无序" class="headerlink" title="无序"></a>无序</h4><p><a href="https://github.com/bolorundurowb/shortid" target="_blank" rel="noopener">ShortId</a><br><a href="https://github.com/jasonholloway/miniguid" target="_blank" rel="noopener">MiniGuid</a>  </p>
 <h4 id="有序"><a href="#有序" class="headerlink" title="有序"></a>有序</h4><p><a href="https://github.com/Coldairarrow/IdHelper" target="_blank" rel="noopener">IdHelper</a><br>⭐推荐：<a href="https://github.com/stulzq/snowflake-net" target="_blank" rel="noopener">SnowFlake-NET</a><br>⭐推荐：<a href="https://github.com/buvinghausen/SequentialGuid" target="_blank" rel="noopener">SequentialGuid</a>  </p>
 <h3 id="图像音频视频"><a href="#图像音频视频" class="headerlink" title="图像音频视频"></a>图像音频视频</h3><p><a href="https://trac.ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a><br><a href="https://github.com/dlemstra/Magick.NET" target="_blank" rel="noopener">Magick</a>  </p>
-<h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a><br><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a><br><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
-<h3 id="应用程序接口（API）"><a href="#应用程序接口（API）" class="headerlink" title="应用程序接口（API）"></a>应用程序接口（API）</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/graphql-dotnet/graphql-dotnet" target="_blank" rel="noopener">GraphQL</a><br><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement</a><br>🚫<a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
+<h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
+<h3 id="身份认证"><a href="#身份认证" class="headerlink" title="身份认证"></a>身份认证</h3><p><a href="https://oauth.net/2/" target="_blank" rel="noopener">OAuth 2.0</a><br><a href="https://openid.net/developers/specs/" target="_blank" rel="noopener">OpenID</a><br><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a><br><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a>  </p>
+<h3 id="应用程序接口（API）"><a href="#应用程序接口（API）" class="headerlink" title="应用程序接口（API）"></a>应用程序接口（API）</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/IKende/Bumblebee" target="_blank" rel="noopener">Bumblebee</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/graphql-dotnet/graphql-dotnet" target="_blank" rel="noopener">GraphQL</a><br><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement</a><br>🚫<a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
 <h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p><a href="http://unitycontainer.org/" target="_blank" rel="noopener">Unity</a><br><a href="https://autofac.readthedocs.io/" target="_blank" rel="noopener">Autofac</a><br><a href="https://github.com/jbogard/MediatR/wiki" target="_blank" rel="noopener">MediatR</a><br><a href="https://github.com/dotnet-state-machine/stateless" target="_blank" rel="noopener">Stateless</a>  </p>
 <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><a href="https://redis.io/documentation" target="_blank" rel="noopener">Redis</a><br><a href="https://docs.mongodb.com/" target="_blank" rel="noopener">mongoDB</a><br><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/" target="_blank" rel="noopener">SQL Server</a><br><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a><br><a href="https://www.sqlite.org/docs.html" target="_blank" rel="noopener">SQLite</a>  </p>
 <h3 id="对象关系映射（ORM）"><a href="#对象关系映射（ORM）" class="headerlink" title="对象关系映射（ORM）"></a>对象关系映射（ORM）</h3><p><a href="docs.automapper.org/">AutoMapper</a><br><a href="https://github.com/2881099/FreeSql/wiki" target="_blank" rel="noopener">FreeSql</a><br><a href="https://github.com/StackExchange/Dapper" target="_blank" rel="noopener">Dapper</a><br><a href="https://github.com/2881099/csredis" target="_blank" rel="noopener">CSRedis</a><br><a href="https://stackexchange.github.io/StackExchange.Redis/" target="_blank" rel="noopener">StackExchange.Redis</a><br><a href="https://docs.mongodb.com/ecosystem/drivers/csharp/" target="_blank" rel="noopener">MongoDB.Driver</a>  </p>
@@ -13031,7 +13481,7 @@
 <h3 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h3><p><a href="https://github.com/tensorflow/tensorflow" target="_blank" rel="noopener">TensorFlow</a><br><a href="https://botsharp.readthedocs.io/" target="_blank" rel="noopener">BotSharp</a><br><a href="https://github.com/SciSharp/NumSharp" target="_blank" rel="noopener">NumSharp</a><br><a href="https://github.com/SciSharp/SiaNet" target="_blank" rel="noopener">SiaNet</a><br><a href="https://github.com/SciSharp/Pandas.NET" target="_blank" rel="noopener">Pandas.NET</a>  </p>
 <h3 id="图标符号"><a href="#图标符号" class="headerlink" title="图标符号"></a>图标符号</h3><p><a href="https://icons8.com/icons" target="_blank" rel="noopener">Icons8</a><br><a href="https://pattern.flaticon.com/" target="_blank" rel="noopener">FlatIcon</a><br><a href="https://materialdesignicons.com/" target="_blank" rel="noopener">Material Design Icons</a><br><a href="https://www.iconfont.cn/" target="_blank" rel="noopener">IconFont 阿里巴巴矢量图标库</a><br><a href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</a><br><a href="https://realfavicongenerator.net/" target="_blank" rel="noopener">Favicon</a><br><a href="https://unicode-table.com/" target="_blank" rel="noopener">Unicode</a><br><a href="https://illlustrations.co/" target="_blank" rel="noopener">illlustrations</a>  </p>
 <h2 id="语言"><a href="#语言" class="headerlink" title="语言"></a>语言</h2><p><a href="https://docs.microsoft.com/zh-cn/sql/t-sql/" target="_blank" rel="noopener">T-SQL</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML" target="_blank" rel="noopener">HTML</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS" target="_blank" rel="noopener">CSS</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a><br><a href="https://api.jquery.com/" target="_blank" rel="noopener">jQuery</a><br><a href="https://www.typescriptlang.org/docs/" target="_blank" rel="noopener">TypeScript</a><br><a href="https://docs.python.org/" target="_blank" rel="noopener">Python</a><br><a href="https://doc.rust-lang.org/book/" target="_blank" rel="noopener">Rust</a><br><a href="https://docs.microsoft.com/en-us/powershell/" target="_blank" rel="noopener">PowerShell</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank" rel="noopener">正则表达式</a>  </p>
-<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP" target="_blank" rel="noopener">HTTP</a><br><a href="https://visualgo.net/" target="_blank" rel="noopener">VisuAlgo</a><br><a href="https://www.connectionstrings.com/" target="_blank" rel="noopener">ConnectionStrings</a><br><a href="https://microsoft.github.io/TypeSearch/" target="_blank" rel="noopener">TypeScript Types Search</a><br><a href="https://roadmap.sh/" target="_blank" rel="noopener">Developer Roadmaps</a>  </p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP" target="_blank" rel="noopener">HTTP</a><br><a href="https://visualgo.net/" target="_blank" rel="noopener">VisuAlgo</a><br><a href="https://www.connectionstrings.com/" target="_blank" rel="noopener">ConnectionStrings</a><br><a href="https://microsoft.github.io/TypeSearch/" target="_blank" rel="noopener">TypeScript Types Search</a><br><a href="https://roadmap.sh/" target="_blank" rel="noopener">Developer Roadmaps</a><br><a href="https://github.com/Asabeneh/30DaysOfJavaScript" target="_blank" rel="noopener">30DaysOfJavaScript</a>  </p>
 <h2 id="中文教程"><a href="#中文教程" class="headerlink" title="中文教程"></a>中文教程</h2><p><a href="http://manual.phpv.net/regular_expression.html" target="_blank" rel="noopener">正则表达式30分钟入门教程</a><br><a href="https://learnku.com/docs/tutorial/3.7.0" target="_blank" rel="noopener">Python官方文档：入门教程 3.7.0</a><br><a href="https://dunwu.github.io/linux-tutorial/" target="_blank" rel="noopener">Linux 教程</a><br><a href="https://linux.vbird.org/" target="_blank" rel="noopener">鳥哥的 Linux 私房菜</a><br><a href="https://www.cnblogs.com/abcdwxc/archive/2007/10/30/942834.html" target="_blank" rel="noopener">C#设计模式（23种设计模式）</a><br><a href="https://www.cnblogs.com/zhili/p/DesignPatternSummery.html" target="_blank" rel="noopener">C#设计模式总结</a><br><a href="https://www.cnblogs.com/fatbird/p/SortAlgorithm.html" target="_blank" rel="noopener">8种主要排序算法的C#实现</a><br><a href="https://wangdoc.com/javascript/" target="_blank" rel="noopener">JavaScript教程 - 网道</a><br><a href="https://es6.ruanyifeng.com/" target="_blank" rel="noopener">ECMAScript 6 入门</a><br><a href="https://ts.xcatliu.com/" target="_blank" rel="noopener">TypeScript入门教程</a><br><a href="https://www.cnblogs.com/ZaraNet/p/10323105.html" target="_blank" rel="noopener">.NET Core IdentityServer4实战 - zaraNet</a><br><a href="https://www.cnblogs.com/stulzq/p/8119928.html" target="_blank" rel="noopener">IdentityServer4 中文文档与实战 - 晓晨Master</a><br><a href="https://www.cnblogs.com/viter/p/10474091.html" target="_blank" rel="noopener">Asp.NETCore轻松学系列阅读指引目录 - Ron Liang</a><br><a href="https://www.cnblogs.com/MrHSR/category/1368488.html" target="_blank" rel="noopener">asp.net Core系列篇 - 花阴偷移</a><br><a href="https://www.cnblogs.com/edisonchou/p/dotnetcore_microservice_foundation_blogs_index_final.html" target="_blank" rel="noopener">.NET Core微服务架构系列文章索引目录 - Edison Zhou</a><br><a href="https://www.cnblogs.com/edisonchou/p/4820676.html" target="_blank" rel="noopener">.NET全栈开发工程师学习路径 - Edison Zhou</a><br><a href="https://www.cnblogs.com/edisonchou/p/3843287.html" target="_blank" rel="noopener">博文资源汇总 - Edison Zhou</a><br><a href="https://rachel53461.wordpress.com/2011/05/08/simplemvvmexample/" target="_blank" rel="noopener">A Simple MVVM Example</a><br><a href="https://www.cnblogs.com/youring2/p/quartz_net.html" target="_blank" rel="noopener">Quartz.Net使用教程</a>  </p>
 <h1 id="游戏"><a href="#游戏" class="headerlink" title="游戏"></a>游戏</h1><h2 id="Steam"><a href="#Steam" class="headerlink" title="Steam"></a>Steam</h2><p><a href="https://store.steampowered.com/" target="_blank" rel="noopener">Steam</a><br><a href="https://store.steampowered.com/account/registerkey" target="_blank" rel="noopener">在Steam上激活产品</a><br><a href="https://steamdb.info/" target="_blank" rel="noopener">SteamDB</a><br><a href="https://isthereanydeal.com/" target="_blank" rel="noopener">IsThereAnyDeal</a><br><a href="https://www.steamcardexchange.net/index.php?showcase" target="_blank" rel="noopener">Steam Card Exchange Showcase</a><br><a href="https://steam.design/" target="_blank" rel="noopener">Steam.Design</a><br><a href="https://steamsignature.com/" target="_blank" rel="noopener">Steam Signature</a><br><a href="https://github.com/JustArchiNET/ArchiSteamFarm" target="_blank" rel="noopener">ArchiSteamFarm</a>  </p>
 <h2 id="Wiki"><a href="#Wiki" class="headerlink" title="Wiki"></a>Wiki</h2><p><a href="https://minecraft-zh.gamepedia.com/Minecraft_Wiki" target="_blank" rel="noopener">Minecraft Wiki</a><br><a href="https://terraria.gamepedia.com/Terraria_Wiki" target="_blank" rel="noopener">Terraria Wiki</a><br><a href="https://starbounder.org/Starbound_Wiki" target="_blank" rel="noopener">StarBound Wiki</a><br><a href="https://zh.stardewvalleywiki.com/Stardew_Valley_Wiki" target="_blank" rel="noopener">Stardew Valley 中文维基</a><br><a href="http://xinglugu.huijiwiki.com/wiki/首页" target="_blank" rel="noopener">星露谷物语中文维基 - 灰机Wiki</a><br><a href="http://transformice.wikia.com/wiki/Transformice_Wiki" target="_blank" rel="noopener">Transformice Wiki</a><br><a href="https://wiki.52poke.com/" target="_blank" rel="noopener">神奇宝贝百科</a><br><a href="https://game8.jp/splatoon-2" target="_blank" rel="noopener">スプラトゥーン2攻略Wiki</a><br><a href="https://splatoonwiki.org/" target="_blank" rel="noopener">Splatoon Wiki</a><br><a href="https://www.ssbwiki.com/" target="_blank" rel="noopener">SmashWiki</a><br><a href="https://vstab.com/s/eso/" target="_blank" rel="noopener">上古卷轴Online中文网</a><br><a href="http://octopath.huijiwiki.com/wiki/首页" target="_blank" rel="noopener">八方旅人中文维基</a><br><a href="https://zh.moegirl.org/雀魂麻将" target="_blank" rel="noopener">雀魂麻将 - 萌娘百科</a><br><a href="http://139.199.75.237/TTT/" target="_blank" rel="noopener">Tetris T-SPIN 教程</a><br><a href="https://www.ffxiv.cn/" target="_blank" rel="noopener">最终幻想14中文攻略站 素素</a><br><a href="https://ff14.huijiwiki.com/wiki/首页" target="_blank" rel="noopener">最终幻想14中文维基 灰机Wiki</a><br><a href="https://www.ffxivsc.cn/" target="_blank" rel="noopener">光之收藏家 - 最终幻想14幻化站</a>  </p>
@@ -13044,7 +13494,7 @@
 <h2 id="电子书"><a href="#电子书" class="headerlink" title="电子书"></a>电子书</h2><p><a href="http://www.soshuvip.com/all.html" target="_blank" rel="noopener">搜书VIP</a><br><a href="https://bookfere.com/" target="_blank" rel="noopener">书伴 Kindle伴侣</a><br><a href="http://www.pixvol.com/" target="_blank" rel="noopener">Kindle漫画</a><br><a href="https://www.wuxiaworld.com/" target="_blank" rel="noopener">WuXiaWorld</a>  </p>
 <h2 id="其它-1"><a href="#其它-1" class="headerlink" title="其它"></a>其它</h2><p><a href="https://www.pixiv.net/" target="_blank" rel="noopener">Pixiv</a><br><a href="http://yuc.wiki/" target="_blank" rel="noopener">YuC’s AnimeList</a><br><a href="http://bangumi.tv/" target="_blank" rel="noopener">Bangumi 番组计划</a><br><a href="https://www.equestriacn.com/" target="_blank" rel="noopener">小马中国 | EquestriaCN</a><br><a href="https://japari-cn.com/" target="_blank" rel="noopener">加帕里图书馆 - 兽娘动物园中文维基</a>  </p>
 <h1 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h1><p><a href="https://keylol.com/forum.php" target="_blank" rel="noopener">其乐（SteamCN 蒸汽动力）</a><br><a href="https://www.gamersky.com/" target="_blank" rel="noopener">游民星空</a><br><a href="https://www.cnbeta.com/" target="_blank" rel="noopener">cnBeta</a><br><a href="https://www.ithome.com/" target="_blank" rel="noopener">IT之家</a><br><a href="https://t.bilibili.com/" target="_blank" rel="noopener">哔哩哔哩动态</a><br><a href="https://m.weibo.cn/" target="_blank" rel="noopener">新浪微博</a><br><a href="https://steamcommunity.com/id/tao-lol/home/" target="_blank" rel="noopener">Steam好友动态</a><br><a href="https://www.amazon.cn/Kindle电子书/b?ie=UTF8&node=116169071&ref_=nav_topnav_giftcert" target="_blank" rel="noopener">Kindle电子书</a><br><a href="https://www.oschina.net/news/industry" target="_blank" rel="noopener">开源中国资讯</a><br><a href="https://stackoverflow.com/" target="_blank" rel="noopener">Stack Overflow</a><br><a href="https://github.com/" target="_blank" rel="noopener">Github</a><br><a href="https://dev.azure.com/tao-lol/" target="_blank" rel="noopener">Azure DevOps</a><br><a href="https://wx.qq.com/" target="_blank" rel="noopener">微信网页版</a><br><a href="https://weread.qq.com/" target="_blank" rel="noopener">微信读书</a>  </p>
-<h1 id="其它-2"><a href="#其它-2" class="headerlink" title="其它"></a>其它</h1><h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p><a href="https://antecer.gitee.io/amusingkeypad/" target="_blank" rel="noopener">AmusingKeypad</a><br><a href="https://github.com/Y2Z/monolith" target="_blank" rel="noopener">Monolith</a><br><a href="https://www.draw.io/" target="_blank" rel="noopener">draw.io</a><br><a href="https://www.urlgot.com/" target="_blank" rel="noopener">urlgot</a><br><a href="https://www.toolfk.com/" target="_blank" rel="noopener">TOOLFK - 程序员开发工具</a><br><a href="http://www.nicetool.net/" target="_blank" rel="noopener">NiceTool</a><br><a href="http://www.alltoall.net/" target="_blank" rel="noopener">在线格式转换 All2All</a><br><a href="https://qxk.bnu.edu.cn/" target="_blank" rel="noopener">汉字全息资源应用系统</a><br><a href="https://dillinger.io/" target="_blank" rel="noopener">Online Markdown Editor - Dillinger</a><br><a href="https://markdownapp.now.sh/" target="_blank" rel="noopener">Markdown Editor</a><br><a href="https://todo.microsoft.com/" target="_blank" rel="noopener">Microsoft To-Do</a><br><a href="https://whiteboard.microsoft.com/" target="_blank" rel="noopener">Microsoft Whiteboard</a><br><a href="https://online.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Online</a><br><a href="https://getavatars.app/" target="_blank" rel="noopener">Get an Avatar</a>  </p>
+<h1 id="其它-2"><a href="#其它-2" class="headerlink" title="其它"></a>其它</h1><h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p><a href="https://antecer.gitee.io/amusingkeypad/" target="_blank" rel="noopener">AmusingKeypad</a><br><a href="https://github.com/Y2Z/monolith" target="_blank" rel="noopener">Monolith</a><br><a href="https://www.draw.io/" target="_blank" rel="noopener">draw.io</a><br><a href="https://www.urlgot.com/" target="_blank" rel="noopener">urlgot</a><br><a href="https://www.toolfk.com/" target="_blank" rel="noopener">TOOLFK - 程序员开发工具</a><br><a href="http://www.nicetool.net/" target="_blank" rel="noopener">NiceTool</a><br><a href="https://zh.pickfrom.net/" target="_blank" rel="noopener">PickFrom</a><br><a href="http://www.alltoall.net/" target="_blank" rel="noopener">在线格式转换 All2All</a><br><a href="https://qxk.bnu.edu.cn/" target="_blank" rel="noopener">汉字全息资源应用系统</a><br><a href="https://dillinger.io/" target="_blank" rel="noopener">Online Markdown Editor - Dillinger</a><br><a href="https://markdownapp.now.sh/" target="_blank" rel="noopener">Markdown Editor</a><br><a href="https://todo.microsoft.com/" target="_blank" rel="noopener">Microsoft To-Do</a><br><a href="https://whiteboard.microsoft.com/" target="_blank" rel="noopener">Microsoft Whiteboard</a><br><a href="https://online.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Online</a><br><a href="https://getavatars.app/" target="_blank" rel="noopener">Get an Avatar</a>  </p>
 <h2 id="梯子"><a href="#梯子" class="headerlink" title="梯子"></a>梯子</h2><p><a href="https://bwh1.net/" target="_blank" rel="noopener">BandwagonHost</a><br><a href="https://shadowsky.world/" target="_blank" rel="noopener">ShadowSky</a><br><a href="https://www.v2ray.com/" target="_blank" rel="noopener">V2Ray</a>  </p>
 <h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><p><a href="https://www.baidu.com/" target="_blank" rel="noopener">百度</a><br><a href="https://cn.bing.com/" target="_blank" rel="noopener">Bing</a><br><a href="https://www.google.com/" target="_blank" rel="noopener">Google</a>  </p>
 <h2 id="学习"><a href="#学习" class="headerlink" title="学习"></a>学习</h2><p><a href="https://leetcode-cn.com/" target="_blank" rel="noopener">力扣 LeetCode</a><br><a href="https://www.sololearn.com/" target="_blank" rel="noopener">SoloLearn</a><br><a href="https://www.w3cschool.cn/" target="_blank" rel="noopener">W3Cschool</a><br><a href="https://easychen.gitee.io/foxdict/" target="_blank" rel="noopener">Fox Dict</a><br><a href="http://www.kekenet.com/" target="_blank" rel="noopener">可可英语</a><br><a href="https://app.mtutor.engkoo.com/englishwriting/" target="_blank" rel="noopener">微软小英写作网站</a><br><a href="https://studyspanish.com/" target="_blank" rel="noopener">StudySpanish</a>  </p>
