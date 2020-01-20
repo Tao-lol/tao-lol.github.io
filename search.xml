@@ -3,6 +3,677 @@
   
     
     <entry>
+      <title><![CDATA[计算机底层知识]]></title>
+      <url>/2020/01/20/BasicKnowledgeOfComputer/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://mp.weixin.qq.com/s/ONLfraH0wPzauGkGiDGSaA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/ONLfraH0wPzauGkGiDGSaA</a></p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 计算机原理 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[什么时候该使用 MQ、Redis 和 配置中心]]></title>
+      <url>/2020/01/20/WhenToUseMqRedisConfCenter/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p>究竟什么时候该使用 MQ？ <a href="https://mp.weixin.qq.com/s/_kXoRBAotb4GXoDTqTObYQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/_kXoRBAotb4GXoDTqTObYQ</a><br>架构选型，究竟啥时候选 redis？ <a href="https://mp.weixin.qq.com/s/aX60hdFeuOTW8i3KG_CrtA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/aX60hdFeuOTW8i3KG_CrtA</a><br>互联网架构，究竟为什么需要配置中心？ <a href="https://mp.weixin.qq.com/s/k1IVjya7qtIf8jwWqTumjA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/k1IVjya7qtIf8jwWqTumjA</a>  </p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+            <tag> Redis </tag>
+            
+            <tag> RabbitMQ </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[什么是 高可用 和 高并发]]></title>
+      <url>/2020/01/20/WhatIsHighAvailabilityAndHighConcurrency/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>高可用：<a href="https://mp.weixin.qq.com/s/p0LsxT-JUS7zYg23M7nupQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/p0LsxT-JUS7zYg23M7nupQ</a><br>高并发：<a href="https://mp.weixin.qq.com/s/bEkd2lcuK59Gpncuvyj1Ww" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/bEkd2lcuK59Gpncuvyj1Ww</a>  </p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h1><h2 id="一、什么是高可用"><a href="#一、什么是高可用" class="headerlink" title="一、什么是高可用"></a>一、什么是高可用</h2><p>&emsp;&emsp;<strong>高可用</strong> HA（High Availability）是分布式系统架构设计中必须考虑的因素之一，它通常是指，通过设计减少系统不能提供服务的时间。<br>&emsp;&emsp;假设系统一直能够提供服务，我们说系统的可用性是 100% 。如果系统每运行 100 个时间单位，会有 1 个时间单位无法提供服务，我们说系统的可用性是 99% 。<br>&emsp;&emsp;很多公司的高可用目标是 4 个 9，也就是 99.99% ，这就意味着，系统的年停机时间为 8.76 个小时。<br>&emsp;&emsp;百度的搜索首页，是业内公认高可用保障非常出色的系统，甚至人们会通过 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 能不能访问来判断“网络的连通性”，百度高可用的服务让人留下了“网络通畅，百度就能访问”，“百度打不开，应该是网络连不上”的印象，这其实是对百度 HA 最高的褒奖。</p>
+<h2 id="二、如何保障系统的高可用"><a href="#二、如何保障系统的高可用" class="headerlink" title="二、如何保障系统的高可用"></a>二、如何保障系统的高可用</h2><p>&emsp;&emsp;我们都知道，单点是系统高可用的大敌，单点往往是系统高可用最大的风险和敌人，应该尽量在系统设计的过程中避免单点。方法论上，高可用保证的原则是“集群化”，或者叫“冗余”：只有一个单点，挂了服务会受影响；如果有冗余备份，挂了还有其他 backup 能够顶上。<br>&emsp;&emsp;保证系统高可用，架构设计的<strong>核心准则</strong>是：<strong>冗余</strong>。<br>&emsp;&emsp;有了冗余之后，还不够，每次出现故障需要人工介入恢复势必会增加系统的不可服务实践。所以，又往往是通过“<strong>自动故障转移</strong>”来实现系统的高可用。</p>
+<p>&emsp;&emsp;接下来我们看下典型互联网架构中，如何通过冗余+自动故障转移来保证系统的高可用特性。</p>
+<h2 id="三、常见的互联网分层架构"><a href="#三、常见的互联网分层架构" class="headerlink" title="三、常见的互联网分层架构"></a>三、常见的互联网分层架构</h2><figure class="image-box">
+                <img src="1.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>常见互联网分布式架构如上，分为：<br>（1）<strong>客户端层</strong>：典型调用方是浏览器 browser 或者手机应用 APP；<br>（2）<strong>反向代理层</strong>：系统入口，反向代理；<br>（3）<strong>站点应用层</strong>：实现核心应用逻辑，返回 html 或者 json；<br>（4）<strong>服务层</strong>：如果实现了服务化，就有这一层；<br>（5）<strong>数据-缓存层</strong>：缓存加速访问存储；<br>（6）<strong>数据-数据库层</strong>：数据库固化数据存储；</p>
+<p>整个系统的高可用，又是通过每一层的<strong>冗余+自动故障转移</strong>来综合实现的。</p>
+<h2 id="四、分层高可用架构实践"><a href="#四、分层高可用架构实践" class="headerlink" title="四、分层高可用架构实践"></a>四、分层高可用架构实践</h2><h3 id="【客户端层-gt-反向代理层】的高可用"><a href="#【客户端层-gt-反向代理层】的高可用" class="headerlink" title="【客户端层 -&gt; 反向代理层】的高可用"></a>【客户端层 -&gt; 反向代理层】的高可用</h3><figure class="image-box">
+                <img src="2.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【客户端层】到【反向代理层】的高可用，是通过反向代理层的冗余来实现的。以 nginx 为例：有两台 nginx，一台对线上提供服务，另一台冗余以保证高可用，常见的实践是 keepalived 存活探测，相同 virtual IP 提供服务。</p>
+<figure class="image-box">
+                <img src="3.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当 nginx 挂了的时候，keepalived 能够探测到，会自动的进行故障转移，将流量自动迁移到 shadow-nginx，由于使用的是相同的 virtual IP，这个切换过程对调用方是透明的。</p>
+<h3 id="【反向代理层-gt-站点层】的高可用"><a href="#【反向代理层-gt-站点层】的高可用" class="headerlink" title="【反向代理层 -&gt; 站点层】的高可用"></a>【反向代理层 -&gt; 站点层】的高可用</h3><figure class="image-box">
+                <img src="4.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【反向代理层】到【站点层】的高可用，是通过站点层的冗余来实现的。假设反向代理层是 nginx，<code>nginx.conf</code>里能够配置多个 web 后端，并且 nginx 能够探测到多个后端的存活性。</p>
+<figure class="image-box">
+                <img src="5.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当 web-server 挂了的时候，nginx 能够探测到，会自动的进行故障转移，将流量自动迁移到其他的 web-server，整个过程由 nginx 自动完成，对调用方是透明的。</p>
+<h3 id="【站点层-gt-服务层】的高可用"><a href="#【站点层-gt-服务层】的高可用" class="headerlink" title="【站点层 -&gt; 服务层】的高可用"></a>【站点层 -&gt; 服务层】的高可用</h3><figure class="image-box">
+                <img src="6.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【站点层】到【服务层】的高可用，是通过服务层的冗余来实现的。“服务连接池”会建立与下游服务多个连接，每次请求会“随机”选取连接来访问下游服务。</p>
+<figure class="image-box">
+                <img src="7.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当 service 挂了的时候，service-connection-pool 能够探测到，会自动的进行故障转移，将流量自动迁移到其他的 service，整个过程由连接池自动完成，对调用方是透明的（所以说 RPC-client 中的服务连接池是很重要的基础组件）。</p>
+<h3 id="【服务层-gt-缓存层】的高可用"><a href="#【服务层-gt-缓存层】的高可用" class="headerlink" title="【服务层 -&gt; 缓存层】的高可用"></a>【服务层 -&gt; 缓存层】的高可用</h3><figure class="image-box">
+                <img src="8.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【服务层】到【缓存层】的高可用，是通过缓存数据的冗余来实现的。<br>&emsp;&emsp;缓存层的数据冗余又有几种方式：第一种是利用客户端的封装，service 对 cache 进行双读或者双写。</p>
+<figure class="image-box">
+                <img src="9.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;缓存层也可以通过支持主从同步的缓存集群来解决缓存层的高可用问题。<br>&emsp;&emsp;以 Redis 为例，Redis 天然支持主从同步，Redis 官方也有 sentinel 哨兵机制，来做 Redis 的存活性检测。</p>
+<figure class="image-box">
+                <img src="10.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当 redis 主挂了的时候，sentinel 能够探测到，会通知调用方访问新的 redis，整个过程由 sentinel 和 redis 集群配合完成，对调用方是透明的。</p>
+<p>&emsp;&emsp;说完缓存的高可用，这里要多说一句，业务对缓存并不一定有“高可用”要求，更多的对缓存的使用场景，是用来“加速数据访问”：把一部分数据放到缓存里，如果缓存挂了或者缓存没有命中，是可以去后端的数据库中再取数据的。<br>&emsp;&emsp;这类允许 “cache miss” 的业务场景，缓存架构的建议是：</p>
+<figure class="image-box">
+                <img src="11.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;将 kv 缓存封装成服务集群，上游设置一个代理（代理可以用集群冗余的方式保证高可用），代理的后端根据缓存访问的 key 水平切分成若干个实例，每个实例的访问并不做高可用。</p>
+<figure class="image-box">
+                <img src="12.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;缓存实例挂了屏蔽：当有水平切分的实例挂掉时，代理层直接返回 cache miss，此时缓存挂掉对调用方也是透明的。key 水平切分实例减少，不建议做 re-hash，这样容易引发缓存数据的不一致。</p>
+<h3 id="【服务层-gt-数据库层】的高可用"><a href="#【服务层-gt-数据库层】的高可用" class="headerlink" title="【服务层 -&gt; 数据库层】的高可用"></a>【服务层 -&gt; 数据库层】的高可用</h3><p>&emsp;&emsp;大部分互联网技术，数据库层都用了“主从同步，读写分离”架构，所以数据库层的高可用，又分为“读库高可用”与“写库高可用”两类。</p>
+<h4 id="【服务层-gt-数据库层“读”】的高可用"><a href="#【服务层-gt-数据库层“读”】的高可用" class="headerlink" title="【服务层 -&gt; 数据库层“读”】的高可用"></a>【服务层 -&gt; 数据库层“读”】的高可用</h4><figure class="image-box">
+                <img src="13.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【服务层】到【数据库读】的高可用，是通过读库的冗余来实现的。<br>&emsp;&emsp;既然冗余了读库，一般来说就至少有2个从库，“数据库连接池”会建立与读库多个连接，每次请求会路由到这些读库。</p>
+<figure class="image-box">
+                <img src="14.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当读库挂了的时候，db-connection-pool 能够探测到，会自动的进行故障转移，将流量自动迁移到其他的读库，整个过程由连接池自动完成，对调用方是透明的（所以说DAO中的数据库连接池是很重要的基础组件）。</p>
+<h4 id="【服务层-gt-数据库层“写”】的高可用"><a href="#【服务层-gt-数据库层“写”】的高可用" class="headerlink" title="【服务层 -&gt; 数据库层“写”】的高可用"></a>【服务层 -&gt; 数据库层“写”】的高可用</h4><figure class="image-box">
+                <img src="15.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;【服务层】到【数据库写】的高可用，是通过写库的冗余来实现的。<br>&emsp;&emsp;以 MySQL 为例，可以设置两个 MySQL 双主同步，一台对线上提供服务，另一台冗余以保证高可用，常见的实践是 keepalived 存活探测，相同 virtual IP 提供服务。</p>
+<figure class="image-box">
+                <img src="16.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;自动故障转移：当写库挂了的时候，keepalived 能够探测到，会自动的进行故障转移，将流量自动迁移到 shadow-db-master，由于使用的是相同的 virtual IP，这个切换过程对调用方是透明的。</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>&emsp;&emsp;高可用 HA（High Availability）是分布式系统架构设计中必须考虑的因素之一，它通常是指，通过设计减少系统不能提供服务的时间。</p>
+<p>&emsp;&emsp;方法论上，高可用是通过<strong>冗余+自动故障转移</strong>来实现的。</p>
+<p>&emsp;&emsp;整个互联网分层系统架构的高可用，又是通过每一层的冗余+自动故障转移来综合实现的，具体的：<br>&emsp;（1）【客户端层】到【反向代理层】的高可用，是通过反向代理层的冗余实现的，常见实践是 keepalived + virtual IP 自动故障转移；<br>&emsp;（2）【反向代理层】到【站点层】的高可用，是通过站点层的冗余实现的，常见实践是 nginx 与 web-server 之间的存活性探测与自动故障转移；<br>&emsp;（3）【站点层】到【服务层】的高可用，是通过服务层的冗余实现的，常见实践是通过 service-connection-pool 来保证自动故障转移；<br>&emsp;（4）【服务层】到【缓存层】的高可用，是通过缓存数据的冗余实现的，常见实践是缓存客户端双读双写，或者利用缓存集群的主从数据同步与 sentinel 保活与自动故障转移；更多的业务场景，对缓存没有高可用要求，可以使用缓存服务化来对调用方屏蔽底层复杂性；<br>&emsp;（5）【服务层】到【数据库“读”】的高可用，是通过读库的冗余实现的，常见实践是通过 db-connection-pool 来保证自动故障转移；<br>&emsp;（6）【服务层】到【数据库“写”】的高可用，是通过写库的冗余实现的，常见实践是 keepalived + virtual IP 自动故障转移；</p>
+<hr>
+<h1 id="高并发"><a href="#高并发" class="headerlink" title="高并发"></a>高并发</h1><h2 id="什么是高并发？"><a href="#什么是高并发？" class="headerlink" title="什么是高并发？"></a>什么是高并发？</h2><p>&emsp;&emsp;高并发（High Concurrency）是互联网分布式系统架构设计中必须考虑的因素之一，它通常是指，<strong>通过设计保证系统能够同时并行处理很多请求</strong>。</p>
+<h2 id="高并发相关的常见指标有哪些？"><a href="#高并发相关的常见指标有哪些？" class="headerlink" title="高并发相关的常见指标有哪些？"></a>高并发相关的常见指标有哪些？</h2><ul>
+<li>响应时间（Response Time）</li>
+<li>吞吐量（Throughput）</li>
+<li>每秒查询率 QPS（Query Per Second）</li>
+<li>并发用户数</li>
+</ul>
+<h3 id="什么是响应时间？"><a href="#什么是响应时间？" class="headerlink" title="什么是响应时间？"></a>什么是响应时间？</h3><p>&emsp;&emsp;系统对请求做出响应的时间。<br>&emsp;&emsp;例如：系统处理一个 HTTP 请求需要 200ms，这个 200ms 就是系统的响应时间。</p>
+<h3 id="什么是吞吐量？"><a href="#什么是吞吐量？" class="headerlink" title="什么是吞吐量？"></a>什么是吞吐量？</h3><p>&emsp;&emsp;单位时间内处理的请求数量。</p>
+<h3 id="什么是-QPS？"><a href="#什么是-QPS？" class="headerlink" title="什么是 QPS？"></a>什么是 QPS？</h3><p>&emsp;&emsp;每秒响应请求数。在互联网领域，这个指标和吞吐量区分的没有这么明显。</p>
+<h3 id="什么是并发用户数？"><a href="#什么是并发用户数？" class="headerlink" title="什么是并发用户数？"></a>什么是并发用户数？</h3><p>&emsp;&emsp;同时承载正常使用系统功能的用户数量。<br>&emsp;&emsp;例如：一个即时通讯系统，同时在线量一定程度上代表了系统的并发用户数。</p>
+<h2 id="如何提升系统的并发能力？"><a href="#如何提升系统的并发能力？" class="headerlink" title="如何提升系统的并发能力？"></a>如何提升系统的并发能力？</h2><p>&emsp;&emsp;互联网分布式架构设计，提高系统并发能力的方式，方法论上主要有两种：<br>&emsp;&emsp;- 垂直扩展（Scale Up）<br>&emsp;&emsp;- 水平扩展（Scale Out）</p>
+<h3 id="什么是垂直扩展？"><a href="#什么是垂直扩展？" class="headerlink" title="什么是垂直扩展？"></a>什么是垂直扩展？</h3><p>&emsp;&emsp;垂直扩展是指，<strong>提升单机处理能力</strong>，垂直扩展的方式又有两种：<br>&emsp;（1）<strong>增强单机硬件性能</strong>，例如：增加 CPU 核数如 32 核，升级更好的网卡如万兆，升级更好的硬盘如 SSD，扩充硬盘容量如 2T，扩充系统内存如 128G；<br>&emsp;（2）<strong>提升单机架构性能</strong>，例如：使用 Cache 来减少 IO 次数，使用异步来增加单服务吞吐量，使用无锁数据结构来减少响应时间；</p>
+<blockquote>
+<p>&emsp;&emsp;画外音：在互联网业务发展非常迅猛的早期，如果预算不是问题，强烈建议使用“增强单机硬件性能”的方式提升系统并发能力，因为这个阶段，公司的战略往往是发展业务抢时间，而“增强单机硬件性能”往往是最快的方法。</p>
+</blockquote>
+<h4 id="垂直扩展有什么瓶颈？"><a href="#垂直扩展有什么瓶颈？" class="headerlink" title="垂直扩展有什么瓶颈？"></a>垂直扩展有什么瓶颈？</h4><p>&emsp;&emsp;不管是提升单机硬件性能，还是提升单机架构性能，都有一个致命的<strong>不足</strong>：<strong>单机性能总是有极限的</strong>。</p>
+<h4 id="如何突破单机的极限？"><a href="#如何突破单机的极限？" class="headerlink" title="如何突破单机的极限？"></a>如何突破单机的极限？</h4><p>&emsp;&emsp;互联网分布式架构设计，高并发终极解决方案还是水平扩展。</p>
+<h3 id="什么是水平扩展？"><a href="#什么是水平扩展？" class="headerlink" title="什么是水平扩展？"></a>什么是水平扩展？</h3><p>&emsp;&emsp;<strong>只要增加服务器数量，就能线性扩充系统性能。</strong></p>
+<h2 id="常见的互联网分层架构如何？"><a href="#常见的互联网分层架构如何？" class="headerlink" title="常见的互联网分层架构如何？"></a>常见的互联网分层架构如何？</h2><figure class="image-box">
+                <img src="17.webp" alt title class>
+                <p></p>
+            </figure>
+
+<p>常见互联网分布式架构如上，分为：<br>（1）<strong>客户端层</strong>：典型调用方是浏览器 browser 或者手机应用 APP；<br>（2）<strong>反向代理层</strong>：系统入口，反向代理；<br>（3）<strong>站点应用层</strong>：实现核心应用逻辑，返回 html 或者 json；<br>（4）<strong>服务层</strong>：如果实现了服务化，就有这一层；<br>（5）<strong>数据-缓存层</strong>：缓存加速访问存储；<br>（6）<strong>数据-数据库层</strong>：数据库固化数据存储；</p>
+<p>要想真个系统支持水平扩展，就必须每一层都支持水平扩展。</p>
+<h2 id="各层该如何落地水平扩展？"><a href="#各层该如何落地水平扩展？" class="headerlink" title="各层该如何落地水平扩展？"></a>各层该如何落地水平扩展？</h2><h3 id="反向代理层如何进行水平扩展？"><a href="#反向代理层如何进行水平扩展？" class="headerlink" title="反向代理层如何进行水平扩展？"></a>反向代理层如何进行水平扩展？</h3><figure class="image-box">
+                <img src="18.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;<strong>反向代理层的水平扩展，是通过“DNS 轮询”实现的</strong>：dns-server 对于一个域名配置了多个解析 ip，每次 DNS 解析请求来访问 dns-server，会轮询返回这些 ip。</p>
+<p>&emsp;&emsp;当 nginx 成为瓶颈的时候，只要增加服务器数量，新增 nginx 服务的部署，增加一个外网 ip，就能扩展反向代理层的性能，做到理论上的无限高并发。</p>
+<h3 id="站点层如何进行水平扩展？"><a href="#站点层如何进行水平扩展？" class="headerlink" title="站点层如何进行水平扩展？"></a>站点层如何进行水平扩展？</h3><figure class="image-box">
+                <img src="19.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;<strong>站点层的水平扩展，是通过 “nginx” 实现的</strong>，通过修改<code>nginx.conf</code>，可以设置多个 web 后端。</p>
+<blockquote>
+<p>&emsp;&emsp;画外音：nginx 是个例子，有可能是 LVS 或者 F5 等反向代理。</p>
+</blockquote>
+<p>&emsp;&emsp;当 web 后端成为瓶颈的时候，只要增加服务器数量，新增 web 服务的部署，在 nginx 配置中配置上新的 web 后端，就能扩展站点层的性能，做到理论上的无限高并发。</p>
+<h3 id="服务层如何进行水平扩展？"><a href="#服务层如何进行水平扩展？" class="headerlink" title="服务层如何进行水平扩展？"></a>服务层如何进行水平扩展？</h3><figure class="image-box">
+                <img src="20.webp" alt title class>
+                <p></p>
+            </figure>
+<p>&emsp;&emsp;<strong>服务层的水平扩展，是通过“服务连接池”实现的。</strong></p>
+<p>&emsp;&emsp;站点层通过 RPC-client 调用下游的服务层 RPC-server 时，RPC-client 中的连接池会建立与下游服务多个连接，当服务成为瓶颈的时候，只要增加服务器数量，新增服务部署，在 RPC-client 处建立新的下游服务连接，就能扩展服务层性能，做到理论上的无限高并发。</p>
+<blockquote>
+<p>&emsp;&emsp;画外音：如果需要优雅的进行服务层自动扩容，这里可能需要配置中心里服务自动发现功能的支持。</p>
+</blockquote>
+<h3 id="数据层如何进行水平扩展？"><a href="#数据层如何进行水平扩展？" class="headerlink" title="数据层如何进行水平扩展？"></a>数据层如何进行水平扩展？</h3><p>&emsp;&emsp;在数据量很大的情况下，数据层（缓存，数据库）涉及数据的水平扩展，将原本存储在一台服务器上的数据（缓存，数据库）水平拆分到不同服务器上去，以达到扩充系统性能的目的。</p>
+<p>&emsp;&emsp;互联网数据层常见的水平拆分方式有这么几种，以数据库为例：</p>
+<h4 id="一、按照范围水平拆分"><a href="#一、按照范围水平拆分" class="headerlink" title="一、按照范围水平拆分"></a>一、按照范围水平拆分</h4><figure class="image-box">
+                <img src="21.webp" alt title class>
+                <p></p>
+            </figure>
+<p>每一个数据服务，存储一定范围的数据，上图为例：</p>
+<ul>
+<li>user0 库，存储 uid 范围 1 - 1kw</li>
+<li>user1 库，存储 uid 范围 1kw - 2kw</li>
+</ul>
+<p>这个方案的好处是：<br>（1）规则简单，service 只需判断一下 uid 范围就能路由到对应的存储服务；<br>（2）数据均衡性较好；<br>（3）比较容易扩展，可以随时加一个 uid[2kw, 3kw] 的数据服务；</p>
+<p>不足是：<br>（1）请求的负载不一定均衡，一般来说，新注册的用户会比老用户更活跃，大 range 的服务请求压力会更大；</p>
+<h4 id="二、按照哈希水平拆分"><a href="#二、按照哈希水平拆分" class="headerlink" title="二、按照哈希水平拆分"></a>二、按照哈希水平拆分</h4><figure class="image-box">
+                <img src="22.webp" alt title class>
+                <p></p>
+            </figure>
+<p>每一个数据库，存储某个 key 值 hash 后的部分数据，上图为例：</p>
+<ul>
+<li>user0 库，存储偶数 uid 数据</li>
+<li>user1 库，存储奇数 uid 数据</li>
+</ul>
+<p>这个方案的好处是：<br>（1）规则简单，service 只需对 uid 进行 hash 能路由到对应的存储服务；<br>（2）数据均衡性较好；<br>（3）请求均匀性较好；</p>
+<p>不足是：<br>（1）不容易扩展，扩展一个数据服务，hash 方法改变时候，可能需要进行数据迁移；</p>
+<h2 id="通过水平拆分来扩充系统性能，与主从同步读写分离来扩充数据库性能，有什么本质的不同？"><a href="#通过水平拆分来扩充系统性能，与主从同步读写分离来扩充数据库性能，有什么本质的不同？" class="headerlink" title="通过水平拆分来扩充系统性能，与主从同步读写分离来扩充数据库性能，有什么本质的不同？"></a>通过水平拆分来扩充系统性能，与主从同步读写分离来扩充数据库性能，有什么本质的不同？</h2><blockquote>
+<p>画外音：这两个方案千万别搞混。</p>
+</blockquote>
+<p>&emsp;&emsp;通过<strong>水平拆分扩展数据库性能</strong>：<br>&emsp;（1）<strong>每个服务器上存储的数据量是总量的 1/n</strong>，所以单机的性能也会有提升；<br>&emsp;（2）<strong>n 个服务器上的数据没有交集</strong>，那个服务器上数据的并集是数据的全集；<br>&emsp;（3）数据水平拆分到了 n 个服务器上，理论上<strong>读性能扩充了 n 倍，写性能也扩充了 n 倍</strong>（其实远不止 n 倍，因为单机的数据量变为了原来的 1/n）；</p>
+<p>&emsp;&emsp;通过<strong>主从同步读写分离扩展数据库性能</strong>：<br>&emsp;（1）每个服务器上存储的<strong>数据量是和总量相同</strong>；<br>&emsp;（2）<strong>n 个服务器上的数据都一样</strong>，都是全集；<br>&emsp;（3）理论上<strong>读性能扩充了 n 倍，写仍然是单点</strong>，写性能不变；</p>
+<p>&emsp;&emsp;缓存层的水平拆分和数据库层的水平拆分类似，也是以范围拆分和哈希拆分的方式居多，就不再展开。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;高并发（High Concurrency）是互联网分布式系统架构设计中必须考虑的因素之一，它通常是指，通过设计保证系统能够同时并行处理很多请求。</p>
+<p>&emsp;&emsp;提高系统并发能力的方法主要有两种：<br>&emsp;&emsp;- 垂直扩展（Scale Up）<br>&emsp;&emsp;- 水平扩展（Scale Out）</p>
+<p>&emsp;&emsp;前者垂直扩展可以通过提升单机硬件性能，或者提升单机架构性能，来提高并发性，但单机性能总是有极限的，互联网分布式架构设计高并发终极解决方案还是后者：水平扩展。</p>
+<p>&emsp;&emsp;互联网分层架构中，各层次水平扩展的实践又有所不同：<br>&emsp;（1）<strong>反向代理层</strong>可以通过“DNS 轮询”的方式来进行水平扩展；<br>&emsp;（2）<strong>站点层</strong>可以通过 nginx 来进行水平扩展；<br>&emsp;（3）<strong>服务层</strong>可以通过服务连接池来进行水平扩展；<br>&emsp;（4）<strong>数据库</strong>可以按照数据范围，或者数据哈希的方式来进行水平扩展；</p>
+<p>&emsp;&emsp;各层实施水平扩展后，能够<strong>通过增加服务器数量的方式来提升系统的性能</strong>，做到理论上的性能无限。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[微服务下如何保证事务的一致性]]></title>
+      <url>/2020/01/20/HowToEnsureConsistencyOfTransactionInMicroServices/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://segmentfault.com/a/1190000021574402" target="_blank" rel="noopener">https://segmentfault.com/a/1190000021574402</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="从本地事务到分布式事务的演变"><a href="#从本地事务到分布式事务的演变" class="headerlink" title="从本地事务到分布式事务的演变"></a>从本地事务到分布式事务的演变</h1><p>&emsp;&emsp;什么是事务？回答这个问题之前，我们先来看一个经典的场景：支付宝等交易平台的转账。假设小明需要用支付宝给小红转账 100000 元，此时，小明帐号会少 100000 元，而小红帐号会多 100000 元。如果在转账过程中系统崩溃了，小明帐号少 100000 元，而小红帐号金额不变，就会出大问题，因此这个时候我们就需要使用事务了。</p>
+<figure class="image-box">
+                <img src="1.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;这里，体现了事务一个很重要的特性：原子性。事实上，事务有四个基本特性：原子性、一致性、隔离性、持久性。其中，</p>
+<ul>
+<li>原子性，即事务内的操作要么全部成功，要么全部失败，不会在中间的某个环节结束。</li>
+<li>一致性，即数据库在一个事务执行之前和执行之后，数据库都必须处于一致性状态。如果事务执行失败，那么需要自动回滚到原始状态，换句话说，事务一旦提交，其他事务查看到的结果一致，事务一旦回滚，其他事务也只能看到回滚前的状态。</li>
+<li>隔离性，即在并发环境中，不同的事务同时修改相同的数据时，一个未完成事务不会影响另外一个未完成事务。</li>
+<li>持久性，即事务一旦提交，其修改的数据将永久保存到数据库中，其改变是永久性的。</li>
+</ul>
+<p>&emsp;&emsp;本地事务通过 ACID 保证数据的强一致性。ACID 是 Atomic（原子性）、Consistency（一致性）、 Isolation（隔离性）和 Durability（持久性）的缩写。在实际开发过程中，我们或多或少都有使用到本地事务。例如，MySQL 事务处理使用到 begin 开始一个事务，rollback 事务回滚，commit 事务确认。这里，事务提交后，通过 redo log 记录变更，通过 undo log 在失败时进行回滚，保证事务的原子性。</p>
+<figure class="image-box">
+                <img src="2.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;随着业务的高速发展，面对海量数据，例如，上千万甚至上亿的数据，查询一次所花费的时间会变长，甚至会造成数据库的单点压力。因此，我们就要考虑分库与分表方案了。分库与分表的目的在于，减小数据库的单库单表负担，提高查询性能，缩短查询时间。这里，我们先来看下单库拆分的场景。事实上，分表策略可以归纳为垂直拆分和水平拆分。</p>
+<ul>
+<li>垂直拆分，把表的字段进行拆分，即一张字段比较多的表拆分为多张表，这样使得行数据变小。一方面，可以减少客户端程序和数据库之间的网络传输的字节数，因为生产环境共享同一个网络带宽，随着并发查询的增多，有可能造成带宽瓶颈从而造成阻塞。另一方面，一个数据块能存放更多的数据，在查询时就会减少 I/O 次数。</li>
+<li>水平拆分，把表的行进行拆分。因为表的行数超过几百万行时，就会变慢，这时可以把一张的表的数据拆成多张表来存放。水平拆分，有许多策略，例如，取模分表，时间维度分表等。</li>
+</ul>
+<p>&emsp;&emsp;这种场景下，虽然我们根据特定规则分表了，我们仍然可以使用本地事务。但是，库内分表，仅仅是解决了单表数据过大的问题，并没有把单表的数据分散到不同的物理机上，因此并不能减轻 MySQL 服务器的压力，仍然存在同一个物理机上的资源竞争和瓶颈，包括 CPU、内存、磁盘 IO、网络带宽等。<br>&emsp;&emsp;对于分库拆分的场景，它把一张表的数据划分到不同的数据库，多个数据库的表结构一样。此时，如果我们根据一定规则将我们需要使用事务的数据路由到相同的库中，可以通过本地事务保证其强一致性。但是，对于按照业务和功能划分的垂直拆分，它将把业务数据分别放到不同的数据库中。这里，拆分后的系统就会遇到数据的一致性问题，因为我们需要通过事务保证的数据分散在不同的数据库中，而每个数据库只能保证自己的数据可以满足 ACID 保证强一致性，但是在分布式系统中，它们可能部署在不同的服务器上，只能通过网络进行通信，因此无法准确地知道其他数据库中的事务执行情况。</p>
+<figure class="image-box">
+                <img src="3.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;此外，不仅仅在跨库调用存在本地事务无法解决的问题，随着微服务的落地，每个服务都有自己的数据库，并且数据库是相互独立且透明的。那如果服务 A 需要获取服务 B 的数据，就存在跨服务调用，如果遇到服务宕机，或者网络连接异常、同步调用超时等场景就会导致数据的不一致，这个也是一种分布式场景下需要考虑的数据一致性问题。</p>
+<figure class="image-box">
+                <img src="4.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;总结一下，当业务量级扩大之后的分库，以及微服务落地之后的业务服务化，都会产生分布式数据不一致的问题。既然本地事务无法满足需求，因此分布式事务就要登上舞台。什么是分布式事务？我们可以简单地理解，它就是为了保证不同数据库的数据一致性的事务解决方案。这里，我们有必要先来了解下 CAP 原则和 BASE 理论。<br>&emsp;&emsp;CAP 原则是 Consistency（一致性）、Availablity（可用性）和 Partition-tolerance（分区容错性）的缩写，它是分布式系统中的平衡理论。在分布式系统中，</p>
+<ul>
+<li>一致性要求所有节点每次读操作都能保证获取到最新数据；</li>
+<li>可用性要求无论任何故障产生后都能保证服务仍然可用；</li>
+<li>分区容错性要求被分区的节点可以正常对外提供服务。</li>
+</ul>
+<p>&emsp;&emsp;事实上，任何系统只可同时满足其中二个，无法三者兼顾。对于分布式系统而言，分区容错性是一个最基本的要求。那么，如果选择了一致性和分区容错性，放弃可用性，那么网络问题会导致系统不可用。如果选择可用性和分区容错性，放弃一致性，不同的节点之间的数据不能及时同步数据而导致数据的不一致。</p>
+<figure class="image-box">
+                <img src="5.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;此时，BASE 理论针对一致性和可用性提出了一个方案，BASE 是 Basically Available（基本可用）、Soft-state（软状态）和 Eventually Consistent（最终一致性）的缩写，它是最终一致性的理论支撑。简单地理解，在分布式系统中，允许损失部分可用性，并且不同节点进行数据同步的过程存在延时，但是在经过一段时间的修复后，最终能够达到数据的最终一致性。BASE 强调的是数据的最终一致性。相比于 ACID 而言，BASE 通过允许损失部分一致性来获得可用性。</p>
+<p>&emsp;&emsp;现在，业内比较常用的分布式事务解决方案，包括强一致性的两阶段提交协议、三阶段提交协议，以及最终一致性的可靠事件模式、补偿模式、阿里的 TCC 模式。</p>
+<h1 id="强一致性解决方案"><a href="#强一致性解决方案" class="headerlink" title="强一致性解决方案"></a>强一致性解决方案</h1><h2 id="二阶段提交协议"><a href="#二阶段提交协议" class="headerlink" title="二阶段提交协议"></a>二阶段提交协议</h2><p>&emsp;&emsp;在分布式系统中，每个数据库只能保证自己的数据可以满足 ACID 保证强一致性，但是它们可能部署在不同的服务器上，只能通过网络进行通信，因此无法准确的知道其他数据库中的事务执行情况。因此，为了解决多个节点之间的协调问题，就需要引入一个协调者负责控制所有节点的操作结果，要么全部成功，要么全部失败。其中，XA 协议是一个分布式事务协议，它有两个角色：事务管理者和资源管理者。这里，我们可以把事务管理者理解为协调者，而资源管理者理解为参与者。<br>&emsp;&emsp;XA 协议通过二阶段提交协议保证强一致性。<br>&emsp;&emsp;二阶段提交协议，顾名思义，它具有两个阶段：第一阶段准备，第二阶段提交。这里，事务管理者（协调者）主要负责控制所有节点的操作结果，包括准备流程和提交流程。</p>
+<ul>
+<li>第一阶段，事务管理者（协调者）向资源管理者（参与者）发起准备指令，询问资源管理者（参与者）预提交是否成功。如果资源管理者（参与者）可以完成，就会执行操作，并不提交，最后给出自己响应结果，是预提交成功还是预提交失败。</li>
+<li>第二阶段，如果全部资源管理者（参与者）都回复预提交成功，资源管理者（参与者）正式提交命令。如果其中有一个资源管理者（参与者）回复预提交失败，则事务管理者（协调者）向所有的资源管理者（参与者）发起回滚命令。</li>
+</ul>
+<p>&emsp;&emsp;举个案例，现在我们有一个事务管理者（协调者），三个资源管理者（参与者），那么这个事务中我们需要保证这三个参与者在事务过程中的数据的强一致性。首先，事务管理者（协调者）发起准备指令预判它们是否已经预提交成功了，如果全部回复预提交成功，那么事务管理者（协调者）正式发起提交命令执行数据的变更。</p>
+<figure class="image-box">
+                <img src="6.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;注意的是，虽然二阶段提交协议为保证强一致性提出了一套解决方案，但是仍然存在一些问题。</p>
+<ul>
+<li>其一，事务管理者（协调者）主要负责控制所有节点的操作结果，包括准备流程和提交流程，但是整个流程是同步的，所以事务管理者（协调者）必须等待每一个资源管理者（参与者）返回操作结果后才能进行下一步操作。这样就非常容易造成同步阻塞问题。</li>
+<li>其二，单点故障也是需要认真考虑的问题。事务管理者（协调者）和资源管理者（参与者）都可能出现宕机，如果资源管理者（参与者）出现故障则无法响应而一直等待，事务管理者（协调者）出现故障则事务流程就失去了控制者，换句话说，就是整个流程会一直阻塞，甚至极端的情况下，一部分资源管理者（参与者）数据执行提交，一部分没有执行提交，也会出现数据不一致性。</li>
+</ul>
+<p>&emsp;&emsp;此时，读者会提出疑问：这些问题应该都是小概率情况，一般是不会产生的？是的，但是对于分布式事务场景，我们不仅仅需要考虑正常逻辑流程，还需要关注小概率的异常场景，如果我们对异常场景缺乏处理方案，可能就会出现数据的不一致性，那么后期靠人工干预处理，会是一个成本非常大的任务，此外，对于交易的核心链路也许就不是数据问题，而是更加严重的资损问题。</p>
+<h2 id="三阶段提交协议"><a href="#三阶段提交协议" class="headerlink" title="三阶段提交协议"></a>三阶段提交协议</h2><p>&emsp;&emsp;二阶段提交协议诸多问题，因此三阶段提交协议就要登上舞台了。三阶段提交协议是二阶段提交协议的改良版本，它与二阶段提交协议不同之处在于，引入了超时机制解决同步阻塞问题，此外加入了预备阶段尽可能提早发现无法执行的资源管理者（参与者）并且终止事务，如果全部资源管理者（参与者）都可以完成，才发起第二阶段的准备和第三阶段的提交。否则，其中任何一个资源管理者（参与者）回复执行，或者超时等待，那么就终止事务。总结一下，三阶段提交协议包括：第一阶段预备，第二阶段准备，第二阶段提交。</p>
+<figure class="image-box">
+                <img src="7.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;三阶段提交协议很好的解决了二阶段提交协议带来的问题，是一个非常有参考意义的解决方案。但是，极小概率的场景下可能会出现数据的不一致性。因为三阶段提交协议引入了超时机制，如果出现资源管理者（参与者）超时场景会默认提交成功，但是如果其没有成功执行，或者其他资源管理者（参与者）出现回滚，那么就会出现数据的不一致性。</p>
+<h1 id="最终一致性解决方案"><a href="#最终一致性解决方案" class="headerlink" title="最终一致性解决方案"></a>最终一致性解决方案</h1><h2 id="TCC-模式"><a href="#TCC-模式" class="headerlink" title="TCC 模式"></a>TCC 模式</h2><p>&emsp;&emsp;二阶段提交协议和三阶段提交协议很好的解决了分布式事务的问题，但是在极端情况下仍然存在数据的不一致性，此外它对系统的开销会比较大，引入事务管理者（协调者）后，比较容易出现单点瓶颈，以及在业务规模不断变大的情况下，系统可伸缩性也会存在问题。注意的是，它是同步操作，因此引入事务后，直到全局事务结束才能释放资源，性能可能是一个很大的问题。因此，在高并发场景下很少使用。因此，阿里提出了另外一种解决方案：TCC 模式。注意的是，很多读者把二阶段提交等同于二阶段提交协议，这个是一个误区，事实上，TCC 模式也是一种二阶段提交。<br>&emsp;&emsp;TCC 模式将一个任务拆分三个操作：Try、Confirm、Cancel。假如，我们有一个 func() 方法，那么在 TCC 模式中，它就变成了 tryFunc()、confirmFunc()、cancelFunc() 三个方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tryFunc();</span><br><span class="line">confirmFunc();</span><br><span class="line">cancelFunc();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在 TCC 模式中，主业务服务负责发起流程，而从业务服务提供 TCC 模式的 Try、Confirm、Cancel 三个操作。其中，还有一个事务管理器的角色负责控制事务的一致性。例如，我们现在有三个业务服务：交易服务，库存服务，支付服务。用户选商品，下订单，紧接着选择支付方式进行付款，然后这笔请求，交易服务会先调用库存服务扣库存，然后交易服务再调用支付服务进行相关的支付操作，然后支付服务会请求第三方支付平台创建交易并扣款，这里，交易服务就是主业务服务，而库存服务和支付服务是从业务服务。</p>
+<figure class="image-box">
+                <img src="8.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;我们再来梳理下 TCC 模式的流程。</p>
+<ul>
+<li>第一阶段，主业务服务调用全部的从业务服务的 Try 操作，并且事务管理器记录操作日志。</li>
+<li>第二阶段，当全部从业务服务都成功时，再执行 Confirm 操作，否则会执行 Cancel 逆操作进行回滚。</li>
+</ul>
+<figure class="image-box">
+                <img src="9.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;现在，我们针对 TCC 模式说说大致业务上的实现思路。首先，交易服务（主业务服务）会向事务管理器注册并启动事务。其实，事务管理器是一个概念上的全局事务管理机制，可以是一个内嵌于主业务服务的业务逻辑，或者抽离出的一个 TCC 框架。事实上，它会生成全局事务 ID 用于记录整个事务链路，并且实现了一套嵌套事务的处理逻辑。当主业务服务调用全部的从业务服务的 try 操作，事务管理器利用本地事务记录相关事务日志，这个案例中，它记录了调用库存服务的动作记录，以及调用支付服务的动作记录，并将其状态设置成“预提交”状态。这里，调用从业务服务的 Try 操作就是核心的业务代码。当全部从业务服务都成功时，由事务管理器通过 TCC 事务上下文切面执行 Confirm 操作，将其状态设置成“成功”状态，否则执行 Cancel 操作将其状态设置成“预提交”状态，然后进行重试。因此，TCC 模式通过补偿的方式保证其最终一致性。</p>
+<p>&emsp;&emsp;这里，我们要特别注意操作的幂等性。幂等机制的核心是保证资源唯一性，例如重复提交或服务端的多次重试只会产生一份结果。支付场景、退款场景，涉及金钱的交易不能出现多次扣款等问题。事实上，查询接口用于获取资源，因为它只是查询数据而不会影响到资源的变化，因此不管调用多少次接口，资源都不会改变，所以是它是幂等的。而新增接口是非幂等的，因为调用接口多次，它都将会产生资源的变化。因此，我们需要在出现重复提交时进行幂等处理。<br>&emsp;&emsp;那么，如何保证幂等机制呢？事实上，我们有很多实现方案。其中，一种方案就是常见的创建唯一索引。在数据库中针对我们需要约束的资源字段创建唯一索引，可以防止插入重复的数据。但是，遇到分库分表的情况是，唯一索引也就不那么好使了，此时，我们可以先查询一次数据库，然后判断是否约束的资源字段存在重复，没有重复时再进行插入操作。注意的是，为了避免并发场景，我们可以通过锁机制，例如悲观锁与乐观锁保证数据的唯一性。这里，分布式锁是一种经常使用的方案，它通常情况下是一种悲观锁的实现。但是，很多人经常把悲观锁、乐观锁、分布式锁当作幂等机制的解决方案，这是不正确的。除此之外，我们还可以引入状态机，通过状态机进行状态的约束以及状态跳转，确保同一个业务的流程化执行，从而实现数据幂等。</p>
+<h2 id="补偿模式"><a href="#补偿模式" class="headerlink" title="补偿模式"></a>补偿模式</h2><p>&emsp;&emsp;上节，我们提到了重试机制。事实上，它也是一种最终一致性的解决方案。我们需要通过最大努力不断重试，保证数据库的操作最终一定可以保证数据一致性，如果最终多次重试失败可以根据相关日志并主动通知开发人员进行手工介入。注意的是，被调用方需要保证其幂等性。重试机制可以是同步机制，例如主业务服务调用超时或者非异常的调用失败需要及时重新发起业务调用。重试机制可以大致分为固定次数的重试策略与固定时间的重试策略。除此之外，我们还可以借助消息队列和定时任务机制。消息队列的重试机制，即消息消费失败则进行重新投递，这样就可以避免消息没有被消费而被丢弃，例如 RocketMQ 可以默认允许每条消息最多重试 16 次，每次重试的间隔时间可以进行设置。定时任务的重试机制，我们可以创建一张任务执行表，并增加一个“重试次数”字段。这种设计方案中，我们可以在定时调用时，获取这个任务是否是执行失败的状态并且没有超过重试次数，如果是则进行失败重试。但是，当出现执行失败的状态并且超过重试次数时，就说明这个任务永久失败了，需要开发人员进行手工介入与排查问题。<br>&emsp;&emsp;除了重试机制之外，也可以在每次更新的时候进行修复。例如，对于社交互动的点赞数、收藏数、评论数等计数场景，也许因为网络抖动或者相关服务不可用，导致某段时间内的数据不一致，我们就可以在每次更新的时候进行修复，保证系统经过一段较短的时间的自我恢复和修正，数据最终达到一致。需要注意的是，使用这种解决方案的情况下，如果某条数据出现不一致性，但是又没有再次更新修复，那么其永远都会是异常数据。<br>&emsp;&emsp;定时校对也是一种非常重要的解决手段，它采取周期性的进行校验操作来保证。关于定时校对可以分为两种场景，一种是未完成的定时重试，例如我们利用定时任务扫描还未完成的调用任务，并通过补偿机制来修复，实现数据最终达到一致。另一种是定时核对，它需要主业务服务提供相关查询接口给从业务服务核对查询，用于恢复丢失的业务数据。现在，我们来试想一下电商场景的退款业务。在这个退款业务中会存在一个退款基础服务和自动化退款服务。此时，自动化退款服务在退款基础服务的基础上实现退款能力的增强，实现基于多规则的自动化退款，并且通过消息队列接收退款基础服务推送的退款快照信息。但是，由于退款基础服务发送消息丢失或者消息队列在多次失败重试后的主动丢弃，都很有可能造成数据的不一致性。因此，我们通过定时从退款基础服务查询核对，恢复丢失的业务数据就显得特别重要了。</p>
+<h2 id="可靠事件模式"><a href="#可靠事件模式" class="headerlink" title="可靠事件模式"></a>可靠事件模式</h2><p>&emsp;&emsp;在分布式系统中，消息队列在服务端的架构中的地位非常重要，主要解决异步处理、系统解耦、流量削峰等场景。多个系统之间如果同步通信很容易造成阻塞，同时会将这些系统会耦合在一起。因此，引入了消息队列，一方面解决了同步通信机制造成的阻塞，另一方面通过消息队列进行业务解耦。</p>
+<figure class="image-box">
+                <img src="10.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;可靠事件模式，通过引入可靠的消息队列，只要保证当前的可靠事件投递并且消息队列确保事件传递至少一次，那么订阅这个事件的消费者保证事件能够在自己的业务内被消费即可。这里，请读者思考，是否只要引入了消息队列就可以解决问题了呢？事实上，只是引入消息队列并不能保证其最终的一致性，因为分布式部署环境下都是基于网络进行通信，而网络通信过程中，上下游可能因为各种原因而导致消息丢失。<br>&emsp;&emsp;其一，主业务服务发送消息时可能因为消息队列无法使用而发生失败。对于这种情况，我们可以让主业务服务（生产者）发送消息，再进行业务调用来确保。一般的做法是，主业务服务将要发送的消息持久化到本地数据库，设置标志状态为“待发送”状态，然后把消息发送给消息队列，消息队列收到消息后，也把消息持久化到其存储服务中，但并不是立即向从业务服务（消费者）投递消息，而是先向主业务服务（生产者）返回消息队列的响应结果，然后主业务服务判断响应结果执行之后的业务处理。如果响应失败，则放弃之后的业务处理，设置本地的持久化消息标志状态为“结束”状态。否则，执行后续的业务处理，设置本地的持久化消息标志状态为“已发送”状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doServer</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 发送消息</span></span><br><span class="line">    send();</span><br><span class="line">    <span class="comment">// 执行业务</span></span><br><span class="line">    exec();</span><br><span class="line">    <span class="comment">// 更新消息状态</span></span><br><span class="line">    updateMsg();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此外，消息队列发送消息后，也可能从业务服务（消费者）宕机而无法消费。绝大多数消息中间件对于这种情况，例如 RabbitMQ、RocketMQ 等引入了 ACK 机制。注意的是，默认的情况下，采用自动应答，这种方式中消息队列会发送消息后立即从消息队列中删除该消息。所以，为了确保消息的可靠投递，我们通过手动 ACK 方式，如果从业务服务（消费者）因宕机等原因没有发送 ACK，消息队列会将消息重新发送，保证消息的可靠性。从业务服务处理完相关业务后通过手动 ACK 通知消息队列，消息队列才从消息队列中删除该持久化消息。那么，消息队列如果一直重试失败而无法投递，就会出现消息主动丢弃的情况，我们需要如何解决呢？聪明的读者可能已经发现，我们在上个步骤中，主业务服务已经将要发送的消息持久化到本地数据库。因此，从业务服务消费成功后，它也会向消息队列发送一个通知消息，此时它是一个消息的生产者。主业务服务（消费者）接收到消息后，最终把本地的持久化消息标志状态为“完成”状态。说到这里，读者应该可以理解到我们使用“正反向消息机制”确保了消息队列可靠事件投递。当然，补偿机制也是必不可少的。定时任务会从数据库扫描在一定时间内未完成的消息并重新投递。</p>
+<figure class="image-box">
+                <img src="11.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;注意的是，因为从业务服务可能收到消息处理超时或者服务宕机，以及网络等原因导致消息队列收不到消息的处理结果，因此可靠事件投递并且消息队列确保事件传递至少一次。这里，从业务服务（消费者）需要保证幂等性。如果从业务服务（消费者）没有保证接口的幂等性，将会导致重复提交等异常场景。此外，我们也可以独立消息服务，将消息服务独立部署，根据不同的业务场景共用该消息服务，降低重复开发服务的成本。<br>&emsp;&emsp;了解了“可靠事件模式”的方法论后，现在我们来看一个真实的案例来加深理解。首先，当用户发起退款后，自动化退款服务会收到一个退款的事件消息，此时，如果这笔退款符合自动化退款策略的话，自动化退款服务会先写入本地数据库持久化这笔退款快照，紧接着，发送一条执行退款的消息投递到给消息队列，消息队列接受到消息后返回响应成功结果，那么自动化退款服务就可以执行后续的业务逻辑。与此同时，消息队列异步地把消息投递给退款基础服务，然后退款基础服务执行自己业务相关的逻辑，执行失败与否由退款基础服务自我保证，如果执行成功则发送一条执行退款成功消息投递到给消息队列。最后，定时任务会从数据库扫描在一定时间内未完成的消息并重新投递。这里，需要注意的是，自动化退款服务持久化的退款快照可以理解为需要确保投递成功的消息，由“正反向消息机制”和“定时任务”确保其成功投递。此外，真正的退款出账逻辑由退款基础服务来保证，因此它要保证幂等性，及出账逻辑的收敛。当出现执行失败的状态并且超过重试次数时，就说明这个任务永久失败了，需要开发人员进行手工介入与排查问题。</p>
+<figure class="image-box">
+                <img src="12.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;总结一下，引入了消息队列并不能保证可靠事件投递，换句话说，由于网络等各种原因而导致消息丢失不能保证其最终的一致性，因此，我们需要通过“正反向消息机制”确保了消息队列可靠事件投递，并且使用补偿机制尽可能在一定时间内未完成的消息并重新投递。</p>
+<h1 id="开源项目的分布式事务实现解读"><a href="#开源项目的分布式事务实现解读" class="headerlink" title="开源项目的分布式事务实现解读"></a>开源项目的分布式事务实现解读</h1><h2 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h2><p>&emsp;&emsp;Apache RocketMQ 是阿里开源的一款高性能、高吞吐量的分布式消息中间件。在历年双 11 中，RocketMQ 都承担了阿里巴巴生产系统全部的消息流转，在核心交易链路有着稳定和出色的表现，是承载交易峰值的核心基础产品之一。<br>&emsp;&emsp;Apache RocketMQ 4.3 版本正式支持分布式事务消息。RocketMQ 事务消息设计主要解决了生产者端的消息发送与本地事务执行的原子性问题，换句话说，如果本地事务执行不成功，则不会进行 MQ 消息推送。那么，聪明的你可能就会存在疑问：我们可以先执行本地事务，执行成功了再发送 MQ 消息，这样不就可以保证事务性的？但是，请你再认真的思考下，如果 MQ 消息发送不成功怎么办呢？事实上，RocketMQ 对此提供一个很好的思路和解决方案。<br>&emsp;&emsp;RocketMQ 首先会发送预执行消息到 MQ，并且在发送预执行消息成功后执行本地事务。紧接着，它根据本地事务执行结果进行后续执行逻辑，如果本地事务执行结果是 commit，那么正式投递 MQ 消息，如果本地事务执行结果是 rollback，则 MQ 删除之前投递的预执行消息，不进行投递下发。注意的是，对于异常情况，例如执行本地事务过程中，服务器宕机或者超时，RocketMQ 将会不停的询问其同组的其他生产者端来获取状态。</p>
+<figure class="image-box">
+                <img src="13.png" alt title class>
+                <p></p>
+            </figure>
+
+<h2 id="ServiceComb"><a href="#ServiceComb" class="headerlink" title="ServiceComb"></a>ServiceComb</h2><p>&emsp;&emsp;ServiceComb 基于华为内部的 CSE(Cloud Service Engine) 框架开源而来，它提供了一套包含代码框架生成、服务注册发现、负载均衡、服务可靠性（容错熔断，限流降级，调用链追踪）等功能的微服务框架。其中，ServiceComb Saga 是一个微服务应用的数据最终一致性解决方案。<br>&emsp;&emsp;Saga 拆分分布式事务为多个本地事务，然后由 Saga 引擎负责协调。如果整个流程正常结束，那么业务成功完成；如果在这过程中实现出现部分失败，那么 Saga 引擎调用补偿操作。Saga 有两种恢复的策略：向前恢复和向后恢复。其中，向前恢复对失败的节点采取最大努力不断重试，保证数据库的操作最终一定可以保证数据一致性，如果最终多次重试失败可以根据相关日志主动通知开发人员进行手工介入。向后恢复对之前所有成功的节点执行回滚的事务操作，这样保证数据达到一致的效果。<br>&emsp;&emsp;Saga 与 TCC 不同之处在于，Saga 比 TCC 少了一个 Try 操作。因此，Saga 会直接提交到数据库，然后出现失败的时候，进行补偿操作。Saga 的设计可能导致在极端场景下的补偿动作比较麻烦，但是对于简单的业务逻辑侵入性更低，更轻量级，并且减少了通信次数。</p>
+<figure class="image-box">
+                <img src="14.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;ServiceComb Saga 在其理论基础上进行了扩展，它包含两个组件：alpha 和 omega。alpha 充当协调者，主要负责对事务的事件进行持久化存储以及协调子事务的状态，使其得以最终与全局事务的状态保持一致。omega 是微服务中内嵌的一个 agent，负责对网络请求进行拦截并向 alpha 上报事务事件，并在异常情况下根据 alpha 下发的指令执行相应的补偿操作。在预处理阶段，alpha 会记录事务开始的事件；在后处理阶段，alpha 会记录事务结束的事件。因此，每个成功的子事务都有一一对应的开始及结束事件。在服务生产方，omega 会拦截请求中事务相关的 id 来提取事务的上下文。在服务消费方，omega 会在请求中注入事务相关的 id 来传递事务的上下文。通过服务提供方和服务消费方的这种协作处理，子事务能连接起来形成一个完整的全局事务。注意的是，Saga 要求相关的子事务提供事务处理方法，并且提供补偿函数。<br>&emsp;&emsp;现在，我们来看一下它的业务流程图：</p>
+<figure class="image-box">
+                <img src="15.png" alt title class>
+                <p></p>
+            </figure>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 程序设计 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[为什么我使用了索引，查询还是慢？]]></title>
+      <url>/2020/01/20/WhyItIsStillSlowWhenUsingIndex/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.cnblogs.com/jackyfei/p/12122767.html" target="_blank" rel="noopener">https://www.cnblogs.com/jackyfei/p/12122767.html</a></p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+            <category> 杂谈 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 数据库 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[C# 中 ConfigureAwait 相关答疑 FAQ]]></title>
+      <url>/2020/01/20/ConfigureAwaitFAQsInCSharp/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.cnblogs.com/ms27946/p/ConfigureAwait-FAQs-In-CSharp.html" target="_blank" rel="noopener">https://www.cnblogs.com/ms27946/p/ConfigureAwait-FAQs-In-CSharp.html</a></p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[在 ASP.NET Core 3.0 中使用 Serilog.AspNetCore]]></title>
+      <url>/2020/01/20/UsingSerilogAspNetCoreInAspNetCore3/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p>译文：<br>使用 Serilog RequestLogging 来简化 ASP.NET Core 的日志输出：<a href="https://www.cnblogs.com/yilezhu/p/12215934.html" target="_blank" rel="noopener">https://www.cnblogs.com/yilezhu/p/12215934.html</a><br>使用 Serilog 记录所选的端点名称：<br>使用 Serilog.AspNetCore 记录 MVC 属性：  </p>
+</blockquote>
+<blockquote>
+<p>原文：<br><a href="https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-reducing-log-verbosity/" target="_blank" rel="noopener">Reducing log verbosity with Serilog RequestLogging</a><br><a href="https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-logging-the-selected-endpoint-name-with-serilog/" target="_blank" rel="noopener">Logging the selected Endpoint Name with Serilog</a><br><a href="https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-logging-mvc-propertis-with-serilog/" target="_blank" rel="noopener">Logging MVC properties with Serilog.AspNetCore</a>  </p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> ASPNETCore </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[使用 OAS（OpenAPI 标准）来描述 Web API]]></title>
+      <url>/2020/01/20/UseOasToDescribeWebApi/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>待更新</p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.cnblogs.com/cgzl/p/12217617.html" target="_blank" rel="noopener">https://www.cnblogs.com/cgzl/p/12217617.html</a></p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[ASP.Net Core 3.1 中使用 JWT 认证]]></title>
+      <url>/2020/01/20/UseJwtInAspNetCore/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.cnblogs.com/liuww/p/12177272.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuww/p/12177272.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="JWT-认证简单介绍"><a href="#JWT-认证简单介绍" class="headerlink" title="JWT 认证简单介绍"></a>JWT 认证简单介绍</h1><p>&emsp;&emsp;关于 JWT 的介绍网上很多，此处不再赘述，我们主要看看 JWT 的结构。<br>&emsp;&emsp;JWT 主要由三部分组成，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HEADER.PAYLOAD.SIGNATURE</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>HEADER</code>：包含 token 的元数据，主要是加密算法，和签名的类型。<br>&emsp;&emsp;如下面的信息，说明了加密的对象类型是 JWT，加密算法是 HMAC SHA-256。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"alg"</span>:<span class="string">"HS256"</span>,<span class="attr">"typ"</span>:<span class="string">"JWT"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后需要通过 <strong>BASE64</strong> 编码后存入 token 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>Payload</code>：主要包含一些声明信息（claim），这些声明是 <strong>key-value 对</strong> 的数据结构。<br>&emsp;&emsp;通常如用户名，角色等信息，过期日期等，因为是未加密的，所以不建议存放敏感信息。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"</span>:<span class="string">"admin"</span>,<span class="attr">"exp"</span>:<span class="number">1578645536</span>,<span class="attr">"iss"</span>:<span class="string">"webapi.cn"</span>,<span class="attr">"aud"</span>:<span class="string">"WebApi"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;也需要通过 <strong>BASE64</strong> 编码后存入 token 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDU1MzYsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>Signature</code>：JWT 要符合 JWS（Json Web Signature）的标准生成一个最终的签名。把编码后的 Header 和 Payload 信息加在一起，然后使用一个强加密算法，如 Hmac SHA-256，进行加密。<code>HS256(BASE64(Header).Base64(Payload)，secret)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2_akEH40LR2QWekgjm8Tt3lesSbKtDethmJMo_3jpF4</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;最后生成的token如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.</span><br><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDU1MzYsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9.</span><br><span class="line">2_akEH40LR2QWekgjm8Tt3lesSbKtDethmJMo_3jpF4</span><br></pre></td></tr></table></figure>
+
+<h1 id="ASP-NET-Core-3-1-Web-API-中使用-JWT-认证"><a href="#ASP-NET-Core-3-1-Web-API-中使用-JWT-认证" class="headerlink" title="ASP.NET Core 3.1 Web API 中使用 JWT 认证"></a>ASP.NET Core 3.1 Web API 中使用 JWT 认证</h1><blockquote>
+<p>开发环境：  </p>
+<ul>
+<li>框架：ASP.NET Core 3.1  </li>
+<li>IDE：Visual Studio 2019</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;命令行中执行执行以下命令，创建 Web API 项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi -n Webapi -o WebApi</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;特别注意的是，3.x 默认是没有 JWT 的<code>Microsoft.AspNetCore.Authentication.JwtBearer</code>库的，所以需要手动添加 NuGet Package，切换到项目所在目录，执行 .NET CLI 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 3.1.0</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;创建一个简单的 POCO 类，用来存储签发或者验证 JWT 时用到的信息：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Newtonsoft.Json;</span><br><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> System.Threading.Tasks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Webapi.Models</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenManagement</span></span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"secret"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Secret &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"issuer"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Issuer &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"audience"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Audience &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"accessExpiration"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> AccessExpiration &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"refreshExpiration"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> RefreshExpiration &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>appsettings.Development.json</code>添加 JWT 使用到的配置信息（如果是生成环境在<code>appsettings.json</code>添加即可）：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">"tokenManagement": &#123;</span><br><span class="line">    "secret": "123456",</span><br><span class="line">    "issuer": "webapi.cn",</span><br><span class="line">    "audience": "WebApi",</span><br><span class="line">    "accessExpiration": 30,</span><br><span class="line">    "refreshExpiration": 60</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>StartUp</code>类的<code>ConfigureServices</code>方法中添加读取配置信息：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers();</span><br><span class="line">    services.Configure&lt;TokenManagement&gt;(Configuration.GetSection(<span class="string">"tokenManagement"</span>));</span><br><span class="line">    <span class="keyword">var</span> token = Configuration.GetSection(<span class="string">"tokenManagement"</span>).Get&lt;TokenManagement&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;到目前为止，我们完成了一些基础工作，下面在 Web API 中注入 JWT 的验证服务，并在中间件管道中启用 Authentication 中间件。<br>&emsp;&emsp;<code>StartUp</code>类中要引用 JWT 验证服务的命名空间：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.AspNetCore.Authentication.JwtBearer;</span><br><span class="line"><span class="keyword">using</span> Microsoft.IdentityModel.Tokens;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>ConfigureServices</code>方法中添加如下逻辑：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">services.AddAuthentication(x =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;</span><br><span class="line">    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;</span><br><span class="line">&#125;).AddJwtBearer(x =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    x.RequireHttpsMetadata = <span class="literal">false</span>;</span><br><span class="line">    x.SaveToken = <span class="literal">true</span>;</span><br><span class="line">    x.TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters</span><br><span class="line">    &#123;</span><br><span class="line">        ValidateIssuerSigningKey = <span class="literal">true</span>,</span><br><span class="line">        IssuerSigningKey = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.ASCII.GetBytes(token.Secret)),</span><br><span class="line">        ValidIssuer = token.Issuer,</span><br><span class="line">        ValidAudience = token.Audience,</span><br><span class="line">        ValidateIssuer = <span class="literal">false</span>,</span><br><span class="line">        ValidateAudience = <span class="literal">false</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在<code>Configure</code>方法中启用验证：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseDeveloperExceptionPage();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    app.UseHttpsRedirection();</span><br><span class="line"></span><br><span class="line">    app.UseAuthentication();</span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseAuthorization();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapControllers();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;上面完成了 JWT 验证的功能，下面就需要添加签发 token 的逻辑。我们需要添加一个专门用来用户认证和签发 token 的控制器，命名成 AuthenticationController，同时添加一个请求的 DTO 类：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoginRequestDTO</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Required</span>]</span><br><span class="line">    [<span class="meta">JsonProperty(<span class="meta-string">"username"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Username &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Required</span>]</span><br><span class="line">    [<span class="meta">JsonProperty(<span class="meta-string">"password"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Password &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/[controller]"</span>)</span>]</span><br><span class="line">[<span class="meta">ApiController</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AuthenticationController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">AllowAnonymous</span>]</span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"requestToken"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ActionResult <span class="title">RequestToken</span>(<span class="params">[FromBody] LoginRequestDTO request</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Ok();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;目前上面的控制器只实现了基本的逻辑，下面我们要创建签发 token 的服务，去完成具体的业务。第一步我们先创建对应的服务接口，命名为 IAuthenticateService：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接下来，实现接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenAuthenticationService</span> : <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在<code>Startup</code>的<code>ConfigureServices</code>方法中注册服务：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;IAuthenticateService, TokenAuthenticationService&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在 Controller 中注入 IAuthenticateService 服务，并完善 Action：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AuthenticationController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IAuthenticateService _authService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AuthenticationController</span>(<span class="params">IAuthenticateService authService</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._authService = authService;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">AllowAnonymous</span>]</span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"requestToken"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ActionResult <span class="title">RequestToken</span>(<span class="params">[FromBody] LoginRequestDTO request</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> token;</span><br><span class="line">        <span class="keyword">if</span> (_authService.IsAuthenticated(request, <span class="keyword">out</span> token))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> Ok(token);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;正常情况，我们都会根据请求的用户和密码去验证用户是否合法，需要连接到数据库获取数据进行校验，我们这里为了方便，假设任何请求的用户都是合法的。<br>&emsp;&emsp;这里单独加个用户管理的服务，不在 IAuthenticateService 这个服务里面添加相应逻辑，主要遵循了职责单一原则。首先和上面一样，创建一个服务接口 IUserService：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IUserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">LoginRequestDTO req</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;实现 IUserService 接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserService</span> : <span class="title">IUserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//模拟测试，默认都是人为验证有效</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">LoginRequestDTO req</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;同样注册到容器中：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;IUserService, UserService&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接下来，就要完善 TokenAuthenticationService 签发 token 的逻辑，首先要注入 IUserService 和 TokenManagement，然后实现具体的业务逻辑，这个 token 的生成还是使用的 Jwt 的类库提供的 API，具体不详细描述。<br>&emsp;&emsp;特别注意下 TokenManagement 的注入是以 IOptions 的接口类型注入的，还记得是在<code>StartpUp</code>中吗？我们是通过配置项的方式注册 TokenManagement 类型的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenAuthenticationService</span> : <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IUserService _userService;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> TokenManagement _tokenManagement;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TokenAuthenticationService</span>(<span class="params">IUserService userService, IOptions&lt;TokenManagement&gt; tokenManagement</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _userService = userService;</span><br><span class="line">        _tokenManagement = tokenManagement.Value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        token = <span class="keyword">string</span>.Empty;</span><br><span class="line">        <span class="keyword">if</span> (!_userService.IsValid(request))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">var</span> claims = <span class="keyword">new</span>[]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">new</span> Claim(ClaimTypes.Name,request.Username)</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">var</span> key = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));</span><br><span class="line">        <span class="keyword">var</span> credentials = <span class="keyword">new</span> SigningCredentials(key, SecurityAlgorithms.HmacSha256);</span><br><span class="line">        <span class="keyword">var</span> jwtToken = <span class="keyword">new</span> JwtSecurityToken(_tokenManagement.Issuer, _tokenManagement.Audience, claims, expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration), signingCredentials: credentials);</span><br><span class="line"></span><br><span class="line">        token = <span class="keyword">new</span> JwtSecurityTokenHandler().WriteToken(jwtToken);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;准备好测试试用的 API，打上<code>Authorize</code>特性，表明需要授权。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">ApiController</span>]</span><br><span class="line">[<span class="meta">Route(<span class="meta-string">"[controller]"</span>)</span>]</span><br><span class="line">[<span class="meta">Authorize</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">WeatherForecastController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="keyword">string</span>[] Summaries = <span class="keyword">new</span>[]</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"Freezing"</span>, <span class="string">"Bracing"</span>, <span class="string">"Chilly"</span>, <span class="string">"Cool"</span>, <span class="string">"Mild"</span>, <span class="string">"Warm"</span>, <span class="string">"Balmy"</span>, <span class="string">"Hot"</span>, <span class="string">"Sweltering"</span>, <span class="string">"Scorching"</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger&lt;WeatherForecastController&gt; _logger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeatherForecastController</span>(<span class="params">ILogger&lt;WeatherForecastController&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;WeatherForecast&gt; <span class="title">Get</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> rng = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> Enumerable.Range(<span class="number">1</span>, <span class="number">5</span>).Select(index =&gt; <span class="keyword">new</span> WeatherForecast</span><br><span class="line">        &#123;</span><br><span class="line">            Date = DateTime.Now.AddDays(index),</span><br><span class="line">            TemperatureC = rng.Next(<span class="number">-20</span>, <span class="number">55</span>),</span><br><span class="line">            Summary = Summaries[rng.Next(Summaries.Length)]</span><br><span class="line">        &#125;)</span><br><span class="line">        .ToArray();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们可以测试验证了，我们可以使用 Postman 来进行 HTTP 请求，先启动 HTTP 服务，获取 URL，先测试一个访问需要授权的接口，但没有携带 token 信息，返回是 401，表示未授权。</p>
+<figure class="image-box">
+                <img src="683694-20200110184421844-68601763.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;下面我们先通过认证接口，获取 token，居然报错，查询了下，发现 HS256 算法的秘钥长度最新为 128 位，转换成字符至少 16 字符，之前设置的秘钥是 123456，所以导致异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.ArgumentOutOfRangeException: IDX10603: Decryption failed. Keys tried: &apos;HS256&apos;. Exceptions caught: &apos;128&apos;. token: &apos;48&apos; (Parameter &apos;KeySize&apos;) at</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;更新秘钥：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">"tokenManagement": &#123;</span><br><span class="line">    "secret": "123456123456123456",</span><br><span class="line">    "issuer": "webapi.cn",</span><br><span class="line">    "audience": "WebApi",</span><br><span class="line">    "accessExpiration": 30,</span><br><span class="line">    "refreshExpiration": 60</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;重新发起请求，成功获取 token：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.</span><br><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDUyMDMsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9.</span><br><span class="line">AehD8WTAnEtklof2OJsvg0U4_o8_SjdxmwUjzAiuI-o</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <img src="683694-20200110184411897-1612763683.png" alt title class>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;把 token 带到之前请求的 API 中，重新测试，成功获取数据：</p>
+<figure class="image-box">
+                <img src="683694-20200110184403969-331881185.png" alt title class>
+                <p></p>
+            </figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&emsp;&emsp;基于 token 的认证方式，让我们构建分布式/松耦合的系统更加容易。任何地方生成的 token，只有拥有相同秘钥，就可以在任何地方进行签名校验。<br>&emsp;&emsp;当然要用好 JWT 认证方式，还有其他安全细节需要处理，比如 Payload 中不能存放敏感信息，使用 HTTPS 的加密传输方式等等，可以根据业务实际需要再进一步安全加固。<br>&emsp;&emsp;同时我们也发现使用 token，就可以摆脱 Cookie 的限制，所以 JWT 是移动 APP 开发的首选。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSharp </tag>
+            
+            <tag> ASPNETCore </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[WPF Prism 框架 教程]]></title>
       <url>/2020/01/19/WpfPrismTutorial/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -49,8 +720,6 @@
         
         
         <tags>
-            
-            <tag> Web </tag>
             
             <tag> CSharp </tag>
             
@@ -1604,8 +2273,6 @@
             
             <tag> ASPNETCore </tag>
             
-            <tag> dotNET </tag>
-            
         </tags>
         
     </entry>
@@ -1767,8 +2434,6 @@
             <tag> CSharp </tag>
             
             <tag> ASPNETCore </tag>
-            
-            <tag> dotNET </tag>
             
         </tags>
         
@@ -2410,13 +3075,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
             
             <tag> ASPNETCore </tag>
-            
-            <tag> dotNET </tag>
             
         </tags>
         
@@ -7537,9 +8198,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> 程序设计 </tag>
+            
+            <tag> Web </tag>
             
         </tags>
         
@@ -9148,9 +9809,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> 计算机原理 </tag>
+            
+            <tag> Web </tag>
             
         </tags>
         
@@ -10289,13 +10950,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
             
             <tag> ASPNETCore </tag>
-            
-            <tag> dotNET </tag>
             
             <tag> IdentityServer4 </tag>
             
@@ -10361,8 +11018,6 @@
         <tags>
             
             <tag> CSharp </tag>
-            
-            <tag> dotNET </tag>
             
             <tag> WPF </tag>
             
@@ -10535,9 +11190,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -10749,8 +11404,6 @@
             
             <tag> CSharp </tag>
             
-            <tag> dotNET </tag>
-            
             <tag> WPF </tag>
             
         </tags>
@@ -10953,13 +11606,9 @@
         
         <tags>
             
-            <tag> Web </tag>
-            
             <tag> CSharp </tag>
             
             <tag> ASPNETCore </tag>
-            
-            <tag> dotNET </tag>
             
         </tags>
         
@@ -12988,7 +13637,32 @@
 <li>单例模式 Singleton：只要服务器不嗝屁，不管解析多少次接口，拿到的都是 a。换句话说就是，只要皇帝不死，太子一直是太子！从商场建成开业到商场倒闭关门，此次程序服务过程中，单例返回的始终是这个 a。</li>
 </ol>
 <hr>
-<h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h4 id="自定义中间件"><a href="#自定义中间件" class="headerlink" title="自定义中间件"></a>自定义中间件</h4><blockquote>
+<h2 id="ASP-NET-Core"><a href="#ASP-NET-Core" class="headerlink" title="ASP.NET Core"></a>ASP.NET Core</h2><h4 id="添加-HTTPS-支持"><a href="#添加-HTTPS-支持" class="headerlink" title="添加 HTTPS 支持"></a>添加 HTTPS 支持</h4><blockquote>
+<p>HTTPS: <a href="https://www.cnblogs.com/JulianHuang/p/11858800.html" target="_blank" rel="noopener">https://www.cnblogs.com/JulianHuang/p/11858800.html</a><br>HSTS: <a href="https://www.cnblogs.com/JulianHuang/p/12156997.html" target="_blank" rel="noopener">https://www.cnblogs.com/JulianHuang/p/12156997.html</a></p>
+</blockquote>
+<p>&emsp;&emsp;我们利用 Visual Studio 2019 项目模板构建 ASP.Net Core 项目，勾选 HTTPS 支持，会默认添加 HTTPS 支持：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app.UseHttpsRedirection()  <span class="comment">// 强制 Http 请求跳转到 Https</span></span><br><span class="line">app.UseHsts()</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;HSTS（HTTP Strict Transport Protocol）的作用是强制浏览器使用 HTTPS 与服务器创建连接，避免原有的 301 重定向 Https 时可能发生中间人劫持。<br>&emsp;&emsp;服务器开启 HSTS 的方法是，当客户端通过HTTPS发出请求时，在服务器返回的超文本传输协议响应头中包含 Strict-Transport-Security 字段。非加密传输时设置的 HSTS 字段无效。它告诉浏览器为特定的主机头和特定的时间范围缓存证书。  </p>
+<p>&emsp;&emsp;若使用 Kestrel 作为边缘（face-to-internet）Web 服务器， 参见下面的服务配置：</p>
+<ul>
+<li>为 STS header 设置了 preload 参数，Preload 不是 RFC HSTS 规范的一部分，但是浏览器支持在全新安装时预加载 HSTS 网站</li>
+<li>指定子域或排除的子域 使用 HSTS 协议</li>
+<li>设置浏览器缓存 [访问站点的请求均使用 HTTPS 协议] 这一约定的时间，默认是 30 天。</li>
+</ul>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddMvc();</span><br><span class="line"></span><br><span class="line">    services.AddHsts(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        options.Preload = <span class="literal">true</span>;</span><br><span class="line">        options.IncludeSubDomains = <span class="literal">true</span>;</span><br><span class="line">        options.MaxAge = TimeSpan.FromDays(<span class="number">60</span>);</span><br><span class="line">        options.ExcludedHosts.Add(<span class="string">"example.com"</span>);</span><br><span class="line">        options.ExcludedHosts.Add(<span class="string">"www.example.com"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    services.AddHttpsRedirection(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;</span><br><span class="line">        options.HttpsPort = <span class="number">5001</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>请注意： UseHsts 对于本地回送 hosts 并不生效。</p>
+<ul>
+<li><code>localhost</code>：IPv4 回送地址</li>
+<li><code>127.0.0.1</code>：IPv4 回送地址</li>
+<li><code>[::1]</code>：IPv6 回送地址</li>
+</ul>
+<p>这也是开发者在本地启动时 抓不到<code>Strict-Transport-Security</code>响应头的原因。</p>
+</blockquote>
+<hr>
+<h4 id="自定义中间件"><a href="#自定义中间件" class="headerlink" title="自定义中间件"></a>自定义中间件</h4><blockquote>
 <p><a href="https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PUdolCF8I9GCXlt1DI_BMw</a></p>
 </blockquote>
 <p>中间件是一种装配到应用程序管道以处理请求和响应的软件，每个组件可以：</p>
@@ -13391,6 +14065,14 @@
 </tr>
 </tbody></table>
 <hr>
+<h2 id="await-Task-Yield-和-await-Task-CompletedTask-有什么不同"><a href="#await-Task-Yield-和-await-Task-CompletedTask-有什么不同" class="headerlink" title="await Task.Yield() 和 await Task.CompletedTask 有什么不同"></a>await Task.Yield() 和 await Task.CompletedTask 有什么不同</h2><blockquote>
+<p><a href="https://www.cnblogs.com/OpenCoder/p/12201446.html" target="_blank" rel="noopener">https://www.cnblogs.com/OpenCoder/p/12201446.html</a></p>
+</blockquote>
+<ul>
+<li><code>Task.CompletedTask</code>本质上来说是返回一个已经完成的 Task 对象，所以这时如果我们用<code>await</code>关键字去等待<code>Task.CompletedTask</code>，.NET Core 认为没有必要再去线程池启动一个新的线程来执行<code>await</code>关键字之后的代码，所以实际上<code>await Task.CompletedTask</code>之前和之后的代码是在同一个线程上同步执行的，通俗易懂的说就是单线程的。这也是为什么很多文章说，使用了 await async 关键字并不代表程序就变成异步多线程的了。</li>
+<li>而<code>Task.Yield()</code>就不一样了，我们可以理解<code>Task.Yield()</code>是真正使用 Task 来启动了一个线程，只不过这个线程什么都没有干，相当于在使用<code>await Task.Yield()</code>的时候，确实是在用<code>await</code>等待一个还没有完成的<code>Task</code>对象，所以这时调用线程（主线程）就会立即返回去做其它事情了，当调用线程（主线程）返回后，<code>await</code>等待的<code>Task</code>对象就立即变为完成了，这时<code>await</code>关键字之后的代码由另外一个线程池线程来执行。</li>
+</ul>
+<hr>
 <h1 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h1><h2 id="9-个小技巧"><a href="#9-个小技巧" class="headerlink" title="9 个小技巧"></a>9 个小技巧</h2><blockquote>
 <p><a href="http://blog.yidengxuetang.com/post/201912/11/" target="_blank" rel="noopener">http://blog.yidengxuetang.com/post/201912/11/</a></p>
 </blockquote>
@@ -13427,7 +14109,7 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> entries = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]; </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 7  </span></span><br><span class="line">entries.length = <span class="number">0</span>;   </span><br><span class="line"><span class="built_in">console</span>.log(entries.length); </span><br><span class="line"><span class="comment">// 0 </span></span><br><span class="line"><span class="built_in">console</span>.log(entries); </span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
 
 <hr>
-]]></content>
+<h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1>]]></content>
       
         <categories>
             
@@ -13440,9 +14122,9 @@
             
             <tag> CSharp </tag>
             
-            <tag> dotNET </tag>
-            
             <tag> JavaScript </tag>
+            
+            <tag> dotNET </tag>
             
         </tags>
         
@@ -13851,6 +14533,11 @@
             </figure>
 
 <figure class="image-box">
+                <img src="微服务框架基本功能.png" alt="微服务框架基本功能" title class>
+                <p>微服务框架基本功能</p>
+            </figure>
+
+<figure class="image-box">
                 <img src="排序算法.webp" alt="排序算法" title class>
                 <p>排序算法</p>
             </figure>
@@ -14131,9 +14818,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -14158,9 +14845,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -14185,9 +14872,9 @@
         
         <tags>
             
-            <tag> 程序设计 </tag>
-            
             <tag> CSharp </tag>
+            
+            <tag> 程序设计 </tag>
             
         </tags>
         
@@ -14483,14 +15170,14 @@
 
 <p><a href="https://tao-lol.top/">tao-lol</a></p>
 <h1 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h1><p><a href="https://docs.microsoft.com/zh-cn/dotnet/api/index" target="_blank" rel="noopener">.NET API 浏览器</a><br><a href="https://try.dot.net/" target="_blank" rel="noopener">try.dot.net</a>  </p>
-<h2 id="微软官方文档"><a href="#微软官方文档" class="headerlink" title="微软官方文档"></a>微软官方文档</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/" target="_blank" rel="noopener">.NET</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/" target="_blank" rel="noopener">.NET Standard</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/" target="_blank" rel="noopener">.NET Framework</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/core/" target="_blank" rel="noopener">.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/" target="_blank" rel="noopener">C#</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/" target="_blank" rel="noopener">ASP.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/razor-pages/" target="_blank" rel="noopener">Razor Pages</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/mvc/" target="_blank" rel="noopener">MVC</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/blazor/" target="_blank" rel="noopener">Blazor</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/web-api/" target="_blank" rel="noopener">Web API</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/signalr/" target="_blank" rel="noopener">SignalR</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/grpc/" target="_blank" rel="noopener">gRPC</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/wpf/" target="_blank" rel="noopener">WPF</a><br><a href="https://docs.microsoft.com/zh-cn/xamarin/" target="_blank" rel="noopener">Xamarin</a><br><a href="https://docs.microsoft.com/zh-cn/ef/core/" target="_blank" rel="noopener">Entity Framework Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/machine-learning/" target="_blank" rel="noopener">ML.NET</a><br><a href="https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md" target="_blank" rel="noopener">Microsoft REST API Guidelines</a><br><a href="https://docs.microsoft.com/zh-cn/azure/devops/" target="_blank" rel="noopener">Azure Devops</a><br><a href="https://docs.microsoft.com/en-us/azure/architecture/" target="_blank" rel="noopener">Azure Architecture</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/architecture/microservices/" target="_blank" rel="noopener">MicroServices</a><br><a href="https://github.com/dotnet-architecture/eShopOnContainers" target="_blank" rel="noopener">eShopOnContainers</a>  </p>
+<h2 id="微软官方文档"><a href="#微软官方文档" class="headerlink" title="微软官方文档"></a>微软官方文档</h2><p><a href="https://docs.microsoft.com/zh-cn/dotnet/" target="_blank" rel="noopener">.NET</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/standard/" target="_blank" rel="noopener">.NET Standard</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/" target="_blank" rel="noopener">.NET Framework</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/core/" target="_blank" rel="noopener">.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/" target="_blank" rel="noopener">C#</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/" target="_blank" rel="noopener">ASP.NET Core</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/razor-pages/" target="_blank" rel="noopener">Razor Pages</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/mvc/" target="_blank" rel="noopener">MVC</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/blazor/" target="_blank" rel="noopener">Blazor</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/web-api/" target="_blank" rel="noopener">Web API</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/signalr/" target="_blank" rel="noopener">SignalR</a><br><a href="https://docs.microsoft.com/zh-cn/aspnet/core/grpc/" target="_blank" rel="noopener">gRPC</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/framework/wpf/" target="_blank" rel="noopener">WPF</a><br><a href="https://docs.microsoft.com/zh-cn/xamarin/" target="_blank" rel="noopener">Xamarin</a><br><a href="https://docs.microsoft.com/zh-cn/ef/core/" target="_blank" rel="noopener">Entity Framework Core</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/machine-learning/" target="_blank" rel="noopener">ML.NET</a><br><a href="https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md" target="_blank" rel="noopener">Microsoft REST API Guidelines</a><br><a href="https://docs.microsoft.com/zh-cn/azure/devops/" target="_blank" rel="noopener">Azure Devops</a><br><a href="https://docs.microsoft.com/en-us/azure/architecture/" target="_blank" rel="noopener">Azure Architecture</a><br><a href="https://docs.microsoft.com/zh-cn/dotnet/architecture/microservices/" target="_blank" rel="noopener">MicroServices</a><br><a href="https://github.com/dotnet-architecture/eShopOnContainers" target="_blank" rel="noopener">eShopOnContainers</a><br><a href="https://www.microsoft.com/design/" target="_blank" rel="noopener">Microsoft Design</a>  </p>
 <h2 id="第三方组件"><a href="#第三方组件" class="headerlink" title="第三方组件"></a>第三方组件</h2><h3 id="代码增强"><a href="#代码增强" class="headerlink" title="代码增强"></a>代码增强</h3><p><a href="https://github.com/App-vNext/Polly/wiki" target="_blank" rel="noopener">Polly</a><br><a href="https://fluentvalidation.net/start" target="_blank" rel="noopener">FluentValidation</a><br><a href="https://github.com/scottksmith95/LINQKit" target="_blank" rel="noopener">LINQKit</a>  </p>
 <h3 id="ID生成"><a href="#ID生成" class="headerlink" title="ID生成"></a>ID生成</h3><h4 id="无序"><a href="#无序" class="headerlink" title="无序"></a>无序</h4><p><a href="https://github.com/bolorundurowb/shortid" target="_blank" rel="noopener">ShortId</a><br><a href="https://github.com/jasonholloway/miniguid" target="_blank" rel="noopener">MiniGuid</a>  </p>
 <h4 id="有序"><a href="#有序" class="headerlink" title="有序"></a>有序</h4><p><a href="https://github.com/Coldairarrow/IdHelper" target="_blank" rel="noopener">IdHelper</a><br>⭐推荐：<a href="https://github.com/stulzq/snowflake-net" target="_blank" rel="noopener">SnowFlake-NET</a><br>⭐推荐：<a href="https://github.com/buvinghausen/SequentialGuid" target="_blank" rel="noopener">SequentialGuid</a>  </p>
 <h3 id="图像音频视频"><a href="#图像音频视频" class="headerlink" title="图像音频视频"></a>图像音频视频</h3><p><a href="https://trac.ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a><br><a href="https://github.com/dlemstra/Magick.NET" target="_blank" rel="noopener">Magick</a>  </p>
 <h3 id="网络服务"><a href="#网络服务" class="headerlink" title="网络服务"></a>网络服务</h3><p><a href="http://docs.supersocket.net/" target="_blank" rel="noopener">SuperSocket</a>  </p>
 <h3 id="身份认证"><a href="#身份认证" class="headerlink" title="身份认证"></a>身份认证</h3><p><a href="https://oauth.net/2/" target="_blank" rel="noopener">OAuth 2.0</a><br><a href="https://openid.net/developers/specs/" target="_blank" rel="noopener">OpenID</a><br><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a><br><a href="docs.identityserver.io/">IdentityServer4</a><br><a href="https://identitymodel.readthedocs.io/" target="_blank" rel="noopener">IdentityModel</a>  </p>
-<h3 id="应用程序接口（API）"><a href="#应用程序接口（API）" class="headerlink" title="应用程序接口（API）"></a>应用程序接口（API）</h3><p><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/IKende/Bumblebee" target="_blank" rel="noopener">Bumblebee</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/graphql-dotnet/graphql-dotnet" target="_blank" rel="noopener">GraphQL</a><br><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement</a><br>🚫<a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
+<h3 id="应用程序接口（API）"><a href="#应用程序接口（API）" class="headerlink" title="应用程序接口（API）"></a>应用程序接口（API）</h3><p><a href="https://json-schema.org/" target="_blank" rel="noopener">JSON Schema</a><br><a href="https://swagger.io/docs/" target="_blank" rel="noopener">Swagger</a><br><a href="http://editor.swagger.io/" target="_blank" rel="noopener">Swagger Editor</a><br><a href="https://github.com/domaindrivendev/Swashbuckle" target="_blank" rel="noopener">SwashBuckle</a><br><a href="https://github.com/RicoSuter/NSwag/wiki" target="_blank" rel="noopener">NSwag</a><br><a href="https://ocelot.readthedocs.io/" target="_blank" rel="noopener">Ocelot</a><br><a href="https://github.com/IKende/Bumblebee" target="_blank" rel="noopener">Bumblebee</a><br><a href="https://github.com/reactiveui/refit" target="_blank" rel="noopener">Refit</a><br><a href="https://github.com/graphql-dotnet/graphql-dotnet" target="_blank" rel="noopener">GraphQL</a><br><a href="https://github.com/microsoft/FeatureManagement-Dotnet" target="_blank" rel="noopener">FeatureManagement</a><br>🚫<a href="https://github.com/stefanprodan/AspNetCoreRateLimit/wiki" target="_blank" rel="noopener">AspNetCoreRateLimit</a>  </p>
 <h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p><a href="http://unitycontainer.org/" target="_blank" rel="noopener">Unity</a><br><a href="https://autofac.readthedocs.io/" target="_blank" rel="noopener">Autofac</a><br><a href="https://github.com/jbogard/MediatR/wiki" target="_blank" rel="noopener">MediatR</a><br><a href="https://github.com/dotnet-state-machine/stateless" target="_blank" rel="noopener">Stateless</a><br><a href="https://github.com/MassTransit/Automatonymous" target="_blank" rel="noopener">Automatonymous</a>  </p>
 <h2 id="规则引擎"><a href="#规则引擎" class="headerlink" title="规则引擎"></a>规则引擎</h2><p><a href="https://github.com/NRules/NRules" target="_blank" rel="noopener">NRules</a>  </p>
 <h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p><a href="https://redis.io/documentation" target="_blank" rel="noopener">Redis</a><br><a href="https://docs.mongodb.com/" target="_blank" rel="noopener">mongoDB</a><br><a href="https://docs.microsoft.com/zh-cn/sql/sql-server/" target="_blank" rel="noopener">SQL Server</a><br><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener">MySQL</a><br><a href="https://www.sqlite.org/docs.html" target="_blank" rel="noopener">SQLite</a>  </p>
@@ -14501,7 +15188,7 @@
 <h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ</a><br><a href="https://github.com/EasyNetQ/EasyNetQ/wiki/Introduction" target="_blank" rel="noopener">EasyNetQ</a><br><a href="https://masstransit-project.com/MassTransit/" target="_blank" rel="noopener">MassTransit</a>  </p>
 <h3 id="服务管理"><a href="#服务管理" class="headerlink" title="服务管理"></a>服务管理</h3><p><a href="https://www.consul.io/docs/index.html" target="_blank" rel="noopener">Consul</a><br><a href="https://github.com/ctripcorp/apollo/wiki" target="_blank" rel="noopener">Apollo</a>  </p>
 <h3 id="日志记录"><a href="#日志记录" class="headerlink" title="日志记录"></a>日志记录</h3><p><a href="https://github.com/serilog/serilog/wiki" target="_blank" rel="noopener">Serilog</a><br><a href="https://github.com/NLog/NLog/wiki" target="_blank" rel="noopener">NLog</a>  </p>
-<h3 id="状态监控"><a href="#状态监控" class="headerlink" title="状态监控"></a>状态监控</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" target="_blank" rel="noopener">Elasticsearch</a><br><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank" rel="noopener">Kibana</a><br><a href="https://www.elastic.co/guide/en/logstash/current/index.html" target="_blank" rel="noopener">Logstash</a><br><a href="https://github.com/apache/skywalking/tree/master/docs" target="_blank" rel="noopener">SkyWalking</a><br><a href="https://www.app-metrics.io/" target="_blank" rel="noopener">AppMetrics</a><br><a href="https://docs.influxdata.com/influxdb/" target="_blank" rel="noopener">influxDB</a><br><a href="https://grafana.com/docs/grafana/" target="_blank" rel="noopener">Grafana</a><br><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank" rel="noopener">Exceptionless</a><br><a href="https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks" target="_blank" rel="noopener">AspNetCore.Diagnostics.HealthChecks</a>  </p>
+<h3 id="状态监控"><a href="#状态监控" class="headerlink" title="状态监控"></a>状态监控</h3><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html" target="_blank" rel="noopener">Elasticsearch</a><br><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank" rel="noopener">Kibana</a><br><a href="https://www.elastic.co/guide/en/logstash/current/index.html" target="_blank" rel="noopener">Logstash</a><br><a href="https://github.com/apache/skywalking/tree/master/docs" target="_blank" rel="noopener">SkyWalking</a><br><a href="https://www.app-metrics.io/" target="_blank" rel="noopener">AppMetrics</a><br><a href="https://docs.influxdata.com/influxdb/" target="_blank" rel="noopener">influxDB</a><br><a href="https://grafana.com/docs/grafana/" target="_blank" rel="noopener">Grafana</a><br><a href="https://github.com/exceptionless/Exceptionless/wiki" target="_blank" rel="noopener">Exceptionless</a><br><a href="https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks" target="_blank" rel="noopener">AspNetCore.Diagnostics.HealthChecks</a><br><a href="https://github.com/SpringLeee/HttpReports" target="_blank" rel="noopener">HttpReports</a>  </p>
 <h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p><a href="https://github.com/nunit/docs/wiki" target="_blank" rel="noopener">NUnit</a><br><a href="https://xunit.net/#documentation" target="_blank" rel="noopener">xUnit</a><br><a href="https://github.com/moq/moq4/wiki" target="_blank" rel="noopener">Moq</a><br><a href="https://nsubstitute.github.io/help.html" target="_blank" rel="noopener">NSubstitute</a><br><a href="https://shouldly.readthedocs.io/" target="_blank" rel="noopener">Shouldly</a><br><a href="https://fluentassertions.com/introduction" target="_blank" rel="noopener">FluentAssertions</a>  </p>
 <h3 id="托管部署"><a href="#托管部署" class="headerlink" title="托管部署"></a>托管部署</h3><p><a href="https://github.com/madskristensen/BundlerMinifier" target="_blank" rel="noopener">BundlerMinifier</a><br><a href="https://git-scm.com/doc" target="_blank" rel="noopener">Git</a><br><a href="https://docs.docker.com/" target="_blank" rel="noopener">Docker</a><br><a href="https://github.com/jesseduffield/lazydocker" target="_blank" rel="noopener">LazyDocker</a><br><a href="https://helm.sh/" target="_blank" rel="noopener">Helm</a><br><a href="https://kubernetes.io/docs/concepts/" target="_blank" rel="noopener">Kubernetes</a><br><a href="https://github.com/rancher/k3s" target="_blank" rel="noopener">K3s</a><br><a href="https://jenkins.io/zh/doc/" target="_blank" rel="noopener">Jenkins</a>  </p>
 <h3 id="集成架构"><a href="#集成架构" class="headerlink" title="集成架构"></a>集成架构</h3><h4 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h4><p><a href="http://cap.dotnetcore.xyz/user-guide/zh/getting-started/quick-start/" target="_blank" rel="noopener">CAP</a><br><a href="https://github.com/dotnetcore/surging" target="_blank" rel="noopener">Surging</a><br><a href="http://dotnet.github.io/orleans/Documentation/" target="_blank" rel="noopener">Orleans</a><br><a href="https://github.com/dapr/dapr/wiki" target="_blank" rel="noopener">Dapr</a><br><a href="https://steeltoe.io/docs/" target="_blank" rel="noopener">Steeltoe</a>  </p>
@@ -14539,7 +15226,7 @@
 <h2 id="比价"><a href="#比价" class="headerlink" title="比价"></a>比价</h2><p><a href="http://www.xitie.com/" target="_blank" rel="noopener">西贴 网上商品历史价格</a><br><a href="https://www.smzdm.com/" target="_blank" rel="noopener">什么值得买</a>  </p>
 <h2 id="运营商"><a href="#运营商" class="headerlink" title="运营商"></a>运营商</h2><p><a href="https://www.10086.cn/" target="_blank" rel="noopener">中国移动</a><br><a href="https://www.189.cn/" target="_blank" rel="noopener">中国电信</a><br><a href="https://www.10010.com/" target="_blank" rel="noopener">中国联通</a>  </p>
 <h2 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h2><p><a href="https://homenew.console.aliyun.com/" target="_blank" rel="noopener">阿里云控制台</a><br><a href="https://console.cloud.tencent.com/" target="_blank" rel="noopener">腾讯云控制台</a>  </p>
-<h2 id="其它-3"><a href="#其它-3" class="headerlink" title="其它"></a>其它</h2><p><a href="http://www.chongdiantou.com/" target="_blank" rel="noopener">充电头网</a><br><a href="https://github.com/awesome-selfhosted/awesome-selfhosted" target="_blank" rel="noopener">Selfhosted</a>  </p>
+<h2 id="其它-3"><a href="#其它-3" class="headerlink" title="其它"></a>其它</h2><p><a href="https://www.tianyancha.com/" target="_blank" rel="noopener">天眼查</a><br><a href="https://www.qichacha.com/" target="_blank" rel="noopener">企查查</a><br><a href="http://www.chongdiantou.com/" target="_blank" rel="noopener">充电头网</a><br><a href="https://github.com/awesome-selfhosted/awesome-selfhosted" target="_blank" rel="noopener">Selfhosted</a>  </p>
 ]]></content>
       
         <categories>
