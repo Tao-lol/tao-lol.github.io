@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>ASP.Net Core 3.1 中使用 JWT 认证 | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp,ASPNETCore">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>ASP.Net Core 3.1 中使用 JWT 认证</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">ASP.Net Core 3.1 中使用 JWT 认证</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-20T08:38:44.000Z" itemprop="datePublished" class="page-time">
+  2020-01-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-UseJwtInAspNetCore"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">ASP.Net Core 3.1 中使用 JWT 认证</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-20 16:38:44" datetime="2020-01-20T08:38:44.000Z"  itemprop="datePublished">2020-01-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/liuww/p/12177272.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuww/p/12177272.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="JWT-认证简单介绍"><a href="#JWT-认证简单介绍" class="headerlink" title="JWT 认证简单介绍"></a>JWT 认证简单介绍</h1><p>&emsp;&emsp;关于 JWT 的介绍网上很多，此处不再赘述，我们主要看看 JWT 的结构。<br>&emsp;&emsp;JWT 主要由三部分组成，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HEADER.PAYLOAD.SIGNATURE</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>HEADER</code>：包含 token 的元数据，主要是加密算法，和签名的类型。<br>&emsp;&emsp;如下面的信息，说明了加密的对象类型是 JWT，加密算法是 HMAC SHA-256。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"alg"</span>:<span class="string">"HS256"</span>,<span class="attr">"typ"</span>:<span class="string">"JWT"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后需要通过 <strong>BASE64</strong> 编码后存入 token 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>Payload</code>：主要包含一些声明信息（claim），这些声明是 <strong>key-value 对</strong> 的数据结构。<br>&emsp;&emsp;通常如用户名，角色等信息，过期日期等，因为是未加密的，所以不建议存放敏感信息。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"</span>:<span class="string">"admin"</span>,<span class="attr">"exp"</span>:<span class="number">1578645536</span>,<span class="attr">"iss"</span>:<span class="string">"webapi.cn"</span>,<span class="attr">"aud"</span>:<span class="string">"WebApi"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;也需要通过 <strong>BASE64</strong> 编码后存入 token 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDU1MzYsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;<code>Signature</code>：JWT 要符合 JWS（Json Web Signature）的标准生成一个最终的签名。把编码后的 Header 和 Payload 信息加在一起，然后使用一个强加密算法，如 Hmac SHA-256，进行加密。<code>HS256(BASE64(Header).Base64(Payload)，secret)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2_akEH40LR2QWekgjm8Tt3lesSbKtDethmJMo_3jpF4</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;最后生成的token如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.</span><br><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDU1MzYsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9.</span><br><span class="line">2_akEH40LR2QWekgjm8Tt3lesSbKtDethmJMo_3jpF4</span><br></pre></td></tr></table></figure>
+
+<h1 id="ASP-NET-Core-3-1-Web-API-中使用-JWT-认证"><a href="#ASP-NET-Core-3-1-Web-API-中使用-JWT-认证" class="headerlink" title="ASP.NET Core 3.1 Web API 中使用 JWT 认证"></a>ASP.NET Core 3.1 Web API 中使用 JWT 认证</h1><blockquote>
+<p>开发环境：  </p>
+<ul>
+<li>框架：ASP.NET Core 3.1  </li>
+<li>IDE：Visual Studio 2019</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;命令行中执行执行以下命令，创建 Web API 项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi -n Webapi -o WebApi</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;特别注意的是，3.x 默认是没有 JWT 的<code>Microsoft.AspNetCore.Authentication.JwtBearer</code>库的，所以需要手动添加 NuGet Package，切换到项目所在目录，执行 .NET CLI 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 3.1.0</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;创建一个简单的 POCO 类，用来存储签发或者验证 JWT 时用到的信息：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Newtonsoft.Json;</span><br><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> System.Threading.Tasks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Webapi.Models</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenManagement</span></span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"secret"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Secret &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"issuer"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Issuer &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"audience"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Audience &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"accessExpiration"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> AccessExpiration &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">JsonProperty(<span class="meta-string">"refreshExpiration"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> RefreshExpiration &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>appsettings.Development.json</code>添加 JWT 使用到的配置信息（如果是生成环境在<code>appsettings.json</code>添加即可）：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">"tokenManagement": &#123;</span><br><span class="line">    "secret": "123456",</span><br><span class="line">    "issuer": "webapi.cn",</span><br><span class="line">    "audience": "WebApi",</span><br><span class="line">    "accessExpiration": 30,</span><br><span class="line">    "refreshExpiration": 60</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>StartUp</code>类的<code>ConfigureServices</code>方法中添加读取配置信息：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers();</span><br><span class="line">    services.Configure&lt;TokenManagement&gt;(Configuration.GetSection(<span class="string">"tokenManagement"</span>));</span><br><span class="line">    <span class="keyword">var</span> token = Configuration.GetSection(<span class="string">"tokenManagement"</span>).Get&lt;TokenManagement&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;到目前为止，我们完成了一些基础工作，下面在 Web API 中注入 JWT 的验证服务，并在中间件管道中启用 Authentication 中间件。<br>&emsp;&emsp;<code>StartUp</code>类中要引用 JWT 验证服务的命名空间：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.AspNetCore.Authentication.JwtBearer;</span><br><span class="line"><span class="keyword">using</span> Microsoft.IdentityModel.Tokens;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;然后在<code>ConfigureServices</code>方法中添加如下逻辑：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">services.AddAuthentication(x =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;</span><br><span class="line">    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;</span><br><span class="line">&#125;).AddJwtBearer(x =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    x.RequireHttpsMetadata = <span class="literal">false</span>;</span><br><span class="line">    x.SaveToken = <span class="literal">true</span>;</span><br><span class="line">    x.TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters</span><br><span class="line">    &#123;</span><br><span class="line">        ValidateIssuerSigningKey = <span class="literal">true</span>,</span><br><span class="line">        IssuerSigningKey = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.ASCII.GetBytes(token.Secret)),</span><br><span class="line">        ValidIssuer = token.Issuer,</span><br><span class="line">        ValidAudience = token.Audience,</span><br><span class="line">        ValidateIssuer = <span class="literal">false</span>,</span><br><span class="line">        ValidateAudience = <span class="literal">false</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在<code>Configure</code>方法中启用验证：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseDeveloperExceptionPage();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    app.UseHttpsRedirection();</span><br><span class="line"></span><br><span class="line">    app.UseAuthentication();</span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseAuthorization();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapControllers();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>&emsp;&emsp;上面完成了 JWT 验证的功能，下面就需要添加签发 token 的逻辑。我们需要添加一个专门用来用户认证和签发 token 的控制器，命名成 AuthenticationController，同时添加一个请求的 DTO 类：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoginRequestDTO</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Required</span>]</span><br><span class="line">    [<span class="meta">JsonProperty(<span class="meta-string">"username"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Username &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Required</span>]</span><br><span class="line">    [<span class="meta">JsonProperty(<span class="meta-string">"password"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Password &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/[controller]"</span>)</span>]</span><br><span class="line">[<span class="meta">ApiController</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AuthenticationController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">AllowAnonymous</span>]</span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"requestToken"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ActionResult <span class="title">RequestToken</span>(<span class="params">[FromBody] LoginRequestDTO request</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Ok();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;目前上面的控制器只实现了基本的逻辑，下面我们要创建签发 token 的服务，去完成具体的业务。第一步我们先创建对应的服务接口，命名为 IAuthenticateService：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接下来，实现接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenAuthenticationService</span> : <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在<code>Startup</code>的<code>ConfigureServices</code>方法中注册服务：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;IAuthenticateService, TokenAuthenticationService&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在 Controller 中注入 IAuthenticateService 服务，并完善 Action：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AuthenticationController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IAuthenticateService _authService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AuthenticationController</span>(<span class="params">IAuthenticateService authService</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._authService = authService;</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="meta">AllowAnonymous</span>]</span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"requestToken"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ActionResult <span class="title">RequestToken</span>(<span class="params">[FromBody] LoginRequestDTO request</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ModelState.IsValid)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> token;</span><br><span class="line">        <span class="keyword">if</span> (_authService.IsAuthenticated(request, <span class="keyword">out</span> token))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> Ok(token);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> BadRequest(<span class="string">"Invalid Request"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;正常情况，我们都会根据请求的用户和密码去验证用户是否合法，需要连接到数据库获取数据进行校验，我们这里为了方便，假设任何请求的用户都是合法的。<br>&emsp;&emsp;这里单独加个用户管理的服务，不在 IAuthenticateService 这个服务里面添加相应逻辑，主要遵循了职责单一原则。首先和上面一样，创建一个服务接口 IUserService：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IUserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">LoginRequestDTO req</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;实现 IUserService 接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserService</span> : <span class="title">IUserService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//模拟测试，默认都是人为验证有效</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsValid</span>(<span class="params">LoginRequestDTO req</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;同样注册到容器中：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services.AddScoped&lt;IUserService, UserService&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;接下来，就要完善 TokenAuthenticationService 签发 token 的逻辑，首先要注入 IUserService 和 TokenManagement，然后实现具体的业务逻辑，这个 token 的生成还是使用的 Jwt 的类库提供的 API，具体不详细描述。<br>&emsp;&emsp;特别注意下 TokenManagement 的注入是以 IOptions 的接口类型注入的，还记得是在<code>StartpUp</code>中吗？我们是通过配置项的方式注册 TokenManagement 类型的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TokenAuthenticationService</span> : <span class="title">IAuthenticateService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IUserService _userService;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> TokenManagement _tokenManagement;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TokenAuthenticationService</span>(<span class="params">IUserService userService, IOptions&lt;TokenManagement&gt; tokenManagement</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _userService = userService;</span><br><span class="line">        _tokenManagement = tokenManagement.Value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsAuthenticated</span>(<span class="params">LoginRequestDTO request, <span class="keyword">out</span> <span class="keyword">string</span> token</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        token = <span class="keyword">string</span>.Empty;</span><br><span class="line">        <span class="keyword">if</span> (!_userService.IsValid(request))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">var</span> claims = <span class="keyword">new</span>[]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">new</span> Claim(ClaimTypes.Name,request.Username)</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">var</span> key = <span class="keyword">new</span> SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));</span><br><span class="line">        <span class="keyword">var</span> credentials = <span class="keyword">new</span> SigningCredentials(key, SecurityAlgorithms.HmacSha256);</span><br><span class="line">        <span class="keyword">var</span> jwtToken = <span class="keyword">new</span> JwtSecurityToken(_tokenManagement.Issuer, _tokenManagement.Audience, claims, expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration), signingCredentials: credentials);</span><br><span class="line"></span><br><span class="line">        token = <span class="keyword">new</span> JwtSecurityTokenHandler().WriteToken(jwtToken);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;准备好测试试用的 API，打上<code>Authorize</code>特性，表明需要授权。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">ApiController</span>]</span><br><span class="line">[<span class="meta">Route(<span class="meta-string">"[controller]"</span>)</span>]</span><br><span class="line">[<span class="meta">Authorize</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">WeatherForecastController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="keyword">string</span>[] Summaries = <span class="keyword">new</span>[]</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"Freezing"</span>, <span class="string">"Bracing"</span>, <span class="string">"Chilly"</span>, <span class="string">"Cool"</span>, <span class="string">"Mild"</span>, <span class="string">"Warm"</span>, <span class="string">"Balmy"</span>, <span class="string">"Hot"</span>, <span class="string">"Sweltering"</span>, <span class="string">"Scorching"</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogger&lt;WeatherForecastController&gt; _logger;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WeatherForecastController</span>(<span class="params">ILogger&lt;WeatherForecastController&gt; logger</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">HttpGet</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;WeatherForecast&gt; <span class="title">Get</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> rng = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> Enumerable.Range(<span class="number">1</span>, <span class="number">5</span>).Select(index =&gt; <span class="keyword">new</span> WeatherForecast</span><br><span class="line">        &#123;</span><br><span class="line">            Date = DateTime.Now.AddDays(index),</span><br><span class="line">            TemperatureC = rng.Next(<span class="number">-20</span>, <span class="number">55</span>),</span><br><span class="line">            Summary = Summaries[rng.Next(Summaries.Length)]</span><br><span class="line">        &#125;)</span><br><span class="line">        .ToArray();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;现在我们可以测试验证了，我们可以使用 Postman 来进行 HTTP 请求，先启动 HTTP 服务，获取 URL，先测试一个访问需要授权的接口，但没有携带 token 信息，返回是 401，表示未授权。</p>
+<figure class="image-box">
+                <a rel=ASP.Net Core 3.1 中使用 JWT 认证 href="683694-20200110184421844-68601763.png" title="" data-fancybox="images"><img src="683694-20200110184421844-68601763.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;下面我们先通过认证接口，获取 token，居然报错，查询了下，发现 HS256 算法的秘钥长度最新为 128 位，转换成字符至少 16 字符，之前设置的秘钥是 123456，所以导致异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.ArgumentOutOfRangeException: IDX10603: Decryption failed. Keys tried: &apos;HS256&apos;. Exceptions caught: &apos;128&apos;. token: &apos;48&apos; (Parameter &apos;KeySize&apos;) at</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;更新秘钥：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">"tokenManagement": &#123;</span><br><span class="line">    "secret": "123456123456123456",</span><br><span class="line">    "issuer": "webapi.cn",</span><br><span class="line">    "audience": "WebApi",</span><br><span class="line">    "accessExpiration": 30,</span><br><span class="line">    "refreshExpiration": 60</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;重新发起请求，成功获取 token：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.</span><br><span class="line">eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE1Nzg2NDUyMDMsImlzcyI6IndlYmFwaS5jbiIsImF1ZCI6IldlYkFwaSJ9.</span><br><span class="line">AehD8WTAnEtklof2OJsvg0U4_o8_SjdxmwUjzAiuI-o</span><br></pre></td></tr></table></figure>
+
+<figure class="image-box">
+                <a rel=ASP.Net Core 3.1 中使用 JWT 认证 href="683694-20200110184411897-1612763683.png" title="" data-fancybox="images"><img src="683694-20200110184411897-1612763683.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<p>&emsp;&emsp;把 token 带到之前请求的 API 中，重新测试，成功获取数据：</p>
+<figure class="image-box">
+                <a rel=ASP.Net Core 3.1 中使用 JWT 认证 href="683694-20200110184403969-331881185.png" title="" data-fancybox="images"><img src="683694-20200110184403969-331881185.png" alt title class></a>
+                <p></p>
+            </figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&emsp;&emsp;基于 token 的认证方式，让我们构建分布式/松耦合的系统更加容易。任何地方生成的 token，只有拥有相同秘钥，就可以在任何地方进行签名校验。<br>&emsp;&emsp;当然要用好 JWT 认证方式，还有其他安全细节需要处理，比如 Payload 中不能存放敏感信息，使用 HTTPS 的加密传输方式等等，可以根据业务实际需要再进一步安全加固。<br>&emsp;&emsp;同时我们也发现使用 token，就可以摆脱 Cookie 的限制，所以 JWT 是移动 APP 开发的首选。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-20T10:23:42.964Z" itemprop="dateUpdated">2020-01-20 18:23:42</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/01/20/UseJwtInAspNetCore/" target="_blank" rel="external">https://tao-lol.top/2020/01/20/UseJwtInAspNetCore/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ASPNETCore/">ASPNETCore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/20/UseJwtInAspNetCore/&title=《ASP.Net Core 3.1 中使用 JWT 认证》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/20/UseJwtInAspNetCore/&title=《ASP.Net Core 3.1 中使用 JWT 认证》 — Blog&source=
+https://www.cnblogs.com/liuww/p/12177272.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="prev">
+      <a href="/2020/01/20/UseOasToDescribeWebApi/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">使用 OAS（OpenAPI 标准）来描述 Web API</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/19/WpfPrismTutorial/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">WPF Prism 框架 教程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JWT-认证简单介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">JWT 认证简单介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ASP-NET-Core-3-1-Web-API-中使用-JWT-认证"><span class="post-toc-number">2.</span> <span class="post-toc-text">ASP.NET Core 3.1 Web API 中使用 JWT 认证</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/01/20/UseJwtInAspNetCore/&title=《ASP.Net Core 3.1 中使用 JWT 认证》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/01/20/UseJwtInAspNetCore/&title=《ASP.Net Core 3.1 中使用 JWT 认证》 — Blog&source=
+https://www.cnblogs.com/liuww/p/12177272.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJUlEQVR42u3awQ6CMBBFUf//pzFxq8B9M2DC9HZlFKGHxUun09cLj+0zvr/ZG9//2vv1+JuLhwwZMh7L4BPa+5Vcs3c9+UyeLkOGjBUYxyHLw5EHKwl3MjcZMmTIINcck/gSU4YMGTKuYpws0fA1PNZlyJAho7NxRqI2jd3ba3EZMmQ8kJE2Bv75+cb+hgwZMh7C2MJBNtTSxWLaHP1xHxkyZIxmpA+4Y+s/DdlghStDhowRjHRDrQNO8TzEZciQMZtR+0MaxLVQjhucMmTIWJjBm4jk0FjnPif3lCFDxlBGZ/HXj8u0CYGOWciQIWMog4cdj8u0WK2F+49aXIYMGeMY6XKtv3GWMlplsAwZMgYx+OR45PWbmvz4hQwZMlZg1MrUq0pfErKXFbQyZMh4IIOXoGk7k7cK0mVoUIvLkCFjHIM3MtN2QtqSjIteGTJkjGaQkd60v1XXWXrKkCFjHqNTQNYmwV8cb4jKkCFjNoNsu5MDECRkeawXD6vJkCFjKKPfaEwju3YI42Q+MmTIWIxBojCug8NppbErQ4aM2Yy0MZk2AGpFb+t1yJAhYxxjC0cnInl882tkyJCxAqO2sKvdunaEonMoTYYMGZMYJGSLPYfGawqalzJkyFiGcVXIktdR24xDe4cyZMhYnsHLzmNef+tNhgwZMjqMflFam48MGTJWYKQHHXjDoFZpxu0KGTJkjGb0T2oUb4rL1GDTTYYMGdMYb44mjnRj4RqHAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
