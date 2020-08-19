@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    
+    
+    <title>C# 实践设计模式原则 SOLID | Blog | tao-lol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="CSharp">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/style.css?v=1.4.4">
+    
+    <script type="text/javascript">
+        // Data Center
+        var DC = {
+            reward:	false,
+            lv: JSON.parse('{"enable":false,"app_id":null,"app_key":null,"icon":true}'),
+            v: JSON.parse('{"enable":false,"appid":null,"appkey":null,"notify":true,"verify":true,"placeholder":"give me some sugers plz...","avatar":"wavatar"}'),
+            g: JSON.parse('{"enable":false,"lazy":true,"owner":"codefine","repo":"gitment","oauth":{"client_id":null,"client_secret":null},"perPage":10}'),
+            d: JSON.parse('{"app_id":null}')
+        };
+    </script>
+    <script type="text/javascript">
+        window.lazyScripts=[];
+    </script>
+    
+</head>
+
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap">
+      
+      <img src="/img/brand.jpg" class="brand-bg">
+      
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">濤</h5>
+          <a href="mailto:tao-lol@qq.com" title="tao-lol@qq.com" class="mail">
+            
+              <span>t</span>
+            
+              <span>a</span>
+            
+              <span>o</span>
+            
+              <span>-</span>
+            
+              <span>l</span>
+            
+              <span>o</span>
+            
+              <span>l</span>
+            
+              <span>@</span>
+            
+              <span>q</span>
+            
+              <span>q</span>
+            
+              <span>.</span>
+            
+              <span>c</span>
+            
+              <span>o</span>
+            
+              <span>m</span>
+            
+          </a>
+        </hgroup>
+        
+        <ul class="menu-link">
+          
+              <li>
+                <a href="https://github.com/Tao-lol" target="_blank">
+                  <i class="icon icon-lg icon-github"></i>
+                </a>
+              </li>
+            
+        </ul>
+        
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                HOME
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                CATEGORIES
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                TAGS
+              </a>
+            </li>
+        
+            <li class="">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                ARCHIVES
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row clearfix">
+        <a href="javascript:;" class="header-icon pull-left waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">
+            <span>C# 实践设计模式原则 SOLID</span>
+            
+        </div>
+        
+        <a href="javascript:;" id="site_search_btn" class="header-icon pull-right waves-effect waves-circle waves-light">
+            <i class="icon icon-lg icon-search"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+    <img src="/img/banner.jpg" class="header-bg">
+    <div class="container fade-scale">
+        <h1 class="title">C# 实践设计模式原则 SOLID</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-08-19T16:26:12.000Z" itemprop="datePublished" class="page-time">
+  2020-08-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+            
+        </h5>
+        
+    </div>
+    
+
+</header>
+
+<div id="site_search">
+    <div class="search-title clearfix">
+        <span class="pull-left">
+          <i class="icon icon-lg icon-search"></i>
+        </span>
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control pull-left"/>
+        <a href="javascript:;" class="close pull-right waves-effect waves-circle waves-light">
+          <i class="icon icon-lg icon-close"></i>
+        </a>
+    </div>
+    <div id="local-search-result"></div>
+</div>
+
+
+<div class="container body-wrap">
+    <article id="post-SOLIDPrinciplesInCSharp"
+  class="post-article article-type-post" itemprop="blogPost">
+    <div class="post-card">
+        <h1 class="post-card-title">C# 实践设计模式原则 SOLID</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-08-20 00:26:12" datetime="2020-08-19T16:26:12.000Z"  itemprop="datePublished">2020-08-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/编程/">编程</a></li></ul>
+
+
+
+            
+
+            
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            
+            <blockquote>
+<p><a href="https://www.cnblogs.com/tiger-wang/p/13525841.html" target="_blank" rel="noopener">https://www.cnblogs.com/tiger-wang/p/13525841.html</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>通常讲到设计模式，一个最通用的原则是 SOLID：</p>
+<ol>
+<li>S - Single Responsibility Principle，单一责任原则</li>
+<li>O - Open Closed Principle，开闭原则</li>
+<li>L - Liskov Substitution Principle，里氏替换原则</li>
+<li>I - Interface Segregation Principle，接口隔离原则</li>
+<li>D - Dependency Inversion Principle，依赖倒置原则</li>
+</ol>
+<p>嗯，这就是五大原则。</p>
+<p>后来又加入了一个：Law of Demeter，迪米特法则。于是，就变成了六大原则。</p>
+<p>原则好理解。怎么用在实践中？</p>
+<h1 id="一、单一责任原则"><a href="#一、单一责任原则" class="headerlink" title="一、单一责任原则"></a>一、单一责任原则</h1><p>单一责任原则，简单来说就是一个类或一个模块，只负责一种或一类职责。</p>
+<p>看代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IUser</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">AddUser</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RemoveUser</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UpdateUser</span>(<span class="params"></span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Logger</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Message</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据原则，我们会发现，对于<code>IUser</code>来说，前三个方法：<code>AddUser</code>、<code>RemoveUser</code>、<code>UpdateUser</code>是有意义的，而后两个<code>Logger</code>和<code>Message</code>作为<code>IUser</code>的一部分功能，是没有意义的并不符合单一责任原则的。</p>
+<p>所以，我们可以把它分解成不同的接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IUser</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">AddUser</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RemoveUser</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UpdateUser</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ILog</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Logger</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Message</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拆分后，我们看到，三个接口各自完成自己的责任，可读性和可维护性都很好。</p>
+<p>下面是使用的例子，采用依赖注入来做：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Log</span> : <span class="title">ILog</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Logger</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Logged Error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Msg</span> : <span class="title">IMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Message</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Messaged Sent"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Class_DI</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IUser _user;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILog _log;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IMessage _msg;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Class_DI</span>(<span class="params">IUser user, ILog log, IMessage msg</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._user = user;</span><br><span class="line">        <span class="keyword">this</span>._log = log;</span><br><span class="line">        <span class="keyword">this</span>._msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">User</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._user.AddUser();</span><br><span class="line">        <span class="keyword">this</span>._user.RemoveUser();</span><br><span class="line">        <span class="keyword">this</span>._user.UpdateUser();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Log</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._log.Logger();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Msg</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._msg.Message();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Class_DI di = <span class="keyword">new</span> Class_DI(<span class="keyword">new</span> User(), <span class="keyword">new</span> Log(), <span class="keyword">new</span> Msg());</span><br><span class="line">    di.User();</span><br><span class="line">    di.Log();</span><br><span class="line">    di.Msg();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的代码，看着就漂亮多了。</p>
+<h1 id="二、开闭原则"><a href="#二、开闭原则" class="headerlink" title="二、开闭原则"></a>二、开闭原则</h1><p>开闭原则要求类、模块、函数等实体应该对扩展开放，对修改关闭。</p>
+<p>我们先来看一段代码，计算员工的奖金：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Employee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.2</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Employee emp = <span class="keyword">new</span> Employee(<span class="number">101</span>, <span class="string">"WangPlus"</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp.Employee_ID, emp.Name, emp.Bonus(<span class="number">10000</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在假设，计算奖金的公式做了改动。</p>
+<p>要实现这个，我们可能需要对代码进行修改：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Employee_Type;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Employee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name, <span class="keyword">string</span> type</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">        <span class="keyword">this</span>.Employee_Type = type;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (Employee_Type == <span class="string">"manager"</span>)</span><br><span class="line">            <span class="keyword">return</span> salary * <span class="number">.2</span>M;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">                salary * <span class="number">.1</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然，为了实现改动，我们修改了类和方法。</p>
+<p>这违背了开闭原则。</p>
+<p>那我们该怎么做？</p>
+<p>我们可以用抽象类来实现 - 当然，实际有很多实现方式，选择最习惯或自然的方式就成：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Employee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们再实现最初的功能：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GeneralEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GeneralEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.2</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Employee emp = <span class="keyword">new</span> GeneralEmployee(<span class="number">101</span>, <span class="string">"WangPlus"</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp.Employee_ID, emp.Name, emp.Bonus(<span class="number">10000</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这儿使用抽象类的好处是：如果未来需要修改奖金规则，则不需要像前边例子一样，修改整个类和方法，因为现在的扩展是开放的。</p>
+<p>代码写完整了是这样：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Employee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GeneralEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GeneralEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.1</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ManagerEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ManagerEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.2</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Employee emp = <span class="keyword">new</span> GeneralEmployee(<span class="number">101</span>, <span class="string">"WangPlus"</span>);</span><br><span class="line">        Employee emp1 = <span class="keyword">new</span> ManagerEmployee(<span class="number">102</span>, <span class="string">"WangPlus1"</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp.Employee_ID, emp.Name, emp.Bonus(<span class="number">10000</span>));</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp1.Employee_ID, emp1.Name, emp1.Bonus(<span class="number">10000</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、里氏替换原则"><a href="#三、里氏替换原则" class="headerlink" title="三、里氏替换原则"></a>三、里氏替换原则</h1><p>里氏替换原则，讲的是：子类可以扩展父类的功能，但不能改变基类原有的功能。它有四层含义：</p>
+<ol>
+<li>子类可以实现父类的抽象方法，但不能覆盖父类的非抽象方法；</li>
+<li>子类中可以增加自己的特有方法；</li>
+<li>当子类重载父类的方法时，方法的前置条件（形参）要比父类的输入参数更宽松；</li>
+<li>当子类实现父类的抽象方法时，方法的后置条件（返回值）要比父类更严格。</li>
+</ol>
+<p>在前边开闭原则中，我们的例子里，实际上也遵循了部分里氏替换原则，我们用<code>GeneralEmployee</code>和<code>ManagerEmployee</code>替换了父类<code>Employee</code>。</p>
+<p>还是拿代码来说。</p>
+<p>假设需求又改了，这回加了一个临时工，是没有奖金的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TempEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Employee emp = <span class="keyword">new</span> GeneralEmployee(<span class="number">101</span>, <span class="string">"WangPlus"</span>);</span><br><span class="line">        Employee emp1 = <span class="keyword">new</span> ManagerEmployee(<span class="number">101</span>, <span class="string">"WangPlus1"</span>);</span><br><span class="line">        Employee emp2 = <span class="keyword">new</span> TempEmployee(<span class="number">102</span>, <span class="string">"WangPlus2"</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp.Employee_ID, emp.Name, emp.Bonus(<span class="number">10000</span>));</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp1.Employee_ID, emp1.Name, emp1.Bonus(<span class="number">10000</span>));</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Bonus: &#123;2&#125;"</span>, emp2.Employee_ID, emp2.Name, emp2.Bonus(<span class="number">10000</span>));</span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然，这个方式不符合里氏替原则的第四条，它抛出了一个错误。</p>
+<p>所以，我们需要继续修改代码，并增加两个接口：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title">IBonus</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title">IEmployee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> Employee_ID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">decimal</span> <span class="title">GetSalary</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Employee</span> : <span class="title">IEmployee</span>, <span class="title">IBonus</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Employee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">decimal</span> <span class="title">GetSalary</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GeneralEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GeneralEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">GetSalary</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.1</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ManagerEmployee</span> : <span class="title">Employee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ManagerEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>) : <span class="title">base</span>(<span class="params">id, name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">GetSalary</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">decimal</span> <span class="title">Bonus</span>(<span class="params"><span class="keyword">decimal</span> salary</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> salary * <span class="number">.1</span>M;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempEmployee</span> : <span class="title">IEmployee</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Employee_ID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TempEmployee</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> name</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.Employee_ID = id;</span><br><span class="line">        <span class="keyword">this</span>.Name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">decimal</span> <span class="title">GetSalary</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Employee emp = <span class="keyword">new</span> GeneralEmployee(<span class="number">101</span>, <span class="string">"WangPlus"</span>);</span><br><span class="line">        Employee emp1 = <span class="keyword">new</span> ManagerEmployee(<span class="number">102</span>, <span class="string">"WangPlus1"</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Salary: &#123;2&#125; Bonus:&#123;3&#125;"</span>, emp.Employee_ID, emp.Name, emp.GetSalary(), emp.Bonus(emp.GetSalary()));</span><br><span class="line">        Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Salary: &#123;2&#125; Bonus:&#123;3&#125;"</span>, emp1.Employee_ID, emp1.Name, emp1.GetSalary(), emp1.Bonus(emp1.GetSalary()));</span><br><span class="line"></span><br><span class="line">        List&lt;IEmployee&gt; emp_list = <span class="keyword">new</span> List&lt;IEmployee&gt;();</span><br><span class="line">        emp_list.Add(<span class="keyword">new</span> GeneralEmployee(<span class="number">101</span>, <span class="string">"WangPlus"</span>));</span><br><span class="line">        emp_list.Add(<span class="keyword">new</span> ManagerEmployee(<span class="number">102</span>, <span class="string">"WangPlus1"</span>));</span><br><span class="line">        emp_list.Add(<span class="keyword">new</span> TempEmployee(<span class="number">103</span>, <span class="string">"WangPlus2"</span>));</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> obj <span class="keyword">in</span> emp_list)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(<span class="string">"Employee ID: &#123;0&#125; Name: &#123;1&#125; Salary: &#123;2&#125; "</span>, obj.EmpId, obj.Name, obj.GetSalary());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、接口隔离原则"><a href="#四、接口隔离原则" class="headerlink" title="四、接口隔离原则"></a>四、接口隔离原则</h1><p>接口隔离原则要求客户不依赖于它不使用的接口和方法；一个类对另一个类的依赖应该建立在最小的接口上。</p>
+<p>通常的做法，是把一个臃肿的接口拆分成多个更小的接口，以保证客户只需要知道与它相关的方法。</p>
+<p>这个部分不做代码演示了，可以去看看上边单一责任原则里的代码，也遵循了这个原则。</p>
+<h1 id="五、依赖倒置原则"><a href="#五、依赖倒置原则" class="headerlink" title="五、依赖倒置原则"></a>五、依赖倒置原则</h1><p>依赖倒置原则要求高层模块不能依赖于低层模块，而是两者都依赖于抽象。另外，抽象不应该依赖于细节，而细节应该依赖于抽象。</p>
+<p>看代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Message</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Message Sent"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Notification</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Message _msg;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Notification</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _msg = <span class="keyword">new</span> Message();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">PromotionalNotification</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _msg.SendMessage();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Notification notify = <span class="keyword">new</span> Notification();</span><br><span class="line">        notify.PromotionalNotification();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个代码中，通知完全依赖<code>Message</code>类，而<code>Message</code>类只能发送一种通知。如果我们需要引入别的类型，例如邮件和SMS，则需要修改<code>Message</code>类。</p>
+<p>下面，我们使用依赖倒置原则来完成这段代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SendMessage</span>(<span class="params"></span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Email</span> : <span class="title">IMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Send Email"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SMS</span> : <span class="title">IMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Send Sms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Notification</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IMessage _msg;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Notification</span>(<span class="params">IMessage msg</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>._msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Notify</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _msg.SendMessage();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Email email = <span class="keyword">new</span> Email();</span><br><span class="line">        Notification notify = <span class="keyword">new</span> Notification(email);</span><br><span class="line">        notify.Notify();</span><br><span class="line"></span><br><span class="line">        SMS sms = <span class="keyword">new</span> SMS();</span><br><span class="line">        notify = <span class="keyword">new</span> Notification(sms);</span><br><span class="line">        notify.Notify();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过这种方式，我们把代码之间的耦合降到了最小。</p>
+<h1 id="六、迪米特法则"><a href="#六、迪米特法则" class="headerlink" title="六、迪米特法则"></a>六、迪米特法则</h1><p>迪米特法则也叫最少知道法则。从称呼就可以知道，意思是：一个对象应该对其它对象有最少的了解。</p>
+<p>在写代码的时候，尽可能少暴露自己的接口或方法。写类的时候，能不public就不public，所有暴露的属性、接口、方法，都是不得不暴露的，这样能确保其它类对这个类有最小的了解。</p>
+<p>这个原则没什么需要多讲的，调用者只需要知道被调用者公开的方法就好了，至于它内部是怎么实现的或是有其他别的方法，调用者并不关心，调用者只关心它需要用的。反而，如果被调用者暴露太多不需要暴露的属性或方法，那么就可能导致调用者滥用其中的方法，或是引起一些其他不必要的麻烦。</p>
+<p>&emsp;  </p>
+<p>最后说两句：所谓原则，不是规则，不是硬性的规定。在代码中，能灵活应用就好，不需要非拘泥于形式，但是，用好了，会让代码写得很顺手，很漂亮。</p>
+
+        </div>
+        
+<blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-19T16:41:49.979Z" itemprop="dateUpdated">2020-08-20 00:41:49</time>
+</span><br>
+
+
+        
+        转载注明出处，原文地址：<a href="/2020/08/20/SOLIDPrinciplesInCSharp/" target="_blank" rel="external">https://tao-lol.top/2020/08/20/SOLIDPrinciplesInCSharp/</a>
+        
+    </div>
+    <footer>
+        <a href="https://tao-lol.top">
+            <img src="/img/avatar.jpg" alt="濤">
+            濤
+        </a>
+    </footer>
+</blockquote>
+
+        
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSharp/">CSharp</a></li></ul>
+
+            <div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/08/20/SOLIDPrinciplesInCSharp/&title=《C# 实践设计模式原则 SOLID》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/08/20/SOLIDPrinciplesInCSharp/&title=《C# 实践设计模式原则 SOLID》 — Blog&source=
+https://www.cnblogs.com/tiger-wang/p/13525841.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+        </div>
+        
+            
+
+
+        
+    </div>
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="next">
+      <a href="/2020/01/20/BasicKnowledgeOfComputer/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">计算机底层知识</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+    
+    
+        <aside class="post-widget">
+            <nav class="post-toc-wrap" id="post-toc">
+                <strong>目录</strong>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、单一责任原则"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、单一责任原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、开闭原则"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、开闭原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、里氏替换原则"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、里氏替换原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四、接口隔离原则"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、接口隔离原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五、依赖倒置原则"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、依赖倒置原则</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六、迪米特法则"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、迪米特法则</span></a></li></ol>
+            </nav>
+            <div class="toc-bar"><div>
+        </aside>
+    
+</article>
+
+
+</div>
+
+    </main>
+    <footer class="footer ">
+    
+    <div class="top">
+        
+            <p>
+    <span>Links：</span>
+    
+    <span class="blogroll-item">
+        <a href="https://tao-lol.top" target="_blank">Home</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/hexojs/hexo" target="_blank">Hexo</a>
+    </span>
+    
+    <span class="blogroll-item">
+        <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">Mellow</a>
+    </span>
+    
+</p>
+
+        
+    </div>
+    
+    <div class="bottom">
+        <p>
+            <span>
+                濤 &copy; 2018 - 2020
+            </span>
+        		
+           	
+            
+            
+            <span>
+	            Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/codefine/hexo-theme-mellow" target="_blank">mellow</a>
+            </span>
+            
+            
+            
+
+            
+                
+<span class="site-uv" title="总访客量">
+    <i class="icon icon-user"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>
+
+
+<span class="site-pv" title="总访问量">
+    <i class="icon icon-eye"></i>
+    <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+            
+        </p>
+    </div>
+</footer>
+
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://tao-lol.top/2020/08/20/SOLIDPrinciplesInCSharp/&title=《C# 实践设计模式原则 SOLID》 — Blog&pic=https://tao-lol.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://tao-lol.top/2020/08/20/SOLIDPrinciplesInCSharp/&title=《C# 实践设计模式原则 SOLID》 — Blog&source=
+https://www.cnblogs.com/tiger-wang/p/13525841.html
+" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJUlEQVR42u3ay27rIBQF0Pz/T+dOW1VO9+b4VjIsRpHrEBYDeh68XvF4fxk/n1w9/zzD1V+v3rlhYGBgPJbx/ji+vrM2T7Lcz5+TmTEwME5gXC0rYeTH8dVs7fZhYGBg3MVYWygGBgbGhJE8SZAJFQMDA2MtiU2Szwn1j3JxDAyMBzLyqvvff/4v/Q0MDIxHMd7lmDQv8+/Wq8LAwNiasdbCbEtvayW8djYMDIy9GXmhLSmZ3VVuGwEwMDC2Y6wV6PPi16SUljc7MTAwTmAkmHah8xbpYtENAwNjI0Z+PaI9BNtLYGtzfqsaYmBgbMq4qyeYBHxtwjwp0mFgYOzHyI+8xerdUukt+a1fklgMDIyNGG1QmL+Th5VtCl0EhRgYGA9ntOX+tnyfJMltgxMDA+NMRtsYyH9gQi2aFhgYGFsz2lZlfRQutUIXk2oMDIxNGe3FrLZVmbcTRlcuMDAwDmCslfgnR2feqowSaQwMjK0Z81L+fLmTYh8GBsZpjDziahuZ7aa0DQYMDIzTGG2qmQdz8wS4TmUxMDA2YkyCuclsiwv9vB4MDIztGO9yrLUH2mXVjUwMDIytGZMDtA0K2+Zofo0DAwPjBEZ+5aIt8Seb0oaVGBgYJzPycC0v3CeLngSRr3ZHMTAwjmGsXb9ItuaG6BUDAwOjbDe2Vy4wMDAw2lLapFi2dp2iTV9vyMUxMDAewpi3GNsUdO1bN/9vwcDAeAbjHxkSJ83k2j/ZAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+    
+    <!-- main-js -->
+<script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/fastclick.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/plugins/ios-orientationchange-fix.js?v=1.4.4"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+
+<script type="text/javascript" src="/js/method.js?v=1.4.4"></script>
+<script type="text/javascript" src="/js/blog.js?v=1.4.4"></script>
+
+<!-- third-party -->
+
+
+
+
+
+
+<script type="text/javascript" src="/js/plugins/local_search.js?v=1.4.4"></script>
+<script type="text/javascript">
+	var search_path = "search.xml";
+	if (search_path.length === 0) {
+		search_path = "search.xml";
+	}
+	var path = "/" + search_path;
+	searchFunc(path, "local-search-input", "local-search-result");
+</script>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+    
+    
+
+
+
+
+
+    <!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+            processEscapes: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
